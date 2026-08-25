@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Johnson 华文作文练习</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#FDF8F0;--bg2:#F5EDE0;--card:#FFFFFF;--card2:#FBF7F0;
+  --border:#E8DCC8;--border2:#D4C5A8;
+  --text:#2D2A26;--text2:#6B6560;--text3:#A09890;
+  --red:#E74C3C;--red-dark:#C0392B;--red-light:#FDEDEC;
+  --blue:#2980B9;--blue-light:#EBF5FB;
+  --green:#27AE60;--green-dark:#1E8449;--green-light:#E8F8F0;
+  --orange:#E67E22;--orange-light:#FEF5E7;
+  --purple:#8E44AD;--purple-light:#F4ECF7;
+  --gold:#F1C40F;--gold-light:#FFFDE7;
+  --pink:#E91E63;
+  --shadow:0 2px 12px rgba(0,0,0,0.06);
+  --shadow2:0 4px 20px rgba(0,0,0,0.1);
+}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+.top-bar{position:sticky;top:0;z-index:100;display:none;align-items:center;gap:12px;padding:12px 20px;background:var(--bg);border-bottom:2px solid var(--border);}
+.top-bar .close-btn{font-size:20px;color:var(--text2);cursor:pointer;background:none;border:none;}
+.progress-bar{flex:1;height:14px;background:var(--bg2);border-radius:10px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--red),#E74C3C);border-radius:10px;transition:width 0.5s ease;}
+.hearts{display:flex;align-items:center;gap:4px;font-size:16px;font-weight:900;color:var(--red);}
+.streak-display{display:flex;align-items:center;gap:4px;font-size:16px;font-weight:900;color:var(--orange);}
+
+.main{max-width:680px;margin:0 auto;padding:20px 16px 100px;}
+.screen{display:none;animation:fadeIn 0.4s ease;}.screen.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+
+/* Home */
+.home-hero{text-align:center;padding:30px 0 16px;}
+.home-hero .mascot{font-size:64px;animation:bounce 2.5s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.home-hero h1{font-size:26px;font-weight:900;margin:12px 0 6px;}
+.home-hero p{color:var(--text2);font-size:14px;}
+.home-stats{display:flex;justify-content:center;gap:24px;margin:16px 0;}
+.home-stat{text-align:center;}.home-stat .hs-val{font-size:22px;font-weight:900;}.home-stat .hs-label{font-size:11px;color:var(--text2);}
+
+.module-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px;}
+.module-card{display:flex;align-items:center;gap:16px;background:var(--card);border:2px solid var(--border);border-radius:16px;padding:18px 20px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow);}
+.module-card:hover{transform:translateY(-2px);box-shadow:var(--shadow2);border-color:var(--red);}
+.module-card:active{transform:translateY(0);}
+.module-icon{font-size:36px;flex-shrink:0;}
+.module-info{flex:1;}.module-info .mod-name{font-size:16px;font-weight:900;}.module-info .mod-desc{font-size:12px;color:var(--text2);margin-top:2px;}
+.module-badge{background:var(--red-light);color:var(--red);font-size:11px;font-weight:900;padding:4px 10px;border-radius:10px;white-space:nowrap;}
+
+/* Back Button */
+.back-row{margin-bottom:16px;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:10px;border:2px solid var(--border);background:var(--card);font-family:'Noto Sans SC';font-size:13px;font-weight:700;cursor:pointer;color:var(--text2);}
+.back-btn:hover{border-color:var(--red);color:var(--text);}
+
+/* Spinner */
+.spinner-container{display:flex;flex-direction:column;align-items:center;margin:20px 0;}
+.wheel-wrapper{position:relative;width:300px;height:300px;margin:0 auto 20px;}
+.wheel{width:300px;height:300px;border-radius:50%;border:6px solid var(--border2);transition:transform 4s cubic-bezier(0.17,0.67,0.12,0.99);position:relative;overflow:hidden;}
+.wheel-pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:28px;z-index:10;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));}
+.spin-btn{padding:16px 48px;background:linear-gradient(135deg,var(--red),var(--pink));color:#fff;border:none;border-radius:16px;font-family:'Noto Sans SC';font-size:18px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 var(--red-dark);letter-spacing:2px;transition:all 0.15s;}
+.spin-btn:hover{filter:brightness(1.1);}
+.spin-btn:active{box-shadow:none;transform:translateY(4px);}
+.spin-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.spin-result{text-align:center;margin-top:20px;padding:20px;background:var(--card);border:2px solid var(--border);border-radius:16px;box-shadow:var(--shadow);display:none;}
+.spin-result .sr-emoji{font-size:40px;margin-bottom:8px;}
+.spin-result .sr-title{font-size:18px;font-weight:900;margin-bottom:4px;}
+.spin-result .sr-type{font-size:13px;color:var(--red);font-weight:700;margin-bottom:12px;}
+.spin-result .sr-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.sr-btn{padding:10px 20px;border-radius:12px;border:none;font-family:'Noto Sans SC';font-size:14px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.sr-btn-primary{background:var(--red);color:#fff;box-shadow:0 3px 0 var(--red-dark);}
+.sr-btn-primary:active{box-shadow:none;transform:translateY(3px);}
+.sr-btn-secondary{background:var(--bg2);color:var(--text2);border:2px solid var(--border);}
+
+/* Essay Reader */
+.reader-container{background:var(--card);border-radius:16px;padding:24px;border:2px solid var(--border);box-shadow:var(--shadow);}
+.reader-title{font-size:20px;font-weight:900;margin-bottom:4px;}
+.reader-meta{font-size:12px;color:var(--text2);margin-bottom:16px;}
+.reader-text{font-size:16px;line-height:2.4;color:var(--text);}
+.reader-text p{margin-bottom:16px;text-indent:2em;}
+.reader-text .hl-good{background:linear-gradient(120deg,#C3E8FF 0%,#74B9FF 100%);background-size:100% 40%;background-repeat:no-repeat;background-position:0 88%;padding:0 2px;border-radius:2px;cursor:pointer;}
+.reader-text .hl-good:hover{background-size:100% 100%;}
+.reader-text .hl-vocab{background:linear-gradient(120deg,#FCEABB 0%,#F8B500 100%);background-size:100% 40%;background-repeat:no-repeat;background-position:0 88%;padding:0 2px;border-radius:2px;cursor:pointer;}
+.reader-text .hl-vocab:hover{background-size:100% 100%;}
+
+.hl-legend{display:flex;gap:16px;margin:16px 0;flex-wrap:wrap;}
+.hl-legend span{font-size:12px;font-weight:700;display:flex;align-items:center;gap:4px;}
+.hl-legend .dot{width:12px;height:12px;border-radius:3px;}
+
+.essay-nav{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.essay-tab{padding:8px 14px;border-radius:10px;border:2px solid var(--border);background:var(--card);font-family:'Noto Sans SC';font-size:12px;font-weight:700;cursor:pointer;color:var(--text2);}
+.essay-tab:hover{border-color:var(--red);}
+.essay-tab.active{border-color:var(--red);background:var(--red-light);color:var(--red);}
+
+/* Comment Box */
+.comment-box{background:var(--purple-light);border-left:4px solid var(--purple);border-radius:0 12px 12px 0;padding:14px 16px;margin:16px 0;font-size:13px;line-height:1.8;color:var(--purple);}
+.comment-box strong{font-weight:900;}
+
+/* Quiz */
+.q-header{margin-bottom:20px;}
+.q-header .q-type{color:var(--red);font-size:12px;font-weight:900;letter-spacing:1px;}
+.q-header h2{font-size:18px;font-weight:900;margin-top:6px;line-height:1.6;}
+.q-header .q-hint{color:var(--text2);font-size:13px;margin-top:8px;line-height:1.6;}
+
+.options{display:flex;flex-direction:column;gap:8px;}
+.option-btn{display:flex;align-items:flex-start;gap:12px;background:var(--card);border:2px solid var(--border);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all 0.15s;font-size:14px;font-weight:600;color:var(--text);text-align:left;width:100%;font-family:'Noto Sans SC';line-height:1.6;}
+.option-btn:hover{border-color:var(--blue);background:var(--blue-light);}
+.option-btn.selected{border-color:var(--blue);background:var(--blue-light);}
+.option-btn.correct{border-color:var(--green);background:var(--green-light);animation:correctPulse 0.4s;}
+.option-btn.wrong{border-color:var(--red);background:var(--red-light);animation:shake 0.4s;}
+.option-num{width:28px;height:28px;border-radius:8px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0;}
+@keyframes correctPulse{0%{transform:scale(1);}50%{transform:scale(1.02);}100%{transform:scale(1);}}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:2px solid var(--border);padding:14px;display:none;justify-content:center;}
+.check-btn{width:100%;max-width:680px;padding:14px;border:none;border-radius:14px;font-family:'Noto Sans SC';font-size:15px;font-weight:900;cursor:pointer;transition:all 0.15s;letter-spacing:2px;}
+.check-btn.ready{background:var(--red);color:#fff;box-shadow:0 4px 0 var(--red-dark);}
+.check-btn.ready:active{box-shadow:none;transform:translateY(4px);}
+.check-btn.disabled{background:var(--bg2);color:var(--text3);cursor:not-allowed;}
+.check-btn.next{background:var(--blue);color:#fff;box-shadow:0 4px 0 #2471A3;}
+
+.feedback{position:fixed;bottom:66px;left:0;right:0;padding:14px 20px;text-align:center;font-weight:900;font-size:15px;transform:translateY(120%);transition:transform 0.3s ease;z-index:50;}
+.feedback.show{transform:translateY(0);}
+.feedback.correct-fb{background:var(--green-light);color:var(--green-dark);border-top:2px solid var(--green);}
+.feedback.wrong-fb{background:var(--red-light);color:var(--red);border-top:2px solid var(--red);}
+.feedback .fb-explain{font-size:12px;font-weight:500;color:var(--text2);margin-top:6px;line-height:1.6;}
+
+.results{text-align:center;padding:30px 0;}
+.results .trophy{font-size:64px;animation:bounce 2s infinite;}
+.results h1{font-size:26px;font-weight:900;margin:12px 0;}
+.results .score-ring{width:140px;height:140px;margin:16px auto;border-radius:50%;border:8px solid var(--bg2);display:flex;align-items:center;justify-content:center;background:var(--card);}
+.results .score-num{font-size:32px;font-weight:900;}
+.stat-row{display:flex;justify-content:center;gap:24px;margin:20px 0;}
+.stat-item{text-align:center;}.stat-item .stat-val{font-size:24px;font-weight:900;}.stat-item .stat-label{font-size:11px;color:var(--text2);}
+.restart-btn{padding:14px 40px;background:var(--red);color:#fff;border:none;border-radius:14px;font-family:'Noto Sans SC';font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 var(--red-dark);letter-spacing:1px;margin-top:12px;}
+.restart-btn:active{box-shadow:none;transform:translateY(4px);}
+
+/* Toolbox */
+.toolbox-section{margin-bottom:20px;}
+.toolbox-section h3{font-size:16px;font-weight:900;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.toolbox-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;box-shadow:var(--shadow);}
+.toolbox-card .tc-cat{font-size:11px;font-weight:900;color:var(--purple);margin-bottom:6px;}
+.toolbox-card .tc-example{font-size:14px;line-height:2;color:var(--text);margin:8px 0;padding:10px 14px;background:var(--card2);border-radius:10px;border-left:4px solid var(--red);}
+.toolbox-card .tc-tip{font-size:12px;color:var(--text2);line-height:1.6;margin-top:6px;}
+.toolbox-tabs{display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px;}
+.toolbox-tab{padding:8px 14px;border-radius:10px;border:2px solid var(--border);background:var(--card);font-family:'Noto Sans SC';font-size:12px;font-weight:700;cursor:pointer;color:var(--text2);white-space:nowrap;}
+.toolbox-tab:hover{border-color:var(--purple);}
+.toolbox-tab.active{border-color:var(--purple);background:var(--purple-light);color:var(--purple);}
+
+/* Writing Practice */
+.writing-area{margin-top:16px;}
+.writing-area textarea{width:100%;min-height:300px;padding:16px;border:2px solid var(--border);border-radius:14px;font-family:'Noto Sans SC';font-size:16px;line-height:2.2;color:var(--text);background:var(--card);resize:vertical;}
+.writing-area textarea:focus{outline:none;border-color:var(--red);}
+.char-counter{font-size:13px;font-weight:900;padding:6px 12px;border-radius:8px;display:inline-block;margin-top:8px;}
+.char-counter.cc-red{background:var(--red-light);color:var(--red);}
+.char-counter.cc-green{background:var(--green-light);color:var(--green);}
+.char-counter.cc-orange{background:var(--orange-light);color:var(--orange);}
+
+.tip-box{background:var(--gold-light);border:2px solid var(--gold);border-radius:14px;padding:16px;margin:16px 0;font-size:13px;line-height:1.8;}
+.tip-box strong{color:var(--orange);}
+
+.xp-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);font-size:40px;font-weight:900;color:var(--gold);text-shadow:0 4px 20px rgba(241,196,15,0.4);pointer-events:none;z-index:200;transition:all 0.5s ease;}
+.xp-popup.show{transform:translate(-50%,-50%) scale(1);opacity:1;}
+.xp-popup.hide{transform:translate(-50%,-100%) scale(0.5);opacity:0;}
+
+.tooltip-popup{position:fixed;z-index:300;background:var(--card);border:2px solid var(--border);border-radius:12px;padding:14px 16px;box-shadow:var(--shadow2);max-width:320px;font-size:13px;line-height:1.7;display:none;animation:fadeIn 0.2s;}
+.tooltip-popup .tp-title{font-weight:900;color:var(--red);font-size:12px;margin-bottom:4px;}
+.tooltip-popup .tp-close{position:absolute;top:8px;right:10px;cursor:pointer;font-size:14px;color:var(--text2);background:none;border:none;}
+
+/* Outline Builder */
+.ob-step-indicator{display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:20px;flex-wrap:wrap;}
+.ob-step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;border:2px solid var(--border);background:var(--card);color:var(--text3);transition:all 0.3s;}
+.ob-step-dot.active{border-color:var(--red);background:var(--red);color:#fff;}
+.ob-step-dot.done{border-color:var(--green);background:var(--green-light);color:var(--green);}
+.ob-step-line{width:24px;height:2px;background:var(--border);}
+.ob-topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.ob-topic-card{background:var(--card);border:2px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;text-align:center;transition:all 0.2s;}
+.ob-topic-card:hover{border-color:var(--red);transform:translateY(-2px);}
+.ob-topic-card.selected{border-color:var(--red);background:var(--red-light);}
+.ob-topic-card .otc-emoji{font-size:28px;margin-bottom:4px;}
+.ob-topic-card .otc-title{font-size:13px;font-weight:900;}
+.ob-topic-card .otc-type{font-size:11px;color:var(--text2);}
+.ob-template-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;}
+.ob-template-card:hover{border-color:var(--red);transform:translateY(-1px);}
+.ob-template-card.selected{border-color:var(--red);background:var(--red-light);}
+.ob-template-card .ot-name{font-size:15px;font-weight:900;margin-bottom:4px;}
+.ob-template-card .ot-flow{font-size:12px;color:var(--text2);line-height:1.6;}
+.ob-section-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow);}
+.ob-section-card .os-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;font-size:12px;font-weight:900;margin-right:8px;}
+.ob-section-card .os-title{font-size:15px;font-weight:900;display:inline;}
+.ob-section-card .os-question{font-size:13px;color:var(--blue);font-weight:700;margin:10px 0 8px;line-height:1.6;}
+.ob-section-card .os-tips{font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:10px;padding:10px 12px;background:var(--gold-light);border-radius:8px;}
+.ob-section-card .os-examples{margin-bottom:10px;}
+.ob-section-card .os-example{font-size:12px;line-height:1.8;padding:8px 12px;background:var(--blue-light);border-radius:8px;border-left:3px solid var(--blue);margin-bottom:6px;color:var(--text);}
+.ob-section-card textarea{width:100%;min-height:80px;padding:12px;border:2px solid var(--border);border-radius:10px;font-family:'Noto Sans SC';font-size:14px;line-height:1.8;color:var(--text);background:var(--card2);resize:vertical;}
+.ob-section-card textarea:focus{outline:none;border-color:var(--red);}
+.ob-nav{display:flex;gap:10px;justify-content:center;margin-top:20px;}
+.ob-nav-btn{padding:12px 28px;border-radius:12px;border:none;font-family:'Noto Sans SC';font-size:14px;font-weight:900;cursor:pointer;transition:all 0.15s;}
+.ob-nav-btn.primary{background:var(--red);color:#fff;box-shadow:0 3px 0 var(--red-dark);}
+.ob-nav-btn.primary:active{box-shadow:none;transform:translateY(3px);}
+.ob-nav-btn.secondary{background:var(--bg2);color:var(--text2);border:2px solid var(--border);}
+.ob-nav-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.ob-outline-review{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:20px;margin:16px 0;box-shadow:var(--shadow);}
+.ob-outline-review .or-section{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.ob-outline-review .or-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.ob-outline-review .or-label{font-size:13px;font-weight:900;color:var(--red);margin-bottom:4px;}
+.ob-outline-review .or-content{font-size:14px;line-height:1.8;color:var(--text);white-space:pre-wrap;}
+.ob-outline-review .or-empty{font-size:13px;color:var(--text3);font-style:italic;}
+.ob-outline-ref{background:var(--gold-light);border:2px solid var(--gold);border-radius:14px;padding:16px;margin-bottom:16px;max-height:200px;overflow-y:auto;}
+.ob-outline-ref .or-ref-title{font-size:13px;font-weight:900;color:var(--orange);margin-bottom:8px;}
+.ob-outline-ref .or-ref-item{font-size:12px;line-height:1.6;color:var(--text);margin-bottom:4px;}
+
+/* Model Essay Library */
+.mel-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:16px;}
+.mel-card{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow);}
+.mel-card:hover{border-color:var(--red);transform:translateY(-2px);box-shadow:var(--shadow2);}
+.mel-card .mc-top{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.mel-card .mc-emoji{font-size:28px;}
+.mel-card .mc-info{flex:1;}
+.mel-card .mc-title{font-size:15px;font-weight:900;}
+.mel-card .mc-meta{font-size:11px;color:var(--text2);margin-top:2px;}
+.mel-card .mc-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.mel-card .mc-tag{font-size:10px;padding:2px 8px;border-radius:6px;font-weight:700;}
+.mel-card .mc-tag-type{background:var(--red-light);color:var(--red);}
+.mel-card .mc-tag-count{background:var(--blue-light);color:var(--blue);}
+
+@media(max-width:480px){
+  .home-hero h1{font-size:22px;}
+  .wheel-wrapper,.wheel{width:260px;height:260px;}
+  .reader-text{font-size:15px;line-height:2.2;}
+  .ob-topic-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar" id="topBar">
+  <button class="close-btn" onclick="goHome()">&#10005;</button>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="hearts" id="heartsDisplay">&#10084;&#65039; 5</div>
+  <div class="streak-display" id="streakDisplay">&#128293; 0</div>
+</div>
+
+<div class="main">
+  <div class="screen active" id="homeScreen"></div>
+  <div class="screen" id="menuScreen"></div>
+  <div class="screen" id="spinnerScreen"></div>
+  <div class="screen" id="readerScreen"></div>
+  <div class="screen" id="questionScreen"><div id="questionContent"></div></div>
+  <div class="screen" id="resultsScreen"><div class="results" id="resultsContent"></div></div>
+  <div class="screen" id="toolboxScreen"></div>
+  <div class="screen" id="writingScreen"></div>
+  <div class="screen" id="outlineScreen"></div>
+  <div class="screen" id="modelLibScreen"></div>
+</div>
+
+<div class="bottom-bar" id="bottomBar">
+  <button class="check-btn disabled" id="checkBtn" onclick="onCheck()">检查答案</button>
+</div>
+<div class="feedback" id="feedback"></div>
+<div class="xp-popup" id="xpPopup"></div>
+<div class="tooltip-popup" id="tooltipPopup"><button class="tp-close" onclick="closeTooltip()">&#10005;</button><div id="tooltipBody"></div></div>
+
+<script>
+// =========================================================
+// DATA: 5 Model Essays from Johnson's actual compositions
+// =========================================================
+var ESSAYS = [
+  {
+    id: 'sea', title: '一次与海的相遇', type: '记叙文', icon: '\uD83C\uDF0A',
+    meta: 'P5 高华 \u00B7 约1500字 \u00B7 记叙文',
+    highlights: [
+      { text: '海边的空气清新而湿润，带着淡淡的咸味', type: 'good', tip: '五感描写：嗅觉+触觉，让读者"身临其境"' },
+      { text: '仿佛在奏着一首温柔的晨曲', type: 'good', tip: '比喻+拟人：把海浪声比作音乐' },
+      { text: '那种感觉既陌生，又让人有些不安', type: 'vocab', tip: '心理描写：真实写出第一次下潜的紧张' },
+      { text: '化作一束束流动的金线，在海底轻轻摇曳', type: 'good', tip: '绝佳比喻：把阳光比作金线，画面感极强' },
+      { text: '真正的勇敢，并不是一味逞强', type: 'vocab', tip: '点题升华：从经历中悟出道理' }
+    ],
+    content: [
+      '清晨的亚庇，天空才刚刚泛白，海边的空气清新而湿润，带着淡淡的咸味。轻柔的海风迎面吹来，令人顿时精神一振。远处的海面在晨光的照耀下闪烁着粼粼波光，一层层海浪轻轻拍打着沙滩，仿佛在奏着一首温柔的晨曲。我静静地站在沙滩上，望着眼前这片辽阔无边的大海，心里既兴奋，又有些忐忑，因为这是我第一次尝试专业自由潜训练。',
+      '我们先在沙滩上做热身运动。细软的沙子踩在脚下，又松又暖。随着一个个拉伸动作展开，我原本有些僵硬的身体渐渐放松下来，连心里的紧张感也一点一点地消散了。吃过早餐后，教练又让我们练习憋气。刚开始时，我觉得并不难，可是时间一长，胸口便开始发紧，呼吸也越来越困难。我强忍着不适，在心里默默数着秒数。',
+      '终于到了下水的时候。我先漂浮在海面上，照着教练的指示慢慢调整呼吸，让自己尽量放松下来。深吸一口气后，我鼓起勇气，一个鸭式下潜扎入海中。刚开始下潜时，我的心一下子绷紧了，四周变得格外安静，只剩下海水轻轻包围着我的感觉。那种感觉既陌生，又让人有些不安。',
+      '过了一会儿，我渐渐适应了水中的环境，也真正看见了海底的景象。阳光透过水面洒落下来，化作一束束流动的金线，在海底轻轻摇曳。五彩缤纷的珊瑚铺展在海床上，有的像分枝的树木，有的像盛开的花朵，还有的像一团团柔软的蘑菇。成群结队的小鱼在珊瑚间穿梭来去，忽东忽西，灵活极了。',
+      '我继续慢慢下潜，到了大约五六米深的地方时，心情再次紧张起来。耳压也难以做顺，当我试着再往下潜时，那股不适感不但没有减弱，反而更加严重了。短短几秒钟里，我想了很多。最后，我决定不再勉强自己，而是立刻转身往上游去。',
+      '当我重新回到水面，大口呼吸着新鲜空气时，整个人仿佛一下子轻松了下来。那一刻，我突然明白：真正的勇敢，并不是一味逞强，而是懂得在危险面前保持清醒，知道什么时候该坚持，什么时候该停下来保护自己。',
+      '这次亚庇之旅，让我看见了一个平日无法接触到的世界。海底的景色固然令人惊叹，但更让我难忘的，是那份在未知面前学会冷静、判断和自我保护的成长。'
+    ],
+    comment: '这篇作文的亮点：(1) 五感描写极丰富\u2014\u2014嗅觉、触觉、视觉、听觉交替出现；(2) 比喻新颖\u2014\u2014"流动的金线""温柔的晨曲"；(3) 心理变化线索清晰\u2014\u2014兴奋\u2192紧张\u2192惊喜\u2192犹豫\u2192释然；(4) 结尾升华到"真正的勇敢"，主题有深度。'
+  },
+  {
+    id: 'fruit', title: '自食其果', type: '命题作文', icon: '\uD83D\uDCF1',
+    meta: 'P5 高华 \u00B7 约800字 \u00B7 命题作文',
+    highlights: [
+      { text: '被子的缝隙间还透出一丝微弱的亮光', type: 'good', tip: '细节描写：不直接说"玩手机"，用细节暗示，更有悬念感' },
+      { text: '安静得连针掉到地上都听得见', type: 'vocab', tip: '夸张手法：极写安静，制造紧张气氛' },
+      { text: '仿佛被人施了定身术一般', type: 'good', tip: '比喻：用"定身术"写出被发现时的僵住' },
+      { text: '满城风雨', type: 'vocab', tip: '成语运用：形容引起很大的骚动' },
+      { text: '一个人的任性和贪玩，往往会给别人带来不必要的担忧', type: 'vocab', tip: '结尾点题：扣紧"自食其果"的主题，有反思深度' }
+    ],
+    content: [
+      '夜幕降临，一轮弯月高挂在天空中，柔和的月光洒在营地上。学校举办的露营活动正进行得热火朝天，同学们围着营火唱歌、拍手、跳舞，个个兴高采烈。',
+      '活动结束后，老师带领同学们回到宿舍休息。临睡前，老师特别提醒大家，不可以吵闹，更不可以偷偷玩手机。大家都点头答应，宿舍里很快便安静下来。',
+      '就在这时，一名同学无意间朝下看了一眼，突然发现小文的床铺空空的，连被子也不见了。原本安静的宿舍一下子骚动起来，大家纷纷坐起身来，东张西望。随着时间一点一点过去，同学们越来越着急，空气仿佛也凝固了。',
+      '老师得知后，马上带着几名同学沿着走廊四处寻找。当大家走到三号房门口时，老师忽然停下了脚步。房里隐隐传来窸窸窣窣的声音。老师轻轻推开房门，只见其中一张床上的被子鼓鼓的，被子的缝隙间还透出一丝微弱的亮光。',
+      '突然，老师一把掀开被子。只见小文和另一名同学正缩在被窝里，手中握着一部手机。两人顿时吓得脸色发白，整个人僵住了，仿佛被人施了定身术一般。',
+      '老师的脸色沉了下来。小文低着头，双手紧紧抓着被角，脸上一阵红一阵白，恨不得马上钻进地缝里。她原本只是贪玩，没想到却弄得满城风雨。',
+      '这件事让我明白，在集体生活中，任何人都不能只顾自己一时的快乐，而不顾别人的感受。小文因为一时贪玩，结果被老师抓个正着，还让大家虚惊一场，真是自食其果。'
+    ],
+    comment: '老师点评亮点：(1) 心理和气氛描写到位\u2014\u2014"担心\u2192紧张\u2192发现\u2192羞愧"情绪线清晰；(2) 结尾有分量\u2014\u2014扣紧"集体生活要守纪律"的道理；(3) 悬念设置巧妙\u2014\u2014先写"人不见了"，再揭晓"原来在被窝里"。'
+  },
+  {
+    id: 'class', title: '课室风波', type: '看图作文', icon: '\uD83C\uDFC0',
+    meta: 'P5 高华 \u00B7 约700字 \u00B7 看图作文',
+    highlights: [
+      { text: '像一只脱缰的野马似的', type: 'good', tip: '比喻：把飞出的篮球比作脱缰野马，形象生动' },
+      { text: '安静得连一根针掉在地上都听得见', type: 'vocab', tip: '夸张：极写出事后的寂静，和之前的欢闹形成对比' },
+      { text: '恨不得地上立刻裂开一条缝让自己钻进去', type: 'good', tip: '夸张的心理描写：把害怕和后悔写得很传神' },
+      { text: '神情严肃得像暴风雨来临前的天空', type: 'good', tip: '比喻：用天气写老师的表情，气氛感拉满' },
+      { text: '知错能改，善莫大焉', type: 'vocab', tip: '引用名言：增添文章的思想深度' }
+    ],
+    content: [
+      '一天早上，小明和大华在课室里玩篮球。他们把球抛来抛去，玩得非常开心。这时，黄老师朝课室走了过来\u2026\u2026',
+      '\u201C来呀！把球传给我！\u201D大华一边挥着双手，一边兴奋地喊道。\u201C看我的！\u201D小明得意洋洋地说完，便使劲把篮球朝大华扔去。那颗篮球像一只脱缰的野马似的，猛地飞了出去。大华连忙张开双手，想把球接住，没想到球速太快，他竟扑了个空。',
+      '只听见\u201C砰\u201D的一声巨响，篮球不偏不倚地撞上了窗户。顿时，玻璃碎片四处飞溅，散落一地。原本充满欢笑声的课室，一下子安静得连一根针掉在地上都听得见。',
+      '小明和大华顿时愣在原地，脸上的笑容一下子凝固了。小明的手心直冒冷汗，心想：\u201C糟了！这下可闯大祸了！\u201D大华也慌了，恨不得地上立刻裂开一条缝让自己钻进去。',
+      '就在这时，黄老师走进了课室。她看见地上的玻璃碎片，神情严肃得像暴风雨来临前的天空。\u201C小明！大华！这到底是怎么一回事？\u201D黄老师厉声问道。',
+      '小明鼓起勇气说：\u201C老师，对不起。我们不应该在课室里玩篮球。\u201D黄老师语重心长地说：\u201C课室是学习的地方，不是玩球的地方。万一玻璃碎片飞到别人身上，后果不堪设想！\u201D',
+      '经过这次教训，小明和大华深深明白了：做人不能只顾一时贪玩，更不能在不适当的地方做危险的事。知错能改，善莫大焉。'
+    ],
+    comment: '老师点评公式：看图作文 = 看清图意 + 展开想象 + 写出对话 + 点明道理。这篇范文的高分秘诀：(1) 声音描写\u201C砰\u201D制造冲击力；(2) 前后对比（欢笑\u2192寂静）；(3) 对话推动情节；(4) 结尾引用名言。'
+  },
+  {
+    id: 'camp', title: '露营惊魂', type: '记叙文', icon: '\uD83C\uDFD5\uFE0F',
+    meta: 'P5 高华 \u00B7 约800字 \u00B7 记叙文',
+    highlights: [
+      { text: '打开回忆的匣子，里面装着许多五彩缤纷的往事', type: 'good', tip: '经典开头法：用"打开回忆的匣子"引出回忆，形象而不落俗套' },
+      { text: '一阵低沉而可怕的叫声从不远处的树林深处传来', type: 'vocab', tip: '听觉描写：制造恐怖气氛' },
+      { text: '吓得脸青唇白，浑身发抖', type: 'vocab', tip: '成语描写：生动写出恐惧的生理反应' },
+      { text: '急得像热锅上的蚂蚁', type: 'good', tip: '比喻（俗语）：简洁有力地写出焦急心理' },
+      { text: '只有保持冷静，听从大人的指示，才能化险为夷', type: 'vocab', tip: '结尾点题：用"化险为夷"收束全文，道理明确' }
+    ],
+    content: [
+      '打开回忆的匣子，里面装着许多五彩缤纷的往事。有的早已随风飘散，有的却深深地刻在我的脑海里。最令我难以忘怀的，莫过于那次惊心动魄的露营经历。',
+      '那是一个阳光灿烂的星期天早晨，我和小宝、小白、小乐跟着营地管理员到深山里露营。一到目的地，大家便兴致勃勃地忙了起来。有的搭帐篷，有的搬行李，还有的捡树枝，准备晚上生火。',
+      '时间过得飞快，转眼间，夜幕悄悄降临。四周渐渐暗了下来，只有营火发出微弱的光。树林里静得出奇，偶尔传来几声虫鸣。忽然，一阵低沉而可怕的叫声从不远处的树林深处传来，紧接着，草丛也不停地晃动起来。',
+      '\u201C那\u2026\u2026那是什么声音？\u201D小白结结巴巴地问道，脸色一下子变得苍白。还没等管理员开口，草丛里竟出现了一个庞大的黑影。大家顿时吓得脸青唇白，浑身发抖，我的心也一下子提到了嗓子眼。',
+      '\u201C快跑啊！\u201D不知是谁大喊了一声，我们立刻拔腿就跑。就在这时，小乐因为跑得太急，被树根绊倒了，重重地摔在地上。她的膝盖擦破了皮，鲜血直流，疼得她哇哇大哭。看到这一幕，我急得像热锅上的蚂蚁，不知如何是好。',
+      '就在大家不知所措时，营地管理员赶来了。他压低声音说：\u201C大家别慌，那不是凶猛的野兽，而是一头经过的大象。你们跟紧我，慢慢退回营地。\u201D管理员一边留意大象的动静，一边小心翼翼地带着我们往回走。',
+      '这件事虽然已经过去很久了，但每当我想起那个漆黑的夜晚，仍然心有余悸。经过这次露营惊魂，我明白了：遇到危险时，千万不能惊慌失措，只有保持冷静，听从大人的指示，才能化险为夷。'
+    ],
+    comment: '范文结构公式：(1) 开头引出回忆 \u2192 (2) 背景铺垫（快乐场景） \u2192 (3) 转折（恐怖来袭） \u2192 (4) 高潮（发现+受伤） \u2192 (5) 解决（大人出手） \u2192 (6) 结尾点题。成语运用密度高：惊心动魄、兴致勃勃、脸青唇白、心有余悸、化险为夷。'
+  },
+  {
+    id: 'maldives', title: '心留在那片海\u2014\u2014马尔代夫', type: '游记', icon: '\uD83C\uDFDD\uFE0F',
+    meta: 'P5 高华 \u00B7 约3000字 \u00B7 游记',
+    highlights: [
+      { text: '海面上波光粼粼像钻石一样闪耀', type: 'good', tip: '比喻：把波光比作钻石，画面璀璨夺目' },
+      { text: '就像上帝打翻的蓝色系颜料盘', type: 'good', tip: '绝佳比喻：用\u201C颜料盘\u201D写出海水层次分明的色彩，想象力丰富' },
+      { text: '钓鱼不是一件简单的事，需要有足够的耐心和经验', type: 'vocab', tip: '借爷爷的话点出道理，让叙事有深度' },
+      { text: '仿佛像一个自由的舞者找到了知音', type: 'good', tip: '拟人+比喻：把魔鬼鱼比作舞者，生动有趣' },
+      { text: '失之交臂，我的心猛地一沉', type: 'vocab', tip: '成语+心理描写：写出抓蟹失败的失落感' },
+      { text: '煮熟的鸭子又飞了', type: 'vocab', tip: '俗语运用：生动幽默地写出到手的螃蟹又跑了' },
+      { text: '我克服了心理巨大的障碍，一股自豪涌上心头', type: 'good', tip: '心理描写：从犹豫到自豪，情感转变自然' },
+      { text: '宛如一幅流动的水彩画', type: 'good', tip: '比喻：把海底景色比作水彩画，梦幻唯美' },
+      { text: '仿佛像春运火车站一样繁忙', type: 'good', tip: '比喻幽默又贴切：用春运写鲨鱼抢食的壮观场面' },
+      { text: '让我杀出一条\u201C血路\u201D能够独自虎口脱险', type: 'vocab', tip: '成语连用：\u201C杀出血路\u201D\u201C虎口脱险\u201D，气势十足' }
+    ],
+    content: [
+      '周六早上，妈妈、哥哥、外婆和我终于前往机场，去参加期待已久的\u201C九月假期马尔代夫之旅\u201D。8点钟左右，我们到达了机场，走向登机口集合。远处，我就看到了传说中的学霸\u2014\u2014云云。她的爸爸就是这次活动的发起人\u2014\u2014小菜叔叔。我发现，云云比视频里更清瘦，而小菜叔叔略显强壮。他们一家人都看起来很和善，热情地和大家打招呼。很快，广播通知大家登机。登上飞机后，我惊讶地发现，我们两家的座位居然特别近，真幸运！坐下后，我开始扫视四周，观察团里的其它的孩子。在我的左前方坐着一个很特别的男孩子\u2014\u2014他外表很绅士温文尔雅，戴着一副眼镜，拿着一本笔记本在窗户旁奋笔疾书。他刷刷的写字声让我觉得他仿佛已经忘了这是在一场旅途中。我不时好奇的盯着他，心想：他的妈妈和飞机上90%的人都在看电影，而他这是怎么做到的专注力，我心生敬佩。',
+      '经过4.5小时的飞行我们到达了首都马累维拉纳国际机场，下飞机后就是码头。我们拿着行李登上托尼船前往母船。引入眼帘的蓝天让我彻底沉醉，清新的海风柔软的云朵，海面上波光粼粼像钻石一样闪耀。远处的海水层次分明，我惊讶的发现海水不是单一的颜色，而是层层铺开，就像上帝打翻的蓝色系颜料盘。近处透明的像玻璃隐约可以见底；再远些变成宁静的蓝；最远处则是颜色浓重的深蓝。海风迎面吹来，仿佛在和每一个远道而来的客人招手，瞬间让大家不禁感叹，\u201C这里真美啊！\u201D很快，我们到达自己的游艇，并登上船。船员们早早就准备好了冰镇果汁和新鲜的大串香蕉。放好行李后，在好奇心的驱使下，我们把整条船的四层逛了个遍。这是我第一次在船上住宿，虽然我有点担心会晕船，但是听见爸爸说越大的船会越稳后，我马上松了一口气。',
+      '小菜叔叔说，第一天，我们先和大家熟悉一下，然后可以叫上好朋友一起来钓鱼。幸运的话，晚上还能加个餐。听到这句话，我们每个人脸上都洋溢着开心地笑容。我本以为我们要使用鱼竿钓鱼，却发现我们居然只需要一卷鱼线！船员帮我们挂上鱼饵后，我因为不熟练便马马虎虎，模仿着大人们扔鱼饵钓鱼。我发现并不需要把鱼饵扔得很远，可以直接把它垂直地放入海里。船员说，先把鱼线放到海底，再把线往下拉个四五圈，最后静等鱼儿上钩。刚开始，我觉得钓鱼很简单，还在脑补被大鱼拉进海里的场景。我心想，我有没有可能会跟着它冲起浪来？我越想越好笑，不禁笑出声音来。事实上，漫长的等待让我慢慢失去信心。但是我突然想起爷爷说的话，钓鱼不是一件简单的事，需要有足够的耐心和经验。如果你老是玩弄鱼线，被惊动的鱼儿就不会上钩；如果你分心了，鱼饵就会被鱼偷偷吃掉，只能功亏一篑。不知不觉的，一个小时过去了。我看着同伴们一条接一条的收获，我心里非常沮丧。突然我的线微微地动了几下，我揉揉眼睛，集中注意力。我谨慎地握着我手中的线，这时幅动越来越大，拉扯感非常强！我赶紧迅速收线。船员发现了，赶快过来帮忙。我们俩用力一拽，一条大鱼飞出了水面！只听啪啪几声，大鱼的鱼尾拍着甲板，让我兴奋极了，开心地喊道：\u201C今天可以加餐了！\u201D晚餐时间，新鲜的清蒸东星斑鱼已经端上餐桌，我迫不及待地拿起餐具，大家都狼吞虎咽地开吃了起来。我夹了一块鱼肚子上的肉，沾了一点汤汁，放到嘴巴里。那条鱼肉质嫩滑，味道鲜美，大家都纷纷赞不绝口！',
+      '晚上，我和朋友们躺在船上的甲板上，享受着凉爽的海风。我们仰望着星空，看着无边无际的印度洋海峡，不禁感叹人类的渺小宇宙的浩瀚。随后，我们回去了各自的房间躺到床上慢慢地闭上眼睛。',
+      '三个小时的时差让我第二天早早就起床了。吃完早餐后，我们坐上快艇去长尾沙滩做简单的浮潜练习。下午，我们去了一个很多断崖式的水域，让我初步感受到海底生物的多样性。身边一条条鱼儿川流不息，有的身体细长，颜色亮得发光；有的长着尖尖嘴巴，往前伸出去，好像一支小管子。这些鱼的样子看起来十分独特。我忍不住跟着它的方向游去，只见它在珊瑚丛中钻来钻去，像一只调皮的小精灵。在不远处，我看见一只魔鬼鱼潜伏在海底，它的身体很宽，好像一只展开的大风筝，轻轻摆动就能在水里自由自在地滑行。看见我们拿摄像机来拍摄它居然玩起了杂技，不停地在我们面前翻滚，仿佛像一个自由的舞者找到了知音。在水下的一个小时过的异常快，被潜导带上来的那一刻我依依不舍。海底的画面已经牢牢的刻入我的心里！',
+      '夕阳西下，经过短暂的休息我们整装待发去无人岛抓螃蟹，上岛后大家迫不及待地拎着桶，先侦查地形，然后分成多个小组开始行动。我选择和一个看上去很有经验的叔叔一起组队，他带着我去海滩边礁石比较多的地方找，于是，我弯下腰手忙脚乱地翻起各种石头，眼睛还死死地盯着石缝，望眼欲穿地盯着小螃蟹的踪影，我心里像有一只小鼓在\u201C咚咚\u201D在跳，生怕慢一步就错过了。只见石头刚一掀起，我眼睁睁地看着一只沙蟹\u201C嗖\u201D的一声窜进沙洞里，失之交臂，我的心猛地一沉，刚才的兴奋像泄了气的气球，瞬间瘪下去，我生气的在原地直跺脚。叔叔安慰我说，别泄气那只是一只小沙蟹，我们再去找更大的，明天早上煮海鲜粥。就在这时又有一只幽灵蟹探头探脑从洞里爬出，我拿起长长的尖嘴钳毫不犹豫地冲上去夹住它的外壳。我兴奋地一蹦三尺高，结果煮熟的鸭子又飞了。我恨不得立刻钻进沙洞里，把那只螃蟹亲自拽出来。我重振旗鼓，屏住呼吸，目不转睛地盯着沙滩，不敢再像之前一样大意，果然，又有一只更大的幽灵蟹慢慢吞吞地从沙洞里爬出，这时我小心翼翼地弯下腰，不敢打草惊蛇，动作轻地连沙子都不敢惊动，手指缓缓靠近，心\u201C砰砰\u201D直响，仿佛下一秒就要跳出胸口，终于，机会来了，我猛合十双手，把螃蟹牢牢地抓在掌心。那一刻我的心从嗓子眼掉到胸口，终于松了一口气，我的手心又热又痒，但我却舍不得松开，怕又重蹈覆辙，看着张牙舞爪的小家伙，我兴奋地几乎要跳起来，心里乐开了花，慢慢的有成就感。之后我熟练掌握了技巧，夜幕降临很快也退潮了，海滩上的螃蟹也开始越来越多，看着小伙伴们都洋溢着开心地笑容满载而归，真的是意犹未尽。',
+      '昨天在海滩上，我和螃蟹们斗智斗勇，收获满满，而今天我们要换一种方式去接近大海，潜导带着我们穿上潜水装备，背上沉甸甸的氧气罐去体验十米左右的深潜，开启一场新的冒险。我站在船舷上，看着一望无际的大海，感觉开始心里有点慢慢打退堂鼓犹豫不决。一面想着不愿损失这么好的机会，毕竟那可是美金，应该是笔不小的费用；一面又在逼自己向前，如果不尝试怎么知道自己会不会成功呢！终于我还是硬着头皮跳入深不见底的海水中，那一瞬间，我克服了心理巨大的障碍，一股自豪涌上心头\u2014\u2014我竟然做到了，心里既惊又喜。我刚潜下去的时候，耳膜被海水压的非常刺疼，于是，我按照潜导教的方法捏住鼻子做耳压，瞬间，耳朵像打了气一样慢慢鼓起来。随着教练的手势提醒，我慢慢调整呼吸，用嘴一吸一呼，渐渐找到节奏。刚开始下水时，还有一丝温热，每下潜一米海水就会冰一分。阵阵寒意直逼我的骨头里，四五米之后，当身体习惯这股冷意，冰凉感反而成了一种刺激，整个神经都被唤醒，感觉自己已经属于海洋的一部分。忽然眼前闪过一群五彩斑斓的鱼在珊瑚丛中轻轻摇曳，宛如一幅流动的水彩画。时而钻进缝隙，时而又成群结队地游出来。阳光透过水面洒在深海，照得它们的鳞片闪闪发亮，把海底装点成一座梦幻的花园。此刻的画面让我忘记所有的紧张和不适都。在那一刻通通抛入脑后，忘记时间的流逝。教练拍了拍我的肩膀，示意我上浮。我依依不舍地抬头，随着身体一点点上升，阳光越来越耀眼，耳边渐渐传来船上的喧闹声\u2014\u2014我回到了现实。登上船我的心情久久不能平复，感觉人虽然在船上但是心却还留在海底了。那一晚我带着海底的回忆进入梦乡。',
+      '第二天清晨，又有新的惊喜在等着我\u2014\u2014追逐海豚。我一直想着能不能真的看到这些海洋精灵。潜导说海豚常常会出现在这一片海域，但也要看运气。我满怀期待，不停望着远方的海面，眼睛几乎都舍不得眨。船渐渐开远，我看见的只是无边的渐变蓝。海浪轻轻拍打船身，发出\u201C隆隆隆\u201D的声音。我有点失望，心想：也许今天真的没有机会了。周围那么安静，只有风吹过和水声。我开始慢慢泄气，时间一分一秒地过去，我几乎想要放弃继续寻找。看着空荡荡的海面，我心里叹了口气，告诉自己：\u201C算了，可能今天见不到海豚了。\u201D可就在这时，海面溅起一大团水花！我猛地抬起头，正好看到一只海豚高高地跃出海面。它的身体在阳光下闪着亮光，像一条弯弯的弧线，然后\u201C扑通\u201D一声落回水里。那一刻，我整个人都惊呆了，心脏跳得特别快。我兴奋得大声喊出来，感觉刚才所有的失望一下子都被冲走了。海豚的出现就像一份意外的礼物，我们发现海豚喜欢在船头的甲板地下游泳。最幸运的是，我们竟然看到了一个海豚跃出水面，并且在空中华丽地转了一个圈，再跳回水里！我觉得今天简直是运气爆棚！',
+      '当然如果你要问我，整个旅程最刺激的点是在哪里？我会义无反顾地告诉你一定是和护士鲨一起自由潜！起初刚下水时，我们并没有意识到有很多大家伙，只有潜到水底才稀疏看到几条护士鲨。过了一会儿，当船员拿来几条新鲜的鱼，切碎后不停地在海里摇摆来吸引护士鲨。不一会儿，这一举动吸引了几十条鲨鱼过来，瞬间就包围了我们。我又害怕又激动，我仔细地看着这些大家伙，它的皮肤灰白色，身长大约两米左右。当它们蜂拥而上抢鱼吃的时候，场面太壮观，仿佛像春运火车站一样繁忙。于是，弱小的我被护士鲨庞大的身躯撞来撞去。我第一次跟这么大鱼类动物有肢体接触。它的嘴巴旁边有2个细长的胡须，远远看去像牙齿一样。但他们真正的牙齿并不像普通的鲨鱼一样，又尖又锋利。它们并不会张着血盆大口。但由于数量的庞大，我的心一直全程悬着。我怕我的脚蹼不小心伤害到它，因为它们都纷纷簇拥聚集在围船尾等投喂导致我们无法回船，我一心只想拼出一条上岸的路。场面一度混乱。也不知道哪里来的力气，我奋勇而上，居然让我杀出一条\u201C血路\u201D能够独自虎口脱险，我不得不佩服自己的勇气，上岸后站在船尾看着那在蜂拥抢食的护士鲨仍旧心有余悸！这样刻骨铭心的记忆实在让人难以忘怀！',
+      '短短几天的马尔代夫之旅虽然结束了，但那片碧海蓝天已经深深刻在我心里。踏上回新加坡的飞机上我闭上眼睛脑海里不时的回忆起浮在水里的画面和小伙伴们玩\u201C兔人杀\u201D的场景，这趟旅行，不只是快乐的回忆，更是收获了更多的友谊，也丰富了我的人生经历！期待下一个假期和小伙伴们的美好相遇！'
+    ],
+    comment: '老师点评亮点：(1) 游记结构完整\u2014\u2014按时间线串联钓鱼、浮潜、抓蟹、深潜、追海豚、鲨鱼自由潜六大活动；(2) 比喻丰富新颖\u2014\u2014\u201C上帝打翻的颜料盘\u201D\u201C春运火车站\u201D\u201C流动的水彩画\u201D；(3) 心理描写层次丰富\u2014\u2014从好奇\u2192期待\u2192紧张\u2192自豪\u2192恐惧\u2192释然，情感线索清晰；(4) 成语/俗语运用密度高\u2014\u2014波光粼粼、狼吞虎咽、失之交臂、煮熟的鸭子飞了、打草惊蛇、重蹈覆辙、心有余悸、虎口脱险等；(5) 结尾升华到友谊和成长，主题有温度。'
+  }
+];
+
+// =========================================================
+// MODEL ESSAY LIBRARY (8 PSLE-level model essays)
+// =========================================================
+var MODEL_ESSAYS = [
+  {
+    id: 'regret1', title: '一件令我后悔的事', type: '记叙文', icon: '\uD83D\uDE1E', wordCount: 420,
+    meta: 'P6 华文 \u00B7 420字 \u00B7 记叙文',
+    highlights: [
+      { text: '我的心像被一只无形的手狠狠揪了一下', type: 'good', tip: '比喻：用"无形的手"写内心的痛苦，具象化抽象情感' },
+      { text: '如坐针毡', type: 'vocab', tip: '成语运用：形容坐立不安，非常焦虑' },
+      { text: '眼眶里蓄满了泪水，像断了线的珍珠一样滚落下来', type: 'good', tip: '比喻：把泪珠比作珍珠，写出伤心的画面感' }
+    ],
+    content: [
+      '每当我看到书架上那个缺了一角的陶瓷小兔子，心里便涌起一股难以言喻的愧疚。那是外婆送给妹妹的生日礼物，而它的破损，正是因为我一时的冲动。',
+      '那天放学后，我因为考试没考好，心情十分烦躁。回到家，看见妹妹正小心翼翼地把那只陶瓷小兔子摆在书架上，嘴里还哼着歌。她兴高采烈地朝我喊道："哥哥你看！外婆送我的，好不好看？"我没好气地说了一句"有什么好看的"，便把书包重重地往沙发上一甩。',
+      '书包不偏不倚地撞上了书架，只听"啪"的一声，陶瓷小兔子从书架上掉了下来，耳朵缺了一角。妹妹愣了一秒，随后眼眶里蓄满了泪水，像断了线的珍珠一样滚落下来。她哇的一声大哭起来。',
+      '看到妹妹伤心的模样，我的心像被一只无形的手狠狠揪了一下。我知道这只小兔子对她来说有多重要。我如坐针毡地站在原地，嘴巴张了又闭，想道歉却怎么也开不了口。',
+      '妈妈闻声赶来，了解了事情的经过后，语重心长地对我说："心情不好可以理解，但不能把坏情绪发泄在别人身上。"那一刻，我羞愧得抬不起头来。',
+      '经过这件事，我深深地明白了：一个人不管遇到多大的挫折，都不应该迁怒于无辜的人。后悔是事后的事，而学会控制自己的情绪，才是真正的成长。'
+    ],
+    comment: '老师点评：(1) 叙事节奏好\u2014\u2014从心情烦躁\u2192冲动行为\u2192后果\u2192反思，因果链条清楚；(2) 细节到位\u2014\u2014"缺了一角的陶瓷小兔子"贯穿全文；(3) 心理描写细腻\u2014\u2014"如坐针毡""张了又闭"；(4) 结尾升华到"控制情绪"，道理扣题且有深度。'
+  },
+  {
+    id: 'growup1', title: '那一刻，我长大了', type: '命题作文', icon: '\uD83C\uDF31', wordCount: 450,
+    meta: 'P6 华文 \u00B7 450字 \u00B7 命题作文',
+    highlights: [
+      { text: '豆大的汗珠不停地从她额头上滚落', type: 'good', tip: '细节描写：用"豆大的汗珠"写出妈妈的辛苦和疲惫' },
+      { text: '鼻子一酸，眼泪差点夺眶而出', type: 'vocab', tip: '生理+心理描写：写出被触动的瞬间' },
+      { text: '她的手掌粗糙而温暖', type: 'good', tip: '触觉描写：用"粗糙"暗示辛劳，用"温暖"传递母爱' }
+    ],
+    content: [
+      '在我的记忆中，妈妈总是那个无所不能的超人。直到那个闷热的下午，我才真正理解了她肩上的重担。',
+      '那天，学校提早放学。我兴冲冲地跑回家，想给妈妈一个惊喜。推开门，却发现家里空荡荡的。正当我纳闷时，厨房传来一阵细微的声响。我悄悄走过去，只见妈妈正蹲在地上擦地板，豆大的汗珠不停地从她额头上滚落。她的背微微弓着，动作比平时慢了许多。',
+      '我正想叫她，却注意到妈妈的手。她的手掌粗糙而温暖，指关节因为长年做家务而微微发红。我的目光移到桌上，几份文件散落在一旁，旁边还有一杯已经凉透的咖啡。原来，妈妈白天上班，晚上还要加班写报告，周末又要打扫整个家。',
+      '看到这一幕，我的鼻子一酸，眼泪差点夺眶而出。我连忙走上前，轻声说："妈妈，我来帮你吧。"妈妈抬起头，先是一愣，然后露出了疲倦但欣慰的笑容。',
+      '那天下午，我帮妈妈擦完了地板，又把碗筷洗干净。妈妈坐在沙发上，笑着说："我的小男子汉长大了。"听到这句话，我心里暗暗发誓：从今以后，我要多帮妈妈分担家务，不再只顾自己玩乐。',
+      '那一刻，我仿佛一下子长大了。我明白了：长大不是个子变高，而是学会体谅身边最爱我们的人，懂得用行动去回报他们的付出。'
+    ],
+    comment: '老师点评：(1) 主题切题\u2014\u2014"那一刻"聚焦在一个具体的时间点上；(2) 五感运用佳\u2014\u2014视觉（汗珠、粗糙的手）、触觉（温暖）、听觉（细微声响）；(3) 以小见大\u2014\u2014从一次帮忙擦地板的小事，写出对母爱的理解；(4) 结尾点题到"体谅""回报"，升华自然不做作。'
+  },
+  {
+    id: 'gift1', title: '一个特别的礼物', type: '记叙文', icon: '\uD83C\uDF81', wordCount: 400,
+    meta: 'P6 华文 \u00B7 400字 \u00B7 记叙文',
+    highlights: [
+      { text: '一针一线都藏着外婆对我深深的爱', type: 'good', tip: '借物抒情：从具体的针线写到抽象的爱' },
+      { text: '如获至宝', type: 'vocab', tip: '成语运用：形容得到非常珍贵的东西' },
+      { text: '她眯起眼睛，嘴角微微上扬', type: 'good', tip: '神态描写：不说"高兴"，用表情传达情感，更细腻' }
+    ],
+    content: [
+      '生日那天，同学们送了我各种各样的礼物\u2014\u2014有最新款的文具盒、精美的零食大礼包，还有一本我一直想要的漫画书。然而，最让我感动的，却是一个看起来并不起眼的小布袋。',
+      '那天晚上，外婆笑眯眯地从身后拿出一个用花布包着的东西。她眯起眼睛，嘴角微微上扬，像一个藏着秘密的小孩。我好奇地打开，发现里面是一个手工缝制的笔袋。笔袋上绣着一只小猫咪，歪着脑袋，样子憨态可掬。',
+      '"外婆眼睛不太好了，缝了好几个晚上才缝好。"妈妈在一旁轻声说道。我仔细端详着笔袋上的每一条线，虽然针脚不算均匀，有的地方甚至有些歪斜，但每一针一线都藏着外婆对我深深的爱。',
+      '我如获至宝地把笔袋紧紧抱在怀里，跑到外婆面前大声说："外婆，这是我收到的最好的礼物！"外婆听了，笑得合不拢嘴，脸上的皱纹像一朵盛开的菊花。',
+      '从那以后，我每天都带着那个笔袋去上学。每当我打开它，就仿佛看到外婆在昏黄的灯光下一针一线缝制的身影。',
+      '这个笔袋让我明白了：最贵重的礼物并不是用金钱衡量的，而是用心和爱做成的。外婆的这份心意，我会永远珍藏在心底。'
+    ],
+    comment: '老师点评：(1) 对比手法出色\u2014\u2014精美礼物 vs 朴素笔袋，突出"心意最重要"的主题；(2) 借物抒情\u2014\u2014笔袋是载体，真正写的是亲情；(3) 神态描写到位\u2014\u2014外婆的笑容、眯眼细节让人物鲜活；(4) 结尾扣题\u2014\u2014"用心和爱做成的"照应题目"特别的礼物"。'
+  },
+  {
+    id: 'friend1', title: '我的好朋友', type: '记叙文', icon: '\uD83E\uDD1D', wordCount: 430,
+    meta: 'P6 华文 \u00B7 430字 \u00B7 记叙文',
+    highlights: [
+      { text: '他总是像一棵大树一样默默地站在我身旁', type: 'good', tip: '比喻：用"大树"写朋友的可靠和稳重' },
+      { text: '形影不离', type: 'vocab', tip: '成语运用：形容关系亲密，总在一起' },
+      { text: '他拍了拍我的肩膀，什么也没说，只是递给我一瓶水', type: 'good', tip: '动作描写：用无声的行动表达友情，比语言更有力' }
+    ],
+    content: [
+      '在我的生活中，有一个人，虽然他不善言辞，却总是在我最需要的时候出现。他就是我的好朋友\u2014\u2014阿明。从小学一年级起，我们就是形影不离的好伙伴。',
+      '阿明的个子不高，皮肤晒得黑黑的，一双浓眉大眼总是透着一股正气。他话不多，但每次开口都让人觉得踏实。他总是像一棵大树一样默默地站在我身旁，无论刮风下雨，从不动摇。',
+      '记得四年级那次运动会，我报名参加了八百米赛跑。比赛那天，烈日当空，跑到第三圈时，我的腿像灌了铅似的，每迈一步都无比艰难。最后，我只拿到了第五名。',
+      '走下跑道时，我的心情跌到了谷底。同学们都忙着庆祝其他项目的胜利，没有人注意到角落里垂头丧气的我。就在这时，阿明默默走过来。他拍了拍我的肩膀，什么也没说，只是递给我一瓶水。',
+      '那一刻，我心里涌起一阵暖意。他没有说"别难过""下次再来"这些安慰的话，但他的陪伴比任何话语都更有力量。喝了水后，我深吸一口气，对他说："明年我一定跑进前三名！"他咧开嘴笑了，用力地点了点头。',
+      '后来，阿明每天放学后都陪我在操场上练跑。他用手机帮我计时，跑完后还帮我分析哪里可以改进。终于，在五年级的运动会上，我拿到了第二名。',
+      '友情不在于每天说多少好听的话，而在于困难时默默的陪伴和无条件的支持。阿明教会了我：真正的好朋友，是那个在你失落时不离不弃，在你进步时由衷为你高兴的人。'
+    ],
+    comment: '老师点评：(1) 人物塑造鲜明\u2014\u2014通过外貌+性格+行动三维刻画，阿明的形象跃然纸上；(2) 叙事选材精准\u2014\u2014不写"什么都好"，聚焦"赛跑失败时的陪伴"一件事，以小见大；(3) 细节动人\u2014\u2014"拍肩膀、递水、什么也没说"比长篇大论的安慰更感人；(4) 结尾点出友情真谛，主题明确。'
+  },
+  {
+    id: 'race1', title: '一次难忘的比赛', type: '记叙文', icon: '\uD83C\uDFC3', wordCount: 440,
+    meta: 'P6 华文 \u00B7 440字 \u00B7 记叙文',
+    highlights: [
+      { text: '心跳加速得像一面被疯狂敲打的鼓', type: 'good', tip: '比喻：把心跳比作鼓声，写出极度紧张的状态' },
+      { text: '孤注一掷', type: 'vocab', tip: '成语运用：形容在关键时刻把所有力量集中到一次行动上' },
+      { text: '掌声像潮水一般涌来', type: 'good', tip: '比喻：把掌声比作潮水，写出欢呼的热烈和排山倒海之势' }
+    ],
+    content: [
+      '在我的小学生涯中，最让我难以忘怀的，莫过于那次华语演讲比赛。那不仅是一场比赛，更是一次让我重新认识自己的旅程。',
+      '比赛的前一个星期，老师突然找到我说："这次华语演讲比赛，我推荐你代表班级参加。"我一听，当即愣住了。我从小就害怕在众人面前讲话，一上台就紧张得说不出话来。可是看着老师期待的目光，我硬着头皮答应了。',
+      '接下来的日子，我每天对着镜子反复练习。妈妈当我的听众，帮我纠正发音和语气。爸爸则不断鼓励我："只要你全力以赴，无论结果如何，你都是最棒的。"',
+      '比赛那天，礼堂里坐满了人。轮到我上台时，我的心跳加速得像一面被疯狂敲打的鼓。走到麦克风前，我的手心全是汗。台下黑压压一片人头，我紧张得差点忘了开场白。',
+      '就在那一瞬间，我看到了坐在第三排的妈妈。她正微笑着对我竖起大拇指。那个简单的动作像一针强心剂，让我瞬间镇定下来。我深吸一口气，决定孤注一掷，把练了无数遍的稿子一字一句地讲出来。',
+      '随着演讲渐入佳境，我忘记了紧张，声音越来越洪亮，手势也越来越自然。当我说完最后一句话时，台下爆发出热烈的掌声。掌声像潮水一般涌来，那一刻，我的眼眶湿润了。',
+      '最终，我获得了第二名。虽然不是第一名，但我收获了比奖杯更重要的东西\u2014\u2014自信。这次比赛让我懂得了：每个人都有无限的潜力，只要敢于迈出第一步，就能发现一个更好的自己。'
+    ],
+    comment: '老师点评：(1) 心理变化线条清晰\u2014\u2014推辞\u2192紧张练习\u2192上台恐惧\u2192妈妈鼓励\u2192越讲越好\u2192感动；(2) 比喻精彩\u2014\u2014"鼓""强心剂""潮水"三个比喻层层推进；(3) 以"第二名"收尾更真实\u2014\u2014不是每个故事都必须拿第一，写出"成长比成绩重要"更有说服力；(4) 首尾呼应\u2014\u2014从"害怕讲话"到"获得自信"。'
+  },
+  {
+    id: 'rain1', title: '雨中的温暖', type: '记叙文', icon: '\u2614', wordCount: 410,
+    meta: 'P6 华文 \u00B7 410字 \u00B7 记叙文',
+    highlights: [
+      { text: '雨点像一粒粒豆子砸在屋檐上，发出噼里啪啦的响声', type: 'good', tip: '比喻+拟声：把雨点比作豆子，加上声音描写，画面和听觉兼具' },
+      { text: '浑身湿透了，像一只落汤鸡', type: 'vocab', tip: '比喻（俗语）：形象幽默地写出淋雨后的狼狈' },
+      { text: '一股暖流从心底涌了上来', type: 'good', tip: '心理描写：用"暖流"写感动，抽象情感具象化' }
+    ],
+    content: [
+      '那是一个乌云密布的下午。天空像蒙上了一层厚厚的灰布，闷得让人喘不过气来。我背着书包正准备回家，突然，天空毫无预兆地下起了倾盆大雨。',
+      '雨点像一粒粒豆子砸在屋檐上，发出噼里啪啦的响声。我没有带伞，只好缩在学校门口的遮雨棚下，焦急地等着雨停。可是，雨越下越大，丝毫没有要停的意思。',
+      '十分钟过去了，二十分钟过去了，同学们一个个被家长接走，遮雨棚下只剩下我一个人。我缩着脖子，看着路上的积水越来越深，心里又冷又急。',
+      '就在我几乎要冒雨冲回家时，一个熟悉的身影出现在雨帘中。是李叔叔\u2014\u2014住在我家楼下的邻居！他撑着一把黑色大伞，气喘吁吁地跑过来。',
+      '"小杰！你妈妈打电话给我，说她加班来不了，让我来接你。"李叔叔一边说，一边把伞递给我。我连忙道谢，和李叔叔共撑一把伞走在回家的路上。我注意到，伞大部分遮在我这一边，而李叔叔的右肩早已被雨淋湿了。',
+      '到了家，李叔叔的衣服已经湿了大半。他笑着说："回去换件衣服就好了，你赶紧进去喝碗热汤。"看着他转身离开的背影，一股暖流从心底涌了上来，我在心里默默说了一声："谢谢您，李叔叔。"',
+      '那场大雨虽然让我浑身湿透了，像一只落汤鸡，但李叔叔的善举却让我感受到了人与人之间最真挚的温暖。我懂得了：在别人需要帮助的时候伸出援手，就是最美的行为。'
+    ],
+    comment: '老师点评：(1) 环境渲染出色\u2014\u2014雨景从开头写到结尾，与"温暖"主题形成反差对比；(2) 叙事有悬念\u2014\u2014"一个人等\u2192越来越急\u2192熟悉身影出现"，节奏感好；(3) 细节感人\u2014\u2014"伞大部分遮在我这一边"一句胜过千言万语；(4) 结尾扣题\u2014\u2014"雨中"+"温暖"完美呼应标题。'
+  },
+  {
+    id: 'cook1', title: '第一次做饭', type: '记叙文', icon: '\uD83C\uDF73', wordCount: 430,
+    meta: 'P6 华文 \u00B7 430字 \u00B7 记叙文',
+    highlights: [
+      { text: '油烟像一条受惊的蛇，迅速窜了上来', type: 'good', tip: '比喻+拟人：把油烟比作蛇，生动写出厨房的手忙脚乱' },
+      { text: '手忙脚乱', type: 'vocab', tip: '成语运用：形容做事忙乱没有条理' },
+      { text: '虽然卖相不佳，但每一口都充满了成就感', type: 'good', tip: '转折句式：用"虽然\u2026但\u2026"写出内心的满足' }
+    ],
+    content: [
+      '妈妈常说，一个人如果连一顿饭都不会做，以后怎么照顾自己？于是，在一个阳光明媚的周末，我决定挑战人生中的"第一次做饭"。',
+      '我打开冰箱，左看右看，最终选定了最简单的菜\u2014\u2014西红柿炒鸡蛋。我信心满满地想：不就是把西红柿和鸡蛋放在一起炒嘛，能有多难？',
+      '然而，现实很快给了我一个"下马威"。我笨手笨脚地打鸡蛋，第一个蛋壳碎了一半掉进碗里，我只好像挑刺一样一片片把碎壳捞出来。切西红柿更是险象环生，刀在我手里像一个不听话的调皮鬼，好几次差点切到手指。',
+      '总算把材料准备好了，我往锅里倒了油，打开火。没一会儿，油烟像一条受惊的蛇，迅速窜了上来。我手忙脚乱地倒入蛋液，只听"刺啦"一声，金黄的蛋液在锅里迅速膨胀起来。我慌忙拿起锅铲翻炒，结果用力过猛，半个鸡蛋飞出了锅外。',
+      '接着，我加入西红柿继续翻炒，又倒了盐和糖。可是，我一不小心把盐多放了一大勺。等到出锅时，盘子里的菜看起来……有点惨不忍睹\u2014\u2014鸡蛋炒焦了一半，西红柿还有些生。',
+      '我端着盘子走到餐桌前，心里七上八下。妈妈尝了一口，先是皱了皱眉，然后笑着说："味道嘛，有进步的空间。但是，你愿意动手尝试，妈妈已经很开心了。"听了这话，我虽然卖相不佳，但每一口都充满了成就感。',
+      '第一次做饭让我明白了：任何事情看起来简单，做起来未必容易。只有亲自尝试，才能体会其中的酸甜苦辣。我暗下决心，下个周末，我要再做一次\u2014\u2014这一次，一定要做得更好！'
+    ],
+    comment: '老师点评：(1) 选材贴近生活\u2014\u2014"第一次做饭"是每个孩子都可能有的经历，容易引起共鸣；(2) 语言幽默\u2014\u2014"下马威""调皮鬼""半个鸡蛋飞出锅外"让人忍俊不禁；(3) 比喻形象\u2014\u2014"油烟像蛇""刀像调皮鬼"写出厨房新手的狼狈；(4) 结尾升华到"亲自尝试"的道理，且留有续写的空间。'
+  },
+  {
+    id: 'exam1', title: '考试风波', type: '记叙文', icon: '\uD83D\uDCDD', wordCount: 420,
+    meta: 'P6 华文 \u00B7 420字 \u00B7 记叙文',
+    highlights: [
+      { text: '教室里安静得只能听见笔尖在纸上沙沙作响', type: 'good', tip: '以声衬静：用"沙沙"的声音反衬考场的寂静和紧张' },
+      { text: '如释重负', type: 'vocab', tip: '成语运用：形容放下心中的大石头，释然轻松' },
+      { text: '时间像一个无情的裁判，正在一分一秒地倒数', type: 'good', tip: '比喻+拟人：把时间比作裁判，写出考试时的紧迫感' }
+    ],
+    content: [
+      '考试，对每个学生来说，都是一场没有硝烟的"战争"。而那次数学期末考试，更是让我经历了一场惊心动魄的风波。',
+      '考试铃声一响，教室里安静得只能听见笔尖在纸上沙沙作响。我翻开试卷，前面的题目还算顺利，我一路"过关斩将"。可是，当我翻到最后一页时，一道应用题让我彻底卡住了。',
+      '我盯着那道题，读了一遍又一遍，脑子里却一片空白。我偷偷看了看四周，发现其他同学都在埋头写着，似乎没有人被难住。我开始心慌起来，手心渗出了细密的汗珠。',
+      '时间像一个无情的裁判，正在一分一秒地倒数。眼看只剩下最后十五分钟了，我的额头冒出了冷汗。就在这时，我想起了数学老师常说的一句话："遇到难题不要慌，先跳过去做别的，回头再看往往就有思路了。"',
+      '我深吸一口气，先把其他会做的题全部检查了一遍。果然，当我再回过头来看那道难题时，突然灵光一闪\u2014\u2014原来只要换一种方法列方程式就行了！我奋笔疾书，赶在最后三分钟把答案写了上去。',
+      '交卷的铃声响起时，我如释重负地放下了笔，长长地呼出一口气。虽然不确定答案是否全对，但至少我没有留下空白。',
+      '这次考试风波让我深刻地领悟到：遇到困难时，最重要的不是一味死磕，而是学会调整心态、换个角度思考。冷静和变通，才是解决问题的最好办法。'
+    ],
+    comment: '老师点评：(1) 节奏感强\u2014\u2014从顺利\u2192卡住\u2192焦虑\u2192冷静\u2192解决，一波三折；(2) 环境和心理融合\u2014\u2014"安静的教室""沙沙声""汗珠"营造考场氛围；(3) 比喻形象\u2014\u2014"时间像裁判"写出紧迫感；(4) 结尾的道理\u2014\u2014"冷静和变通"不仅适用于考试，也适用于生活，主题有延展性。'
+  }
+];
+
+// =========================================================
+// SPINNER TOPICS (8 topics for the wheel)
+// =========================================================
+var TOPICS = [
+  { title: '一次与海的相遇', type: '记叙文', emoji: '\uD83C\uDF0A', essayId: 'sea', color: '#3498DB' },
+  { title: '自食其果', type: '命题作文', emoji: '\uD83D\uDCF1', essayId: 'fruit', color: '#E74C3C' },
+  { title: '课室风波', type: '看图作文', emoji: '\uD83C\uDFC0', essayId: 'class', color: '#27AE60' },
+  { title: '露营惊魂', type: '记叙文', emoji: '\uD83C\uDFD5\uFE0F', essayId: 'camp', color: '#E67E22' },
+  { title: '心留在那片海', type: '游记', emoji: '\uD83C\uDFDD\uFE0F', essayId: 'maldives', color: '#00B4D8' },
+  { title: '一件令我感动的事', type: '命题作文', emoji: '\uD83E\uDD79', essayId: null, color: '#9B59B6' },
+  { title: '校园里的那棵树', type: '记叙文', emoji: '\uD83C\uDF33', essayId: null, color: '#1ABC9C' },
+  { title: '迟到的生日礼物', type: '命题作文', emoji: '\uD83C\uDF81', essayId: null, color: '#E91E63' }
+];
+
+// =========================================================
+// QUIZ QUESTIONS
+// =========================================================
+var QUESTIONS = [
+  { type: '修辞手法', q: '"那颗篮球像一只脱缰的野马似的，猛地飞了出去。" 这句话用了什么修辞手法？', options: ['比喻', '拟人', '夸张', '排比'], answer: 0, explain: '把篮球比作脱缰的野马，这是比喻（明喻），用"像……似的"连接。' },
+  { type: '修辞手法', q: '"海浪轻轻拍打着沙滩，仿佛在奏着一首温柔的晨曲。" 用了哪些修辞手法？', options: ['比喻+拟人', '夸张+排比', '反问+设问', '对偶+排比'], answer: 0, explain: '"拍打"是拟人（海浪像人一样拍），"仿佛在奏着晨曲"是比喻。' },
+  { type: '好词好句', q: '下面哪个成语最适合形容"非常害怕"？', options: ['兴高采烈', '脸青唇白', '得意洋洋', '兴致勃勃'], answer: 1, explain: '"脸青唇白"形容因恐惧或寒冷而面色发青、嘴唇发白，最适合写害怕。' },
+  { type: '作文结构', q: '记叙文的经典结构顺序是什么？', options: ['开头\u2192经过\u2192结尾', '背景铺垫\u2192转折\u2192高潮\u2192解决\u2192点题', '议论\u2192举例\u2192总结', '提问\u2192回答\u2192补充'], answer: 1, explain: '记叙文要有铺垫、转折、高潮，最后点题升华，才有起伏感。' },
+  { type: '作文结构', q: '"打开回忆的匣子，里面装着许多五彩缤纷的往事。" 这种开头方式叫什么？', options: ['开门见山', '回忆引入法', '设问开头', '景物描写'], answer: 1, explain: '用"打开回忆""翻开记忆的相册"等引入，是经典的回忆引入法，适合写过去的事。' },
+  { type: '好词好句', q: '"恨不得地上立刻裂开一条缝让自己钻进去。" 这句话表达的是什么心情？', options: ['开心', '害怕', '羞愧/后悔', '愤怒'], answer: 2, explain: '这是经典的心理描写句式，表达极度羞愧、恨不得消失的心情。' },
+  { type: '修辞手法', q: '"阳光透过水面洒落下来，化作一束束流动的金线。" 这是什么修辞？', options: ['夸张', '比喻', '拟人', '反复'], answer: 1, explain: '把阳光比作"金线"，是暗喻。用"化作"而不是"像"，但本质仍是比喻。' },
+  { type: '好词好句', q: '下面哪句最适合写"结尾点题"？', options: ['"太阳下山了。"', '"我吃了一碗面。"', '"经过这件事，我明白了……"', '"第二天，一切照旧。"'], answer: 2, explain: '"经过这件事，我明白了……"是最常用的点题升华句式，让读者知道你从中学到了什么。' },
+  { type: '作文结构', q: '看图作文的基本公式是什么？', options: ['看清图意\u2192展开想象\u2192写出对话\u2192点明道理', '描写景物\u2192抒发感情', '先写结尾\u2192再写开头', '只写对话就好'], answer: 0, explain: '看图作文四步：看清图意（理解图片）\u2192展开想象（补充细节）\u2192写出对话（让人物说话）\u2192点明道理。' },
+  { type: '修辞手法', q: '"五彩缤纷的珊瑚铺展在海床上，有的像分枝的树木，有的像盛开的花朵，还有的像一团团柔软的蘑菇。" 除了比喻，还用了什么修辞？', options: ['排比', '拟人', '夸张', '反问'], answer: 0, explain: '"有的像\u2026\u2026有的像\u2026\u2026还有的像\u2026\u2026" 三个相同结构并列，是排比。排比+比喻组合使用，描写更生动。' },
+  { type: '好词好句', q: '"心里像压了一块大石头似的，沉甸甸的。" 用来形容什么心情？', options: ['轻松快乐', '沉重、担心', '生气', '无聊'], answer: 1, explain: '这是写心理负担/担忧的经典句式。"大石头"比喻压在心头的沉重感。' },
+  { type: '作文结构', q: '好的命题作文结尾应该做到什么？', options: ['越长越好', '扣题 + 写出感悟/道理', '重复一遍开头', '写"完"字'], answer: 1, explain: '结尾要"扣题"（呼应题目）+"升华"（写出你从中学到的道理），这样主题才站得稳。' },
+  { type: '修辞手法', q: '\u201C海面上波光粼粼像钻石一样闪耀\u201D\u201C就像上帝打翻的蓝色系颜料盘\u201D 这两句分别用了什么修辞？', options: ['排比+夸张', '比喻+比喻', '拟人+比喻', '夸张+排比'], answer: 1, explain: '第一句把波光比作钻石（明喻），第二句把海水颜色比作颜料盘（明喻），两个都是比喻。' },
+  { type: '好词好句', q: '\u201C煮熟的鸭子又飞了\u201D 这个俗语在文中表达什么意思？', options: ['鸭子真的飞走了', '到手的东西又失去了', '做饭失败了', '鸭子不好吃'], answer: 1, explain: '\u201C煮熟的鸭子飞了\u201D是俗语，比喻已经到手的东西又丢了。文中用来写抓到的螃蟹又逃跑了，幽默又贴切。' },
+  { type: '作文结构', q: '马尔代夫游记按什么顺序组织内容？', options: ['空间顺序', '时间顺序（按天数串联活动）', '倒叙', '插叙'], answer: 1, explain: '游记最常用的结构是时间顺序：第一天钓鱼\u2192第二天浮潜+抓蟹\u2192第三天深潜\u2192追海豚\u2192鲨鱼自由潜\u2192回程。按天数推进，读者一目了然。' }
+];
+
+// =========================================================
+// TOOLBOX DATA (EXPANDED)
+// =========================================================
+var TOOLBOX = {
+  '好词好句': [
+    { cat: '描写害怕', examples: ['脸青唇白、浑身发抖', '心一下子提到了嗓子眼', '吓得目瞪口呆', '我的脑海里一片空白'], tip: '写害怕时要写生理反应（脸色、手抖、心跳），比单纯写"我很害怕"更生动。' },
+    { cat: '描写开心', examples: ['兴高采烈', '个个神采飞扬', '心里别提有多开心了', '忍不住在心里为自己喝彩'], tip: '写开心不只是"我很开心"，可以写动作（跳起来）、表情（笑容）、想法。' },
+    { cat: '描写紧张', examples: ['空气仿佛也凝固了', '安静得连针掉到地上都听得见', '手心直冒冷汗', '心怦怦直跳'], tip: '紧张时周围变安静、身体有反应（冒汗、心跳加速），用环境衬托心理更高级。' },
+    { cat: '描写后悔', examples: ['恨不得地上裂开一条缝让自己钻进去', '羞愧得抬不起头来', '脸上一阵红一阵白', '心里满是懊悔'], tip: '后悔/羞愧要写得夸张一点，才能让读者感受到角色的情感强度。' },
+    { cat: '描写感动', examples: ['鼻子一酸，眼泪差点夺眶而出', '一股暖流从心底涌了上来', '喉咙像被什么东西堵住了似的', '心里涌起一阵说不出的感动'], tip: '感动的瞬间要放慢节奏、聚焦细节，让读者和你一起感受那一刻。' },
+    { cat: '描写愤怒', examples: ['气得脸红脖子粗', '怒目圆睁，双拳紧握', '火冒三丈', '恨不得把桌子掀翻'], tip: '愤怒要写得有层次：先写表情/动作变化，再写想法，最后写说的话或做的事。' }
+  ],
+  '修辞手法': [
+    { cat: '比喻', examples: ['篮球像一只脱缰的野马', '阳光化作一束束流动的金线', '被子鼓鼓的，像一座小山'], tip: '比喻 = 本体 + 喻体 + 相似点。用"像、仿佛、好像、如同"连接。' },
+    { cat: '拟人', examples: ['海浪轻轻拍打着沙滩', '夜幕悄悄降临', '微风轻轻吹拂着脸庞'], tip: '拟人 = 把物当人写。给非人事物加上人的动作、表情、心理。' },
+    { cat: '夸张', examples: ['安静得连针掉到地上都听得见', '恨不得钻进地缝里', '吓得魂飞魄散'], tip: '夸张不是说谎，是为了加强表达效果，故意放大或缩小。' },
+    { cat: '排比', examples: ['有的搭帐篷，有的搬行李，还有的捡树枝', '有的像树木，有的像花朵，还有的像蘑菇'], tip: '排比 = 三个或以上结构相同/相似的句子。让文章有节奏感和气势。' }
+  ],
+  '结构模板': [
+    { cat: '记叙文公式', examples: ['开头铺垫 \u2192 事件发展 \u2192 转折/冲突 \u2192 高潮 \u2192 解决 \u2192 结尾点题'], tip: '记叙文一定要有"起伏"，不能平铺直叙。有转折有高潮，文章才好看。' },
+    { cat: '经典开头法', examples: ['回忆引入：打开回忆的匣子\u2026\u2026', '环境描写：那是一个阳光灿烂的早晨\u2026\u2026', '开门见山：那件事，让我至今难以忘怀。', '设问开头：你有没有经历过让自己后悔莫及的事？', '对话开头："快跑啊！"不知是谁大喊了一声\u2026\u2026', '五感开头：空气中弥漫着淡淡的花香\u2026\u2026'], tip: '开头不要超过3句话，快速入题。环境开头可以用天气、时间、地点。' },
+    { cat: '经典结尾法', examples: ['点题升华：经过这件事，我明白了\u2026\u2026', '首尾呼应：回到开头的场景/意象', '感悟收束：这段经历，让我变得更\u2026\u2026了', '引用名言：知错能改，善莫大焉。', '留有余味：每当我看到那个小兔子，心里便\u2026\u2026', '展望未来：我暗下决心，从今以后\u2026\u2026'], tip: '结尾一定要"扣题"+"升华"。扣题=呼应标题，升华=写出道理或成长。' },
+    { cat: '看图作文模板', examples: ['看清图意 \u2192 展开想象 \u2192 声音描写("砰"的一声) \u2192 对话推动 \u2192 点明道理'], tip: '看图作文的秘诀：图上没画的要靠想象补充（心理活动、对话、声音、气味）。' }
+  ],
+  '过渡词语': [
+    { cat: '时间过渡', examples: ['第二天一早\u2026\u2026', '不知不觉\u2026\u2026', '转眼间\u2026\u2026', '过了好一会儿\u2026\u2026', '就在这时\u2026\u2026', '随着时间一分一秒地过去\u2026\u2026'], tip: '时间过渡词让读者知道故事进展到了哪里，是叙事的"导航仪"。' },
+    { cat: '转折过渡', examples: ['然而\u2026\u2026', '可是\u2026\u2026', '没想到\u2026\u2026', '出乎意料的是\u2026\u2026', '谁知\u2026\u2026', '就在我以为一切顺利的时候\u2026\u2026'], tip: '转折是记叙文的灵魂！没有转折的文章像一碗白开水，加了转折才有滋味。' },
+    { cat: '因果过渡', examples: ['因此\u2026\u2026', '于是\u2026\u2026', '正因为如此\u2026\u2026', '这一切都是因为\u2026\u2026', '难怪\u2026\u2026'], tip: '因果关系让文章逻辑更清晰，读者能跟上你的思路。' },
+    { cat: '递进过渡', examples: ['不但\u2026\u2026而且\u2026\u2026', '更重要的是\u2026\u2026', '不仅如此\u2026\u2026', '甚至\u2026\u2026', '更让我没想到的是\u2026\u2026'], tip: '递进让情感或事件层层加深，像"加辣"\u2014\u2014一层比一层强烈。' },
+    { cat: '总结过渡', examples: ['总而言之\u2026\u2026', '经过这件事\u2026\u2026', '回想起来\u2026\u2026', '这段经历让我\u2026\u2026'], tip: '总结过渡词常用在结尾段落的开头，引出全文的感悟和道理。' }
+  ],
+  '环境描写': [
+    { cat: '学校', examples: ['琅琅的读书声从教室里传出来', '操场上同学们的欢笑声此起彼伏', '走廊里贴满了五颜六色的画作', '阳光透过窗户洒在课桌上，形成一片金色的光斑'], tip: '写学校场景可以用声音（读书声、铃声）+视觉（操场、教室）+人物活动来营造氛围。' },
+    { cat: '家里', examples: ['厨房里飘出阵阵饭菜的香味', '客厅的灯光柔和而温暖', '窗台上的绿萝垂下长长的枝条', '老旧的时钟发出"滴答滴答"的声音'], tip: '写家的温馨感：用嗅觉（饭菜香）、视觉（灯光）、听觉（时钟声）营造"家的味道"。' },
+    { cat: '公园', examples: ['花坛里百花争艳，蝴蝶在花间翩翩起舞', '湖面平静如镜，倒映着岸边的垂柳', '老人们在石凳上下棋，小孩子在草坪上追逐嬉闹', '微风拂过，带来一阵淡淡的桂花香'], tip: '公园适合写"和平美好"的场景，用花草+人物活动+气味来渲染。' },
+    { cat: '海边', examples: ['海面上波光粼粼，像撒了一层碎银', '浪花一波接一波地涌上沙滩，又慢慢退了回去', '远处的海天相接，分不清哪里是海、哪里是天', '咸咸的海风迎面吹来，夹杂着海藻的气味'], tip: '海边场景的"五感大礼包"：看波光、听海浪、闻咸味、触海风、尝海水。' },
+    { cat: '雨天', examples: ['天空乌云密布，像蒙上了一层厚厚的灰布', '雨点像一粒粒豆子砸在屋顶上', '路上的积水映出了灰蒙蒙的天空', '雨后的空气格外清新，叶子上挂着晶莹的水珠'], tip: '雨天是制造气氛的"神器"\u2014\u2014大雨=紧张/困难；小雨=忧伤/思念；雨后=希望/转机。' },
+    { cat: '夜晚', examples: ['夜幕降临，一轮明月高挂天空', '远处传来几声蛙鸣和蟋蟀的叫声', '路灯发出昏黄的光，把影子拉得长长的', '漆黑的夜空中繁星点点，像无数只眨眼的小精灵'], tip: '夜晚场景适合写"安静""恐怖""美好"等不同情绪，关键看你用什么词来渲染。' }
+  ],
+  '人物描写': [
+    { cat: '外貌描写', examples: ['她的眼睛又大又亮，像两颗黑葡萄', '他的脸晒得黑黑的，露出一排洁白的牙齿', '外婆脸上的皱纹像一朵盛开的菊花', '他高高瘦瘦的，总是穿着一件洗得发白的校服'], tip: '外貌描写不是从头写到脚！抓住最突出的1-2个特征就够了，要有辨识度。' },
+    { cat: '动作描写', examples: ['他猛地站了起来，椅子被推得"吱"一声响', '她小心翼翼地捧起那只小鸟，生怕弄疼了它', '他三步并作两步冲上楼去', '她一把抢过试卷，眼睛飞快地扫了一遍'], tip: '动作描写要用"准确的动词"\u2014\u2014"抢"比"拿"有力，"冲"比"走"有速度感。' },
+    { cat: '神态描写', examples: ['她眉头紧皱，嘴唇抿成一条线', '他的眼眶红红的，泪水在眼眶里打转', '妈妈的脸色一下子沉了下来', '老师微笑着点了点头，眼里满是赞许'], tip: '神态描写 = 表情 + 眼神 + 嘴巴/眉毛的变化。不要写"他很生气"，要写"他的脸涨得通红"。' },
+    { cat: '语言描写', examples: ['他结结巴巴地说："对……对不起。"', '"你怎么回事！"老师厉声问道。', '妈妈语重心长地说："孩子，做人要诚实。"', '"太好了！"我兴奋地大喊一声。'], tip: '语言描写要配合"说话方式"\u2014\u2014厉声、轻声、语重心长、结结巴巴\u2014\u2014让读者"听"到角色怎么说话。' }
+  ]
+};
+
+// =========================================================
+// OUTLINE BUILDER DATA
+// =========================================================
+var OB_TOPICS = [
+  { title: '一件令我后悔的事', type: '记叙文', emoji: '\uD83D\uDE1E' },
+  { title: '那一刻，我长大了', type: '命题作文', emoji: '\uD83C\uDF31' },
+  { title: '一个特别的礼物', type: '记叙文', emoji: '\uD83C\uDF81' },
+  { title: '我的好朋友', type: '记叙文', emoji: '\uD83E\uDD1D' },
+  { title: '一次难忘的比赛', type: '记叙文', emoji: '\uD83C\uDFC3' },
+  { title: '雨中的温暖', type: '记叙文', emoji: '\u2614' },
+  { title: '第一次做饭', type: '记叙文', emoji: '\uD83C\uDF73' },
+  { title: '考试风波', type: '记叙文', emoji: '\uD83D\uDCDD' },
+  { title: '一件令我感动的事', type: '命题作文', emoji: '\uD83E\uDD79' },
+  { title: '校园里的那棵树', type: '记叙文', emoji: '\uD83C\uDF33' }
+];
+
+var OB_TEMPLATES = [
+  {
+    name: '五段式记叙文',
+    flow: '开头 \u2192 铺垫 \u2192 高潮 \u2192 转折 \u2192 结尾点题',
+    sections: [
+      { title: '开头', question: '怎么吸引读者？用什么方式开头？', tips: '开头技巧：五感描写（至少写2种感官）、设问开头、对话开头、回忆引入法。开头不要超过3句话，快速入题。', examples: ['"打开回忆的匣子，里面装着许多五彩缤纷的往事。"\u2014\u2014回忆引入法', '"清晨的亚庇，天空才刚刚泛白，海边的空气清新而湿润。"\u2014\u2014环境+五感描写', '"快跑啊！"不知是谁大喊了一声\u2014\u2014对话开头，制造悬念'] },
+      { title: '铺垫', question: '交代背景：故事发生在什么时候？什么地方？有谁？', tips: '铺垫要为高潮做准备。写好铺垫的秘诀：人物出场（外貌+性格暗示）、环境气氛（快乐/平静/紧张）、事件的起因。', examples: ['"那是一个阳光灿烂的星期天早晨，我和小宝、小白跟着管理员到深山里露营。"\u2014\u2014交代时间+地点+人物', '"我信心满满地想：不就是把西红柿和鸡蛋放在一起炒嘛，能有多难？"\u2014\u2014为后面的"翻车"埋下伏笔'] },
+      { title: '高潮', question: '最精彩/最紧张的时刻是什么？发生了什么事？', tips: '高潮要放慢节奏！用短句增加紧张感、写身体反应（心跳、冒汗、发抖）、声音描写（"砰"的一声）、时间仿佛静止。', examples: ['"只听见\u201C砰\u201D的一声巨响，篮球不偏不倚地撞上了窗户。"\u2014\u2014声音+动作，节奏紧凑', '"草丛里竟出现了一个庞大的黑影。大家顿时吓得脸青唇白。"\u2014\u2014视觉冲击+生理反应'] },
+      { title: '转折', question: '事情怎么解决的？谁出现了？发生了什么变化？', tips: '转折要写出情绪变化：从紧张/害怕/难过\u2192安心/释然/高兴。可以写一个人出来解围、发现事情的真相、或者自己想通了。', examples: ['"就在大家不知所措时，营地管理员赶来了。"\u2014\u2014关键人物出场解围', '"我深吸一口气，先把其他题全部检查了一遍。果然灵光一闪\u2014\u2014"\u2014\u2014自己冷静下来找到解决办法'] },
+      { title: '结尾点题', question: '你学到了什么道理？有什么感悟？', tips: '结尾扣题升华：(1) 写出从这件事学到的道理；(2) 引用名言加深印象；(3) 回扣开头形成首尾呼应。常用句式："经过这件事，我明白了\u2026\u2026"', examples: ['"经过这次露营惊魂，我明白了：只有保持冷静，才能化险为夷。"\u2014\u2014道理+成语收尾', '"知错能改，善莫大焉。"\u2014\u2014引用名言点题'] }
+    ]
+  },
+  {
+    name: '情感线叙事',
+    flow: '快乐开场 \u2192 出现问题 \u2192 雪上加霜 \u2192 转机 \u2192 感悟',
+    sections: [
+      { title: '快乐开场', question: '故事一开始，大家的心情怎么样？在做什么开心的事？', tips: '用快乐的场景开场，是为了和后面的"问题"形成对比。开心写得越足，后面的转折冲击力越大。', examples: ['"学校举办的露营活动正进行得热火朝天，同学们围着营火唱歌、拍手、跳舞。"\u2014\u2014用热闹的活动写出快乐', '"我兴冲冲地跑回家，想给妈妈一个惊喜。"\u2014\u2014用"兴冲冲"奠定开心基调'] },
+      { title: '出现问题', question: '发生了什么不好的事？谁遇到了困难？', tips: '问题要具体：不是"出了事"，而是写清楚什么事、影响了谁、当时的反应是什么。', examples: ['"一名同学无意间发现小文的床铺空空的，连被子也不见了。"\u2014\u2014具体的问题引发紧张', '"我翻到最后一页时，一道应用题让我彻底卡住了。"\u2014\u2014考试中遇到难题'] },
+      { title: '雪上加霜', question: '事情有没有变得更糟？还发生了什么？', tips: '让情况恶化！"屋漏偏逢连夜雨"，问题叠加才能把情绪推到最高点。这一段是高潮的铺垫。', examples: ['"小乐因为跑得太急，被树根绊倒了，膝盖鲜血直流。"\u2014\u2014除了害怕，还有人受伤了', '"眼看只剩下最后十五分钟了，我的额头冒出了冷汗。"\u2014\u2014时间压力+身体反应'] },
+      { title: '转机', question: '转机是什么？谁来帮忙了？还是自己想到了办法？', tips: '转机可以是：别人的帮助、自己的顿悟、一句话的启发、意外的发现。', examples: ['"营地管理员赶来了，压低声音说：大家别慌。"\u2014\u2014大人出场，冷静指挥', '"我突然想起数学老师常说的一句话：遇到难题先跳过去。"\u2014\u2014回忆中的智慧带来转机'] },
+      { title: '感悟', question: '你从这件事中学到了什么？心情最后怎么样了？', tips: '感悟要真诚，不要空喊口号。写出具体学到了什么，以及这件事对你之后的影响。', examples: ['"我明白了：遇到危险时，千万不能惊慌失措。"\u2014\u2014具体的道理', '"这次经历让我懂得了：冷静和变通，才是解决问题的最好办法。"\u2014\u2014贴合经历的感悟'] }
+    ]
+  },
+  {
+    name: '回忆引入式',
+    flow: '打开回忆匣子 \u2192 背景铺垫 \u2192 事件经过 \u2192 高潮 \u2192 结尾升华',
+    sections: [
+      { title: '打开回忆匣子', question: '用什么方式引出这段回忆？是看到什么东西想起来的？', tips: '经典回忆开头法：看到某样东西/听到某首歌/闻到某种味道\u2192勾起回忆。也可以用"打开回忆的匣子"这类句式。', examples: ['"打开回忆的匣子，里面装着许多五彩缤纷的往事。"\u2014\u2014经典回忆引入', '"每当我看到书架上那个缺了一角的小兔子，心里便涌起一股愧疚。"\u2014\u2014用物件触发回忆'] },
+      { title: '背景铺垫', question: '这件事发生在什么时候？当时的环境和心情是怎样的？', tips: '用环境描写+心情描写来设定"基调"。如果后面是悲伤的故事，这里可以先写快乐（反差更大）。', examples: ['"那是一个阳光灿烂的星期天早晨，大家兴致勃勃地忙了起来。"\u2014\u2014快乐基调', '"那天放学后，我因为考试没考好，心情十分烦躁。"\u2014\u2014直接写出当时的心理状态'] },
+      { title: '事件经过', question: '具体发生了什么事？按顺序写出来。', tips: '经过要有细节：谁说了什么话？做了什么动作？有什么声音/画面？写出"现场感"。', examples: ['"我笨手笨脚地打鸡蛋，第一个蛋壳碎了一半掉进碗里。"\u2014\u2014具体+幽默的细节', '"只听\u201C啪\u201D的一声，陶瓷小兔子从书架上掉了下来，耳朵缺了一角。"\u2014\u2014声音+细节'] },
+      { title: '高潮', question: '最打动人心/最紧张/最意外的一刻是什么？', tips: '高潮是全文最精彩的部分，要放慢节奏！用五感描写、心理活动、短句来增强表现力。', examples: ['"看到妹妹伤心的模样，我的心像被一只无形的手狠狠揪了一下。"\u2014\u2014心理比喻', '"掌声像潮水一般涌来，那一刻，我的眼眶湿润了。"\u2014\u2014比喻+生理反应'] },
+      { title: '结尾升华', question: '回到现在，你怎么看待这段回忆？学到了什么？', tips: '升华要自然：从具体事件中提炼出普遍的道理。可以回扣开头的"触发物"（比如又看到那个小兔子），形成首尾呼应。', examples: ['"从那以后，我每天都带着那个笔袋去上学。"\u2014\u2014用行动证明感悟', '"这次经历让我明白：长大不是个子变高，而是学会体谅身边的人。"\u2014\u2014从小事看大道理'] }
+    ]
+  },
+  {
+    name: '对话推动式',
+    flow: '对话开头 \u2192 行动展开 \u2192 更多对话 \u2192 高潮冲突 \u2192 安静结尾',
+    sections: [
+      { title: '对话开头', question: '故事从谁的一句话开始？这句话引出了什么？', tips: '对话开头能立刻"把读者拉进现场"。第一句话要有信息量或悬念，让人想知道接下来发生什么。', examples: ['"来呀！把球传给我！"大华一边挥着双手，一边兴奋地喊道。\u2014\u2014一句对话直接入戏', '"你怎么回事！"老师厉声问道。\u2014\u2014用严厉的话制造紧张感'] },
+      { title: '行动展开', question: '说完话之后，角色们做了什么？事情怎么发展的？', tips: '对话之后一定要接动作和细节，不能只有"说来说去"。动作描写让故事有画面感。', examples: ['"小明得意洋洋地说完，便使劲把篮球朝大华扔去。"\u2014\u2014对话+动作无缝衔接', '"我连忙走上前，轻声说：妈妈，我来帮你吧。"\u2014\u2014对话引发行动'] },
+      { title: '更多对话', question: '角色之间还说了什么关键的话？', tips: '中间的对话要推动情节：可以是争吵、安慰、鼓励、质问。每句对话都要有"用处"，不要写废话。', examples: ['"老师语重心长地说：课室是学习的地方，不是玩球的地方。"\u2014\u2014老师的话是全文的道理', '"妈妈尝了一口，笑着说：味道嘛，有进步的空间。"\u2014\u2014妈妈的话推动情感变化'] },
+      { title: '高潮冲突', question: '最激烈/最紧张的对话或冲突是什么？', tips: '高潮时的对话要短促有力，可以配合"！""？"和语气词。同时写出说话者的表情、动作、心理。', examples: ['"糟了！这下可闯大祸了！"\u2014\u2014短促内心独白', '"那\u2026\u2026那是什么声音？"小白结结巴巴地问道。\u2014\u2014结巴的语气传达恐惧'] },
+      { title: '安静结尾', question: '一切平静下来后，大家的感受是什么？', tips: '高潮之后，结尾要"安静"下来。用平和的语气写感悟，和前面的激烈形成对比，更有余韵。', examples: ['"经过这件事，小明和大华深深明白了：做人不能只顾一时贪玩。"\u2014\u2014安静的反思', '"那一刻，我仿佛一下子长大了。"\u2014\u2014简短但有力'] }
+    ]
+  }
+];
+
+// =========================================================
+// GAME STATE
+// =========================================================
+var xp = 0, hearts = 5, streak = 0, questionsAnswered = 0;
+var quizQueue = [], currentQ = 0, selectedOption = -1, answered = false, correctCount = 0;
+
+// Outline Builder State
+var obStep = 0, obSelectedTopic = '', obSelectedTemplate = -1, obSectionNotes = [], obCustomTopic = '';
+
+// =========================================================
+// NAVIGATION
+// =========================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+function goHome() {
+  showScreen('homeScreen');
+  document.getElementById('topBar').style.display = 'none';
+  document.getElementById('bottomBar').style.display = 'none';
+  document.getElementById('feedback').className = 'feedback';
+  renderHome();
+}
+
+// =========================================================
+// HOME SCREEN
+// =========================================================
+function renderHome() {
+  var totalEssays = ESSAYS.length + MODEL_ESSAYS.length;
+  var h = '<div class="home-hero"><div class="mascot">\u270D\uFE0F</div>';
+  h += '<h1>Johnson 的华文作文练习</h1>';
+  h += '<p>P5-P6 华文 \u00B7 ' + totalEssays + ' 篇范文 \u00B7 写作技巧训练</p></div>';
+  h += '<div class="home-stats">';
+  h += '<div class="home-stat"><div class="hs-val" style="color:var(--gold);">' + xp + '</div><div class="hs-label">总 XP</div></div>';
+  h += '<div class="home-stat"><div class="hs-val" style="color:var(--orange);">\uD83D\uDD25 ' + streak + '</div><div class="hs-label">连续答对</div></div>';
+  h += '<div class="home-stat"><div class="hs-val" style="color:var(--green);">' + questionsAnswered + '</div><div class="hs-label">已答题数</div></div>';
+  h += '</div>';
+  h += '<div class="module-grid">';
+  h += '<div class="module-card" onclick="openOutlineBuilder()"><div class="module-icon">\uD83C\uDFD7\uFE0F</div><div class="module-info"><div class="mod-name">列骨架</div><div class="mod-desc">作文骨架搭建器 \u00B7 选模板 \u00B7 逐段填写</div></div><div class="module-badge">新功能</div></div>';
+  h += '<div class="module-card" onclick="openModelLibrary()"><div class="module-icon">\uD83D\uDCDA</div><div class="module-info"><div class="mod-name">范文库</div><div class="mod-desc">8 篇 PSLE 高分范文 \u00B7 好词好句 \u00B7 老师点评</div></div><div class="module-badge">' + MODEL_ESSAYS.length + ' 篇</div></div>';
+  h += '<div class="module-card" onclick="openSpinner()"><div class="module-icon">\uD83C\uDFB0</div><div class="module-info"><div class="mod-name">作文转盘</div><div class="mod-desc">随机抽题 \u00B7 看范文 \u00B7 练写作</div></div><div class="module-badge">8 题</div></div>';
+  h += '<div class="module-card" onclick="openEssayList()"><div class="module-icon">\uD83D\uDCD6</div><div class="module-info"><div class="mod-name">范文精读</div><div class="mod-desc">' + ESSAYS.length + ' 篇 Johnson 原创范文 \u00B7 好词好句高亮</div></div><div class="module-badge">' + ESSAYS.length + ' 篇</div></div>';
+  h += '<div class="module-card" onclick="openQuiz()"><div class="module-icon">\uD83E\uDDE0</div><div class="module-info"><div class="mod-name">写作知识闯关</div><div class="mod-desc">修辞手法 \u00B7 好词好句 \u00B7 作文结构</div></div><div class="module-badge">15 题</div></div>';
+  h += '<div class="module-card" onclick="openToolbox()"><div class="module-icon">\uD83E\uDDF0</div><div class="module-info"><div class="mod-name">写作工具箱</div><div class="mod-desc">好词分类 \u00B7 过渡词 \u00B7 环境/人物描写 \u00B7 结构模板</div></div><div class="module-badge">工具</div></div>';
+  h += '</div>';
+  document.getElementById('homeScreen').innerHTML = h;
+}
+
+// =========================================================
+// OUTLINE BUILDER (列骨架)
+// =========================================================
+function openOutlineBuilder() {
+  obStep = 0;
+  obSelectedTopic = '';
+  obSelectedTemplate = -1;
+  obSectionNotes = [];
+  obCustomTopic = '';
+  showScreen('outlineScreen');
+  renderOutlineStep();
+}
+
+function renderOutlineStep() {
+  var h = '<div class="back-row"><button class="back-btn" onclick="goHome()">\u2190 返回首页</button></div>';
+  h += '<h2 style="font-size:20px;font-weight:900;margin-bottom:4px;">\uD83C\uDFD7\uFE0F 列骨架 \u2014\u2014 作文骨架搭建器</h2>';
+  h += '<p style="font-size:12px;color:var(--text2);margin-bottom:16px;">一步一步搭建你的作文骨架，写作不再迷路！</p>';
+
+  // Step indicator
+  var stepNames = ['选题', '选模板', '填骨架', '查看骨架', '写作'];
+  h += '<div class="ob-step-indicator">';
+  for (var i = 0; i < stepNames.length; i++) {
+    if (i > 0) h += '<div class="ob-step-line"></div>';
+    var cls = i < obStep ? 'done' : (i === obStep ? 'active' : '');
+    h += '<div class="ob-step-dot ' + cls + '">' + (i + 1) + '</div>';
+  }
+  h += '</div>';
+
+  if (obStep === 0) h += renderOBStep0();
+  else if (obStep === 1) h += renderOBStep1();
+  else if (obStep === 2) h += renderOBStep2();
+  else if (obStep === 3) h += renderOBStep3();
+  else if (obStep === 4) h += renderOBStep4();
+
+  document.getElementById('outlineScreen').innerHTML = h;
+}
+
+function renderOBStep0() {
+  var h = '<h3 style="font-size:16px;font-weight:900;margin:16px 0 8px;">Step 1: 选择题目</h3>';
+  h += '<p style="font-size:13px;color:var(--text2);margin-bottom:12px;">选一个常见的 PSLE 作文题目，或者自己输入：</p>';
+  h += '<div class="ob-topic-grid">';
+  OB_TOPICS.forEach(function(t, i) {
+    var sel = obSelectedTopic === t.title ? ' selected' : '';
+    h += '<div class="ob-topic-card' + sel + '" onclick="obSelectTopic(\'' + t.title.replace(/'/g, "\\'") + '\')"><div class="otc-emoji">' + t.emoji + '</div><div class="otc-title">' + t.title + '</div><div class="otc-type">' + t.type + '</div></div>';
+  });
+  h += '</div>';
+  h += '<div style="margin-top:16px;"><label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px;">或者自定义题目：</label>';
+  h += '<input type="text" id="obCustomInput" placeholder="输入你的作文题目..." value="' + (obCustomTopic || '') + '" oninput="obCustomTopic=this.value" style="width:100%;padding:12px;border:2px solid var(--border);border-radius:10px;font-family:Noto Sans SC;font-size:14px;background:var(--card);" /></div>';
+  h += '<div class="ob-nav"><button class="ob-nav-btn primary" onclick="obNextStep()">下一步 \u2192</button></div>';
+  return h;
+}
+
+function renderOBStep1() {
+  var h = '<h3 style="font-size:16px;font-weight:900;margin:16px 0 4px;">Step 2: 选择作文模板</h3>';
+  h += '<p style="font-size:13px;color:var(--text2);margin-bottom:12px;">题目：<strong style="color:var(--red);">' + obGetTopic() + '</strong></p>';
+  OB_TEMPLATES.forEach(function(t, i) {
+    var sel = obSelectedTemplate === i ? ' selected' : '';
+    h += '<div class="ob-template-card' + sel + '" onclick="obSelectTemplate(' + i + ')"><div class="ot-name">' + t.name + '</div><div class="ot-flow">' + t.flow + '</div></div>';
+  });
+  h += '<div class="ob-nav"><button class="ob-nav-btn secondary" onclick="obPrevStep()">\u2190 上一步</button><button class="ob-nav-btn primary" onclick="obNextStep()">下一步 \u2192</button></div>';
+  return h;
+}
+
+function renderOBStep2() {
+  var tmpl = OB_TEMPLATES[obSelectedTemplate];
+  if (!tmpl) return '<p>请先选择模板</p>';
+  if (obSectionNotes.length !== tmpl.sections.length) {
+    obSectionNotes = [];
+    for (var i = 0; i < tmpl.sections.length; i++) obSectionNotes.push('');
+  }
+  var h = '<h3 style="font-size:16px;font-weight:900;margin:16px 0 4px;">Step 3: 逐段填写骨架</h3>';
+  h += '<p style="font-size:13px;color:var(--text2);margin-bottom:4px;">题目：<strong style="color:var(--red);">' + obGetTopic() + '</strong> \u00B7 模板：<strong style="color:var(--purple);">' + tmpl.name + '</strong></p>';
+  h += '<p style="font-size:11px;color:var(--text3);margin-bottom:16px;">在每个段落写下你的想法和要点（可以用中文或英文写笔记）</p>';
+  tmpl.sections.forEach(function(sec, i) {
+    h += '<div class="ob-section-card">';
+    h += '<span class="os-num">' + (i + 1) + '</span><span class="os-title">' + sec.title + '</span>';
+    h += '<div class="os-question">\uD83D\uDCA1 ' + sec.question + '</div>';
+    h += '<div class="os-tips">\u270D\uFE0F ' + sec.tips + '</div>';
+    h += '<div class="os-examples">';
+    sec.examples.forEach(function(ex) {
+      h += '<div class="os-example">' + ex + '</div>';
+    });
+    h += '</div>';
+    h += '<textarea id="obNote' + i + '" placeholder="写下你对这部分的想法和要点..." onblur="obSaveNote(' + i + ')">' + (obSectionNotes[i] || '') + '</textarea>';
+    h += '</div>';
+  });
+  h += '<div class="ob-nav"><button class="ob-nav-btn secondary" onclick="obSaveAllNotes();obPrevStep()">\u2190 上一步</button><button class="ob-nav-btn primary" onclick="obSaveAllNotes();obNextStep()">查看骨架 \u2192</button></div>';
+  return h;
+}
+
+function renderOBStep3() {
+  var tmpl = OB_TEMPLATES[obSelectedTemplate];
+  if (!tmpl) return '<p>请先选择模板</p>';
+  var h = '<h3 style="font-size:16px;font-weight:900;margin:16px 0 4px;">Step 4: 查看完整骨架</h3>';
+  h += '<p style="font-size:13px;color:var(--text2);margin-bottom:16px;">题目：<strong style="color:var(--red);">' + obGetTopic() + '</strong> \u00B7 模板：<strong style="color:var(--purple);">' + tmpl.name + '</strong></p>';
+  h += '<div class="ob-outline-review">';
+  tmpl.sections.forEach(function(sec, i) {
+    h += '<div class="or-section">';
+    h += '<div class="or-label">' + (i + 1) + '. ' + sec.title + '</div>';
+    var note = obSectionNotes[i] || '';
+    if (note.trim()) {
+      h += '<div class="or-content">' + note.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</div>';
+    } else {
+      h += '<div class="or-empty">（未填写）</div>';
+    }
+    h += '</div>';
+  });
+  h += '</div>';
+  h += '<div class="ob-nav"><button class="ob-nav-btn secondary" onclick="obPrevStep()">\u2190 修改骨架</button><button class="ob-nav-btn primary" onclick="obSaveToStorage();obNextStep()">开始写作 \u2192</button></div>';
+  return h;
+}
+
+function renderOBStep4() {
+  var tmpl = OB_TEMPLATES[obSelectedTemplate];
+  if (!tmpl) return '<p>请先选择模板</p>';
+  var savedDraft = '';
+  try { savedDraft = localStorage.getItem('ob_draft_' + obGetTopic()) || ''; } catch(e) {}
+  var h = '<h3 style="font-size:16px;font-weight:900;margin:16px 0 4px;">Step 5: 开始写作</h3>';
+  h += '<p style="font-size:13px;color:var(--text2);margin-bottom:12px;">参考上面的骨架，在下方写出完整的作文。</p>';
+  // Outline reference
+  h += '<div class="ob-outline-ref"><div class="or-ref-title">\uD83D\uDCCB 我的骨架（参考）</div>';
+  tmpl.sections.forEach(function(sec, i) {
+    var note = obSectionNotes[i] || '（未填写）';
+    h += '<div class="or-ref-item"><strong>' + sec.title + ':</strong> ' + note.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, ' ') + '</div>';
+  });
+  h += '</div>';
+  h += '<div class="writing-area">';
+  h += '<textarea id="obWritingInput" placeholder="在这里写作文\u2026\u2026" oninput="obUpdateCharCount()" onblur="obSaveDraft()">' + savedDraft + '</textarea>';
+  h += '<div class="char-counter cc-red" id="obCharCounter">0 / 300-500 字</div>';
+  h += '</div>';
+  h += '<div class="ob-nav" style="margin-top:12px;"><button class="ob-nav-btn secondary" onclick="obPrevStep()">\u2190 查看骨架</button><button class="ob-nav-btn secondary" onclick="obSaveDraft();goHome()">\uD83D\uDCBE 保存并返回</button></div>';
+  return h;
+}
+
+function obGetTopic() {
+  var ci = obCustomTopic ? obCustomTopic.trim() : '';
+  return ci || obSelectedTopic || '（未选择）';
+}
+function obSelectTopic(title) {
+  obSelectedTopic = title;
+  obCustomTopic = '';
+  renderOutlineStep();
+}
+function obSelectTemplate(idx) {
+  obSelectedTemplate = idx;
+  renderOutlineStep();
+}
+function obSaveNote(idx) {
+  var el = document.getElementById('obNote' + idx);
+  if (el) obSectionNotes[idx] = el.value;
+}
+function obSaveAllNotes() {
+  var tmpl = OB_TEMPLATES[obSelectedTemplate];
+  if (!tmpl) return;
+  for (var i = 0; i < tmpl.sections.length; i++) {
+    var el = document.getElementById('obNote' + i);
+    if (el) obSectionNotes[i] = el.value;
+  }
+}
+function obNextStep() {
+  if (obStep === 0) {
+    var ci = document.getElementById('obCustomInput');
+    if (ci && ci.value.trim()) obCustomTopic = ci.value.trim();
+    if (!obGetTopic() || obGetTopic() === '（未选择）') { alert('请先选择或输入一个题目！'); return; }
+  }
+  if (obStep === 1 && obSelectedTemplate < 0) { alert('请先选择一个模板！'); return; }
+  obStep++;
+  renderOutlineStep();
+  window.scrollTo(0, 0);
+}
+function obPrevStep() {
+  if (obStep > 0) obStep--;
+  renderOutlineStep();
+  window.scrollTo(0, 0);
+}
+function obUpdateCharCount() {
+  var el = document.getElementById('obWritingInput');
+  var counter = document.getElementById('obCharCounter');
+  if (!el || !counter) return;
+  var text = el.value.replace(/\s/g, '');
+  var count = text.length;
+  counter.textContent = count + ' / 300-500 字';
+  if (count < 200) counter.className = 'char-counter cc-red';
+  else if (count < 300) counter.className = 'char-counter cc-orange';
+  else counter.className = 'char-counter cc-green';
+}
+function obSaveDraft() {
+  var el = document.getElementById('obWritingInput');
+  if (!el) return;
+  try { localStorage.setItem('ob_draft_' + obGetTopic(), el.value); } catch(e) {}
+}
+function obSaveToStorage() {
+  try {
+    var data = { topic: obGetTopic(), template: OB_TEMPLATES[obSelectedTemplate].name, notes: obSectionNotes, timestamp: new Date().toISOString() };
+    localStorage.setItem('ob_outline_' + obGetTopic(), JSON.stringify(data));
+  } catch(e) {}
+}
+
+// =========================================================
+// MODEL ESSAY LIBRARY (范文库)
+// =========================================================
+function openModelLibrary() {
+  showScreen('modelLibScreen');
+  renderModelLibrary();
+}
+function renderModelLibrary() {
+  var h = '<div class="back-row"><button class="back-btn" onclick="goHome()">\u2190 返回首页</button></div>';
+  h += '<h2 style="font-size:20px;font-weight:900;margin-bottom:4px;">\uD83D\uDCDA 范文库</h2>';
+  h += '<p style="font-size:13px;color:var(--text2);margin-bottom:16px;">' + MODEL_ESSAYS.length + ' 篇 PSLE P6 高分范文 \u00B7 点击阅读精读版</p>';
+  h += '<div class="mel-grid">';
+  MODEL_ESSAYS.forEach(function(e) {
+    h += '<div class="mel-card" onclick="openModelEssay(\'' + e.id + '\')">';
+    h += '<div class="mc-top"><div class="mc-emoji">' + e.icon + '</div><div class="mc-info"><div class="mc-title">' + e.title + '</div><div class="mc-meta">' + e.meta + '</div></div></div>';
+    h += '<div class="mc-tags"><span class="mc-tag mc-tag-type">' + e.type + '</span><span class="mc-tag mc-tag-count">' + e.wordCount + '字</span></div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  document.getElementById('modelLibScreen').innerHTML = h;
+}
+
+function openModelEssay(id) {
+  var essay = MODEL_ESSAYS.find(function(e) { return e.id === id; });
+  if (!essay) return;
+  showScreen('modelLibScreen');
+  var h = '<div class="back-row"><button class="back-btn" onclick="openModelLibrary()">\u2190 返回范文库</button></div>';
+  h += '<div class="reader-container">';
+  h += '<div class="reader-title">' + essay.icon + ' ' + essay.title + '</div>';
+  h += '<div class="reader-meta">' + essay.meta + '</div>';
+  h += '<div class="hl-legend"><span><span class="dot" style="background:#74B9FF;"></span> 好句/修辞</span><span><span class="dot" style="background:#F8B500;"></span> 好词/成语</span></div>';
+  h += '<div class="reader-text">';
+  essay.content.forEach(function(para) {
+    var p = para;
+    essay.highlights.forEach(function(hl, hi) {
+      if (p.indexOf(hl.text) !== -1) {
+        var cls = hl.type === 'good' ? 'hl-good' : 'hl-vocab';
+        p = p.replace(hl.text, '<span class="' + cls + '" onclick="showModelTip(this,' + hi + ',\'' + id + '\')">' + hl.text + '</span>');
+      }
+    });
+    h += '<p>' + p + '</p>';
+  });
+  h += '</div></div>';
+  h += '<div class="comment-box"><strong>\uD83D\uDCDD 老师点评：</strong><br>' + essay.comment + '</div>';
+  h += '<div style="text-align:center;margin-top:16px;"><button class="ob-nav-btn primary" onclick="openWritingFromModel(\'' + essay.title.replace(/'/g, "\\'") + '\')">\u270D\uFE0F 仿写这篇</button></div>';
+  document.getElementById('modelLibScreen').innerHTML = h;
+}
+
+function showModelTip(el, idx, essayId) {
+  var essay = MODEL_ESSAYS.find(function(e) { return e.id === essayId; });
+  var hl = essay.highlights[idx];
+  var popup = document.getElementById('tooltipPopup');
+  var body = document.getElementById('tooltipBody');
+  body.innerHTML = '<div class="tp-title">' + (hl.type === 'good' ? '\u2728 好句赏析' : '\uD83D\uDCDA 好词积累') + '</div><strong>\u201C' + hl.text + '\u201D</strong><br><br>' + hl.tip;
+  popup.style.display = 'block';
+  var rect = el.getBoundingClientRect();
+  popup.style.left = Math.min(rect.left, window.innerWidth - 330) + 'px';
+  popup.style.top = (rect.bottom + 8) + 'px';
+}
+
+function openWritingFromModel(topic) {
+  openWriting(topic);
+}
+
+// =========================================================
+// SPINNER
+// =========================================================
+var spinning = false, spinAngle = 0;
+function openSpinner() {
+  showScreen('spinnerScreen');
+  renderSpinner();
+}
+function renderSpinner() {
+  var h = '<div class="back-row"><button class="back-btn" onclick="goHome()">\u2190 返回首页</button></div>';
+  h += '<h2 style="text-align:center;font-size:20px;font-weight:900;margin-bottom:8px;">\uD83C\uDFB0 作文转盘</h2>';
+  h += '<p style="text-align:center;font-size:13px;color:var(--text2);margin-bottom:16px;">转一转，看看今天练什么题目！</p>';
+  h += '<div class="spinner-container">';
+  h += '<div class="wheel-wrapper"><div class="wheel-pointer">\u25BC</div><canvas id="wheelCanvas" width="300" height="300"></canvas></div>';
+  h += '<button class="spin-btn" id="spinBtn" onclick="doSpin()">转一转！</button>';
+  h += '</div>';
+  h += '<div class="spin-result" id="spinResult"></div>';
+  document.getElementById('spinnerScreen').innerHTML = h;
+  drawWheel(0);
+}
+function drawWheel(angle) {
+  var canvas = document.getElementById('wheelCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var cx = 150, cy = 150, r = 144;
+  var n = TOPICS.length;
+  var sliceAngle = 2 * Math.PI / n;
+  ctx.clearRect(0, 0, 300, 300);
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle * Math.PI / 180);
+  for (var i = 0; i < n; i++) {
+    var startA = i * sliceAngle - Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, r, startA, startA + sliceAngle);
+    ctx.closePath();
+    ctx.fillStyle = TOPICS[i].color;
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.save();
+    ctx.rotate(startA + sliceAngle / 2);
+    ctx.translate(r * 0.55, 0);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillStyle = '#fff';
+    ctx.font = '900 13px "Noto Sans SC"';
+    ctx.textAlign = 'center';
+    ctx.fillText(TOPICS[i].emoji, 0, -6);
+    ctx.font = '700 11px "Noto Sans SC"';
+    var title = TOPICS[i].title;
+    if (title.length > 6) title = title.substring(0, 6) + '\u2026';
+    ctx.fillText(title, 0, 10);
+    ctx.restore();
+  }
+  ctx.restore();
+}
+function doSpin() {
+  if (spinning) return;
+  spinning = true;
+  document.getElementById('spinBtn').disabled = true;
+  document.getElementById('spinResult').style.display = 'none';
+  var extraSpins = 5 + Math.floor(Math.random() * 3);
+  var targetIdx = Math.floor(Math.random() * TOPICS.length);
+  var sliceDeg = 360 / TOPICS.length;
+  var targetAngle = 360 - (targetIdx * sliceDeg + sliceDeg / 2);
+  var totalAngle = spinAngle + extraSpins * 360 + targetAngle;
+  spinAngle = totalAngle;
+  var startTime = null;
+  var duration = 4000;
+  var startA = spinAngle - extraSpins * 360 - targetAngle;
+  function animate(timestamp) {
+    if (!startTime) startTime = timestamp;
+    var elapsed = timestamp - startTime;
+    var progress = Math.min(elapsed / duration, 1);
+    var ease = 1 - Math.pow(1 - progress, 3);
+    var currentAngle = startA + (totalAngle - startA) * ease;
+    drawWheel(currentAngle);
+    if (progress < 1) { requestAnimationFrame(animate); }
+    else {
+      spinning = false;
+      document.getElementById('spinBtn').disabled = false;
+      showSpinResult(TOPICS[targetIdx]);
+    }
+  }
+  requestAnimationFrame(animate);
+}
+function showSpinResult(topic) {
+  var box = document.getElementById('spinResult');
+  var h = '<div class="sr-emoji">' + topic.emoji + '</div>';
+  h += '<div class="sr-title">' + topic.title + '</div>';
+  h += '<div class="sr-type">' + topic.type + '</div>';
+  h += '<div class="sr-btns">';
+  if (topic.essayId) {
+    h += '<button class="sr-btn sr-btn-primary" onclick="openEssay(\'' + topic.essayId + '\')">\uD83D\uDCD6 看范文</button>';
+  }
+  h += '<button class="sr-btn sr-btn-secondary" onclick="openWriting(\'' + topic.title + '\')">\u270D\uFE0F 练写作</button>';
+  h += '</div>';
+  box.innerHTML = h;
+  box.style.display = 'block';
+}
+
+// =========================================================
+// ESSAY LIST & READER
+// =========================================================
+function openEssayList() {
+  showScreen('readerScreen');
+  renderEssayList();
+}
+function renderEssayList() {
+  var h = '<div class="back-row"><button class="back-btn" onclick="goHome()">\u2190 返回首页</button></div>';
+  h += '<h2 style="font-size:20px;font-weight:900;margin-bottom:16px;">\uD83D\uDCD6 范文精读（Johnson 原创）</h2>';
+  h += '<div class="essay-nav" id="essayNav">';
+  ESSAYS.forEach(function(e) {
+    h += '<button class="essay-tab" onclick="openEssay(\'' + e.id + '\')">' + e.icon + ' ' + e.title + '</button>';
+  });
+  h += '</div>';
+  h += '<p style="font-size:13px;color:var(--text2);line-height:1.8;">选择一篇范文开始精读。每篇都有<span style="background:#C3E8FF;padding:2px 6px;border-radius:4px;">蓝色好句</span>和<span style="background:#FCEABB;padding:2px 6px;border-radius:4px;">黄色好词</span>高亮标注，点击可以看讲解。</p>';
+  document.getElementById('readerScreen').innerHTML = h;
+}
+function openEssay(id) {
+  var essay = ESSAYS.find(function(e) { return e.id === id; });
+  if (!essay) return;
+  showScreen('readerScreen');
+  var h = '<div class="back-row"><button class="back-btn" onclick="openEssayList()">\u2190 返回范文列表</button></div>';
+  h += '<div class="essay-nav">';
+  ESSAYS.forEach(function(e) {
+    h += '<button class="essay-tab' + (e.id === id ? ' active' : '') + '" onclick="openEssay(\'' + e.id + '\')">' + e.icon + ' ' + e.title + '</button>';
+  });
+  h += '</div>';
+  h += '<div class="reader-container">';
+  h += '<div class="reader-title">' + essay.icon + ' ' + essay.title + '</div>';
+  h += '<div class="reader-meta">' + essay.meta + '</div>';
+  h += '<div class="hl-legend"><span><span class="dot" style="background:#74B9FF;"></span> 好句/修辞</span><span><span class="dot" style="background:#F8B500;"></span> 好词/成语</span></div>';
+  h += '<div class="reader-text">';
+  essay.content.forEach(function(para) {
+    var p = para;
+    essay.highlights.forEach(function(hl, hi) {
+      if (p.indexOf(hl.text) !== -1) {
+        var cls = hl.type === 'good' ? 'hl-good' : 'hl-vocab';
+        p = p.replace(hl.text, '<span class="' + cls + '" data-tip="' + hi + '" onclick="showTip(this,' + hi + ',\'' + id + '\')">' + hl.text + '</span>');
+      }
+    });
+    h += '<p>' + p + '</p>';
+  });
+  h += '</div></div>';
+  h += '<div class="comment-box"><strong>\uD83D\uDCDD 老师点评：</strong><br>' + essay.comment + '</div>';
+  document.getElementById('readerScreen').innerHTML = h;
+}
+function showTip(el, idx, essayId) {
+  var essay = ESSAYS.find(function(e) { return e.id === essayId; });
+  var hl = essay.highlights[idx];
+  var popup = document.getElementById('tooltipPopup');
+  var body = document.getElementById('tooltipBody');
+  body.innerHTML = '<div class="tp-title">' + (hl.type === 'good' ? '\u2728 好句赏析' : '\uD83D\uDCDA 好词积累') + '</div><strong>\u201C' + hl.text + '\u201D</strong><br><br>' + hl.tip;
+  popup.style.display = 'block';
+  var rect = el.getBoundingClientRect();
+  popup.style.left = Math.min(rect.left, window.innerWidth - 330) + 'px';
+  popup.style.top = (rect.bottom + 8) + 'px';
+}
+function closeTooltip() { document.getElementById('tooltipPopup').style.display = 'none'; }
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.tooltip-popup') && !e.target.classList.contains('hl-good') && !e.target.classList.contains('hl-vocab')) closeTooltip();
+});
+
+// =========================================================
+// QUIZ
+// =========================================================
+function openQuiz() {
+  quizQueue = QUESTIONS.slice().sort(function() { return Math.random() - 0.5; });
+  currentQ = 0; correctCount = 0; hearts = 5; streak = 0;
+  showScreen('questionScreen');
+  document.getElementById('topBar').style.display = 'flex';
+  document.getElementById('bottomBar').style.display = 'flex';
+  renderQuestion();
+}
+function renderQuestion() {
+  if (currentQ >= quizQueue.length) { showResults(); return; }
+  var q = quizQueue[currentQ];
+  selectedOption = -1; answered = false;
+  document.getElementById('progressFill').style.width = Math.round((currentQ / quizQueue.length) * 100) + '%';
+  document.getElementById('heartsDisplay').innerHTML = '\u2764\uFE0F ' + hearts;
+  document.getElementById('streakDisplay').innerHTML = '\uD83D\uDD25 ' + streak;
+  var btn = document.getElementById('checkBtn');
+  btn.className = 'check-btn disabled';
+  btn.textContent = '检查答案';
+  document.getElementById('feedback').className = 'feedback';
+
+  var h = '<div class="q-header"><div class="q-type">\uD83D\uDCDD ' + q.type + ' \u00B7 第 ' + (currentQ + 1) + '/' + quizQueue.length + ' 题</div>';
+  h += '<h2>' + q.q + '</h2></div>';
+  h += '<div class="options">';
+  var labels = ['A', 'B', 'C', 'D'];
+  q.options.forEach(function(opt, i) {
+    h += '<div class="option-btn" onclick="selectOpt(' + i + ')" id="opt' + i + '"><div class="option-num">' + labels[i] + '</div><span>' + opt + '</span></div>';
+  });
+  h += '</div>';
+  document.getElementById('questionContent').innerHTML = h;
+}
+function selectOpt(i) {
+  if (answered) return;
+  selectedOption = i;
+  document.querySelectorAll('.option-btn').forEach(function(b, idx) {
+    b.classList.toggle('selected', idx === i);
+  });
+  var btn = document.getElementById('checkBtn');
+  btn.className = 'check-btn ready';
+}
+function onCheck() {
+  var btn = document.getElementById('checkBtn');
+  if (btn.classList.contains('disabled')) return;
+  if (answered) { nextQuestion(); return; }
+  answered = true;
+  var q = quizQueue[currentQ];
+  var correct = selectedOption === q.answer;
+  document.getElementById('opt' + q.answer).classList.add('correct');
+  if (!correct) document.getElementById('opt' + selectedOption).classList.add('wrong');
+
+  var fb = document.getElementById('feedback');
+  if (correct) {
+    fb.className = 'feedback correct-fb show';
+    fb.innerHTML = '\u2705 答对了！<div class="fb-explain">' + q.explain + '</div>';
+    xp += 10; streak++; correctCount++;
+    showXP('+10 XP');
+  } else {
+    fb.className = 'feedback wrong-fb show';
+    fb.innerHTML = '\u274C 答错了<div class="fb-explain">' + q.explain + '</div>';
+    hearts--; streak = 0;
+    document.getElementById('heartsDisplay').innerHTML = '\u2764\uFE0F ' + hearts;
+  }
+  questionsAnswered++;
+  btn.className = 'check-btn next';
+  btn.textContent = '下一题 \u2192';
+  if (hearts <= 0) { setTimeout(showResults, 1500); }
+}
+function nextQuestion() {
+  currentQ++;
+  document.getElementById('feedback').className = 'feedback';
+  if (currentQ >= quizQueue.length || hearts <= 0) showResults();
+  else renderQuestion();
+}
+function showResults() {
+  showScreen('resultsScreen');
+  document.getElementById('topBar').style.display = 'none';
+  document.getElementById('bottomBar').style.display = 'none';
+  document.getElementById('feedback').className = 'feedback';
+  var pct = quizQueue.length > 0 ? Math.round((correctCount / quizQueue.length) * 100) : 0;
+  var grade = pct >= 90 ? '\uD83C\uDF1F 太棒了！' : pct >= 70 ? '\uD83D\uDC4D 很不错！' : pct >= 50 ? '\uD83D\uDCAA 继续加油' : '\uD83D\uDCDA 多读范文再来';
+  var h = '<div class="trophy">' + (pct >= 70 ? '\uD83C\uDFC6' : '\uD83D\uDCD6') + '</div>';
+  h += '<h1>闯关完成！</h1>';
+  h += '<div class="score-ring"><div class="score-num">' + pct + '%</div></div>';
+  h += '<div style="font-size:18px;font-weight:900;margin:8px 0;">' + grade + '</div>';
+  h += '<div class="stat-row">';
+  h += '<div class="stat-item"><div class="stat-val" style="color:var(--green);">' + correctCount + '</div><div class="stat-label">答对</div></div>';
+  h += '<div class="stat-item"><div class="stat-val" style="color:var(--red);">' + (quizQueue.length - correctCount) + '</div><div class="stat-label">答错</div></div>';
+  h += '<div class="stat-item"><div class="stat-val" style="color:var(--gold);">+' + (correctCount * 10) + '</div><div class="stat-label">XP</div></div>';
+  h += '</div>';
+  h += '<button class="restart-btn" onclick="goHome()">返回首页</button>';
+  document.getElementById('resultsContent').innerHTML = h;
+}
+
+// =========================================================
+// TOOLBOX
+// =========================================================
+var currentToolTab = '好词好句';
+function openToolbox() {
+  showScreen('toolboxScreen');
+  renderToolbox();
+}
+function renderToolbox() {
+  var h = '<div class="back-row"><button class="back-btn" onclick="goHome()">\u2190 返回首页</button></div>';
+  h += '<h2 style="font-size:20px;font-weight:900;margin-bottom:16px;">\uD83E\uDDF0 写作工具箱</h2>';
+  h += '<div class="toolbox-tabs">';
+  Object.keys(TOOLBOX).forEach(function(tab) {
+    h += '<button class="toolbox-tab' + (tab === currentToolTab ? ' active' : '') + '" onclick="switchToolTab(\'' + tab + '\')">' + tab + '</button>';
+  });
+  h += '</div>';
+  var items = TOOLBOX[currentToolTab];
+  items.forEach(function(item) {
+    h += '<div class="toolbox-card"><div class="tc-cat">\uD83D\uDCCC ' + item.cat + '</div>';
+    item.examples.forEach(function(ex) {
+      h += '<div class="tc-example">' + ex + '</div>';
+    });
+    h += '<div class="tc-tip">\uD83D\uDCA1 ' + item.tip + '</div></div>';
+  });
+  document.getElementById('toolboxScreen').innerHTML = h;
+}
+function switchToolTab(tab) { currentToolTab = tab; renderToolbox(); }
+
+// =========================================================
+// WRITING PRACTICE
+// =========================================================
+function openWriting(topic) {
+  showScreen('writingScreen');
+  var savedDraft = '';
+  try { savedDraft = localStorage.getItem('writing_draft_' + topic) || ''; } catch(e) {}
+  var h = '<div class="back-row"><button class="back-btn" onclick="goHome()">\u2190 返回首页</button></div>';
+  h += '<h2 style="font-size:20px;font-weight:900;margin-bottom:8px;">\u270D\uFE0F 写作练习</h2>';
+  h += '<p style="font-size:14px;color:var(--text2);margin-bottom:16px;">题目：<strong style="color:var(--red);">' + topic + '</strong></p>';
+  h += '<div class="tip-box"><strong>\uD83D\uDCA1 写作提醒：</strong><br>';
+  h += '1. 开头要有环境描写或回忆引入<br>';
+  h += '2. 中间要有转折和高潮<br>';
+  h += '3. 多用比喻、拟人等修辞手法<br>';
+  h += '4. 结尾扣题 + 写出感悟<br>';
+  h += '5. 目标字数：300-500字</div>';
+  h += '<div class="writing-area">';
+  h += '<textarea id="writingInput" placeholder="在这里写作文\u2026\u2026" oninput="updateCharCount()" onblur="saveWritingDraft(\'' + topic.replace(/'/g, "\\'") + '\')">' + savedDraft + '</textarea>';
+  h += '<div class="char-counter cc-red" id="charCounter">0 / 300-500 字</div>';
+  h += '</div>';
+  document.getElementById('writingScreen').innerHTML = h;
+}
+function updateCharCount() {
+  var text = document.getElementById('writingInput').value.replace(/\s/g, '');
+  var count = text.length;
+  var el = document.getElementById('charCounter');
+  el.textContent = count + ' / 300-500 字';
+  if (count < 200) { el.className = 'char-counter cc-red'; }
+  else if (count < 300) { el.className = 'char-counter cc-orange'; }
+  else { el.className = 'char-counter cc-green'; }
+}
+function saveWritingDraft(topic) {
+  var el = document.getElementById('writingInput');
+  if (!el) return;
+  try { localStorage.setItem('writing_draft_' + topic, el.value); } catch(e) {}
+}
+
+// =========================================================
+// XP ANIMATION
+// =========================================================
+function showXP(text) {
+  var el = document.getElementById('xpPopup');
+  el.textContent = text;
+  el.className = 'xp-popup show';
+  setTimeout(function() { el.className = 'xp-popup hide'; }, 800);
+  setTimeout(function() { el.className = 'xp-popup'; }, 1300);
+}
+
+// =========================================================
+// INIT
+// =========================================================
+renderHome();
+</script>
+</body>
+</html>

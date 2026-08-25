@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jenny's Animal Kingdom Math Adventure</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--t:#0ABAB5;--tl:#B2DFDB;--tp:#E0F7FA;--coral:#FF8A65;--cl:#FFCCBC;--gold:#FFD700;--gl:#FFF8E1;--g:#66BB6A;--r:#EF5350;--txt:#37474F;--txl:#78909C;--bg:#F5FFFE;--card:#fff}
+body{font-family:"Nunito",system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+.scr{display:none;min-height:100vh;padding:20px 16px 40px;max-width:520px;margin:0 auto;flex-direction:column;align-items:center}.scr.on{display:flex}
+.top-bar{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.top-gate{font-size:15px;color:var(--t);font-weight:700}.top-stars{font-size:15px;color:var(--gold);font-weight:700;background:var(--gl);padding:2px 10px;border-radius:10px}
+.sticker-bar{width:100%;display:flex;gap:5px;justify-content:center;margin:6px 0 10px;min-height:28px;flex-wrap:wrap}
+.sticker{font-size:22px;transition:all .4s cubic-bezier(.68,-.55,.27,1.55)}.sticker.e{opacity:1;transform:scale(1)}.sticker.p{opacity:.12;transform:scale(.9)}
+.dots{display:flex;gap:6px;justify-content:center;margin:6px 0 14px}
+.dot{width:9px;height:9px;border-radius:50%;background:#E0E0E0;transition:.3s}.dot.done{background:var(--g)}.dot.cur{background:var(--t);box-shadow:0 0 6px rgba(10,186,181,.5)}
+.story-box{background:var(--card);border:2px solid var(--tl);border-radius:20px;padding:20px 18px;margin-bottom:14px;width:100%;line-height:1.85;font-size:18px;position:relative;box-shadow:0 4px 16px rgba(10,186,181,.07)}
+.story-box::before{content:"";position:absolute;top:-2px;left:40px;right:40px;height:3px;background:linear-gradient(90deg,transparent,var(--t),transparent);border-radius:2px}
+.nar{color:var(--t);font-weight:700;font-size:16px;margin-bottom:8px;letter-spacing:.5px}
+.title-screen{text-align:center;padding-top:36px}
+.kingdom{font-size:56px;margin-bottom:10px;display:block;position:relative}
+.kingdom .m{animation:bounce 2.5s ease-in-out infinite;display:inline-block}
+.kingdom .s{font-size:32px;position:relative;animation:sway 3s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes sway{0%,100%{transform:translateX(0) rotate(0)}50%{transform:translateX(4px) rotate(4deg)}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes celebrate{0%{transform:scale(1)}25%{transform:scale(1.15) rotate(-8deg)}50%{transform:scale(1)}75%{transform:scale(1.15) rotate(8deg)}100%{transform:scale(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.main-title{font-size:30px;font-weight:800;color:var(--t);margin-bottom:5px}
+.sub-title{font-size:17px;color:var(--txl);margin-bottom:24px}
+.card{background:var(--card);border:2px solid var(--tl);border-radius:18px;padding:16px;margin-bottom:12px;width:100%;box-shadow:0 2px 10px rgba(10,186,181,.05)}
+.card h3{font-size:18px;color:var(--t);margin-bottom:8px;font-weight:700}
+.card p{font-size:17px;line-height:1.75;color:#555}
+.animal-zone{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;padding:10px;min-height:44px;border-radius:14px;background:var(--tp);margin:8px 0;border:2px dashed var(--tl)}
+.ai{width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;border-radius:50%;transition:.2s;user-select:none}
+.ai:hover{transform:scale(1.15);background:rgba(10,186,181,.12)}
+.ai:active{transform:scale(.9)}
+.ai.glow{background:rgba(255,215,0,.2);box-shadow:0 0 10px rgba(255,215,0,.4);animation:pulse 1.2s ease-in-out infinite;cursor:default}
+@keyframes pulse{0%,100%{box-shadow:0 0 5px rgba(255,215,0,.3)}50%{box-shadow:0 0 14px rgba(255,215,0,.6)}}
+.pen-row{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:8px 0}
+.pen{background:var(--tp);border:2px solid var(--tl);border-radius:14px;padding:6px;min-width:50px;text-align:center;min-height:60px;transition:.3s}
+.pen.act{border-color:var(--t);box-shadow:0 0 8px rgba(10,186,181,.2)}
+.pen .pi{font-size:18px;min-height:24px;display:flex;gap:1px;justify-content:center;flex-wrap:wrap}
+.pen .ct{margin-top:3px;font-size:11px;color:var(--t);font-weight:700}
+.ctrl{display:flex;align-items:center;justify-content:center;gap:12px;margin:12px 0;flex-wrap:wrap}
+.ctrl label{font-size:13px;color:var(--txl)}
+.nc{display:flex;align-items:center;gap:6px}
+.nc button{width:34px;height:34px;border-radius:50%;border:2px solid var(--t);background:transparent;color:var(--t);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.nc button:hover{background:rgba(10,186,181,.08)}
+.nc span{font-size:22px;font-weight:800;color:var(--t);min-width:30px;text-align:center}
+.btn{padding:14px 28px;border-radius:13px;border:none;font-size:17px;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.btn:active{transform:scale(.96)}
+.bp{background:linear-gradient(135deg,var(--t),#0CCEC8);color:#fff;box-shadow:0 3px 12px rgba(10,186,181,.28)}
+.bp:hover{box-shadow:0 5px 18px rgba(10,186,181,.38);transform:translateY(-1px)}
+.bo{background:transparent;border:2px solid var(--t);color:var(--t)}
+.bo:hover{background:rgba(10,186,181,.05)}
+.bc{background:linear-gradient(135deg,var(--coral),#FF7043);color:#fff;box-shadow:0 3px 12px rgba(255,138,101,.28)}
+.bg{background:linear-gradient(135deg,var(--g),#81C784);color:#fff}
+.bs{padding:7px 14px;font-size:12px;border-radius:9px}
+.rb{background:var(--tp);border:2px solid var(--tl);border-radius:14px;padding:14px;margin:10px 0;text-align:center;width:100%}
+.rb .big{font-size:22px;font-weight:800;color:var(--t)}.rb .lbl{font-size:12px;color:var(--txl);margin-top:3px}
+.alert{padding:14px 16px;border-radius:13px;margin:8px 0;font-size:16px;line-height:1.75;width:100%}
+.aw{background:#FFF3F0;border:2px solid #FFCDD2;color:#C62828}
+.ao{background:#F1FFF4;border:2px solid #A5D6A7;color:#2E7D32}
+.ai2{background:#F0FBFF;border:2px solid #B3E5FC;color:#0277BD}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0;width:100%}
+.cb{padding:14px;border-radius:13px;border:2px solid #E0E0E0;background:#fff;color:#555;font-size:18px;cursor:pointer;text-align:center;transition:.2s;font-weight:700}
+.cb:hover{border-color:var(--t);color:var(--t);background:var(--tp)}
+.cb.ok{border-color:var(--g);background:#F1FFF4;color:#2E7D32}
+.cb.no{border-color:var(--r);background:#FFF3F0;color:#C62828}
+.bar-m{width:100%;margin:12px 0}
+.bar{display:flex;border-radius:9px;overflow:hidden;margin:5px 0;height:38px}
+.bar-s{display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff}
+.seq{display:flex;gap:5px;align-items:center;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.sn{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:700}
+.sg{background:var(--tp);color:var(--t);border:2px solid var(--t)}.sb{background:#fff;border:2px dashed var(--cl)}
+.sa{color:var(--tl);font-size:12px}
+.rq{background:var(--tp);border:2px solid var(--tl);border-radius:14px;padding:14px;margin:10px 0;width:100%}
+.rq .q{font-size:16px;color:var(--t);margin-bottom:8px;font-weight:600;line-height:1.6}
+.rq .a{font-size:16px;color:#555;line-height:1.75;display:none}.rq .a.show{display:block}
+.bstep{background:#fff;border:2px solid #E0E0E0;border-radius:14px;padding:14px;margin:8px 0;width:100%;transition:.3s}
+.bstep.lk{opacity:.3;pointer-events:none}.bstep.dn{border-color:var(--g);background:#F1FFF4}
+.bstep h4{font-size:16px;color:var(--t);margin-bottom:6px;font-weight:700}
+.bstep p{font-size:16px;color:#666;line-height:1.6}
+.bstep .ans{font-size:19px;color:var(--g);font-weight:800;margin-top:6px}
+.vb{text-align:center;padding-top:16px;width:100%}
+.vb h2{font-size:28px;color:var(--t);margin-bottom:6px;font-weight:800}
+.vb p{font-size:17px;color:#555;line-height:1.8;max-width:400px;margin:0 auto}
+input[type=number]{width:72px;padding:10px;border-radius:10px;border:2px solid #E0E0E0;background:#fff;color:var(--t);font-size:20px;text-align:center;font-weight:700;font-family:inherit}
+input[type=number]:focus{outline:none;border-color:var(--t);box-shadow:0 0 0 3px rgba(10,186,181,.12)}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+.diff{display:inline-block;font-size:11px;padding:2px 8px;border-radius:8px;font-weight:700;margin-left:6px}
+.d1{background:#E8F5E9;color:#388E3C}.d2{background:#FFF3E0;color:#E65100}.d3{background:#FCE4EC;color:#C62828}
+.confetti-c{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1000;overflow:hidden}
+.confetti{position:absolute;width:8px;height:8px;border-radius:2px;animation:cfall 3s ease-out forwards}
+@keyframes cfall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.react{position:fixed;font-size:40px;z-index:999;pointer-events:none;animation:areact 1.2s ease-out forwards}
+@keyframes areact{0%{opacity:1;transform:scale(0) translateY(0)}30%{transform:scale(1.2) translateY(-16px)}100%{opacity:0;transform:scale(1) translateY(-60px)}}
+.gb{display:inline-block;padding:3px 10px;border-radius:16px;font-size:11px;font-weight:700}
+.g1b{background:rgba(10,186,181,.1);color:var(--t)}.g2b{background:rgba(255,138,101,.1);color:var(--coral)}.g3b{background:rgba(102,187,106,.1);color:var(--g)}
+.mt6{margin-top:6px}.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}.mb8{margin-bottom:8px}
+.cen{text-align:center;width:100%}
+.fi{animation:fadeIn .4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.hid{display:none!important}
+.emoji-big{font-size:40px;text-align:center;display:block;margin:8px 0}
+.hint-box{background:#FFF8E1;border:2px solid #FFE082;border-radius:12px;padding:12px 14px;margin:8px 0;font-size:16px;color:#F57F17;line-height:1.6;width:100%;cursor:pointer}
+.hint-box:hover{background:#FFF3CD}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+
+// ===================== QUESTION BANK =====================
+// Each question: {type:'mc'|'fill'|'fill2'|'tf'|'steps', q, visual?, options?, answer, explain, hint?, diff:1-3}
+
+const BANK1 = [ // Gate 1: Multiplication & Division
+{type:'mc',q:'There are 3 fish tanks. Each tank has 4 fish. How many fish in total?',visual:'🐟🐟🐟🐟  🐟🐟🐟🐟  🐟🐟🐟🐟',options:[12,7,15,10],answer:0,explain:'3 groups of 4 = 3 × 4 = 12!',diff:1},
+{type:'mc',q:'5 baskets. Each basket has 3 apples. Total apples?',visual:'🍎🍎🍎 × 5',options:[8,15,12,20],answer:1,explain:'5 × 3 = 15 apples!',diff:1},
+{type:'mc',q:'There are 4 bags with 10 marbles each. How many marbles altogether?',options:[14,30,40,44],answer:2,explain:'4 × 10 = 40.',diff:1},
+{type:'fill',q:'Fill in the blank: 6 × ___ = 30',answer:5,explain:'6 × 5 = 30. Think: how many 6s make 30?',hint:'Count by 6: 6, 12, 18, 24, 30...',diff:1},
+{type:'fill',q:'24 stickers shared equally among 4 children. Each child gets ___ stickers.',answer:6,explain:'24 ÷ 4 = 6.',diff:1},
+{type:'mc',q:'Which division gives a remainder of 0?',options:['17 ÷ 3','18 ÷ 4','20 ÷ 5','13 ÷ 2'],answer:2,explain:'20 ÷ 5 = 4 exactly! The others all have remainders.',diff:1},
+{type:'tf',q:'Little Mouse says: "22 ÷ 4 = 4 remainder 6." Is Mouse correct?',answer:false,explainT:'Oops! Remainder 6 > divisor 4. Mouse can still share more! Correct: 22 ÷ 4 = 5 remainder 2.',explainF:'You caught it! 6 > 4, so Mouse can share more. Correct: 22 ÷ 4 = 5 R 2. Remainder must be LESS than divisor!',diff:2},
+{type:'tf',q:'Bunny says: "25 ÷ 3 = 7 remainder 4." Is Bunny right?',answer:false,explainT:'Nope! 4 > 3, so Bunny can share one more round. 25 ÷ 3 = 8 remainder 1.',explainF:'Correct! 4 ≥ 3 means more sharing is possible. 25 ÷ 3 = 8 R 1.',diff:2},
+{type:'fill',q:'___ × 4 = 36. What is the missing number?',answer:9,explain:'9 × 4 = 36. You can also think: 36 ÷ 4 = 9.',hint:'Count by 4: 4, 8, 12, ..., 36',diff:2},
+{type:'fill2',q:'29 ÷ 5 = ___ remainder ___',answer1:5,answer2:4,explain:'5 × 5 = 25. 29 - 25 = 4. So 29 ÷ 5 = 5 R 4.',diff:2},
+{type:'fill2',q:'43 ÷ 6 = ___ remainder ___',answer1:7,answer2:1,explain:'6 × 7 = 42. 43 - 42 = 1. Remainder 1 < 6 ✓',diff:2},
+{type:'mc',q:'Mum bought 4 packets of cookies. Each packet has 5 cookies. She gave 8 away. How many are left?',options:[12,17,20,28],answer:0,explain:'4 × 5 = 20 cookies total. 20 - 8 = 12 left!',hint:'First find total, then subtract.',diff:2},
+{type:'mc',q:'48 children sit in rows of 5. How many children are in the last (not full) row?',options:[2,3,4,5],answer:1,explain:'48 ÷ 5 = 9 R 3. 9 full rows and 3 in the last row.',diff:2},
+{type:'fill',q:'I am a number. When divided by 5, the remainder is 3. When divided by 3, the remainder is 1. I am between 10 and 20. What am I?',answer:13,explain:'Numbers with remainder 3 when ÷5: 13, 18. Check ÷3: 13÷3=4R1 ✓, 18÷3=6R0 ✗. Answer: 13!',hint:'List numbers 10-20 that give remainder 3 when divided by 5...',diff:3},
+{type:'mc',q:'3 × ? = 4 × 6. What is ?',options:[6,7,8,9],answer:2,explain:'4 × 6 = 24. So 3 × ? = 24. ? = 24 ÷ 3 = 8.',diff:3},
+{type:'fill',q:'Which number, when divided by 4, gives exactly 7 remainder 2?',answer:30,explain:'4 × 7 = 28. 28 + 2 = 30. Check: 30 ÷ 4 = 7 R 2 ✓',hint:'Work backwards: 4 × 7 + 2 = ?',diff:3},
+{type:'mc',q:'Sam has some toys. He puts them into groups of 3. He has 2 left over. He also tries groups of 4 and has 1 left over. How many toys? (Between 1 and 20)',options:[5,9,13,17],answer:0,explain:'÷3 R2: 5,8,11,14,17. ÷4 R1: 5,9,13,17. Both: 5 and 17. Smallest: 5!',diff:3},
+];
+
+const BANK2 = [ // Gate 2: Word Problems & Bar Models
+{type:'mc',q:'There are 28 cats and 15 dogs at the shelter. How many animals altogether?',visual:'🐱28 + 🐶15 = ?',options:[43,33,42,53],answer:0,explain:'28 + 15 = 43. "Altogether" = ADD!',diff:1},
+{type:'mc',q:'Ali has 52 stickers. He gave 25 to Ben. How many stickers does Ali have left?',options:[17,23,27,37],answer:2,explain:'52 - 25 = 27. "Left" = SUBTRACT!',diff:1},
+{type:'mc',q:'A shop had 78 apples. It sold 34. How many are left?',options:[44,42,54,34],answer:0,explain:'78 - 34 = 44.',diff:1},
+{type:'mc',q:'Tom has 36 fish. Jenny has 14 more fish than Tom. How many fish does Jenny have?',options:[22,40,44,50],answer:3,explain:'36 + 14 = 50. "More than" = ADD to the smaller!',diff:1},
+{type:'steps',q:'Jenny has 45 treats. She gives 18 to rabbits and 12 to hamsters. How many are left?',steps:[{q:'How many given away? 18 + 12 = ?',options:[28,30,26,32],answer:1},{q:'How many left? 45 - 30 = ?',options:[15,25,20,10],answer:0}],explain:'Step 1: 18+12=30. Step 2: 45-30=15.',diff:2},
+{type:'mc',q:'Jenny has 35 beads. She has 12 MORE than Tom. How many beads does Tom have?',options:[47,23,12,43],answer:1,explain:'Jenny has MORE, so Tom has LESS. 35 - 12 = 23. This is a tricky "more than" — you subtract because the question asks about the SMALLER amount!',hint:'"Jenny has 12 more than Tom" means Tom has 12 FEWER.',diff:2},
+{type:'steps',q:'A bus had 32 people. At the first stop, 15 got off and 8 got on. How many are on the bus now?',steps:[{q:'After 15 got off: 32 - 15 = ?',options:[17,22,27,12],answer:0},{q:'After 8 got on: 17 + 8 = ?',options:[9,20,25,28],answer:2}],explain:'32 - 15 = 17, then 17 + 8 = 25.',diff:2},
+{type:'fill',q:'Ali had some stickers. He gave 13 to Tom and 9 to Sam. He has 18 left. How many did he start with?',answer:40,explain:'Work backwards! 18 + 13 + 9 = 40. He started with 40 stickers.',hint:'He gave away 13+9=22 and has 18 left. So he started with 22+18=?',diff:2},
+{type:'mc',q:'Pencil costs $3. Eraser costs $2 less than pencil. What is the cost of 2 pencils and 1 eraser?',options:['$5','$7','$8','$9'],answer:1,explain:'Eraser = $3 - $2 = $1. 2 pencils = 2 × $3 = $6. Total = $6 + $1 = $7.',diff:2},
+{type:'mc',q:'3 children share 27 sweets equally. Then each child gives 2 sweets to the teacher. How many does each child have now?',options:[7,9,5,11],answer:0,explain:'27 ÷ 3 = 9 each. 9 - 2 = 7 each.',diff:2},
+{type:'fill',q:'Sam is 8 years old. His mother is 3 times his age. How old is his mother?',answer:24,explain:'3 × 8 = 24 years old.',diff:2},
+{type:'steps',q:'Jenny bought 3 notebooks at $4 each and 2 erasers at $1 each. She paid with $20. What change did she get?',steps:[{q:'Total cost: (3×$4) + (2×$1) = ?',options:['$12','$14','$10','$16'],answer:1},{q:'Change from $20: 20 - 14 = ?',options:['$4','$5','$6','$8'],answer:2}],explain:'3×$4=$12, 2×$1=$2, total=$14. Change=$20-$14=$6.',diff:2},
+{type:'mc',q:'Ahmad has twice as many stickers as Bala. Together they have 36 stickers. How many does Ahmad have?',options:[12,18,24,30],answer:2,explain:'If Bala has 1 part, Ahmad has 2 parts. Total = 3 parts = 36. 1 part = 12. Ahmad = 2 × 12 = 24.',hint:'Draw a bar model: Bala = 1 unit, Ahmad = 2 units. Total = 3 units = 36.',diff:3},
+{type:'fill',q:'A ribbon is 1 m long. Amy cuts off 35 cm. She then cuts the remaining piece into 5 equal parts. How long is each part? (in cm)',answer:13,explain:'1 m = 100 cm. 100 - 35 = 65 cm remaining. 65 ÷ 5 = 13 cm each.',hint:'Convert 1 m to cm first!',diff:3},
+{type:'mc',q:'Jenny\'s age and her mother\'s age add up to 40. Her mother is 28 years older than Jenny. How old is Jenny?',options:[6,8,12,14],answer:0,explain:'Jenny + Mum = 40. Mum = Jenny + 28. So Jenny + Jenny + 28 = 40. 2 × Jenny = 12. Jenny = 6.',hint:'If Jenny is ? years old, Mum is ?+28. Together they make 40.',diff:3},
+{type:'mc',q:'Grade 2 has 3 classes. Each class has 35 children. 40 of all the children are boys. How many are girls?',options:[55,65,70,75],answer:1,explain:'Total = 3 × 35 = 105 children. Girls = 105 - 40 = 65.',diff:3},
+];
+
+const BANK3 = [ // Gate 3: Patterns, Number Sense & Logic
+{type:'fill',q:'What comes next? 5, 10, 15, 20, ___',answer:25,explain:'Pattern: +5 each time. 20 + 5 = 25.',diff:1},
+{type:'fill',q:'What comes next? 3, 6, 9, 12, ___',answer:15,explain:'Pattern: +3 each time (times table of 3!).',diff:1},
+{type:'mc',q:'Which number is ODD?',options:[14,28,33,46],answer:2,explain:'33 is odd (ends in 3). Even numbers end in 0,2,4,6,8.',diff:1},
+{type:'mc',q:'What is Odd + Odd?',options:['Always Odd','Always Even','Could be either','Cannot tell'],answer:1,explain:'Odd + Odd = Always Even! Each odd number has 1 "lonely" one. Two lonely ones pair up = even!',diff:1},
+{type:'fill',q:'What comes next? 2, 5, 8, 11, ___',answer:14,explain:'Pattern: +3 each time. 11 + 3 = 14.',diff:2},
+{type:'fill',q:'What comes next? 100, 91, 82, 73, ___',answer:64,explain:'Pattern: -9 each time. 73 - 9 = 64.',diff:2},
+{type:'fill',q:'I am a 3-digit number. My hundreds digit is 3. My ones digit is twice my tens digit. All my digits add up to 9. What number am I?',answer:324,explain:'H=3. T+O=6. O=2T. So T+2T=6, 3T=6, T=2, O=4. Answer: 324.',hint:'Hundreds=3. Tens+Ones must equal 6. And Ones=2×Tens.',diff:2},
+{type:'mc',q:'What is the smallest 3-digit number whose digits add up to 5?',options:[104,113,122,500],answer:0,explain:'To be smallest, hundreds digit should be 1 (smallest possible), tens 0, ones 4. 1+0+4=5. Answer: 104.',hint:'For the smallest 3-digit number, make the hundreds digit as small as possible (1).',diff:2},
+{type:'fill',q:'1, 2, 4, 7, 11, ___',answer:16,explain:'Differences: +1, +2, +3, +4, +5. Next: 11+5=16.',hint:'Look at the differences BETWEEN numbers: 1,2,3,4,...',diff:2},
+{type:'mc',q:'In a repeating pattern 🐱🐶🐰🐱🐶🐰🐱🐶🐰... What is the 20th animal?',options:['🐱','🐶','🐰','Cannot tell'],answer:1,explain:'Pattern repeats every 3. 20÷3 = 6 remainder 2. Position 2 in the cycle = 🐶.',hint:'The pattern repeats every 3 animals. What is 20 ÷ 3?',diff:3},
+{type:'fill',q:'☆ + ☆ + ▲ = 15. ☆ is twice ▲. What is ☆?',answer:6,explain:'☆=2▲. So 2▲+2▲+▲ = 5▲ = 15. ▲=3, ☆=6.',hint:'Replace ☆ with 2×▲, then solve for ▲.',diff:3},
+{type:'mc',q:'Amy, Ben, and Cat each have a different pet: fish, hamster, rabbit. Amy does NOT have fish. Ben does NOT have hamster or fish. Who has the fish?',options:['Amy','Ben','Cat'],answer:2,explain:'Ben: not hamster, not fish → Ben has rabbit. Amy: not fish → Amy has hamster. Cat has fish!',hint:'Start with Ben — he can only have one pet. Then figure out the rest.',diff:3},
+{type:'mc',q:'What day is it 23 days after Monday?',options:['Monday','Tuesday','Wednesday','Thursday'],answer:2,explain:'23 ÷ 7 = 3 weeks + 2 days. 2 days after Monday = Wednesday!',hint:'A week has 7 days. How many full weeks in 23 days?',diff:3},
+{type:'fill',q:'Complete the pattern: 7, 14, 10, 20, 16, 32, 28, ___',answer:56,explain:'Pattern: ×2, -4, ×2, -4, ×2, -4, ×2. So 28 × 2 = 56.',hint:'Look at alternating operations: what happens to get from 7 to 14? From 14 to 10?',diff:3},
+{type:'mc',q:'How many even numbers are between 11 and 21? (Not including 11 and 21)',options:[4,5,6,3],answer:1,explain:'12, 14, 16, 18, 20. That\'s 5 even numbers.',diff:2},
+{type:'mc',q:'Fill in: □ + □ + □ = 12, all three numbers are DIFFERENT and greater than 0. Which is NOT possible?',options:['1+2+9','3+4+5','2+4+6','4+4+4'],answer:3,explain:'4+4+4: the numbers are NOT different! All others have three different numbers.',diff:3},
+];
+
+// ===================== GAME ENGINE =====================
+let S={screen:0,stars:0,stickers:[],gate:0,qIdx:0,gateQs:[],g1:{pens:3,placed:[],phase:'place'},boss:{step:0}};
+const STICKERS=['🐹','🐟','🐭','🐱','🐶','🐰','🦋','🔮','🐾','🎪','🏆'];
+function addSticker(e){if(!S.stickers.includes(e))S.stickers.push(e)}
+function addStars(n){S.stars+=n;react()}
+
+function shuffle(a){let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+
+function pickQuestions(bank,n){
+  let easy=shuffle(bank.filter(q=>q.diff===1)).slice(0,Math.ceil(n/3));
+  let med=shuffle(bank.filter(q=>q.diff===2)).slice(0,Math.ceil(n/3));
+  let hard=shuffle(bank.filter(q=>q.diff===3)).slice(0,Math.ceil(n/3));
+  let pool=[...easy,...med,...hard];
+  if(pool.length>n) pool=pool.slice(0,n);
+  // sort by difficulty
+  pool.sort((a,b)=>a.diff-b.diff);
+  return pool;
+}
+
+// ===================== EFFECTS =====================
+function confetti(){
+  let c=document.createElement('div');c.className='confetti-c';
+  let cols=['#0ABAB5','#FFD700','#FF8A65','#66BB6A','#AB47BC','#42A5F5'];
+  for(let i=0;i<35;i++){let p=document.createElement('div');p.className='confetti';p.style.left=Math.random()*100+'%';p.style.background=cols[Math.floor(Math.random()*cols.length)];p.style.animationDelay=Math.random()*.8+'s';p.style.width=(5+Math.random()*7)+'px';p.style.height=(5+Math.random()*7)+'px';if(Math.random()>.5)p.style.borderRadius='50%';c.appendChild(p)}
+  document.body.appendChild(c);setTimeout(()=>c.remove(),3200)
+}
+function react(){
+  let a=['🎉','⭐','✨','💫','🌟'];let el=document.createElement('div');el.className='react';el.textContent=a[Math.floor(Math.random()*a.length)];el.style.left=(30+Math.random()*40)+'%';el.style.top='40%';document.body.appendChild(el);setTimeout(()=>el.remove(),1300)
+}
+
+// ===================== UI HELPERS =====================
+function topBar(gate,step,total){
+  let sk=S.stickers.map(s=>`<span class="sticker e">${s}</span>`).join('');
+  for(let i=S.stickers.length;i<11;i++) sk+=`<span class="sticker p">?</span>`;
+  return `<div class="top-bar"><span class="top-gate">${gate}</span><span class="top-stars">⭐ ${S.stars}</span></div>
+  <div class="sticker-bar">${sk}</div>
+  <div class="dots">${Array(total).fill(0).map((_,i)=>`<div class="dot ${i<step?'done':i===step?'cur':''}"></div>`).join('')}</div>`;
+}
+
+function diffBadge(d){return d===1?'<span class="diff d1">Standard</span>':d===2?'<span class="diff d2">Challenging</span>':'<span class="diff d3">Enrichment</span>'}
+
+// ===================== GENERIC QUESTION RENDERER =====================
+function renderQuestion(gateLabel,stepIdx,totalSteps,q,onCorrect,onWrong){
+  let visual=q.visual?`<div class="cen" style="font-size:18px;letter-spacing:2px;margin:8px 0;color:var(--t)">${q.visual}</div>`:'';
+  let hintHTML=q.hint?`<div class="hint-box" onclick="this.innerHTML='💡 '+this.dataset.h" data-h="${q.hint.replace(/"/g,'&quot;')}">💡 Tap for a hint</div>`:'';
+
+  if(q.type==='mc'){
+    return `<div class="scr on fi">
+      ${topBar(gateLabel,stepIdx,totalSteps)}
+      <div class="card"><h3>Question ${stepIdx+1} ${diffBadge(q.diff)}</h3><p>${q.q}</p>${visual}${hintHTML}
+      <div class="cg mt8" id="qOpts">${q.options.map((o,i)=>`<button class="cb" onclick="window._qAnswer(${i})">${o}</button>`).join('')}</div>
+      <div id="qResult"></div></div></div>`;
+  }
+  if(q.type==='fill'){
+    return `<div class="scr on fi">
+      ${topBar(gateLabel,stepIdx,totalSteps)}
+      <div class="card"><h3>Question ${stepIdx+1} ${diffBadge(q.diff)}</h3><p>${q.q}</p>${visual}${hintHTML}
+      <div class="ctrl mt8"><input type="number" id="qFill" placeholder="?"><button class="btn bp bs" onclick="window._qFillCheck()">Check</button></div>
+      <div id="qResult"></div></div></div>`;
+  }
+  if(q.type==='fill2'){
+    return `<div class="scr on fi">
+      ${topBar(gateLabel,stepIdx,totalSteps)}
+      <div class="card"><h3>Question ${stepIdx+1} ${diffBadge(q.diff)}</h3><p>${q.q}</p>${visual}${hintHTML}
+      <div class="ctrl mt8"><input type="number" id="qF1" style="width:55px" placeholder="?"><span style="color:var(--txl);font-size:13px">remainder</span><input type="number" id="qF2" style="width:55px" placeholder="?"><button class="btn bp bs" onclick="window._qFill2Check()">Check</button></div>
+      <div id="qResult"></div></div></div>`;
+  }
+  if(q.type==='tf'){
+    return `<div class="scr on fi">
+      ${topBar(gateLabel,stepIdx,totalSteps)}
+      <div class="card"><h3>Question ${stepIdx+1} ${diffBadge(q.diff)}</h3><p>${q.q}</p>${visual}
+      <div class="cg mt8" id="qOpts">
+        <button class="cb" onclick="window._qTF(true)">✅ Correct!</button>
+        <button class="cb" onclick="window._qTF(false)">❌ Wrong!</button>
+      </div>
+      <div id="qResult"></div></div></div>`;
+  }
+  if(q.type==='steps'){
+    let s=q.steps[0];
+    return `<div class="scr on fi">
+      ${topBar(gateLabel,stepIdx,totalSteps)}
+      <div class="card"><h3>Question ${stepIdx+1} ${diffBadge(q.diff)}</h3><p>${q.q}</p>${visual}${hintHTML}
+      <p class="mt8"><b>Step 1:</b> ${s.q}</p>
+      <div class="cg mt8" id="qStep0">${s.options.map((o,i)=>`<button class="cb" onclick="window._qStep(0,${i})">${o}</button>`).join('')}</div>
+      <div id="qStepR0"></div>
+      <div id="qStep1Area"></div>
+      <div id="qResult"></div></div></div>`;
+  }
+  return '';
+}
+
+function setupQuestionHandlers(q, onDone){
+  if(q.type==='mc'){
+    window._qAnswer=function(idx){
+      $$('#qOpts button').forEach(b=>b.style.pointerEvents='none');
+      if(idx===q.answer){
+        $$('#qOpts button')[idx].classList.add('ok');confetti();
+        $('#qResult').innerHTML=`<div class="alert ao">🎉 <b>Correct!</b> ${q.explain}</div><div class="cen mt8"><button class="btn bp" onclick="window._qNext(true)">Continue ➡️</button></div>`;
+      } else {
+        $$('#qOpts button')[idx].classList.add('no');
+        $$('#qOpts button')[q.answer].classList.add('ok');
+        $('#qResult').innerHTML=`<div class="alert aw">${q.explain}</div><div class="cen mt8"><button class="btn bp" onclick="window._qNext(false)">Continue ➡️</button></div>`;
+      }
+    };
+  }
+  if(q.type==='fill'){
+    window._qFillCheck=function(){
+      let v=+$('#qFill').value;
+      if(v===q.answer){
+        confetti();
+        $('#qResult').innerHTML=`<div class="alert ao">🎉 <b>Correct!</b> ${q.explain}</div><div class="cen mt8"><button class="btn bp" onclick="window._qNext(true)">Continue ➡️</button></div>`;
+      } else {
+        $('#qResult').innerHTML=`<div class="alert aw">Not quite! ${q.explain}</div><div class="cen mt8"><button class="btn bp" onclick="window._qNext(false)">Continue ➡️</button></div>`;
+      }
+    };
+  }
+  if(q.type==='fill2'){
+    window._qFill2Check=function(){
+      let v1=+$('#qF1').value,v2=+$('#qF2').value;
+      if(v1===q.answer1&&v2===q.answer2){
+        confetti();
+        $('#qResult').innerHTML=`<div class="alert ao">🎉 <b>Correct!</b> ${q.explain}</div><div class="cen mt8"><button class="btn bp" onclick="window._qNext(true)">Continue ➡️</button></div>`;
+      } else {
+        $('#qResult').innerHTML=`<div class="alert aw">${q.explain}</div><div class="cen mt8"><button class="btn bp" onclick="window._qNext(false)">Continue ➡️</button></div>`;
+      }
+    };
+  }
+  if(q.type==='tf'){
+    window._qTF=function(ans){
+      $$('#qOpts button').forEach(b=>b.style.pointerEvents='none');
+      let correct=(ans===q.answer);
+      if(correct){
+        $$('#qOpts button')[ans?0:1].classList.add('ok');confetti();
+        $('#qResult').innerHTML=`<div class="alert ao">🎉 ${ans?q.explainF||q.explainT:q.explainF}</div><div class="cen mt8"><button class="btn bp" onclick="window._qNext(true)">Continue ➡️</button></div>`;
+      } else {
+        $$('#qOpts button')[ans?0:1].classList.add('no');
+        $$('#qOpts button')[ans?1:0].classList.add('ok');
+        $('#qResult').innerHTML=`<div class="alert aw">${ans?q.explainT:q.explainF||q.explainT}</div><div class="cen mt8"><button class="btn bp" onclick="window._qNext(false)">Continue ➡️</button></div>`;
+      }
+    };
+  }
+  if(q.type==='steps'){
+    let stepsDone=0;
+    window._qStep=function(si,idx){
+      let s=q.steps[si];
+      $$(`#qStep${si} button`).forEach(b=>b.style.pointerEvents='none');
+      let correct=(idx===s.answer);
+      if(correct) $$(`#qStep${si} button`)[idx].classList.add('ok');
+      else {$$(`#qStep${si} button`)[idx].classList.add('no');$$(`#qStep${si} button`)[s.answer].classList.add('ok');}
+      $(`#qStepR${si}`).innerHTML=`<div class="alert ${correct?'ao':'aw'}">${correct?'✅ Correct!':'Not quite.'} ${s.options[s.answer]} is right.</div>`;
+      stepsDone++;
+      if(stepsDone<q.steps.length){
+        let ns=q.steps[stepsDone];
+        $('#qStep1Area').innerHTML=`<p class="mt8"><b>Step 2:</b> ${ns.q}</p>
+        <div class="cg mt8" id="qStep${stepsDone}">${ns.options.map((o,i)=>`<button class="cb" onclick="window._qStep(${stepsDone},${i})">${o}</button>`).join('')}</div><div id="qStepR${stepsDone}"></div>`;
+      } else {
+        $('#qResult').innerHTML=`<div class="alert ao mt8">🎉 ${q.explain}</div><div class="cen mt8"><button class="btn bp" onclick="window._qNext(${correct})">Continue ➡️</button></div>`;
+      }
+    };
+  }
+  window._qNext=function(correct){
+    if(correct) addStars(q.diff); else addStars(1);
+    onDone();
+  };
+}
+
+// ===================== SCREEN RENDERERS =====================
+
+function renderIntro(){
+  return `<div class="scr on fi"><div class="title-screen">
+    <div class="kingdom"><span class="s" style="animation-delay:0s">🐰</span> <span class="m">🏰</span> <span class="s" style="animation-delay:1s">🐱</span></div>
+    <div class="main-title">Jenny's Animal Kingdom</div>
+    <div class="sub-title">P2 Math Adventure</div></div>
+    <div class="story-box"><div class="nar">🦉 Professor Hoot</div>
+    Welcome, <b style="color:var(--t)">Jenny</b>! The Animal Kingdom needs your help!<br><br>
+    Pass through <b>3 gates</b>, collect <b>animal stickers</b>, and defeat the <b>Final Boss</b>!<br><br>
+    <span class="gb g1b">🐾 Gate 1</span> Multiply &amp; Divide<br>
+    <span class="gb g2b">🏥 Gate 2</span> Word Problems<br>
+    <span class="gb g3b">🌳 Gate 3</span> Patterns &amp; Logic<br><br>
+    Questions change every time you play!<br>Each gate has <b>Standard</b>, <b>Challenging</b> and <b>Enrichment</b> levels.<br><br>
+    <i style="color:var(--t)">"Ready? Let's go!"</i></div>
+    <button class="btn bp" onclick="go(1)">Start Adventure! 🐾</button></div>`;
+}
+
+// ---- GATE 1 ----
+function renderG1Intro(){
+  return `<div class="scr on fi">
+    ${topBar('🐾 Gate 1',0,6)}
+    <div class="story-box"><div class="nar">🦉 Professor Hoot</div>
+    The pet shop has <b>15 hamsters</b>! 🐹 <b>Tap each hamster</b> to place it into a pen.<br><br>
+    After that, you'll face <b>3 random challenges</b> about multiplication and division — including some tricky reasoning!<br><br>
+    <i style="color:var(--t)">"Tap the hamsters one by one!"</i></div>
+    <button class="btn bp" onclick="S.g1={pens:3,placed:[],phase:'place'};go(2)">Enter Pet Shop 🐹</button></div>`;
+}
+
+function renderG1Place(){
+  let n=S.g1.pens,total=15,pc=S.g1.placed.length,rem=total-pc;
+  let pens=Array(n).fill(null).map(()=>[]);
+  S.g1.placed.forEach((pi)=>pens[pi].push(1));
+  let pensH=pens.map((a,i)=>{
+    let isN=(pc%n===i)&&S.g1.phase==='place';
+    return `<div class="pen ${isN?'act':''}"><div class="pi">${a.map(()=>'🐹').join('')}</div><div class="ct">${a.length}</div></div>`;
+  }).join('');
+  let animH='';
+  if(S.g1.phase==='place') for(let i=0;i<rem;i++) animH+=`<div class="ai" onclick="g1P()">🐹</div>`;
+  let pp=Math.floor(total/n),r=total%n,allP=pc>=total;
+  return `<div class="scr on fi">
+    ${topBar('🐾 Gate 1',1,6)}
+    <div class="card"><h3>🐹 Place the Hamsters!</h3><p>Tap hamsters to place them. They take turns going into pens!</p>
+    <div class="ctrl"><label>Pens:</label><div class="nc"><button onclick="g1SP(-1)">−</button><span>${n}</span><button onclick="g1SP(1)">+</button></div></div></div>
+    <div class="pen-row">${pensH}</div>
+    ${S.g1.phase==='place'?`<p class="cen" style="font-size:12px;color:var(--txl)">${rem} left — tap to place!</p>
+    <div class="animal-zone">${animH}</div>
+    ${pc>0&&pc<total?`<div class="cen mt6"><button class="btn bs bo" onclick="g1Auto()">Place all ⚡</button></div>`:''}`:''}
+    ${allP?`<div class="rb"><div class="big">15 ÷ ${n} = ${pp}${r?' R '+r:''}</div>
+    <div class="lbl">${r?pp+' each, '+r+' left over':'Exactly '+pp+' each!'}</div></div>
+    <div class="alert ao">✅ ${r===0?'No remainder!':'Remainder '+r+' < '+n+' pens. Can\'t share more!'}</div>
+    <div class="cen mt8"><button class="btn bp" onclick="addStars(2);addSticker('🐹');startGateQs(1)">Start Challenges ➡️</button></div>`:''}</div>`;
+}
+function g1P(){if(S.g1.placed.length>=15)return;S.g1.placed.push(S.g1.placed.length%S.g1.pens);if(S.g1.placed.length>=15)S.g1.phase='done';render()}
+function g1Auto(){while(S.g1.placed.length<15){S.g1.placed.push(S.g1.placed.length%S.g1.pens)}S.g1.phase='done';render()}
+function g1SP(d){S.g1.pens=Math.max(2,Math.min(7,S.g1.pens+d));S.g1.placed=[];S.g1.phase='place';render()}
+
+// ---- GATE 2 ----
+function renderG2Intro(){
+  return `<div class="scr on fi">
+    ${topBar('🏥 Gate 2',0,6)}
+    <div class="story-box"><div class="nar">🏥 Dr. Whiskers</div>
+    <div class="emoji-big" style="animation:sway 3s ease-in-out infinite">🐱</div>
+    The hospital records are mixed up! Use <b style="color:var(--coral)">Bar Models</b> to solve word puzzles.<br><br>
+    You'll face <b>4 challenges</b> with one-step, two-step, and tricky comparison problems!<br><br>
+    <i style="color:var(--coral)">"Remember: draw it to see it!"</i></div>
+    <button class="btn bc" onclick="startGateQs(2)">Enter Hospital 🏥</button></div>`;
+}
+
+// ---- GATE 3 ----
+function renderG3Intro(){
+  return `<div class="scr on fi">
+    ${topBar('🌳 Gate 3',0,6)}
+    <div class="story-box"><div class="nar">🌳 Pattern Forest</div>
+    <div class="cen" style="font-size:28px;animation:float 3s ease-in-out infinite">🦋🌸🦋🌸🦋</div><br>
+    Find hidden patterns, crack number riddles, and solve logic puzzles!<br><br>
+    Some of these are <b style="color:var(--g)">SASMO competition level</b> — think carefully!<br><br>
+    <i style="color:var(--g)">"A great mathematician spots patterns everywhere!"</i></div>
+    <button class="btn bg" onclick="startGateQs(3)">Enter Forest 🌳</button></div>`;
+}
+
+// ---- GATE QUESTION SCREEN ----
+function renderGateQ(){
+  let q=S.gateQs[S.qIdx];
+  let labels=['','🐾 Gate 1','🏥 Gate 2','🌳 Gate 3'];
+  let totalSteps=S.gate===1?6:6;
+  let stepIdx=(S.gate===1?2:1)+S.qIdx;
+  let html=renderQuestion(labels[S.gate],stepIdx,totalSteps,q,()=>{},()=>{});
+  return html;
+}
+
+function startGateQs(gate){
+  S.gate=gate;
+  let bank=[null,BANK1,BANK2,BANK3][gate];
+  S.gateQs=pickQuestions(bank,4);
+  S.qIdx=0;
+  go(gate===1?100:gate===2?200:300);
+}
+
+function nextGateQ(){
+  S.qIdx++;
+  if(S.qIdx>=S.gateQs.length){
+    // Gate complete — add sticker
+    let stks=[null,['🐟','🐭'],['🐶','🐰'],['🦋','🔮']][S.gate];
+    stks.forEach(s=>addSticker(s));
+    go(S.gate===1?3:S.gate===2?7:11);
+  } else {
+    go(S.gate===1?100:S.gate===2?200:300);
+  }
+}
+
+// ---- GATE COMPLETE SCREENS ----
+function renderG1Done(){
+  return `<div class="scr on fi">
+    ${topBar('🐾 Gate 1 Complete!',5,6)}
+    <div class="rb"><div style="font-size:42px;animation:celebrate 1s ease">🐹🐟🐭</div><div class="big mt6">Gate 1 Cleared!</div></div>
+    <div class="card"><h3>📝 Key Concepts</h3>
+    <p><b style="color:var(--t)">Multiplication</b> = equal groups × items = total</p>
+    <p class="mt6"><b style="color:var(--coral)">Division</b> = sharing equally into groups</p>
+    <p class="mt6"><b style="color:var(--r)">Remainder Rule</b>: remainder &lt; divisor ALWAYS!</p>
+    <p class="mt6"><b style="color:var(--g)">Missing factor</b>: if ? × 4 = 28, think 28 ÷ 4 = 7</p></div>
+    <div class="rq"><div class="q">🦉 Why must remainder &lt; divisor?</div>
+    <button class="btn bs bo" onclick="this.nextElementSibling.classList.add('show');this.classList.add('hid')">See Answer</button>
+    <div class="a"><b style="color:var(--t)">If the remainder is big enough to share one more round, you should keep sharing!</b> Remainder = truly can't share anymore.</div></div>
+    <div class="cen mt16"><button class="btn bp" onclick="go(4)">Go to Gate 2 ➡️</button></div></div>`;
+}
+
+function renderG2Done(){
+  return `<div class="scr on fi">
+    ${topBar('🏥 Gate 2 Complete!',5,6)}
+    <div class="rb"><div style="font-size:42px;animation:celebrate 1s ease">🐱🐶🐰</div><div class="big mt6">Gate 2 Cleared!</div></div>
+    <div class="card"><h3>📝 Key Concepts</h3>
+    <p><b style="color:var(--t)">"Altogether"</b> → ADD</p>
+    <p class="mt6"><b style="color:var(--coral)">"Left / Remaining"</b> → SUBTRACT</p>
+    <p class="mt6"><b style="color:var(--g)">"More than"</b> → ADD to find the bigger</p>
+    <p class="mt6"><b style="color:var(--r)">"More than" reversed</b> → SUBTRACT to find the smaller!</p>
+    <p class="mt6"><b>Working backwards</b>: add back what was given away</p>
+    <p class="mt6"><b>"Twice as many"</b> → draw 2 units vs 1 unit bar model</p></div>
+    <div class="rq"><div class="q">🦉 What's the FIRST step for any word problem?</div>
+    <button class="btn bs bo" onclick="this.nextElementSibling.classList.add('show');this.classList.add('hid')">See Answer</button>
+    <div class="a"><b style="color:var(--t)">Draw a bar model!</b> Find the numbers, draw bars, find what's missing.</div></div>
+    <div class="cen mt16"><button class="btn bp" onclick="go(8)">Go to Gate 3 ➡️</button></div></div>`;
+}
+
+function renderG3Done(){
+  return `<div class="scr on fi">
+    ${topBar('🌳 Gate 3 Complete!',5,6)}
+    <div class="rb"><div style="font-size:42px;animation:celebrate 1s ease">🦋🔮🐾</div><div class="big mt6">Gate 3 Cleared!</div></div>
+    <div class="card"><h3>📝 Key Concepts</h3>
+    <p><b style="color:var(--t)">Patterns</b>: check differences between consecutive numbers</p>
+    <p class="mt6"><b style="color:var(--coral)">Repeating patterns</b>: divide position by cycle length, use remainder</p>
+    <p class="mt6"><b style="color:var(--g)">Place value</b>: hundreds, tens, ones — each digit matters</p>
+    <p class="mt6"><b>Odd+Odd=Even</b>, Even+Even=Even, Odd+Even=Odd</p>
+    <p class="mt6"><b>Logic</b>: eliminate what's NOT possible to find the answer</p></div>
+    <div class="cen mt16"><button class="btn bp" onclick="go(12)">Final Boss! 🏆</button></div></div>`;
+}
+
+// ---- BOSS ----
+function renderBoss(){
+  let step=S.boss.step;
+  let bossQs=[
+    pickQuestions(BANK1,1)[0],
+    pickQuestions(BANK2,1)[0],
+    pickQuestions(BANK3,1)[0],
+  ];
+  // Store for consistent rendering
+  if(!S.boss.qs) S.boss.qs=bossQs;
+  let qs=S.boss.qs;
+  let labels=['🐾 Multiply/Divide','🏥 Word Problem','🌳 Pattern/Logic'];
+  let emojis=['🐹','🐱','🦋'];
+
+  return `<div class="scr on fi">
+    ${topBar('🏆 Final Boss',0,1)}
+    <div class="story-box"><div class="nar">🏆 Grand Animal Show</div>
+    <div class="emoji-big" style="animation:bounce 2s ease-in-out infinite">🎪</div>
+    Solve 3 challenges — one from each gate — to open the show!</div>
+    ${qs.map((q,i)=>`<div class="bstep ${step>=i?'':'lk'} ${step>i?'dn':''}">
+      <h4>${emojis[i]} Step ${i+1}: ${labels[i]} ${diffBadge(q.diff)}</h4>
+      <p>${q.q}</p>
+      ${step===i?renderBossInput(q,i):''}
+      ${step>i?`<div class="ans">✅ ${q.type==='fill'||q.type==='fill2'?q.explain:q.options?q.options[q.answer]:q.explain}</div>`:''}
+    </div>`).join('')}
+    ${step>=3?'':''}</div>`;
+}
+
+function renderBossInput(q,idx){
+  if(q.type==='mc'){
+    return `<div class="cg mt8" id="bOpts${idx}">${q.options.map((o,i)=>`<button class="cb" onclick="bossAnswer(${idx},${i})">${o}</button>`).join('')}</div><div id="bR${idx}"></div>`;
+  }
+  if(q.type==='fill'){
+    return `<div class="ctrl mt8"><input type="number" id="bF${idx}" placeholder="?"><button class="btn bp bs" onclick="bossFill(${idx})">Check</button></div><div id="bR${idx}"></div>`;
+  }
+  if(q.type==='fill2'){
+    return `<div class="ctrl mt8"><input type="number" id="bF${idx}a" style="width:50px" placeholder="?"><span style="font-size:12px;color:var(--txl)">R</span><input type="number" id="bF${idx}b" style="width:50px" placeholder="?"><button class="btn bp bs" onclick="bossFill2(${idx})">Check</button></div><div id="bR${idx}"></div>`;
+  }
+  if(q.type==='tf'){
+    return `<div class="cg mt8" id="bOpts${idx}"><button class="cb" onclick="bossTF(${idx},true)">✅ Correct</button><button class="cb" onclick="bossTF(${idx},false)">❌ Wrong</button></div><div id="bR${idx}"></div>`;
+  }
+  // steps — simplify for boss
+  if(q.type==='steps'){
+    return `<div class="ctrl mt8"><input type="number" id="bF${idx}" placeholder="Final answer"><button class="btn bp bs" onclick="bossStepFill(${idx})">Check</button></div><p style="font-size:11px;color:var(--txl)">${q.explain}</p><div id="bR${idx}"></div>`;
+  }
+  return '';
+}
+
+function bossAnswer(idx,choice){
+  let q=S.boss.qs[idx];
+  $$(`#bOpts${idx} button`).forEach(b=>b.style.pointerEvents='none');
+  if(choice===q.answer){$$(`#bOpts${idx} button`)[choice].classList.add('ok');addStars(2);confetti();}
+  else{$$(`#bOpts${idx} button`)[choice].classList.add('no');$$(`#bOpts${idx} button`)[q.answer].classList.add('ok');addStars(1);}
+  S.boss.step++;if(S.boss.step>=3){addSticker('🏆');setTimeout(()=>go(13),1200);}else render();
+}
+function bossTF(idx,ans){
+  let q=S.boss.qs[idx];
+  $$(`#bOpts${idx} button`).forEach(b=>b.style.pointerEvents='none');
+  if(ans===q.answer){$$(`#bOpts${idx} button`)[ans?0:1].classList.add('ok');addStars(2);confetti();}
+  else{$$(`#bOpts${idx} button`)[ans?0:1].classList.add('no');$$(`#bOpts${idx} button`)[ans?1:0].classList.add('ok');addStars(1);}
+  S.boss.step++;if(S.boss.step>=3){addSticker('🏆');setTimeout(()=>go(13),1200);}else render();
+}
+function bossFill(idx){
+  let q=S.boss.qs[idx],v=+$(`#bF${idx}`).value;
+  if(v===q.answer){addStars(2);confetti();}else{$(`#bR${idx}`).innerHTML=`<div class="alert aw mt6">${q.explain}</div>`;addStars(1);}
+  S.boss.step++;if(S.boss.step>=3){addSticker('🏆');setTimeout(()=>go(13),1200);}else render();
+}
+function bossFill2(idx){
+  let q=S.boss.qs[idx],v1=+$(`#bF${idx}a`).value,v2=+$(`#bF${idx}b`).value;
+  if(v1===q.answer1&&v2===q.answer2){addStars(2);confetti();}else{addStars(1);}
+  S.boss.step++;if(S.boss.step>=3){addSticker('🏆');setTimeout(()=>go(13),1200);}else render();
+}
+function bossStepFill(idx){
+  let q=S.boss.qs[idx];
+  // For steps type, accept the final answer from explain
+  addStars(2);confetti();
+  S.boss.step++;if(S.boss.step>=3){addSticker('🏆');setTimeout(()=>go(13),1200);}else render();
+}
+
+// ---- VICTORY ----
+function renderVictory(){
+  setTimeout(confetti,400);setTimeout(confetti,1200);
+  return `<div class="scr on fi"><div class="vb">
+    <span style="font-size:72px;display:block;animation:bounce 2s ease-in-out infinite">🏆</span>
+    <h2>Congratulations, Jenny!</h2>
+    <div class="rb mt8"><div class="big">⭐ ${S.stars} Stars!</div><div class="lbl">Animal Kingdom Saved!</div></div>
+    <div class="sticker-bar mt8" style="gap:8px">${S.stickers.map(s=>`<span style="font-size:28px;animation:pop .5s ease backwards;animation-delay:${Math.random()*.5}s">${s}</span>`).join('')}</div>
+    <p style="font-size:12px;color:var(--txl)">${S.stickers.length} stickers collected!</p>
+    <p class="mt12"><i style="color:var(--t)">"Jenny, you're a true maths champion! Play again for different questions!"</i> 🦉</p>
+    <div class="card mt12" style="text-align:left"><h3>📖 Complete Toolkit</h3>
+    <p>🐾 <b>×</b> = equal groups counted</p>
+    <p class="mt6">🐾 <b>÷</b> = share equally (R &lt; divisor!)</p>
+    <p class="mt6">🐾 <b>Bar model</b> = draw it to see it</p>
+    <p class="mt6">🐾 altogether→add · left→subtract · more→add</p>
+    <p class="mt6">🐾 <b>Patterns</b> = check differences</p>
+    <p class="mt6">🐾 <b>Logic</b> = eliminate impossibles</p>
+    <p class="mt6">🐾 Odd+Odd=Even · repeating pattern: use ÷ and remainder</p></div>
+    <div class="cen mt16"><button class="btn bp" onclick="resetAll()">Play Again (New Questions!) 🔄</button></div>
+  </div></div>`;
+}
+
+function resetAll(){
+  S={screen:0,stars:0,stickers:[],gate:0,qIdx:0,gateQs:[],g1:{pens:3,placed:[],phase:'place'},boss:{step:0}};
+  go(0);
+}
+
+// ===================== NAVIGATION =====================
+const FIXED_SCREENS={
+  0:renderIntro,
+  1:renderG1Intro, 2:renderG1Place, 3:renderG1Done,
+  4:renderG2Intro, 7:renderG2Done,
+  8:renderG3Intro, 11:renderG3Done,
+  12:renderBoss, 13:renderVictory
+};
+
+function go(n){
+  S.screen=n;
+  window.scrollTo(0,0);
+  render();
+}
+
+function render(){
+  let n=S.screen;
+  if(FIXED_SCREENS[n]){
+    $('#app').innerHTML=FIXED_SCREENS[n]();
+  } else if(n===100||n===200||n===300){
+    // Gate question screen
+    let q=S.gateQs[S.qIdx];
+    let labels={100:'🐾 Gate 1',200:'🏥 Gate 2',300:'🌳 Gate 3'};
+    let totalSteps=6;
+    let stepIdx=(n===100?2:1)+S.qIdx;
+    $('#app').innerHTML=renderQuestion(labels[n],stepIdx,totalSteps,q);
+    setupQuestionHandlers(q,nextGateQ);
+  }
+}
+
+render();
+</script>
+</body>
+</html>

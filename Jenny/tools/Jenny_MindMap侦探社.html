@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Detective Mind Academy — Case 001</title>
+<style>
+  :root{
+    --cork:#9C6B44; --corkD:#7E5433; --wood:#5C3A21;
+    --paper:#FDF6E4; --paperD:#F0E4C8; --ink:#2B2118;
+    --red:#C0392B; --teal:#1C7293; --green:#1F8A4C; --amber:#E8A33D;
+    --shadow:0 4px 10px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none;}
+  html,body{margin:0; height:100%; overflow:hidden; font-family:"Segoe UI",-apple-system,"Comic Sans MS",sans-serif; touch-action:none;}
+  body{background:#3E2A1B;}
+
+  #stage{position:relative; width:100vw; height:100vh; overflow:hidden;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255,235,200,.12), transparent 60%),
+      repeating-linear-gradient(45deg, rgba(0,0,0,.04) 0 3px, transparent 3px 7px),
+      linear-gradient(160deg, var(--cork), var(--corkD));}
+  #stage::before{content:""; position:absolute; inset:0; border:14px solid var(--wood);
+    border-radius:6px; pointer-events:none; box-shadow:inset 0 0 40px rgba(0,0,0,.45); z-index:50;}
+
+  .scene{position:absolute; inset:0; display:none; z-index:1;}
+  .scene.on{display:block;}
+
+  /* ---------- chief ---------- */
+  #chief{position:absolute; left:18px; bottom:18px; z-index:40; display:flex; align-items:flex-end; gap:10px;
+    transition:transform .3s; pointer-events:none;}
+  #chiefFace{font-size:64px; filter:drop-shadow(0 3px 4px rgba(0,0,0,.4)); transform-origin:bottom center;}
+  #chief.talk #chiefFace{animation:bob 0.6s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg) translateY(-3px)}}
+  #bubble{max-width:min(420px,60vw); background:var(--paper); color:var(--ink); border-radius:14px 14px 14px 3px;
+    padding:12px 16px; font-size:17px; line-height:1.45; box-shadow:var(--shadow); position:relative;
+    border:2px solid #D9C9A3; font-weight:600;}
+  #bubble .tap{display:block; margin-top:6px; font-size:12px; color:#8A6516; font-weight:700; text-align:right;}
+  #bubble.hidden{display:none;}
+
+  /* ---------- HUD ---------- */
+  #hud{position:absolute; top:22px; left:50%; transform:translateX(-50%); z-index:45;
+    background:rgba(43,33,24,.85); color:var(--paper); padding:7px 22px; border-radius:30px;
+    font-size:16px; font-weight:700; letter-spacing:.5px; box-shadow:var(--shadow); display:flex; gap:18px; align-items:center;}
+  #hud .badge{color:var(--amber);}
+  #combo{color:#FFD97A; min-width:70px; text-align:center; transition:transform .15s;}
+  #combo.pop{transform:scale(1.35);}
+
+  /* ---------- title scene ---------- */
+  #sTitle{display:none; text-align:center;}
+  #sTitle.on{display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .stamp{background:var(--paper); border:3px solid var(--ink); color:var(--ink); display:inline-block;
+    padding:6px 18px; font-weight:900; letter-spacing:3px; font-size:14px; transform:rotate(-3deg); border-radius:4px;}
+  #sTitle h1{color:var(--paper); font-size:min(7.5vw,58px); margin:18px 0 4px; text-shadow:0 4px 8px rgba(0,0,0,.5);}
+  #sTitle h2{color:#F5D9A8; font-size:min(4vw,26px); margin:0 0 30px; font-weight:600;}
+  .bigbtn{background:var(--red); color:#fff; border:none; font-size:min(5.5vw,26px); font-weight:800;
+    padding:16px 46px; border-radius:50px; cursor:pointer; box-shadow:0 6px 0 #8E2B20, var(--shadow);
+    font-family:inherit; letter-spacing:1px; transition:transform .1s;}
+  .bigbtn:active{transform:translateY(4px); box-shadow:0 2px 0 #8E2B20;}
+  .polaroid{position:absolute; background:var(--paper); padding:8px 8px 26px; box-shadow:var(--shadow);
+    font-size:44px; line-height:1; border-radius:2px;}
+
+  /* ---------- M1 sorting ---------- */
+  .cabRow{position:absolute; top:70px; left:0; right:0; display:flex; justify-content:center; gap:min(2vw,22px); z-index:5;}
+  .cabinet{width:min(22vw,196px); height:min(30vh,210px); background:linear-gradient(#6B4A2C,#553A22);
+    border:4px solid #3E2A16; border-radius:12px; position:relative; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; align-items:center; padding-top:10px; transition:box-shadow .2s, transform .2s;}
+  .cabinet.glow{box-shadow:0 0 0 4px var(--amber), 0 0 26px 6px rgba(232,163,61,.65), var(--shadow);}
+  .cabinet.good{animation:cabpop .35s;}
+  @keyframes cabpop{50%{transform:scale(1.06)}}
+  .cabLabel{background:var(--paper); border:2px solid var(--ink); border-radius:6px; padding:3px 12px;
+    font-weight:900; font-size:min(3.2vw,17px); color:var(--ink); transform:rotate(-1.5deg); text-align:center; line-height:1.2;}
+  .cabLabel small{display:block; font-size:min(2.4vw,11.5px); font-weight:700; color:#7E5C13;}
+  .cabSlots{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:10px; padding:0 6px;}
+  .mini{width:min(7vw,52px); height:min(7vw,52px); border-radius:8px; background:rgba(0,0,0,.25);
+    border:2px dashed rgba(255,255,255,.25); display:flex; align-items:center; justify-content:center; font-size:min(5vw,34px);}
+  .mini.filled{border-style:solid; border-color:var(--green); background:var(--paperD); animation:cabpop .3s;}
+
+  /* ---------- cards ---------- */
+  .card{position:absolute; width:min(17vw,110px); height:min(20vw,128px); background:var(--paper);
+    border:2.5px solid var(--ink); border-radius:10px; box-shadow:var(--shadow); cursor:grab; z-index:20;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+    transition:transform .12s; touch-action:none;}
+  .card .emo{font-size:min(11vw,58px); line-height:1; pointer-events:none;}
+  .card .nm{font-size:min(2.8vw,14.5px); font-weight:800; color:var(--ink); pointer-events:none;}
+  .card.drag{cursor:grabbing; z-index:30; transform:scale(1.12) rotate(2deg); transition:none;}
+  .card.shake{animation:shake .4s;}
+  @keyframes shake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-9px) rotate(-3deg)}75%{transform:translateX(9px) rotate(3deg)}}
+  .card.ghost{opacity:.45; filter:grayscale(.4);}
+  .pin{position:absolute; top:-9px; left:50%; transform:translateX(-50%); font-size:18px; pointer-events:none;
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,.4));}
+
+  /* ---------- M3 board ---------- */
+  #svg{position:absolute; inset:0; width:100%; height:100%; z-index:3; pointer-events:none;}
+  .node{position:absolute; z-index:10; transform:translate(-50%,-50%);}
+  .center{background:var(--red); color:#fff; border:3px solid #7E241B; border-radius:14px;
+    padding:14px 22px; font-weight:900; font-size:min(4vw,22px); box-shadow:var(--shadow); text-align:center; letter-spacing:1px;}
+  .slot{width:min(20vw,132px); height:min(9.5vw,60px); border:3px dashed rgba(255,244,214,.55); border-radius:12px;
+    background:rgba(0,0,0,.14); display:flex; align-items:center; justify-content:center;
+    color:rgba(255,244,214,.75); font-weight:800; font-size:min(2.6vw,13px); transition:all .2s; text-align:center;}
+  .slot.glow{border-color:var(--amber); box-shadow:0 0 18px 4px rgba(232,163,61,.6); background:rgba(232,163,61,.18); color:#FFE9BF;}
+  .slot.small{width:min(16vw,104px); height:min(8.5vw,54px);}
+  .slot.done{border-style:solid; border-color:var(--green); background:transparent; box-shadow:none;}
+  .placed{position:absolute; transform:translate(-50%,-50%); z-index:12; background:var(--paper); border:2.5px solid var(--ink);
+    border-radius:10px; padding:5px 12px 7px; font-weight:800; color:var(--ink); text-align:center; box-shadow:var(--shadow);
+    font-size:min(3vw,16px); animation:pinIn .3s;}
+  .placed .emo{font-size:min(6vw,30px); display:block; line-height:1.1;}
+  .placed .nm{font-size:min(2.6vw,13.5px);}
+  @keyframes pinIn{0%{transform:translate(-50%,-50%) scale(1.4)}100%{transform:translate(-50%,-50%) scale(1)}}
+  .tray{position:absolute; bottom:16px; left:0; right:0; display:flex; justify-content:center; gap:min(2vw,14px);
+    z-index:15; pointer-events:none;}
+
+  /* ---------- quiz popup ---------- */
+  #quiz{position:absolute; inset:0; background:rgba(30,20,12,.72); z-index:60; display:none;
+    align-items:center; justify-content:center;}
+  #quiz.on{display:flex;}
+  .qcard{background:var(--paper); border-radius:18px; padding:26px 30px; max-width:min(88vw,520px); text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,.5); border:3px solid #D9C9A3;}
+  .qcard h3{margin:0 0 6px; color:var(--ink); font-size:21px;}
+  .qcard .q{font-size:19px; color:var(--ink); margin-bottom:18px;}
+  .qcard .q b{color:var(--red);}
+  .opt{display:block; width:100%; margin:8px 0; padding:13px; font-size:18px; font-weight:800; font-family:inherit;
+    border-radius:12px; border:3px solid var(--teal); background:#fff; color:var(--teal); cursor:pointer; transition:transform .1s;}
+  .opt:active{transform:scale(.97);}
+  .opt.right{background:var(--green); border-color:var(--green); color:#fff;}
+  .opt.wrong{background:#F6D2CD; border-color:var(--red); color:var(--red); animation:shake .4s;}
+
+  /* ---------- solved ---------- */
+  #sSolved{display:none; align-items:center; justify-content:center; flex-direction:column; text-align:center;}
+  #sSolved.on{display:flex;}
+  #bigStamp{font-size:min(9vw,54px); font-weight:900; color:var(--red); border:6px solid var(--red);
+    padding:10px 34px; border-radius:10px; transform:rotate(-8deg); background:rgba(253,246,228,.92);
+    letter-spacing:4px; box-shadow:var(--shadow); animation:stampIn .5s cubic-bezier(.2,2.5,.5,1);}
+  @keyframes stampIn{0%{transform:rotate(-8deg) scale(3); opacity:0}100%{transform:rotate(-8deg) scale(1); opacity:1}}
+  #sSolved .badgeBig{font-size:80px; margin:26px 0 6px; animation:bob 1.2s ease-in-out infinite;}
+  #sSolved h2{color:var(--paper); font-size:26px; margin:4px 0 20px;}
+  .confetti{position:absolute; font-size:26px; animation:fall linear forwards; z-index:2; pointer-events:none;}
+  @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+  #skipDemo{position:absolute; right:26px; bottom:22px; z-index:46; background:none; border:2px solid rgba(253,246,228,.5);
+    color:rgba(253,246,228,.8); font-family:inherit; font-weight:700; font-size:14px; padding:7px 16px; border-radius:20px; cursor:pointer; display:none;}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <div id="hud" style="display:none">
+    <span>🕵️ CASE 001</span>
+    <span id="score" class="badge">⭐ 0</span>
+    <span id="combo"></span>
+  </div>
+
+  <!-- TITLE -->
+  <div class="scene on" id="sTitle">
+    <div class="polaroid" style="top:12%;left:12%;transform:rotate(-8deg)">🦁</div>
+    <div class="polaroid" style="top:18%;right:14%;transform:rotate(6deg)">🦜</div>
+    <div class="polaroid" style="bottom:16%;left:20%;transform:rotate(5deg)">🦈</div>
+    <div class="stamp">SCREW STREET DETECTIVE AGENCY</div>
+    <h1>Detective Mind Academy</h1>
+    <h2>Case 001 · The Great Zoo Mix-Up</h2>
+    <button class="bigbtn" onclick="G.start()">OPEN THE CASE 🔍</button>
+  </div>
+
+  <!-- M1 SORTING -->
+  <div class="scene" id="sSort">
+    <div class="cabRow" id="cabRow"></div>
+  </div>
+
+  <!-- M3 BOARD -->
+  <div class="scene" id="sBoard">
+    <svg id="svg"></svg>
+  </div>
+
+  <!-- SOLVED -->
+  <div class="scene" id="sSolved">
+    <div id="bigStamp">CASE SOLVED</div>
+    <div class="badgeBig">🎖️</div>
+    <h2>You earned the <b style="color:#FFD97A">Turtle Detective</b> badge! 🐢</h2>
+    <button class="bigbtn" onclick="location.reload()">PLAY AGAIN</button>
+  </div>
+
+  <div id="quiz"><div class="qcard">
+    <h3>🕵️ What does the red string say?</h3>
+    <div class="q">BIRDS <b>______</b> ZOO ANIMALS</div>
+    <div id="opts"></div>
+  </div></div>
+
+  <div id="chief" style="display:none">
+    <div id="chiefFace">🕵️</div>
+    <div id="bubble"><span id="btext"></span><span class="tap" id="btap">tap to continue ▸</span></div>
+  </div>
+  <button id="skipDemo" onclick="G.skipDemo()">skip demo ▸▸</button>
+</div>
+
+<script>
+"use strict";
+/* ============ audio ============ */
+const AU = {
+  ctx:null,
+  init(){ if(!this.ctx){ try{ this.ctx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } },
+  tone(f, t=0.12, type="sine", vol=0.18, when=0){
+    if(!this.ctx) return;
+    const o=this.ctx.createOscillator(), g=this.ctx.createGain();
+    o.type=type; o.frequency.value=f; o.connect(g); g.connect(this.ctx.destination);
+    const s=this.ctx.currentTime+when;
+    g.gain.setValueAtTime(vol,s); g.gain.exponentialRampToValueAtTime(0.001,s+t);
+    o.start(s); o.stop(s+t+0.02);
+  },
+  ding(){ this.tone(660,.1); this.tone(990,.16,"sine",.15,.08); },
+  buzz(){ this.tone(160,.22,"square",.08); },
+  pin(){ this.tone(220,.05,"square",.12); this.tone(440,.06,"triangle",.1,.04); },
+  string(){ this.tone(330,.25,"sawtooth",.05); },
+  tada(){ [523,659,784,1047].forEach((f,i)=>this.tone(f,.28,"triangle",.16,i*.11)); },
+  combo(n){ this.tone(660+n*110,.1,"triangle",.15); }
+};
+
+/* ============ helpers ============ */
+const $=s=>document.querySelector(s);
+const stage=$("#stage");
+function el(tag,cls,html){ const d=document.createElement(tag); if(cls)d.className=cls; if(html!=null)d.innerHTML=html; return d; }
+function pct(n){ return n+"%"; }
+function rectOf(e){ return e.getBoundingClientRect(); }
+function overlap(a,b){ return !(a.right<b.left||a.left>b.right||a.bottom<b.top||a.top>b.bottom); }
+
+/* ============ chief dialogue ============ */
+const Chief = {
+  q:[], cb:null, waiting:false,
+  say(lines, done){
+    this.q = Array.isArray(lines)?lines.slice():[lines];
+    this.cb = done||null;
+    $("#chief").style.display="flex";
+    this.next();
+  },
+  next(){
+    if(!this.q.length){
+      $("#chief").classList.remove("talk");
+      $("#bubble").classList.add("hidden");
+      this.waiting=false;
+      if(this.cb){ const c=this.cb; this.cb=null; c(); }
+      return;
+    }
+    const line=this.q.shift();
+    $("#bubble").classList.remove("hidden");
+    $("#btext").textContent=line;
+    $("#btap").style.display = this.q.length||this.cb ? "block":"block";
+    $("#chief").classList.add("talk");
+    this.waiting=true;
+  },
+  hint(line){ // non-blocking hint, auto-hide
+    $("#chief").style.display="flex";
+    $("#bubble").classList.remove("hidden");
+    $("#btext").textContent=line;
+    $("#btap").style.display="none";
+    $("#chief").classList.add("talk");
+    clearTimeout(this._t);
+    this._t=setTimeout(()=>{ if(!this.waiting){ $("#bubble").classList.add("hidden"); $("#chief").classList.remove("talk"); } },2600);
+  }
+};
+stage.addEventListener("pointerdown",e=>{
+  if(Chief.waiting && !e.target.closest(".card,.opt,.bigbtn,#skipDemo")){ Chief.next(); }
+});
+
+/* ============ data ============ */
+const CATS=[
+  {id:"birds", name:"BIRDS",    sub:"they have feathers",  emo:"🪶"},
+  {id:"mamm",  name:"MAMMALS",  sub:"they have fur",       emo:"🦁"},
+  {id:"fish",  name:"FISH",     sub:"they live in water",  emo:"🐟"},
+  {id:"rept",  name:"REPTILES", sub:"they have dry scales",emo:"🐊"},
+];
+const ANIMALS=[
+  {id:"parrot",  nm:"Parrot",   emo:"🦜", cat:"birds"},
+  {id:"penguin", nm:"Penguin",  emo:"🐧", cat:"birds"},
+  {id:"eagle",   nm:"Eagle",    emo:"🦅", cat:"birds"},
+  {id:"lion",    nm:"Lion",     emo:"🦁", cat:"mamm"},
+  {id:"eleph",   nm:"Elephant", emo:"🐘", cat:"mamm"},
+  {id:"monkey",  nm:"Monkey",   emo:"🐵", cat:"mamm"},
+  {id:"shark",   nm:"Shark",    emo:"🦈", cat:"fish"},
+  {id:"clown",   nm:"Clownfish",emo:"🐠", cat:"fish"},
+  {id:"gold",    nm:"Goldfish", emo:"🐟", cat:"fish"},
+  {id:"snake",   nm:"Snake",    emo:"🐍", cat:"rept"},
+  {id:"turtle",  nm:"Turtle",   emo:"🐢", cat:"rept"},
+  {id:"croc",    nm:"Crocodile",emo:"🐊", cat:"rept"},
+];
+
+/* ============ game state ============ */
+const G = {
+  score:0, combo:0, misses:{},
+  addScore(n){ this.score+=n; $("#score").textContent="⭐ "+this.score; },
+  bumpCombo(){
+    this.combo++;
+    const c=$("#combo");
+    c.textContent = this.combo>=2 ? "COMBO ×"+this.combo : "";
+    c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop");
+    if(this.combo>=2) AU.combo(Math.min(this.combo,5));
+  },
+  resetCombo(){ this.combo=0; $("#combo").textContent=""; },
+
+  start(){
+    AU.init(); AU.tada();
+    $("#sTitle").classList.remove("on");
+    $("#hud").style.display="flex";
+    Chief.say([
+      "Welcome to the agency, rookie! I'm Chief Cai. 🕵️",
+      "Last night a storm hit the city zoo. Every label blew away!",
+      "Twelve animals are lost. Our job: sort them back into the right cabinets.",
+      "Watch me do the first one. Watch closely!"
+    ], ()=>M1.begin());
+  },
+  skipDemo(){ M1.endDemo(true); },
+  solved(){
+    $("#sBoard").classList.remove("on");
+    $("#chief").style.display="none";
+    $("#skipDemo").style.display="none";
+    $("#sSolved").classList.add("on");
+    AU.tada();
+    // confetti
+    for(let i=0;i<26;i++){
+      const c=el("div","confetti",["🎉","⭐","🎊","🔍"][i%4]);
+      c.style.left=Math.random()*96+"%";
+      c.style.top=(-10-Math.random()*30)+"%";
+      c.style.animationDuration=(2.2+Math.random()*2)+"s";
+      c.style.animationDelay=(Math.random()*0.8)+"s";
+      $("#sSolved").appendChild(c);
+    }
+    try{ localStorage.setItem("dma_badge_001","1"); }catch(e){}
+  }
+};
+
+/* ============ generic drag ============ */
+function makeDraggable(cardEl, onDrop){
+  let sx,sy,ox,oy,drag=false;
+  cardEl.addEventListener("pointerdown",e=>{
+    if(cardEl.classList.contains("ghost"))return;
+    drag=true; cardEl.setPointerCapture(e.pointerId);
+    cardEl.classList.add("drag");
+    const r=rectOf(cardEl);
+    ox=e.clientX-r.left; oy=e.clientY-r.top;
+    cardEl.style.left=(e.clientX-ox)+"px";
+    cardEl.style.top=(e.clientY-oy)+"px";
+    cardEl.style.transform="scale(1.12) rotate(2deg)";
+    e.preventDefault();
+  });
+  cardEl.addEventListener("pointermove",e=>{
+    if(!drag)return;
+    cardEl.style.left=(e.clientX-ox)+"px";
+    cardEl.style.top=(e.clientY-oy)+"px";
+  });
+  cardEl.addEventListener("pointerup",e=>{
+    if(!drag)return; drag=false;
+    cardEl.classList.remove("drag");
+    cardEl.style.transform="";
+    onDrop(cardEl,e);
+  });
+  cardEl.addEventListener("pointercancel",()=>{ drag=false; cardEl.classList.remove("drag"); cardEl.style.transform=""; });
+}
+
+/* ============ M1 : evidence sorting ============ */
+const M1 = {
+  remaining:0, demoCard:null, demoRunning:false, homes:new Map(),
+
+  begin(){
+    $("#sSort").classList.add("on");
+    const row=$("#cabRow");
+    row.innerHTML="";
+    CATS.forEach(c=>{
+      const cab=el("div","cabinet");
+      cab.dataset.cat=c.id;
+      cab.appendChild(el("div","cabLabel",c.name+"<small>"+c.sub+"</small>"));
+      const slots=el("div","cabSlots");
+      for(let i=0;i<3;i++) slots.appendChild(el("div","mini",""));
+      cab.appendChild(slots);
+      row.appendChild(cab);
+    });
+    this.spawnCards();
+    this.startDemo();
+  },
+
+  spawnCards(){
+    const deck=[...ANIMALS].sort(()=>Math.random()-.5);
+    this.remaining=deck.length;
+    const n=deck.length;
+    deck.forEach((a,i)=>{
+      const card=el("div","card");
+      card.dataset.cat=a.cat; card.dataset.id=a.id; card.dataset.nm=a.nm; card.dataset.emo=a.emo;
+      card.innerHTML='<span class="pin">📌</span><span class="emo">'+a.emo+'</span><span class="nm">'+a.nm+'</span>';
+      const left = 5 + (i/(n-1))*80 + (Math.random()*2);
+      const top  = 60 + (i%2)*16 + Math.random()*4;
+      card.style.left=left+"vw"; card.style.top=top+"vh";
+      card.style.transform="rotate("+((Math.random()*8)-4)+"deg)";
+      $("#sSort").appendChild(card);
+      this.homes.set(card,{left:card.style.left, top:card.style.top});
+      makeDraggable(card,(c,e)=>this.tryDrop(c,e));
+      if(a.id==="parrot") this.demoCard=card;
+    });
+  },
+
+  startDemo(){
+    this.demoRunning=true;
+    $("#skipDemo").style.display="block";
+    const card=this.demoCard;
+    const cab=[...document.querySelectorAll(".cabinet")].find(c=>c.dataset.cat==="birds");
+    cab.classList.add("glow");
+    // chief narrates then card flies
+    Chief.say([
+      "This is a Parrot. 🦜  Ask the detective question: WHICH PILE?",
+      "Feathers? Fur? Or fins? … A parrot has FEATHERS.",
+      "So it belongs with the BIRDS. Watch it fly in!"
+    ],()=>{
+      const r1=rectOf(card), r2=rectOf(cab);
+      card.style.transition="left .9s cubic-bezier(.3,1.3,.5,1), top .9s cubic-bezier(.3,1.3,.5,1)";
+      card.style.left=(r2.left+r2.width/2-r1.width/2)+"px";
+      card.style.top=(r2.top+r2.height/2-r1.height/2)+"px";
+      setTimeout(()=>{ this.settle(card,cab,true); this.endDemo(false); },950);
+    });
+  },
+
+  endDemo(skipped){
+    if(!this.demoRunning)return;
+    this.demoRunning=false;
+    $("#skipDemo").style.display="none";
+    if(skipped && this.demoCard && !this.demoCard.classList.contains("ghost")){
+      const cab=[...document.querySelectorAll(".cabinet")].find(c=>c.dataset.cat==="birds");
+      this.settle(this.demoCard,cab,true);
+    }
+    document.querySelectorAll(".cabinet").forEach(c=>c.classList.add("glow"));
+    Chief.say(["Your turn, rookie! Drag each animal into its cabinet.","Ask WHICH PILE before you drag. Go!"]);
+  },
+
+  tryDrop(card){
+    if(this.demoRunning){ this.snapHome(card); return; }
+    const cr=rectOf(card);
+    const cab=[...document.querySelectorAll(".cabinet")].find(c=>overlap(cr,rectOf(c)));
+    if(!cab){ this.snapHome(card); return; }
+    if(cab.dataset.cat===card.dataset.cat){
+      this.settle(card,cab,false);
+    }else{
+      AU.buzz(); G.resetCombo();
+      card.classList.add("shake");
+      G.misses[card.dataset.id]=(G.misses[card.dataset.id]||0)+1;
+      const a=ANIMALS.find(x=>x.id===card.dataset.id);
+      const hints={birds:"Does it have feathers?",mamm:"Does it have fur?",fish:"Does it live in water and have fins?"};
+      Chief.hint("Hmm… a "+a.nm+"? "+hints[a.cat]);
+      setTimeout(()=>{ card.classList.remove("shake"); this.snapHome(card); },380);
+    }
+  },
+
+  snapHome(card){
+    const h=this.homes.get(card);
+    card.style.transition="left .3s, top .3s";
+    card.style.left=h.left; card.style.top=h.top;
+    setTimeout(()=>card.style.transition="",320);
+  },
+
+  settle(card,cab,isDemo){
+    AU.ding();
+    const mini=[...cab.querySelectorAll(".mini")].find(m=>!m.classList.contains("filled"));
+    if(mini){ mini.classList.add("filled"); mini.textContent=card.dataset.emo; }
+    cab.classList.add("good"); setTimeout(()=>cab.classList.remove("good"),380);
+    card.remove();
+    if(!isDemo){ G.addScore(10); G.bumpCombo(); }
+    else G.addScore(0);
+    this.remaining--;
+    if(this.remaining===0) setTimeout(()=>this.finish(),650);
+  },
+
+  finish(){
+    AU.tada();
+    Chief.say([
+      "All twelve sorted — excellent cabinet work! ⭐",
+      "But cabinets are not enough. A detective needs the BIG PICTURE.",
+      "Time for the red string board. Follow me!"
+    ],()=>{
+      $("#sSort").classList.add("hide");
+      $("#sSort").classList.remove("on");
+      document.querySelectorAll("#sSort .card").forEach(c=>c.remove());
+      M3.begin();
+    });
+  }
+};
+
+/* ============ M3 : red string board ============ */
+const M3 = {
+  layout:{}, placedCats:0, placedAnimals:0, quizDone:false, catActual:{},
+
+  begin(){
+    $("#sBoard").classList.add("on");
+    const sc=$("#sBoard");
+    // TURTLE layout: shell (case) in the middle, four legs — two left, two right
+    this.layout={
+      center:{x:50,y:40},
+      cats:{ birds:{x:25,y:20}, mamm:{x:25,y:60}, fish:{x:75,y:20}, rept:{x:75,y:60} },
+    };
+    // center node (the shell)
+    const c=el("div","node center","🐢 ZOO<br>ANIMALS");
+    c.style.left=pct(this.layout.center.x); c.style.top=pct(this.layout.center.y);
+    sc.appendChild(c);
+    // four leg slots
+    Object.entries(this.layout.cats).forEach(([id,pos])=>{
+      const s=el("div","node slot","pin a group here");
+      s.dataset.slotCat=id;
+      s.style.left=pct(pos.x); s.style.top=pct(pos.y);
+      s.classList.add("glow");
+      sc.appendChild(s);
+    });
+    // category cards in tray
+    const catsShuffled=[...CATS].sort(()=>Math.random()-.5);
+    catsShuffled.forEach((cat,i)=>{
+      const card=el("div","card");
+      card.style.position="absolute";
+      card.style.width="min(17vw,112px)"; card.style.height="min(13vw,82px)";
+      card.dataset.cat=cat.id;
+      card.innerHTML='<span class="pin">📌</span><span class="emo" style="font-size:min(6vw,30px)">'+cat.emo+'</span><span class="nm">'+cat.name+'</span>';
+      const left=17+i*17.5;
+      card.style.left=left+"vw"; card.style.top="83vh";
+      $("#sBoard").appendChild(card);
+      makeDraggable(card,(el2)=>this.dropCat(el2));
+    });
+    Chief.say([
+      "This board is called a MIND MAP. And a good one is shaped like a TURTLE! 🐢",
+      "The shell sits in the middle — that's the case.",
+      "Four legs stick out — two on the LEFT, two on the RIGHT.",
+      "Every map you ever make can stand on four legs. Pin the groups on!"
+    ]);
+  },
+
+  dropCat(card){
+    const cr=rectOf(card);
+    const slot=[...document.querySelectorAll("[data-slot-cat]")].find(s=>!s.dataset.filled&&overlap(cr,rectOf(s)));
+    if(!slot){ this.floatBack(card); return; }
+    // full scaffold: any glowing slot accepts the right card only if positions free — but P0 rookie level: slots are interchangeable, accept any cat card, one each
+    slot.dataset.filled=card.dataset.cat;
+    slot.classList.remove("glow"); slot.classList.add("done");
+    slot.textContent="";
+    const cat=CATS.find(c=>c.id===card.dataset.cat);
+    const p=el("div","placed",'<span class="emo">'+cat.emo+'</span><span class="nm">'+cat.name+'</span>');
+    p.style.left=slot.style.left; p.style.top=slot.style.top;
+    $("#sBoard").appendChild(p);
+    card.remove();
+    this.catActual[card.dataset.cat]=this.posOfSlot(slot);
+    AU.pin(); AU.string(); G.addScore(15);
+    this.drawString(this.layout.center, this.posOfSlot(slot));
+    this.placedCats++;
+    if(this.placedCats===4){
+      setTimeout(()=>this.quiz(),500);
+    }
+  },
+
+  posOfSlot(slot){
+    return { x:parseFloat(slot.style.left), y:parseFloat(slot.style.top) };
+  },
+
+  drawString(a,b){
+    const svg=$("#svg");
+    const W=stage.clientWidth, H=stage.clientHeight;
+    const x1=a.x/100*W, y1=a.y/100*H, x2=b.x/100*W, y2=b.y/100*H;
+    const mx=(x1+x2)/2, my=(y1+y2)/2+18;
+    const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+    path.setAttribute("d",`M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`);
+    path.setAttribute("stroke","#C0392B"); path.setAttribute("stroke-width","3.5");
+    path.setAttribute("fill","none"); path.setAttribute("stroke-linecap","round");
+    const len=Math.hypot(x2-x1,y2-y1)*1.15;
+    path.style.strokeDasharray=len; path.style.strokeDashoffset=len;
+    path.style.transition="stroke-dashoffset .5s ease-out";
+    svg.appendChild(path);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>path.style.strokeDashoffset=0));
+  },
+
+  quiz(){
+    $("#quiz").classList.add("on");
+    const opts=[
+      {t:"belong to", ok:true},
+      {t:"are bigger than", ok:false},
+      {t:"eat", ok:false},
+    ].sort(()=>Math.random()-.5);
+    const box=$("#opts"); box.innerHTML="";
+    opts.forEach(o=>{
+      const b=el("button","opt",o.t);
+      b.onclick=()=>{
+        if(o.ok){
+          b.classList.add("right"); AU.ding(); G.addScore(20);
+          setTimeout(()=>{ $("#quiz").classList.remove("on"); this.phaseAnimals(); },700);
+        }else{
+          b.classList.add("wrong"); AU.buzz();
+          setTimeout(()=>b.classList.remove("wrong"),450);
+        }
+      };
+      box.appendChild(b);
+    });
+  },
+
+  phaseAnimals(){
+    // toe slots grow OUTWARD from each leg: left legs → further left, right legs → further right
+    const sc=$("#sBoard");
+    CATS.forEach(c=>{
+      const base=this.catActual[c.id] || this.layout.cats[c.id];
+      const outX = base.x<50 ? base.x-15 : base.x+15;
+      [-9, 9].forEach(dy=>{
+        const s=el("div","node slot small glow","");
+        s.dataset.kidCat=c.id;
+        s.style.left=pct(outX); s.style.top=pct(base.y+dy);
+        sc.appendChild(s);
+      });
+    });
+    // 8 animal cards (2 per cat)
+    const picks=[];
+    CATS.forEach(c=>{
+      const pool=ANIMALS.filter(a=>a.cat===c.id).sort(()=>Math.random()-.5).slice(0,2);
+      picks.push(...pool);
+    });
+    picks.sort(()=>Math.random()-.5);
+    picks.forEach((a,i)=>{
+      const card=el("div","card");
+      card.style.width="min(12vw,84px)"; card.style.height="min(14vw,96px)";
+      card.dataset.cat=a.cat; card.dataset.id=a.id;
+      card.innerHTML='<span class="pin">📌</span><span class="emo" style="font-size:min(7vw,38px)">'+a.emo+'</span><span class="nm" style="font-size:min(2.4vw,12px)">'+a.nm+'</span>';
+      card.style.left=(4+i*12)+"vw"; card.style.top="84vh";
+      sc.appendChild(card);
+      makeDraggable(card,(el2)=>this.dropAnimal(el2));
+    });
+    Chief.say([
+      "Now the details — every leg gets two toes! 🐾",
+      "Left legs grow LEFT, right legs grow RIGHT. Pin all eight!"
+    ]);
+  },
+
+  dropAnimal(card){
+    const cr=rectOf(card);
+    const slot=[...document.querySelectorAll("[data-kid-cat]")].find(s=>!s.dataset.filled&&overlap(cr,rectOf(s)));
+    if(!slot){ this.floatBack(card); return; }
+    if(slot.dataset.kidCat!==card.dataset.cat){
+      AU.buzz(); card.classList.add("shake"); G.resetCombo();
+      const cat=CATS.find(c=>c.id===slot.dataset.kidCat);
+      Chief.hint("That slot hangs under "+cat.name+". Is it the right group?");
+      setTimeout(()=>{ card.classList.remove("shake"); this.floatBack(card); },380);
+      return;
+    }
+    slot.dataset.filled="1"; slot.classList.remove("glow"); slot.classList.add("done");
+    const a=ANIMALS.find(x=>x.id===card.dataset.id);
+    const p=el("div","placed",'<span class="emo">'+a.emo+'</span><span class="nm">'+a.nm+'</span>');
+    p.style.left=slot.style.left; p.style.top=slot.style.top;
+    $("#sBoard").appendChild(p);
+    card.remove();
+    AU.pin(); G.addScore(10); G.bumpCombo();
+    // string from parent cat (actual landing position) to this slot
+    const parentPos=this.catActual[a.cat]||this.layout.cats[a.cat];
+    this.drawString(parentPos,{x:parseFloat(slot.style.left),y:parseFloat(slot.style.top)});
+    this.placedAnimals++;
+    if(this.placedAnimals===8){
+      setTimeout(()=>{
+        Chief.say([
+          "Look at the board, rookie. One shell, FOUR legs, EIGHT toes. 🐢",
+          "That is a mind map — and this turtle shape works for ANY case.",
+          "Your next test paper? Draw the turtle first. Case… CLOSED! 🎉"
+        ],()=>G.solved());
+      },600);
+    }
+  },
+
+  floatBack(card){
+    card.style.transition="left .3s, top .3s";
+    // send back to bottom tray area
+    card.style.top="82vh";
+    setTimeout(()=>card.style.transition="",320);
+  }
+};
+</script>
+</body>
+</html>

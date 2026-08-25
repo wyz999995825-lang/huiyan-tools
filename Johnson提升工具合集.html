@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Johnson 提升工具合集</title>
+<style>
+:root{
+  --bg:#faf5ec;--card:#fff8f0;--border:#e0d5c5;--text:#2c2418;--text2:#7a6e5e;
+  --accent:#1a7a6d;--accent-bg:#e8f5f0;--green:#1a8a5c;--green-bg:#e5f5ec;
+  --blue:#2563eb;--blue-bg:#dbeafe;--orange:#d4790e;--orange-bg:#fdf0dc;
+  --purple:#7c3aed;--purple-bg:#ede9fe;--red:#c0392b;--red-bg:#fce8e6;
+  --gold:#d4a017;--gold-bg:#fdf6e3;
+  --radius:14px;--shadow:0 2px 10px rgba(0,0,0,.06)
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1a16;--card:#262420;--border:#3e3a32;--text:#e8e2d8;--text2:#a09888;
+  --accent:#3dbfa8;--accent-bg:#1a2e2a;--green-bg:#1a2e22;--blue-bg:#1a2a4a;
+  --orange-bg:#2e2618;--purple-bg:#2a1e3e;--red-bg:#2e1a1a;--gold-bg:#2e2a18
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+.topbar{background:linear-gradient(135deg,#1a7a6d 0%,#0d4f46 100%);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+.topbar h1{font-size:20px;font-weight:700}
+.topbar .info{font-size:13px;opacity:.7}
+.topbar .back-btn{background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;display:none}
+.topbar .back-btn:hover{background:rgba(255,255,255,.25)}
+
+/* ===== 全局激励栏 ===== */
+.motiv-bar{background:linear-gradient(90deg,var(--gold-bg) 0%,var(--green-bg) 100%);border-bottom:1.5px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:16px;flex-shrink:0;flex-wrap:wrap;min-height:52px;cursor:pointer;transition:.15s}
+.motiv-bar:hover{filter:brightness(0.97)}
+.mb-streak{display:flex;align-items:center;gap:6px;font-weight:800;font-size:18px;color:var(--gold)}
+.mb-streak .fire{font-size:22px}
+.mb-stat{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--text2);background:var(--card);padding:4px 10px;border-radius:12px;border:1px solid var(--border)}
+.mb-stat .n{font-weight:700;color:var(--accent);font-size:15px}
+.mb-badges{display:flex;gap:2px;font-size:18px}
+.mb-badges .locked{opacity:.2}
+.mb-msg{flex:1;text-align:right;font-size:13px;color:var(--text2);font-style:italic;min-width:120px}
+.mb-add{background:var(--green);color:#fff;border:none;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.mb-add:hover{opacity:.9}
+
+/* 快速记录弹窗 */
+.quick-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1000;justify-content:center;align-items:center}
+.quick-modal-overlay.show{display:flex}
+.quick-modal{background:var(--card);border:2px solid var(--accent);border-radius:18px;padding:28px;width:90%;max-width:440px;box-shadow:0 10px 40px rgba(0,0,0,.15);animation:popIn .25s ease}
+@keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.qm-title{font-size:20px;font-weight:700;margin-bottom:16px;text-align:center}
+.qm-cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.qm-cat{padding:6px 12px;border-radius:16px;border:1.5px solid var(--border);background:var(--bg);cursor:pointer;font-size:13px;transition:.15s}
+.qm-cat.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.qm-cat:hover{border-color:var(--accent)}
+.qm-quicks{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.qm-q{padding:5px 10px;border-radius:12px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:12px}
+.qm-q:hover{background:var(--accent-bg);border-color:var(--accent)}
+.qm-input{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;background:var(--bg);color:var(--text);margin-bottom:12px}
+.qm-input:focus{outline:none;border-color:var(--accent)}
+.qm-btns{display:flex;gap:10px}
+.qm-submit{flex:1;padding:12px;border:none;border-radius:10px;background:var(--green);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.qm-submit:hover{opacity:.9}
+.qm-cancel{padding:12px 20px;border:1.5px solid var(--border);border-radius:10px;background:var(--card);color:var(--text2);font-size:15px;cursor:pointer}
+.qm-cancel:hover{background:var(--bg)}
+
+/* 庆祝动画 */
+.confetti{position:fixed;pointer-events:none;z-index:2000;border-radius:50%;transition:all .8s cubic-bezier(.25,.46,.45,.94)}
+.badge-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--card);border:3px solid var(--gold);border-radius:20px;padding:30px 40px;text-align:center;z-index:2001;box-shadow:0 10px 50px rgba(0,0,0,.25);animation:badgePop .5s ease forwards}
+@keyframes badgePop{from{transform:translate(-50%,-50%) scale(0);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.badge-popup .bp-icon{font-size:64px}
+.badge-popup .bp-title{font-size:20px;font-weight:800;color:var(--gold);margin-top:8px}
+.badge-popup .bp-desc{font-size:14px;color:var(--text2);margin-top:4px}
+
+.main{display:flex;flex:1;overflow:hidden}
+
+.sidebar{width:240px;background:var(--card);border-right:1.5px solid var(--border);overflow-y:auto;flex-shrink:0;padding:12px 0}
+.sidebar .sec{padding:6px 16px;font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-top:8px}
+.sidebar .item{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;transition:.15s;border-left:3px solid transparent;font-size:14px;line-height:1.3}
+.sidebar .item:hover{background:var(--accent-bg)}
+.sidebar .item.active{background:var(--accent-bg);border-left-color:var(--accent);font-weight:600}
+.sidebar .item .emoji{font-size:20px;flex-shrink:0}
+.sidebar .item .label{flex:1}
+.sidebar .item .tag{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;flex-shrink:0}
+.tag-new{background:var(--green-bg);color:var(--green)}
+.tag-hot{background:var(--red-bg);color:var(--red)}
+
+.content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.tool-frame{flex:1;border:none;background:#fff}
+
+.home{flex:1;overflow-y:auto;padding:30px}
+.home h2{font-size:22px;margin-bottom:6px}
+.home .sub{color:var(--text2);font-size:14px;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:28px}
+.card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;transition:.2s;box-shadow:var(--shadow)}
+.card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.1);border-color:var(--accent)}
+.card .c-icon{font-size:28px;margin-bottom:8px}
+.card .c-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.card .c-desc{font-size:13px;color:var(--text2);line-height:1.5}
+.sec-title{font-size:16px;font-weight:700;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
+/* 首页激励仪表盘 */
+.dash{background:linear-gradient(135deg,var(--gold-bg) 0%,var(--accent-bg) 100%);border:2px solid var(--gold);border-radius:var(--radius);padding:24px;margin-bottom:28px;position:relative;overflow:hidden}
+.dash::after{content:'';position:absolute;top:-20px;right:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(212,160,23,.12) 0%,transparent 70%);border-radius:50%}
+.dash-top{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:16px}
+.dash-streak{text-align:center}
+.dash-streak .ds-icon{font-size:40px}
+.dash-streak .ds-num{font-size:44px;font-weight:900;color:var(--gold);line-height:1}
+.dash-streak .ds-label{font-size:12px;color:var(--text2)}
+.dash-stats{display:flex;gap:16px;flex:1;flex-wrap:wrap}
+.dash-stat{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;text-align:center;min-width:80px;flex:1}
+.dash-stat .ds-n{font-size:22px;font-weight:800;color:var(--accent)}
+.dash-stat .ds-l{font-size:11px;color:var(--text2)}
+.dash-week{display:flex;gap:6px;justify-content:center}
+.dash-dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text2);background:var(--card)}
+.dash-dot.done{background:var(--green);border-color:var(--green);color:#fff;font-size:14px}
+.dash-dot.today{border-color:var(--gold);border-width:3px}
+.dash-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
+.dash-badge{font-size:24px;transition:.2s}
+.dash-badge.locked{opacity:.15;filter:grayscale(1)}
+.dash-badge.earned{animation:badgeBounce 1s ease infinite}
+@keyframes badgeBounce{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.dash-encourage{text-align:center;font-size:15px;color:var(--text);margin-top:14px;padding:10px;background:var(--card);border-radius:10px;border:1px solid var(--border)}
+.dash-recent{margin-top:16px}
+.dash-recent h4{font-size:13px;color:var(--text2);margin-bottom:8px}
+.recent-list{display:flex;flex-direction:column;gap:6px}
+.recent-item{display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 10px;background:var(--card);border-radius:8px;border:1px solid var(--border)}
+.recent-item .ri-icon{font-size:16px}
+.recent-item .ri-text{flex:1;font-weight:600}
+.recent-item .ri-date{font-size:11px;color:var(--text2)}
+
+@media(max-width:700px){
+  .sidebar{display:none}
+  .topbar .back-btn{display:inline-block}
+  .dash-top{flex-direction:column;align-items:stretch}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <h1 id="topTitle">Johnson 提升工具合集</h1>
+  <span class="info">P5 · 19 个学习工具</span>
+</div>
+
+<!-- 全局激励栏：每一页都可见 -->
+<div class="motiv-bar" id="motivBar" onclick="openQuickModal()">
+  <div class="mb-streak"><span class="fire" id="mbFire">💤</span><span id="mbStreak">0</span>天</div>
+  <div class="mb-stat"><span id="mbTotal" class="n">0</span> 个成就</div>
+  <div class="mb-badges" id="mbBadges"></div>
+  <div class="mb-msg" id="mbMsg"></div>
+  <button class="mb-add" onclick="event.stopPropagation();openQuickModal()">+ 记录小成功</button>
+</div>
+
+<!-- 快速记录弹窗 -->
+<div class="quick-modal-overlay" id="qmOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="quick-modal">
+    <div class="qm-title">🎉 记录今天的小成功</div>
+    <div class="qm-cats" id="qmCats"></div>
+    <div class="qm-quicks" id="qmQuicks"></div>
+    <input class="qm-input" id="qmInput" placeholder="写下你的小成功..." onkeydown="if(event.key==='Enter')submitWin()" />
+    <div class="qm-btns">
+      <button class="qm-submit" onclick="submitWin()">记录 🌟</button>
+      <button class="qm-cancel" onclick="closeModal()">取消</button>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="sidebar" id="sidebar">
+    <div class="item active" onclick="goHome()">
+      <span class="emoji">🏠</span><span class="label">主页</span>
+    </div>
+
+    <div class="sec">📘 英语</div>
+    <div class="item" onclick="load('Johnson/tools/Johnson_OE_Comprehension_Training.html','OE 阅读理解 7 天训练',this)">
+      <span class="emoji">🎯</span><span class="label">OE 阅读理解训练</span><span class="tag tag-new">NEW</span>
+    </div>
+    <div class="item" onclick="load('Johnson/tools/johnson_english_hub.html','英语综合学习中心',this)">
+      <span class="emoji">📚</span><span class="label">英语学习中心</span>
+    </div>
+    <div class="item" onclick="load('Johnson/tools/grammar-trainer.html','语法训练器',this)">
+      <span class="emoji">✏️</span><span class="label">语法训练器</span>
+    </div>
+    <div class="item" onclick="load('Johnson/tools/vocab_trainer.html','词汇训练器',this)">
+      <span class="emoji">🔤</span><span class="label">词汇训练器</span>
+    </div>
+    <div class="item" onclick="load('Johnson/tools/rfpd-trainer.html','RFPD 训练器',this)">
+      <span class="emoji">📝</span><span class="label">RFPD 训练器</span>
+    </div>
+    <div class="item" onclick="load('Johnson/tools/PSLE_English_Practice.html','PSLE 英语综合练习',this)">
+      <span class="emoji">🎓</span><span class="label">PSLE 英语练习</span>
+    </div>
+    <div class="item" onclick="load('Johnson/tools/Johnson_PSLE英文作文练习.html','PSLE 英文作文练习',this)">
+      <span class="emoji">🖊️</span><span class="label">英文作文练习</span>
+    </div>
+    <div class="item" onclick="load('Johnson/tools/Johnson_WA2_错题挑战赛.html','WA2 错题挑战赛',this)">
+      <span class="emoji">⚔️</span><span class="label">WA2 错题挑战</span>
+    </div>
+    <div class="item" onclick="load('Johnson/tools/Johnson_WA3_SW_训练器.html','WA3 Situational Writing 训练',this)">
+      <span class="emoji">📝</span><span class="label">WA3 SW 训练器</span><span class="tag tag-new">NEW</span>
+    </div>
+    <div class="item" onclick="openExt('https://writewise-psle-sw-2026.mr-cabbage.chatgpt.site','WriterWise SW 作文训练',this)">
+      <span class="emoji">✍️</span><span class="label">SW 作文训练</span><span class="tag tag-new">NEW</span>
+    </div>
+
+    <div class="sec">📐 数学</div>
+    <div class="item" onclick="load('Johnson/tools/Johnson-P5数学专项训练.html','P5 数学专项训练',this)">
+      <span class="emoji">⚡</span><span class="label">P5 数学专项训练</span><span class="tag tag-new">NEW</span>
+    </div>
+    <div class="item" onclick="load('Johnson/tools/Johnson_P5_T3_Math_批改报告.html','P5 T3 数学批改报告',this)">
+      <span class="emoji">📊</span><span class="label">T3 数学 Paper 2</span>
+    </div>
+
+    <div class="sec">📕 华文</div>
+    <div class="item" onclick="load('Johnson/tools/Johnson_PSLE华文作文练习.html','PSLE 华文作文练习',this)">
+      <span class="emoji">🖌️</span><span class="label">华文作文练习</span>
+    </div>
+    <div class="item" onclick="load('Johnson/tools/Johnson驯龙少年高华阅读理解训练.html','驯龙少年阅读理解',this)">
+      <span class="emoji">🐉</span><span class="label">驯龙少年阅读</span>
+    </div>
+    <div class="item" onclick="load('Johnson/tools/Johnson驯龙少年口试训练.html','驯龙少年口试训练',this)">
+      <span class="emoji">🎤</span><span class="label">驯龙少年口试</span>
+    </div>
+    <div class="item" onclick="load('Johnson/tools/Johnson_高华阅读探险营.html','高华阅读探险营',this)">
+      <span class="emoji">🐾</span><span class="label">高华阅读探险营</span><span class="tag tag-new">NEW</span>
+    </div>
+
+    <div class="sec">📰 阅读</div>
+    <div class="item" onclick="load('Johnson/tools/InsightRead_慧眼家庭早报.html','慧眼家庭早报',this)">
+      <span class="emoji">📰</span><span class="label">慧眼家庭早报</span>
+    </div>
+
+    <div class="sec">🌟 激励</div>
+    <div class="item" onclick="load('Johnson/tools/Johnson小成功墙.html','小成功墙',this)">
+      <span class="emoji">🏆</span><span class="label">小成功墙</span><span class="tag tag-new">NEW</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="home" id="homeView">
+      <!-- 首页激励仪表盘 -->
+      <div class="dash" id="dashboard">
+        <div class="dash-top">
+          <div class="dash-streak">
+            <div class="ds-icon" id="dashIcon">💤</div>
+            <div class="ds-num" id="dashStreak">0</div>
+            <div class="ds-label">天连续学习</div>
+          </div>
+          <div class="dash-stats">
+            <div class="dash-stat"><div class="ds-n" id="dashTotal">0</div><div class="ds-l">总成就</div></div>
+            <div class="dash-stat"><div class="ds-n" id="dashWeek">0</div><div class="ds-l">本周</div></div>
+            <div class="dash-stat"><div class="ds-n" id="dashBest">0</div><div class="ds-l">最佳连击</div></div>
+          </div>
+        </div>
+        <div class="dash-week" id="dashWeekDots"></div>
+        <div class="dash-badges" id="dashBadges"></div>
+        <div class="dash-encourage" id="dashEncourage"></div>
+        <div class="dash-recent" id="dashRecent"></div>
+      </div>
+
+      <h2>👋 Johnson 的学习工具箱</h2>
+      <p class="sub">P5 · 共 18 个工具 · 点击左侧菜单或下方卡片打开</p>
+
+      <div class="sec-title"><span>🔥</span>重点突破</div>
+      <div class="grid">
+        <div class="card" onclick="loadByIndex(1)">
+          <div class="c-icon">🎯</div>
+          <div class="c-title">OE 阅读理解 7 天训练</div>
+          <div class="c-desc">基于 28 道错题定制，每天 1 篇长文 + 5 道题</div>
+        </div>
+        <div class="card" onclick="loadByIndex(8)">
+          <div class="c-icon">⚔️</div>
+          <div class="c-title">WA2 错题挑战赛</div>
+          <div class="c-desc">Weighted Assessment 错题回顾与挑战</div>
+        </div>
+        <div class="card" onclick="loadByName('wa3-sw')">
+          <div class="c-icon">📝</div>
+          <div class="c-title">WA3 SW 训练器</div>
+          <div class="c-desc">11/14 · 说服力+语法提升 · 6个课程+互动练习</div>
+        </div>
+        <div class="card" onclick="loadByIndex(14)">
+          <div class="c-icon">📊</div>
+          <div class="c-title">T3 数学 Paper 2 批改</div>
+          <div class="c-desc">10/20 · 年龄、容器、前后题联动需重点突破</div>
+        </div>
+        <div class="card" onclick="loadByIndex(14)">
+          <div class="c-icon">🏆</div>
+          <div class="c-title">小成功墙</div>
+          <div class="c-desc">记录每一个进步，用正向反馈激励学习！</div>
+        </div>
+      </div>
+
+      <div class="sec-title"><span>📐</span>数学工具</div>
+      <div class="grid">
+        <div class="card" onclick="loadByName('sa2-math')">
+          <div class="c-icon">⚡</div>
+          <div class="c-title">P5 数学专项训练</div>
+          <div class="c-desc">分段时间计算 + 对称偏差·钟 · 无限随机题</div>
+        </div>
+      </div>
+
+      <div class="sec-title"><span>📘</span>英语工具</div>
+      <div class="grid">
+        <div class="card" onclick="loadByIndex(2)">
+          <div class="c-icon">📚</div>
+          <div class="c-title">英语综合学习中心</div>
+          <div class="c-desc">阅读、语法、词汇一站式平台</div>
+        </div>
+        <div class="card" onclick="loadByIndex(3)">
+          <div class="c-icon">✏️</div>
+          <div class="c-title">语法训练器</div>
+          <div class="c-desc">tenses, articles, prepositions</div>
+        </div>
+        <div class="card" onclick="loadByIndex(4)">
+          <div class="c-icon">🔤</div>
+          <div class="c-title">词汇训练器</div>
+          <div class="c-desc">P5 核心词汇记忆与测试</div>
+        </div>
+        <div class="card" onclick="loadByIndex(5)">
+          <div class="c-icon">📝</div>
+          <div class="c-title">RFPD 训练器</div>
+          <div class="c-desc">Reading for Pleasure & Details</div>
+        </div>
+        <div class="card" onclick="loadByIndex(6)">
+          <div class="c-icon">🎓</div>
+          <div class="c-title">PSLE 英语综合练习</div>
+          <div class="c-desc">模拟 PSLE 试卷格式</div>
+        </div>
+        <div class="card" onclick="loadByIndex(7)">
+          <div class="c-icon">🖊️</div>
+          <div class="c-title">英文作文练习</div>
+          <div class="c-desc">Situational & Continuous Writing</div>
+        </div>
+        <div class="card" onclick="openExt('https://writewise-psle-sw-2026.mr-cabbage.chatgpt.site','WriterWise SW 作文训练')">
+          <div class="c-icon">✍️</div>
+          <div class="c-title">WriterWise SW 训练</div>
+          <div class="c-desc">PSLE Situational Writing 专项 · 外部工具</div>
+        </div>
+      </div>
+
+      <div class="sec-title"><span>📰</span>阅读</div>
+      <div class="grid">
+        <div class="card" onclick="loadByIndex(12)">
+          <div class="c-icon">📰</div>
+          <div class="c-title">慧眼家庭早报</div>
+          <div class="c-desc">每日新闻阅读，培养阅读习惯与理解能力</div>
+        </div>
+      </div>
+
+      <div class="sec-title"><span>📕</span>华文工具</div>
+      <div class="grid">
+        <div class="card" onclick="loadByIndex(9)">
+          <div class="c-icon">🖌️</div>
+          <div class="c-title">华文作文练习</div>
+          <div class="c-desc">看图作文、命题作文</div>
+        </div>
+        <div class="card" onclick="loadByIndex(10)">
+          <div class="c-icon">🐉</div>
+          <div class="c-title">驯龙少年阅读理解</div>
+          <div class="c-desc">高级华文阅读训练</div>
+        </div>
+        <div class="card" onclick="loadByIndex(11)">
+          <div class="c-icon">🎤</div>
+          <div class="c-title">驯龙少年口试</div>
+          <div class="c-desc">朗读与看图说话模拟</div>
+        </div>
+        <div class="card" onclick="loadByName('hcl-camp')">
+          <div class="c-icon">🐾</div>
+          <div class="c-title">高华阅读探险营</div>
+          <div class="c-desc">14天训练：短语解释·人物感受·概括·变化原因·道理迁移 · 每天15分钟</div>
+        </div>
+      </div>
+    </div>
+    <iframe class="tool-frame" id="toolFrame" style="display:none"></iframe>
+  </div>
+</div>
+
+<script>
+/* ===== 数据 ===== */
+const CATS = [
+  {id:'english',label:'📘 英语',icon:'📘'},
+  {id:'chinese',label:'📕 华文',icon:'📕'},
+  {id:'math',label:'📐 数学',icon:'📐'},
+  {id:'science',label:'🔬 科学',icon:'🔬'},
+  {id:'habit',label:'💪 习惯',icon:'💪'},
+  {id:'other',label:'⭐ 其他',icon:'⭐'}
+];
+const QUICK = [
+  '完成了 OE 阅读训练一天','语法练习全对','背了 10 个新单词',
+  '华文作文写完了','数学作业自己完成','坚持了学习计划',
+  '主动复习了错题','阅读了 30 分钟','考试进步了',
+  '今天没有拖延','帮助了同学','认真听课一整天'
+];
+const BADGES = [
+  {id:'first',name:'第一步',icon:'🌱',need:1},
+  {id:'five',name:'五连胜',icon:'⭐',need:5},
+  {id:'ten',name:'十全十美',icon:'🌟',need:10},
+  {id:'streak3',name:'三日连击',icon:'🔥',type:'streak',val:3},
+  {id:'streak7',name:'一周勇士',icon:'💎',type:'streak',val:7},
+  {id:'twenty',name:'成就满满',icon:'🏆',need:20},
+  {id:'streak14',name:'两周传奇',icon:'👑',type:'streak',val:14},
+  {id:'fifty',name:'半百英雄',icon:'🎖️',need:50}
+];
+const MSGS = [
+  '今天也是进步的一天！加油 Johnson！💪',
+  '每一个小成功都在让你变得更强！',
+  '坚持就是胜利，你已经在路上了！🚀',
+  '你的努力，我们都看在眼里！❤️',
+  '比昨天的自己进步一点点，就是最大的成功！',
+  '学习是马拉松——你跑得很稳！🏃',
+  '错题不可怕，每道错题都是成长的机会！💡',
+  '今天的你比昨天更厉害了！✨',
+  '小小的进步 × 每一天 = 巨大的飞跃！📈',
+  '你有能力做到的，相信自己！🌈'
+];
+
+let state = {wins:[],streak:0,bestStreak:0,selectedCat:'english'};
+let prevBadgeCount = 0;
+
+function loadState(){try{const s=localStorage.getItem('johnson_wins');if(s)state=JSON.parse(s)}catch(e){}if(!state.wins)state.wins=[];if(!state.streak)state.streak=0;if(!state.bestStreak)state.bestStreak=0}
+function saveState(){try{localStorage.setItem('johnson_wins',JSON.stringify(state))}catch(e){}}
+
+function today(){return new Date().toISOString().slice(0,10)}
+
+function calcStreak(){
+  const dates=[...new Set(state.wins.map(w=>w.date))].sort().reverse();
+  if(!dates.length){state.streak=0;return}
+  const t=today();let streak=0;let check=new Date(t);
+  if(dates[0]===t){
+    streak=1;check.setDate(check.getDate()-1);
+    for(let i=1;i<dates.length;i++){if(dates[i]===check.toISOString().slice(0,10)){streak++;check.setDate(check.getDate()-1)}else break}
+  } else {
+    const y=new Date(t);y.setDate(y.getDate()-1);
+    if(dates[0]===y.toISOString().slice(0,10)){
+      streak=1;check=new Date(dates[0]);check.setDate(check.getDate()-1);
+      for(let i=1;i<dates.length;i++){if(dates[i]===check.toISOString().slice(0,10)){streak++;check.setDate(check.getDate()-1)}else break}
+    }
+  }
+  state.streak=streak;
+  if(streak>state.bestStreak)state.bestStreak=streak;
+}
+
+function earnedBadges(){
+  return BADGES.filter(b=>{
+    if(b.type==='streak')return state.bestStreak>=b.val;
+    return state.wins.length>=b.need;
+  });
+}
+
+/* ===== 全局激励栏渲染 ===== */
+function renderMotivBar(){
+  calcStreak();
+  const s=state.streak;
+  document.getElementById('mbFire').textContent=s>=7?'💎':s>=3?'🔥':s>=1?'✨':'💤';
+  document.getElementById('mbStreak').textContent=s;
+  document.getElementById('mbTotal').textContent=state.wins.length;
+  document.getElementById('mbMsg').textContent=MSGS[Math.floor(Math.random()*MSGS.length)];
+  const earned=earnedBadges();
+  document.getElementById('mbBadges').innerHTML=BADGES.map(b=>
+    `<span class="${earned.find(e=>e.id===b.id)?'':'locked'}" title="${b.name}">${b.icon}</span>`
+  ).join('');
+}
+
+/* ===== 首页仪表盘渲染 ===== */
+function renderDashboard(){
+  calcStreak();const s=state.streak;
+  document.getElementById('dashIcon').textContent=s>=7?'💎':s>=3?'🔥':s>=1?'✨':'💤';
+  document.getElementById('dashStreak').textContent=s;
+  document.getElementById('dashTotal').textContent=state.wins.length;
+  document.getElementById('dashBest').textContent=state.bestStreak;
+  const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-7);
+  document.getElementById('dashWeek').textContent=state.wins.filter(w=>new Date(w.date)>=weekAgo).length;
+
+  // Week dots
+  const dayNames=['日','一','二','三','四','五','六'];
+  const now=new Date();const dow=now.getDay();
+  let dots='';
+  for(let i=0;i<7;i++){
+    const d=new Date(now);d.setDate(d.getDate()-dow+i);
+    const ds=d.toISOString().slice(0,10);
+    const done=state.wins.some(w=>w.date===ds);
+    const isToday=ds===today();
+    dots+=`<div class="dash-dot${done?' done':''}${isToday?' today':''}">${done?'✓':dayNames[i]}</div>`;
+  }
+  document.getElementById('dashWeekDots').innerHTML=dots;
+
+  // Badges
+  const earned=earnedBadges();
+  document.getElementById('dashBadges').innerHTML=BADGES.map(b=>
+    `<span class="dash-badge${earned.find(e=>e.id===b.id)?' earned':' locked'}" title="${b.name}">${b.icon}</span>`
+  ).join('');
+
+  // Encourage
+  document.getElementById('dashEncourage').textContent=MSGS[Math.floor(Math.random()*MSGS.length)];
+
+  // Recent wins
+  const recent=state.wins.slice(-5).reverse();
+  const rd=document.getElementById('dashRecent');
+  if(!recent.length){
+    rd.innerHTML='<h4>还没有记录，点击上方 "记录小成功" 开始吧！</h4>';
+  } else {
+    let h='<h4>最近的小成功</h4><div class="recent-list">';
+    recent.forEach(w=>{
+      const cat=CATS.find(c=>c.id===w.cat)||CATS[5];
+      h+=`<div class="recent-item"><span class="ri-icon">${cat.icon}</span><span class="ri-text">${esc(w.text)}</span><span class="ri-date">${w.date===today()?'今天':w.date}</span></div>`;
+    });
+    h+='</div>';rd.innerHTML=h;
+  }
+}
+
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+/* ===== 快速记录弹窗 ===== */
+function openQuickModal(){
+  document.getElementById('qmOverlay').classList.add('show');
+  document.getElementById('qmInput').value='';
+  document.getElementById('qmInput').focus();
+  // Cats
+  document.getElementById('qmCats').innerHTML=CATS.map(c=>
+    `<div class="qm-cat${state.selectedCat===c.id?' active':''}" onclick="state.selectedCat='${c.id}';renderCats()">${c.label}</div>`
+  ).join('');
+  // Quick options
+  document.getElementById('qmQuicks').innerHTML=QUICK.map(q=>
+    `<div class="qm-q" onclick="document.getElementById('qmInput').value='${q.replace(/'/g,"\\'")}';submitWin()">${q}</div>`
+  ).join('');
+}
+function renderCats(){
+  document.getElementById('qmCats').innerHTML=CATS.map(c=>
+    `<div class="qm-cat${state.selectedCat===c.id?' active':''}" onclick="state.selectedCat='${c.id}';renderCats()">${c.label}</div>`
+  ).join('');
+}
+function closeModal(){document.getElementById('qmOverlay').classList.remove('show')}
+
+function submitWin(){
+  const input=document.getElementById('qmInput');
+  const text=input.value.trim();
+  if(!text)return;
+  prevBadgeCount=earnedBadges().length;
+  state.wins.push({id:Date.now().toString(36),text,cat:state.selectedCat,date:today(),time:new Date().toTimeString().slice(0,5)});
+  input.value='';
+  saveState();
+  closeModal();
+  renderMotivBar();
+  renderDashboard();
+  celebrate();
+  // Check for new badge
+  const newBadges=earnedBadges();
+  if(newBadges.length>prevBadgeCount){
+    const latest=newBadges[newBadges.length-1];
+    setTimeout(()=>showBadgePopup(latest),600);
+  }
+}
+
+/* ===== 庆祝特效 ===== */
+function celebrate(){
+  const colors=['#f0c420','#ff6b6b','#48dbfb','#ff9ff3','#1dd1a1','#feca57','#ee5a24','#0abde3'];
+  for(let i=0;i<30;i++){
+    const c=document.createElement('div');
+    c.className='confetti';
+    const sz=4+Math.random()*6;
+    c.style.cssText=`width:${sz}px;height:${sz}px;background:${colors[i%colors.length]};top:${40+Math.random()*10}%;left:${20+Math.random()*60}%;opacity:1;`;
+    document.body.appendChild(c);
+    requestAnimationFrame(()=>{
+      c.style.top=(5+Math.random()*80)+'%';
+      c.style.left=(5+Math.random()*90)+'%';
+      c.style.opacity='0';
+      c.style.transform=`scale(${1+Math.random()*3}) rotate(${Math.random()*360}deg)`;
+    });
+    setTimeout(()=>c.remove(),1000);
+  }
+}
+
+function showBadgePopup(badge){
+  const p=document.createElement('div');
+  p.className='badge-popup';
+  p.innerHTML=`<div class="bp-icon">${badge.icon}</div><div class="bp-title">🎉 解锁新徽章！</div><div class="bp-desc">${badge.name}</div>`;
+  document.body.appendChild(p);
+  // Extra fireworks
+  celebrate();celebrate();
+  setTimeout(()=>{p.style.transition='all .3s';p.style.opacity='0';p.style.transform='translate(-50%,-50%) scale(1.2)';setTimeout(()=>p.remove(),300)},2500);
+}
+
+/* ===== 导航 ===== */
+const items=document.querySelectorAll('.sidebar .item');
+
+function load(url,title,el){
+  document.getElementById('homeView').style.display='none';
+  const f=document.getElementById('toolFrame');
+  f.style.display='block';f.src=url;
+  document.getElementById('topTitle').textContent=title;
+  items.forEach(i=>i.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.querySelector('.back-btn').style.display='inline-block';
+}
+function loadByIndex(idx){const item=items[idx];if(item)item.click()}
+function openExt(url,title,el){
+  window.open(url,'_blank');
+  if(el){items.forEach(i=>i.classList.remove('active'));el.classList.add('active')}
+}
+function loadByName(name){
+  const map={'sa2-math':'Johnson/tools/Johnson-P5数学专项训练.html','wa3-sw':'Johnson/tools/Johnson_WA3_SW_训练器.html','hcl-camp':'Johnson/tools/Johnson_高华阅读探险营.html'};
+  if(map[name]){
+    const titles={'sa2-math':'P5 数学专项训练','wa3-sw':'WA3 Situational Writing 训练','hcl-camp':'高华阅读探险营'};
+    load(map[name],titles[name]||name);
+  }
+}
+function goHome(){
+  document.getElementById('homeView').style.display='block';
+  document.getElementById('toolFrame').style.display='none';
+  document.getElementById('toolFrame').src='';
+  document.getElementById('topTitle').textContent='Johnson 提升工具合集';
+  items.forEach(i=>i.classList.remove('active'));
+  items[0].classList.add('active');
+  document.querySelector('.back-btn').style.display=window.innerWidth<=700?'inline-block':'none';
+  renderDashboard();
+}
+
+/* ===== 初始化 ===== */
+loadState();
+renderMotivBar();
+renderDashboard();
+// 监听 iframe 里的小成功墙可能的数据变化
+window.addEventListener('storage',()=>{loadState();renderMotivBar();renderDashboard()});
+</script>
+</body>
+</html>

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Johnson驯龙少年 · PSLE华文口试训练</title>
+<style>
+:root{
+  --bg:#0a0e17;--card:#141926;--card2:#1a2035;--gold:#f5c842;--gold2:#ffd866;
+  --fire:#ff6b35;--blue:#4ea8de;--green:#3dd68c;--red:#e05252;
+  --txt:#e8ecf4;--muted:#7b8aa8;--line:rgba(245,200,66,.15);
+  --glow:0 0 20px rgba(245,200,66,.12);
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;font-size:15px;min-height:100vh;padding-bottom:40px}
+a{color:var(--gold)}
+.top-bar{background:linear-gradient(135deg,#1a1040 0%,#0d1525 100%);border-bottom:2px solid var(--gold);padding:16px 20px;text-align:center}
+.top-bar h1{font-size:22px;background:linear-gradient(90deg,var(--gold),var(--fire));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.top-bar p{color:var(--muted);font-size:13px;margin-top:4px}
+.container{max-width:900px;margin:0 auto;padding:12px}
+
+/* tabs */
+.tabs{display:flex;gap:6px;margin:12px 0;flex-wrap:wrap}
+.tab{padding:8px 16px;border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--muted);font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
+.tab.on{background:linear-gradient(135deg,var(--gold),var(--fire));color:#000;border-color:transparent}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:14px;box-shadow:var(--glow)}
+.card h2{font-size:17px;color:var(--gold);margin-bottom:10px}
+.card h3{font-size:15px;color:var(--gold2);margin-bottom:8px}
+.card p,.card li{line-height:1.7;color:var(--txt)}
+.card ul{padding-left:18px}
+.card li{margin-bottom:4px}
+
+/* score badge */
+.score-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:16px;font-size:13px;font-weight:700}
+.sb-gold{background:rgba(245,200,66,.15);color:var(--gold)}
+.sb-fire{background:rgba(255,107,53,.15);color:var(--fire)}
+.sb-blue{background:rgba(78,168,222,.15);color:var(--blue)}
+.sb-green{background:rgba(61,214,140,.15);color:var(--green)}
+
+/* rubric table */
+.rubric{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+.rubric th,.rubric td{padding:8px 10px;border:1px solid var(--line);text-align:left}
+.rubric th{background:rgba(245,200,66,.08);color:var(--gold);font-weight:700}
+.rubric td{color:var(--txt)}
+.rubric tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+
+/* topic chips */
+.topic-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.tc{padding:6px 14px;border-radius:18px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;border:1px solid var(--line);background:var(--card2)}
+.tc.on{background:var(--gold);color:#000;border-color:var(--gold)}
+.tc:hover{border-color:var(--gold)}
+
+/* practice area */
+.practice-box{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:16px;margin:10px 0}
+.q-display{font-size:16px;font-weight:700;color:var(--gold2);line-height:1.6;margin-bottom:12px;min-height:48px}
+.q-type-tag{display:inline-block;padding:2px 10px;border-radius:10px;font-size:12px;font-weight:700;margin-bottom:8px}
+.qt-desc{background:rgba(78,168,222,.15);color:var(--blue)}
+.qt-opinion{background:rgba(245,200,66,.15);color:var(--gold)}
+.qt-exp{background:rgba(61,214,140,.15);color:var(--green)}
+
+/* framework steps */
+.fw-steps{display:grid;gap:8px;margin:10px 0}
+.fw-step{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid var(--line)}
+.fw-num{min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--gold);color:#000;font-weight:800;font-size:13px}
+.fw-step strong{color:var(--gold2)}
+.fw-step p{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* textarea & input */
+textarea,input[type="text"]{width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--txt);font:inherit;resize:vertical}
+textarea:focus,input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 8px rgba(245,200,66,.2)}
+textarea{min-height:120px}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+
+/* buttons */
+.btn{padding:10px 20px;border:none;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;transition:.2s}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--fire));color:#000}
+.btn-gold:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold)}
+.btn-outline:hover{background:rgba(245,200,66,.1)}
+.btn-sm{padding:6px 14px;font-size:13px;border-radius:6px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+
+/* timer */
+.timer-box{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:10px;background:var(--card2);border:1px solid var(--line);margin:10px 0}
+.timer-display{font-size:32px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--gold);min-width:100px}
+.timer-label{font-size:12px;color:var(--muted)}
+
+/* checklist */
+.ck-list{display:grid;gap:6px}
+.ck-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:6px;background:rgba(255,255,255,.03);border:1px solid var(--line);cursor:pointer;font-size:14px}
+.ck-item input{width:18px;height:18px;accent-color:var(--gold)}
+.ck-item.checked{border-color:var(--green);background:rgba(61,214,140,.06)}
+
+/* rescue sentences */
+.rescue-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:10px 0}
+.rescue-btn{padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--card2);color:var(--txt);font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:.2s}
+.rescue-btn:hover{border-color:var(--gold);background:rgba(245,200,66,.08)}
+.rescue-btn:active{transform:scale(.97)}
+
+/* stats bar */
+.stats-bar{display:flex;gap:12px;flex-wrap:wrap;margin:10px 0}
+.stat-item{flex:1;min-width:100px;padding:12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);text-align:center}
+.stat-num{font-size:24px;font-weight:800;color:var(--gold)}
+.stat-lbl{font-size:12px;color:var(--muted)}
+
+/* reading passage */
+.passage-box{background:#111827;border:1px solid var(--line);border-radius:10px;padding:18px;font-size:17px;line-height:2;letter-spacing:.5px;margin:10px 0;color:#f0f0f0}
+
+/* hidden */
+.hidden{display:none!important}
+
+/* mobile */
+@media(max-width:600px){
+  .container{padding:8px}
+  .card{padding:14px}
+  .timer-display{font-size:26px}
+  .rescue-grid{grid-template-columns:1fr 1fr}
+  .rubric{font-size:12px}
+  .rubric th,.rubric td{padding:6px}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>Johnson驯龙少年 · PSLE华文口试训练</h1>
+  <p>口试50分 = 朗读20分 + 看录像说话30分 · 占总分25%</p>
+</div>
+
+<div class="container">
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num" id="nPractice">0</div><div class="stat-lbl">练习次数</div></div>
+  <div class="stat-item"><div class="stat-num" id="nBestTime">0:00</div><div class="stat-lbl">最长表达</div></div>
+  <div class="stat-item"><div class="stat-num" id="nStreak">0</div><div class="stat-lbl">连续天数</div></div>
+  <div class="stat-item"><div class="stat-num" id="nConf">60%</div><div class="stat-lbl">开口信心</div></div>
+</div>
+
+<!-- Main Tabs -->
+<div class="tabs" id="mainTabs">
+  <button class="tab on" data-v="rubric">评分标准</button>
+  <button class="tab" data-v="read">朗读练习</button>
+  <button class="tab" data-v="video">看录像说话</button>
+  <button class="tab" data-v="frameworks">答题公式</button>
+  <button class="tab" data-v="topics">话题词库</button>
+</div>
+
+<!-- ==================== VIEW: 评分标准 ==================== -->
+<div id="v-rubric">
+<div class="card">
+  <h2>PSLE华文口试考试结构</h2>
+  <p style="margin-bottom:12px">考试共10分钟准备 + 10分钟考试。准备时间可以反复看录像、默读篇章。</p>
+  <table class="rubric">
+    <tr><th>部分</th><th>内容</th><th>分数</th><th>时间</th></tr>
+    <tr><td><span class="score-badge sb-gold">Part 1</span></td><td>朗读短文（130-150字）</td><td>20分</td><td>~2分钟</td></tr>
+    <tr><td><span class="score-badge sb-fire">Part 2</span></td><td>看录像说话（看1分钟短片，回答2-3个问题）</td><td>30分</td><td>~8分钟</td></tr>
+    <tr><td colspan="2" style="text-align:right;font-weight:700;color:var(--gold)">合计</td><td style="font-weight:700;color:var(--gold)">50分</td><td>~10分钟</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Part 1 朗读评分维度（20分）</h2>
+  <table class="rubric">
+    <tr><th>维度</th><th>分值</th><th>上（高分）</th><th>下（低分）</th></tr>
+    <tr><td>语音语调</td><td>~8分</td><td>四声准确、声母韵母清晰、语调自然</td><td>多处发音错误、声调混淆</td></tr>
+    <tr><td>流利程度</td><td>~6分</td><td>朗读流畅、停顿自然、不结巴</td><td>频繁停顿、磕磕绊绊</td></tr>
+    <tr><td>语感表达</td><td>~6分</td><td>有感情地朗读、抑扬顿挫</td><td>机械背诵、毫无感情</td></tr>
+  </table>
+  <p style="margin-top:10px;color:var(--muted);font-size:13px">评分等级：上 → 中上 → 中 → 中下 → 下（五级）</p>
+</div>
+
+<div class="card">
+  <h2>Part 2 看录像说话评分维度（30分）</h2>
+  <table class="rubric">
+    <tr><th>维度</th><th>分值</th><th>上（高分）</th><th>下（低分）</th></tr>
+    <tr><td>语音语调</td><td>~8分</td><td>发音准确、语调自然有变化</td><td>发音不清、语调平板</td></tr>
+    <tr><td>流利程度</td><td>~8分</td><td>表达流畅、几乎没有长停顿</td><td>频繁卡住、大量"嗯…那个…"</td></tr>
+    <tr><td>内容展开</td><td>~8分</td><td>观点明确+理由+例子+联系生活</td><td>只说一两句、没有展开</td></tr>
+    <tr><td>词汇表达</td><td>~6分</td><td>词汇丰富、用词恰当、有成语</td><td>只用最基本日常词汇</td></tr>
+  </table>
+  <div style="margin-top:12px;padding:12px;border-radius:8px;background:rgba(255,107,53,.08);border:1px solid rgba(255,107,53,.2)">
+    <strong style="color:var(--fire)">考官最不喜欢的三件事：</strong>
+    <p style="font-size:13px;margin-top:4px">1. 千篇一律的背诵答案 &nbsp; 2. 只说一句话就停 &nbsp; 3. 观点没有理由和例子支撑</p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>考官提问的三种类型</h2>
+  <div class="fw-steps">
+    <div class="fw-step">
+      <div class="fw-num" style="background:var(--blue)">1</div>
+      <div><strong style="color:var(--blue)">描述题</strong> — 描述录像中看到了什么<p>"请描述你在录像中看到了什么？" "录像中发生了什么事？"</p></div>
+    </div>
+    <div class="fw-step">
+      <div class="fw-num" style="background:var(--gold)">2</div>
+      <div><strong style="color:var(--gold)">观点题</strong> — 对录像内容发表看法<p>"你觉得他这样做对吗？为什么？" "你认为我们应该怎样做？"</p></div>
+    </div>
+    <div class="fw-step">
+      <div class="fw-num" style="background:var(--green)">3</div>
+      <div><strong style="color:var(--green)">经验题</strong> — 联系自己的生活经历<p>"你有没有类似的经历？" "你在生活中是怎么做的？"</p></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ==================== VIEW: 朗读练习 ==================== -->
+<div id="v-read" class="hidden">
+<div class="card">
+  <h2>朗读三步法：扫描 → 分析 → 默读</h2>
+  <div class="fw-steps">
+    <div class="fw-step">
+      <div class="fw-num">1</div>
+      <div><strong>扫描篇章</strong><p>快速浏览全文，了解情感基调（开心？难过？教育性？），标记生字</p></div>
+    </div>
+    <div class="fw-step">
+      <div class="fw-num">2</div>
+      <div><strong>分析断句</strong><p>长句在哪里停？逗号/句号/感叹号 = 自然停顿点。"词组"概念：把2-4个字当一组来读</p></div>
+    </div>
+    <div class="fw-step">
+      <div class="fw-num">3</div>
+      <div><strong>默读两遍</strong><p>第一遍：确认没有不会读的字。第二遍：想象自己在讲故事给好朋友听</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>选择朗读篇章</h2>
+  <div class="topic-chips" id="readChips"></div>
+  <div id="readPassage" class="passage-box" style="min-height:100px"></div>
+  <div style="margin-top:8px">
+    <p style="font-size:13px;color:var(--muted)" id="readHint"></p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>朗读计时 & 录音</h2>
+  <div class="timer-box">
+    <div>
+      <div class="timer-display" id="readTimer">00:00</div>
+      <div class="timer-label">目标：1分30秒 ~ 2分钟</div>
+    </div>
+    <div class="btn-row" style="flex:1">
+      <button class="btn btn-gold btn-sm" id="readStart">开始朗读</button>
+      <button class="btn btn-outline btn-sm" id="readStop">停止</button>
+      <button class="btn btn-outline btn-sm" id="readRecord">录音</button>
+    </div>
+  </div>
+  <audio id="readAudio" controls style="width:100%;margin-top:8px" class="hidden"></audio>
+  <p id="readNote" style="font-size:13px;color:var(--muted);margin-top:6px">点击"开始朗读"开始计时。尽量用讲故事的语气来读。</p>
+</div>
+
+<div class="card">
+  <h2>朗读自查清单</h2>
+  <div class="ck-list" id="readCk">
+    <label class="ck-item"><input type="checkbox"><span>四声读准了（特别是二声和三声）</span></label>
+    <label class="ck-item"><input type="checkbox"><span>声音够大，不含糊</span></label>
+    <label class="ck-item"><input type="checkbox"><span>速度适中（不太快也不太慢）</span></label>
+    <label class="ck-item"><input type="checkbox"><span>句号、逗号有停顿</span></label>
+    <label class="ck-item"><input type="checkbox"><span>感叹句/问句有语气变化</span></label>
+    <label class="ck-item"><input type="checkbox"><span>像在讲故事，不是念经</span></label>
+  </div>
+</div>
+</div>
+
+<!-- ==================== VIEW: 看录像说话 ==================== -->
+<div id="v-video" class="hidden">
+<div class="card">
+  <h2>选择练习话题</h2>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:10px">这些是PSLE常考话题，选一个开始模拟练习</p>
+  <div class="topic-chips" id="videoTopicChips"></div>
+</div>
+
+<div id="videoWorkspace" class="hidden">
+<div class="card">
+  <h2 id="vwTitle">模拟练习</h2>
+  <p id="vwScene" style="font-size:14px;color:var(--muted);margin-bottom:14px;line-height:1.7"></p>
+
+  <!-- Q1 描述题 -->
+  <div class="practice-box">
+    <div class="q-type-tag qt-desc">描述题</div>
+    <div class="q-display" id="vq1"></div>
+    <div class="fw-steps" style="margin-bottom:10px">
+      <div class="fw-step"><div class="fw-num" style="background:var(--blue)">1</div><div><strong>说人物</strong><p>录像中有谁？在做什么？</p></div></div>
+      <div class="fw-step"><div class="fw-num" style="background:var(--blue)">2</div><div><strong>说事件</strong><p>发生了什么事？经过怎样？</p></div></div>
+      <div class="fw-step"><div class="fw-num" style="background:var(--blue)">3</div><div><strong>说结果</strong><p>最后怎么样了？</p></div></div>
+    </div>
+    <label>Johnson的回答：</label>
+    <textarea id="va1" placeholder="在录像中，我看到……他们在……发生了……最后……"></textarea>
+  </div>
+
+  <!-- Q2 观点题 -->
+  <div class="practice-box">
+    <div class="q-type-tag qt-opinion">观点题</div>
+    <div class="q-display" id="vq2"></div>
+    <div style="padding:10px;border-radius:8px;background:rgba(245,200,66,.06);border:1px solid var(--line);margin-bottom:10px">
+      <strong style="color:var(--gold);font-size:14px">PEEL公式（考官最爱）</strong>
+      <div class="fw-steps" style="margin-top:8px">
+        <div class="fw-step"><div class="fw-num">P</div><div><strong>Point 观点</strong><p>我认为……是对的/不对的，因为……</p></div></div>
+        <div class="fw-step"><div class="fw-num">E</div><div><strong>Explain 解释</strong><p>这样做的好处/坏处是……</p></div></div>
+        <div class="fw-step"><div class="fw-num">E</div><div><strong>Example 举例</strong><p>比如说……（不能用录像的内容！要用自己的例子）</p></div></div>
+        <div class="fw-step"><div class="fw-num">L</div><div><strong>Link 总结</strong><p>所以我觉得我们应该……</p></div></div>
+      </div>
+    </div>
+    <label>Johnson的回答：</label>
+    <textarea id="va2" placeholder="我认为……因为……比如说我自己……所以我觉得……"></textarea>
+  </div>
+
+  <!-- Q3 经验题 -->
+  <div class="practice-box">
+    <div class="q-type-tag qt-exp">经验题</div>
+    <div class="q-display" id="vq3"></div>
+    <div style="padding:10px;border-radius:8px;background:rgba(61,214,140,.06);border:1px solid var(--line);margin-bottom:10px">
+      <strong style="color:var(--green);font-size:14px">经验分享五步法</strong>
+      <div class="fw-steps" style="margin-top:8px">
+        <div class="fw-step"><div class="fw-num" style="background:var(--green)">1</div><div><strong>起因</strong><p>有一次……</p></div></div>
+        <div class="fw-step"><div class="fw-num" style="background:var(--green)">2</div><div><strong>经过</strong><p>我做了……遇到了……</p></div></div>
+        <div class="fw-step"><div class="fw-num" style="background:var(--green)">3</div><div><strong>结果</strong><p>最后……</p></div></div>
+        <div class="fw-step"><div class="fw-num" style="background:var(--green)">4</div><div><strong>感受</strong><p>我觉得很……（欣慰/自豪/感动/后悔）</p></div></div>
+        <div class="fw-step"><div class="fw-num" style="background:var(--green)">5</div><div><strong>道理</strong><p>这件事让我明白了……</p></div></div>
+      </div>
+    </div>
+    <label>Johnson的回答：</label>
+    <textarea id="va3" placeholder="有一次……我做了……结果……我觉得……这件事让我明白了……"></textarea>
+  </div>
+
+  <!-- Timer & Actions -->
+  <div class="timer-box">
+    <div>
+      <div class="timer-display" id="videoTimer">00:00</div>
+      <div class="timer-label">每题目标：60~90秒</div>
+    </div>
+    <div class="btn-row" style="flex:1">
+      <button class="btn btn-gold btn-sm" id="videoStart">开始计时</button>
+      <button class="btn btn-outline btn-sm" id="videoStop">停止</button>
+      <button class="btn btn-outline btn-sm" id="videoRec">录音</button>
+    </div>
+  </div>
+  <audio id="videoAudio" controls style="width:100%;margin-top:8px" class="hidden"></audio>
+  <p id="videoNote" style="font-size:13px;color:var(--muted);margin-top:6px">选好话题后，假装刚看完录像，开始回答考官问题。</p>
+
+  <!-- Rescue Sentences -->
+  <div class="card" style="margin-top:14px">
+    <h3>卡住了？用救命句接上去</h3>
+    <div class="rescue-grid" id="rescueGrid"></div>
+  </div>
+
+  <!-- Self Check -->
+  <div class="card">
+    <h3>答题自查（对照评分标准）</h3>
+    <div class="ck-list" id="videoCk">
+      <label class="ck-item"><input type="checkbox"><span>描述题：说清了人物 + 事件 + 结果</span></label>
+      <label class="ck-item"><input type="checkbox"><span>观点题：有观点 + 理由 + 自己的例子 + 总结</span></label>
+      <label class="ck-item"><input type="checkbox"><span>经验题：有起因经过结果 + 感受 + 道理</span></label>
+      <label class="ck-item"><input type="checkbox"><span>没有长时间停顿（"嗯…那个…"）</span></label>
+      <label class="ck-item"><input type="checkbox"><span>用了好词好句（成语/四字词/比喻）</span></label>
+      <label class="ck-item"><input type="checkbox"><span>每个回答至少说了60秒</span></label>
+    </div>
+    <div class="btn-row" style="margin-top:12px">
+      <button class="btn btn-gold" id="markVideoDone">完成一次口试练习</button>
+      <button class="btn btn-outline" id="showModelAns">看范答</button>
+    </div>
+  </div>
+
+  <!-- Model Answer -->
+  <div class="card hidden" id="modelAnsCard">
+    <h3>范答参考</h3>
+    <div id="modelAnsContent" style="font-size:14px;line-height:1.8"></div>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px">范答仅供参考，考官喜欢用自己的话说，不要背！</p>
+  </div>
+</div>
+</div>
+
+<!-- ==================== VIEW: 答题公式 ==================== -->
+<div id="v-frameworks" class="hidden">
+<div class="card">
+  <h2>描述题万能公式</h2>
+  <div style="padding:14px;border-radius:10px;background:rgba(78,168,222,.06);border:1px solid rgba(78,168,222,.2);font-size:16px;font-weight:700;color:var(--blue);line-height:2;margin-bottom:10px">
+    在录像中，我看到<u>【地点】</u>有<u>【人物】</u>。他们在<u>【做什么】</u>。<br>
+    接着，<u>【发生了什么事】</u>。<br>
+    最后，<u>【结果怎样】</u>。
+  </div>
+  <p style="font-size:13px;color:var(--muted)">描述要具体！不要说"有些人在做事"，要说"一个男孩在图书馆里大声讲电话"。</p>
+</div>
+
+<div class="card">
+  <h2>观点题PEEL公式（30分的关键）</h2>
+  <div style="padding:14px;border-radius:10px;background:rgba(245,200,66,.06);border:1px solid rgba(245,200,66,.2);font-size:16px;font-weight:700;color:var(--gold);line-height:2;margin-bottom:10px">
+    <strong>P</strong> 我认为<u>【你的观点】</u>。<br>
+    <strong>E</strong> 因为<u>【解释原因】</u>，这样做可以<u>【好处/影响】</u>。<br>
+    <strong>E</strong> 比如说，<u>【你自己的例子，不能用录像内容！】</u>。<br>
+    <strong>L</strong> 所以我觉得我们都应该<u>【总结+行动】</u>。
+  </div>
+  <div style="padding:10px;border-radius:8px;background:rgba(224,82,82,.08);border:1px solid rgba(224,82,82,.2)">
+    <strong style="color:var(--red);font-size:13px">注意！</strong>
+    <span style="font-size:13px"> 举例不能用录像里的内容，必须用自己的真实经历或身边的事。这是很多学生丢分的地方！</span>
+  </div>
+</div>
+
+<div class="card">
+  <h2>经验题五步公式</h2>
+  <div style="padding:14px;border-radius:10px;background:rgba(61,214,140,.06);border:1px solid rgba(61,214,140,.2);font-size:16px;font-weight:700;color:var(--green);line-height:2;margin-bottom:10px">
+    <strong>1 起因</strong>：有一次，<u>【什么时候发生了什么事】</u>。<br>
+    <strong>2 经过</strong>：于是我<u>【做了什么/遇到了什么困难】</u>。<br>
+    <strong>3 结果</strong>：最后，<u>【结果怎样】</u>。<br>
+    <strong>4 感受</strong>：我觉得很<u>【感动/自豪/欣慰/后悔】</u>。<br>
+    <strong>5 道理</strong>：这件事让我明白了<u>【学到的道理】</u>。
+  </div>
+</div>
+
+<div class="card">
+  <h2>万能加分句型</h2>
+  <table class="rubric">
+    <tr><th>类型</th><th>句型</th><th>用法</th></tr>
+    <tr><td>表达观点</td><td>我认为……是非常重要的</td><td>观点题开头</td></tr>
+    <tr><td>解释原因</td><td>因为……不但……而且……</td><td>展开解释</td></tr>
+    <tr><td>举例</td><td>比如说，有一次我……</td><td>引入个人经历</td></tr>
+    <tr><td>对比</td><td>如果我们不这样做，就会……</td><td>反面论证</td></tr>
+    <tr><td>联系社会</td><td>在新加坡，我们更应该……</td><td>展示公民意识</td></tr>
+    <tr><td>总结</td><td>总而言之，我觉得……</td><td>收尾</td></tr>
+    <tr><td>成语加分</td><td>助人为乐 / 坚持不懈 / 以身作则</td><td>用在恰当的地方</td></tr>
+  </table>
+</div>
+</div>
+
+<!-- ==================== VIEW: 话题词库 ==================== -->
+<div id="v-topics" class="hidden">
+<div class="card">
+  <h2>PSLE口试12大常考话题</h2>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:12px">根据2002-2025年真题统计，点击话题展开关键词和句型</p>
+  <div class="topic-chips" id="topicLibChips"></div>
+</div>
+<div id="topicDetail" class="card hidden">
+  <h3 id="topicDetailTitle"></h3>
+  <div id="topicDetailBody" style="font-size:14px;line-height:1.8"></div>
+</div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+/* ===== DATA ===== */
+const READINGS=[
+{title:"守规则的力量",text:"在学校里，每个学生都要遵守纪律。上课时，我们应该专心听讲，不和同学说悄悄话。在食堂排队买食物时，我们要有耐心，不插队。放学后，在走廊上不能奔跑，以免撞到别人。这些看起来是小事，但如果每个人都能做到，我们的学校就会变得更加有秩序、更加安全。让我们从自己做起，做一个遵守纪律的好学生。",hint:"注意\u201C应该、不能、以免\u201D等词的语气变化，感叹号处要加强语气。"},
+{title:"爷爷的花园",text:"爷爷家后面有一个小花园。每天清晨，爷爷都会到花园里浇水、拔草。他说：\u201C照顾花草就像照顾孩子，要有耐心。\u201D春天的时候，花园里开满了五颜六色的花，非常美丽。邻居们路过时，总会停下来欣赏。爷爷笑着说：\u201C只要用心，什么都能种好。\u201D我很佩服爷爷的坚持，也学会了做事要有耐心和恒心。",hint:"注意对话的语气——爷爷说话要温和慈祥。\u201C五颜六色\u201D要读得有画面感。"},
+{title:"妈妈的爱",text:"每天早上，妈妈总是第一个起床，为我和弟弟准备早餐。她说营养均衡很重要，所以早餐里总有牛奶、鸡蛋和水果。放学回家后，妈妈会先问我们在学校过得怎样，然后才开始做晚饭。有时候我觉得妈妈太辛苦了，想帮她做家务。妈妈笑着摸摸我的头说：\u201C你把功课做好就是帮妈妈最大的忙了。\u201D听了妈妈的话，我更加用功学习了。",hint:"这篇感情温馨，语气要柔和。妈妈的话语要读出关爱的感觉。"},
+{title:"科技与生活",text:"在今天的社会里，科技已经成为我们生活中不可缺少的一部分。我们用手机和家人保持联络，用电脑完成学校的作业，还可以通过网络学习新知识。但是，有些同学花太多时间玩手机游戏，影响了学习和健康。我们应该学会合理地使用科技产品，既要利用它们来帮助自己学习和成长，也要注意保护眼睛，多到户外活动。",hint:"这篇是议论性短文，\u201C但是\u201D处语气要转折。最后一句总结要读得有力。"},
+{title:"珍惜水资源",text:"新加坡是一个缺水的国家，我们的淡水资源非常有限。为了解决这个问题，政府建造了蓄水池和海水淡化厂。但是，光靠政府的努力是不够的，我们每个人都要学会节约用水。洗手的时候不要开着水龙头不关，洗碗时可以用盆装水来洗。这些简单的小动作，都能帮助我们节约珍贵的水资源。让我们一起行动起来，为保护水资源出一份力！",hint:"新加坡相关话题，要读出号召的语气。最后感叹号要有力量感。"}
+];
+
+const TOPICS_DATA=[
+{id:"relationship",name:"人际关系",pct:"31%",kw:["友谊","邻里","关怀","互相帮助","合作","包容","尊重","体谅"],
+ sentences:["朋友之间应该互相尊重、互相帮助。","我们要学会包容别人的不同之处。","远亲不如近邻，邻居之间要和睦相处。"],
+ exam:"2025 Day1: 同学合作互助学习"},
+{id:"habits",name:"生活习惯",pct:"15%",kw:["健康饮食","早睡早起","整理房间","时间管理","自律","锻炼身体"],
+ sentences:["养成良好的生活习惯，可以让我们更健康、更有精神。","我们应该学会管理自己的时间，不要沉迷于电子产品。"],
+ exam:"2024 D2: 健康饮食; 2021 D1: 整理私物"},
+{id:"civic",name:"公德心",pct:"12%",kw:["排队","不乱扔垃圾","公共场所","安静","礼让","守规则","文明"],
+ sentences:["在公共场所，我们要保持安静，不影响别人。","遵守社会规则是每个公民的责任。"],
+ exam:"图书馆礼仪、公共交通让座"},
+{id:"environment",name:"环保与节约",pct:"10%",kw:["节约用水","回收利用","减少浪费","保护环境","绿色出行","垃圾分类"],
+ sentences:["新加坡是个缺水的国家，我们更要节约水资源。","减少使用一次性塑料袋，是保护环境的第一步。"],
+ exam:"节水、回收物品"},
+{id:"tech",name:"科技与网络",pct:"8%",kw:["手机","电脑","网络安全","沉迷游戏","合理使用","人工智能","网络欺凌"],
+ sentences:["科技是一把双刃剑，我们要学会合理使用。","沉迷手机游戏不但影响学习，还会伤害眼睛。"],
+ exam:"科技对生活的影响"},
+{id:"family",name:"家庭与敬老",pct:"8%",kw:["孝顺","感恩","陪伴","家务","祖孙情","关爱长辈","家人"],
+ sentences:["百善孝为先，我们要多陪伴和关心家中的长辈。","帮忙做家务是表达感恩的一种方式。"],
+ exam:"家庭关系、照顾老人"},
+{id:"learning",name:"学习与阅读",pct:"7%",kw:["课外阅读","图书馆","学习方法","勤奋","不耻下问","知识","书本"],
+ sentences:["书是我们最好的朋友，多阅读可以开阔视野。","遇到不会的问题要主动请教老师和同学。"],
+ exam:"阅读习惯、户外学习"},
+{id:"community",name:"社区服务",pct:"5%",kw:["义工","志愿者","帮助别人","社区活动","捐款","老人院","助人为乐"],
+ sentences:["助人为乐不但能帮助别人，也能让自己感到快乐。","参加社区活动可以让我们更了解身边的人和事。"],
+ exam:"志愿服务、社区活动"},
+{id:"health",name:"健康与运动",pct:"5%",kw:["运动","锻炼","饮食均衡","少吃零食","体育活动","身心健康","CCA"],
+ sentences:["每天至少运动30分钟，有助于保持身心健康。","饮食要均衡，少吃油炸食品和甜食。"],
+ exam:"运动与健康生活"},
+{id:"singapore",name:"新加坡文化",pct:"4%",kw:["多元种族","和谐","国庆","节日","传统","组屋","小贩中心"],
+ sentences:["新加坡是一个多元种族的国家，我们要互相尊重不同的文化。","小贩中心是新加坡的特色，体现了我们的多元文化。"],
+ exam:"2025 D2: 本地休闲景点（动物园）"},
+{id:"safety",name:"安全意识",pct:"3%",kw:["过马路","交通安全","陌生人","网络安全","自我保护","小心谨慎"],
+ sentences:["过马路时要左看右看，确保安全才通过。","不要随便和陌生人交谈或跟他们走。"],
+ exam:"公路安全"},
+{id:"perseverance",name:"毅力与品格",pct:"3%",kw:["坚持不懈","不怕困难","勇敢","诚实","负责任","以身作则"],
+ sentences:["只要坚持不懈，就没有克服不了的困难。","诚实是做人最基本的品质。"],
+ exam:"克服困难、品格教育"}
+];
+
+const PRACTICE_TOPICS=[
+{id:"help-friend",title:"帮助同学",scene:"录像中，一个同学在数学课上遇到了难题，怎么也做不出来。旁边的同学看到了，主动走过来帮他讲解。在同学的耐心帮助下，他终于明白了。放学后，两个人一起开心地走出学校。",
+ q1:"请描述你在录像中看到了什么。",q2:"你觉得主动帮助同学重要吗？为什么？",q3:"你有没有帮助过同学或被同学帮助的经历？请分享。",
+ ma1:"在录像中，我看到在教室里，一个同学在做数学题时遇到了困难，他看起来很着急。这时候，坐在旁边的同学注意到了，就主动走过来帮他讲解。经过耐心的讲解，那个同学终于明白了，露出了开心的笑容。放学后，两个人手牵手一起走出学校，看起来成为了更好的朋友。",
+ ma2:"我认为主动帮助同学是非常重要的。因为在学习的过程中，每个人都会遇到困难，如果同学之间能够互相帮助，不但可以一起进步，还能增进友谊。比如说，有一次我的华文听写考得不好，我的好朋友主动在课后陪我一起复习生字，结果下一次我就考了满分。所以我觉得同学之间应该互相关心、互相帮助，这样我们的班级才会更加团结。",
+ ma3:"有一次，我在体育课上扭伤了脚，走路很困难。我的好朋友看到了，马上跑过来扶我去医务室。他不但帮我拿书包，还在课间帮我买水、带我去食堂吃饭。我非常感动，觉得有这样的朋友真的很幸运。这件事让我明白了，朋友之间最重要的是在对方需要帮助的时候伸出援手。从那以后，我也会更加留意身边需要帮助的同学。"},
+{id:"save-water",title:"节约用水",scene:"录像中，一个学生在洗手间洗手时开着水龙头不关，水一直在流。另一个学生走过来，礼貌地提醒他要节约用水。第一个学生意识到了自己的错误，马上关了水龙头，并向同学道谢。",
+ q1:"请你描述录像中发生了什么事。",q2:"你认为在新加坡，节约用水为什么特别重要？",q3:"你在日常生活中是怎么节约用水的？请举一个例子。",
+ ma1:"在录像中，我看到一个学生在洗手间洗手。他打开水龙头后就一直开着，让水不断地流，非常浪费。这时候，另一个学生经过，看到了这个情况，就走过去礼貌地提醒他应该节约用水。第一个学生听了之后，立刻意识到自己做错了，马上关了水龙头，还感谢那个同学的提醒。",
+ ma2:"我认为在新加坡，节约用水是非常重要的。因为新加坡是一个面积很小的岛国，没有很多天然的淡水资源，很多水都需要通过海水淡化和新生水来获得，成本很高。如果我们每个人都浪费水，水资源就会更加紧张。比如说，我爸爸告诉我，新加坡的水费每年都在涨价，就是为了提醒大家珍惜水资源。所以我觉得作为新加坡人，我们每个人都有责任节约用水，从小事做起。",
+ ma3:"在日常生活中，我会注意节约用水。有一次，我发现自己刷牙时总是开着水龙头，一直让水流着。妈妈提醒我之后，我就养成了一个习惯：刷牙时先把水龙头关掉，等需要漱口时再打开。这样一个小小的改变，每天就可以节省很多水。我觉得很有成就感，因为虽然只是一个小动作，但积少成多，就能为保护水资源做出贡献。这件事让我明白了，节约用水要从生活中的小事做起。"},
+{id:"phone-use",title:"合理使用手机",scene:"录像中，一家人在餐厅吃饭。爸爸妈妈和孩子都在低头看手机，没有人说话。后来奶奶来了，看到这个情况很失望。孩子注意到了奶奶的表情，主动放下手机，开始和奶奶聊天。",
+ q1:"请描述你在录像中看到的情景。",q2:"你觉得吃饭时玩手机有什么不好？我们应该怎么做？",q3:"你的家庭里有没有关于使用手机的规定？请分享。",
+ ma1:"在录像中，我看到一家人在餐厅里吃饭。可是，爸爸、妈妈和孩子都在低头看自己的手机，餐桌上没有人说话，气氛很冷淡。后来奶奶来到餐厅，看到全家人都在玩手机、没有人和她打招呼，她的表情变得很失望和难过。这时候，孩子抬起头，注意到了奶奶失落的表情，就主动放下手机，开心地和奶奶聊天。",
+ ma2:"我觉得吃饭时玩手机是不好的习惯。因为吃饭的时间是家人难得聚在一起的时候，如果大家都低头看手机，就失去了交流和沟通的机会，会让家人之间的关系变得越来越疏远。而且看手机也会影响消化。比如说，我的邻居阿姨告诉我，她的孩子因为吃饭看手机，经常吃得很慢还消化不良。所以我觉得吃饭时我们应该放下手机，好好和家人聊天，珍惜在一起的时光。",
+ ma3:"在我的家庭里，爸爸妈妈制定了一个规定：吃饭时所有人都要把手机放在客厅的篮子里，不能带到餐桌上。一开始我觉得有点不习惯，但是后来我发现，没有手机的干扰，我们一家人的聊天变多了，吃饭也变得更开心。有一次弟弟偷偷把手机藏在口袋里带到餐桌上，被爸爸发现了，爸爸没有生气，只是笑着说规则是大家一起遵守的。我觉得这个规定非常好，它让我们的家庭更加温馨。"},
+{id:"community-service",title:"社区志愿服务",scene:"录像中，一群学生在周末来到社区的老人院做义工。有的学生帮老人打扫房间，有的陪老人聊天下棋，有的帮老人读报纸。老人们脸上都露出了开心的笑容。",
+ q1:"请描述你在录像中看到的活动。",q2:"你认为青少年参加义工活动有什么好处？",q3:"你参加过义工活动或社区服务吗？请分享你的经历。",
+ ma1:"在录像中，我看到一群学生利用周末的时间来到社区的老人院做义工。他们分成几组帮忙：有的学生拿着抹布和拖把帮老人打扫房间，有的学生坐在老人旁边陪他们聊天、下象棋，还有的学生拿着报纸念给老人听。老人们看到这些年轻人来探望他们，脸上都露出了开心的笑容，整个老人院充满了温暖的气氛。",
+ ma2:"我认为青少年参加义工活动有很多好处。首先，通过帮助别人，我们可以培养关心和体谅他人的品质。其次，在活动中我们可以学到课本上学不到的东西，比如和老人沟通的技巧和团队合作的精神。比如说，我的表姐参加了学校的CCA义工团，她告诉我每次去探望老人后，她都觉得自己变得更加感恩，更珍惜和家人在一起的时光。所以我觉得每个青少年都应该积极参加义工活动，不但能帮助别人，也能让自己成长。",
+ ma3:"我参加过学校组织的一次社区服务活动。有一次，我们班去附近的公园捡垃圾和打扫环境。一开始我觉得又热又累，不太想做。但是当我看到公园变得越来越干净，路过的叔叔阿姨向我们竖起大拇指时，我感到非常自豪和开心。这件事让我明白了，帮助社会不需要做很大的事，即使是捡起一片垃圾，也是在为社区做贡献。从那以后，我变得更加积极参加各种义工活动。"},
+{id:"reading-habits",title:"阅读的好处",scene:"录像中，一个男孩在图书馆里认真地读书。旁边的同学在聊天玩耍。后来老师组织了一个知识竞赛，那个爱读书的男孩答对了很多题目，同学们都很佩服他。",
+ q1:"请描述录像中发生了什么。",q2:"你觉得阅读为什么重要？我们可以从阅读中学到什么？",q3:"你喜欢阅读吗？请分享一本对你影响最大的书。",
+ ma1:"在录像中，我看到一个男孩正安静地坐在图书馆里读书，他非常专注和认真。与此同时，旁边的几个同学却在聊天和玩耍，没有人在看书。后来，老师在班上组织了一个知识竞赛。那个爱读书的男孩因为积累了很多知识，答对了许多题目，表现非常出色。同学们都很佩服他，向他投去了羡慕的目光。",
+ ma2:"我认为阅读是非常重要的。因为书本里有很多我们在课堂上学不到的知识，阅读可以开阔我们的视野，让我们了解更多关于这个世界的事情。而且经常阅读的人，华文表达能力会更好，写作也会更有内容。比如说，我发现班上华文成绩最好的同学，几乎都是很喜欢看课外书的。所以我觉得我们应该养成每天阅读的好习惯，即使每天只读15分钟，长期坚持下来，知识量也会有很大的提升。",
+ ma3:"我非常喜欢阅读。对我影响最大的一本书是《汤姆·索亚历险记》。有一次暑假，妈妈带我去图书馆借了这本书。一开始我只是随便翻翻，但是看着看着就被故事吸引住了，花了三天就读完了。书中汤姆虽然调皮，但是很勇敢，敢于冒险和面对困难。这本书让我明白了要有勇气去尝试新事物，不要害怕失败。从那以后，我每个月至少会读两本课外书。"}
+];
+
+const RESCUE=[
+{label:"首先",text:"首先，在录像中，我看到……"},
+{label:"接着",text:"接着，事情发生了变化……"},
+{label:"可是",text:"可是，问题出现了……"},
+{label:"后来",text:"后来，他们想到了一个办法……"},
+{label:"最后",text:"最后，这件事情得到了解决……"},
+{label:"我认为",text:"我认为这件事告诉我们……"},
+{label:"比如说",text:"比如说，在我自己的生活中，有一次……"},
+{label:"总而言之",text:"总而言之，我觉得我们都应该……"},
+{label:"不但…而且",text:"这样做不但可以……而且还能……"},
+{label:"如果…就",text:"如果我们不这样做，就会……"}
+];
+
+/* ===== STATE ===== */
+const SKEY="j-oral-v1";
+let S=JSON.parse(localStorage.getItem(SKEY)||'{"practice":0,"confidence":60,"bestSec":0,"streak":0,"lastDate":"","recs":[]}');
+function save(){localStorage.setItem(SKEY,JSON.stringify(S))}
+function today(){return new Date().toISOString().slice(0,10)}
+function fmtTime(s){return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+
+/* check streak */
+(function(){
+  const t=today();
+  if(S.lastDate&&S.lastDate!==t){
+    const d=new Date(S.lastDate);d.setDate(d.getDate()+1);
+    if(d.toISOString().slice(0,10)!==t)S.streak=0;
+  }
+})();
+
+/* ===== TIMER ENGINE ===== */
+function createTimer(dispId){
+  let sec=0,tid=null,recorder=null,chunks=[];
+  const disp=()=>{document.getElementById(dispId).textContent=fmtTime(sec)};
+  return{
+    start(){sec=0;disp();if(tid)clearInterval(tid);tid=setInterval(()=>{sec++;disp()},1000)},
+    stop(){clearInterval(tid);tid=null;return sec},
+    getSec(){return sec},
+    async startRec(audioId,noteId){
+      this.start();
+      if(!navigator.mediaDevices||!window.MediaRecorder){
+        document.getElementById(noteId).textContent="浏览器不支持录音，计时器已开始。";return;
+      }
+      try{
+        const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+        chunks=[];recorder=new MediaRecorder(stream);
+        recorder.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data)};
+        recorder.onstop=()=>{
+          const blob=new Blob(chunks,{type:"audio/webm"});
+          const aud=document.getElementById(audioId);
+          aud.src=URL.createObjectURL(blob);aud.classList.remove("hidden");
+          stream.getTracks().forEach(t=>t.stop());
+          document.getElementById(noteId).textContent="录音完成！听一遍自己的表现，只挑一个地方改进。";
+        };
+        recorder.start();
+        document.getElementById(noteId).textContent="正在录音……";
+      }catch(e){document.getElementById(noteId).textContent="麦克风未开放，仍可用计时器练习。";}
+    },
+    stopRec(audioId,noteId){
+      const elapsed=this.stop();
+      if(recorder&&recorder.state!=="inactive")recorder.stop();
+      else document.getElementById(noteId).textContent=`本轮用时 ${fmtTime(elapsed)}。`;
+      return elapsed;
+    }
+  };
+}
+const readT=createTimer("readTimer");
+const videoT=createTimer("videoTimer");
+
+/* ===== TAB SYSTEM ===== */
+const views=["rubric","read","video","frameworks","topics"];
+function switchView(v){
+  views.forEach(id=>{
+    document.getElementById("v-"+id).classList.toggle("hidden",id!==v);
+  });
+  document.querySelectorAll("#mainTabs .tab").forEach(b=>{
+    b.classList.toggle("on",b.dataset.v===v);
+  });
+}
+document.getElementById("mainTabs").addEventListener("click",e=>{
+  const b=e.target.closest(".tab");
+  if(b)switchView(b.dataset.v);
+});
+
+/* ===== RENDER STATS ===== */
+function renderStats(){
+  document.getElementById("nPractice").textContent=S.practice;
+  document.getElementById("nBestTime").textContent=fmtTime(S.bestSec);
+  document.getElementById("nStreak").textContent=S.streak;
+  document.getElementById("nConf").textContent=S.confidence+"%";
+}
+renderStats();
+
+/* ===== READING ===== */
+let curRead=0;
+function renderReadChips(){
+  const box=document.getElementById("readChips");box.innerHTML="";
+  READINGS.forEach((r,i)=>{
+    const b=document.createElement("button");
+    b.className="tc"+(i===curRead?" on":"");
+    b.textContent=r.title;
+    b.onclick=()=>{curRead=i;renderReadChips();renderReading()};
+    box.appendChild(b);
+  });
+}
+function renderReading(){
+  const r=READINGS[curRead];
+  document.getElementById("readPassage").textContent=r.text;
+  document.getElementById("readHint").textContent="提示："+r.hint;
+}
+renderReadChips();renderReading();
+
+document.getElementById("readStart").onclick=()=>{readT.start();document.getElementById("readNote").textContent="正在朗读……目标：1分30秒~2分钟，像讲故事一样读。"};
+document.getElementById("readStop").onclick=()=>{
+  const s=readT.stop();
+  document.getElementById("readNote").textContent=`本轮用时 ${fmtTime(s)}。${s>=80&&s<=130?"时间刚好！":""}${s<80?"可以再慢一点，注意感情。":""}${s>130?"稍微快一点，控制在2分钟内。":""}`;
+};
+document.getElementById("readRecord").onclick=()=>{readT.startRec("readAudio","readNote")};
+
+/* ===== VIDEO TOPICS ===== */
+let curPractice=null;
+function renderVideoChips(){
+  const box=document.getElementById("videoTopicChips");box.innerHTML="";
+  PRACTICE_TOPICS.forEach(t=>{
+    const b=document.createElement("button");
+    b.className="tc"+(curPractice&&curPractice.id===t.id?" on":"");
+    b.textContent=t.title;
+    b.onclick=()=>{curPractice=t;renderVideoChips();renderVideoWorkspace()};
+    box.appendChild(b);
+  });
+}
+function renderVideoWorkspace(){
+  if(!curPractice){document.getElementById("videoWorkspace").classList.add("hidden");return}
+  document.getElementById("videoWorkspace").classList.remove("hidden");
+  document.getElementById("vwTitle").textContent="话题："+curPractice.title;
+  document.getElementById("vwScene").textContent="录像场景："+curPractice.scene;
+  document.getElementById("vq1").textContent="Q1: "+curPractice.q1;
+  document.getElementById("vq2").textContent="Q2: "+curPractice.q2;
+  document.getElementById("vq3").textContent="Q3: "+curPractice.q3;
+  ["va1","va2","va3"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("modelAnsCard").classList.add("hidden");
+  document.querySelectorAll("#videoCk input").forEach(c=>c.checked=false);
+}
+renderVideoChips();
+
+/* rescue grid */
+(function(){
+  const g=document.getElementById("rescueGrid");
+  RESCUE.forEach(r=>{
+    const b=document.createElement("button");
+    b.className="rescue-btn";b.textContent=r.label;
+    b.onclick=()=>{
+      const active=document.querySelector("#videoWorkspace textarea:focus")||document.getElementById("va1");
+      const cur=active.value;
+      active.value=cur?(cur+r.text):r.text;
+      active.focus();
+    };
+    g.appendChild(b);
+  });
+})();
+
+/* video timer */
+document.getElementById("videoStart").onclick=()=>{videoT.start();document.getElementById("videoNote").textContent="正在练习……每个问题目标60~90秒。"};
+document.getElementById("videoStop").onclick=()=>{
+  const s=videoT.stop();
+  if(s>S.bestSec){S.bestSec=s;save()}
+  document.getElementById("videoNote").textContent=`本轮用时 ${fmtTime(s)}。`;
+};
+document.getElementById("videoRec").onclick=()=>{videoT.startRec("videoAudio","videoNote")};
+
+/* mark done */
+document.getElementById("markVideoDone").onclick=()=>{
+  const s=videoT.stop();
+  if(s>S.bestSec){S.bestSec=s;save()}
+  S.practice++;
+  S.confidence=Math.min(100,S.confidence+3);
+  const t=today();
+  if(S.lastDate!==t){
+    const d=new Date(S.lastDate||t);d.setDate(d.getDate()+1);
+    if(S.lastDate&&d.toISOString().slice(0,10)===t)S.streak++;
+    else S.streak=1;
+  }
+  S.lastDate=t;
+  S.recs.push({topic:curPractice?curPractice.title:"",date:t,sec:s});
+  save();renderStats();
+  document.getElementById("videoNote").textContent="太棒了！完成一次口试练习！Johnson的龙息越来越强了！";
+};
+
+/* model answer */
+document.getElementById("showModelAns").onclick=()=>{
+  if(!curPractice)return;
+  const card=document.getElementById("modelAnsCard");
+  if(!card.classList.contains("hidden")){card.classList.add("hidden");return}
+  card.classList.remove("hidden");
+  document.getElementById("modelAnsContent").innerHTML=
+    `<p style="margin-bottom:12px"><span class="q-type-tag qt-desc">描述题</span></p><p style="margin-bottom:16px">${curPractice.ma1}</p>`+
+    `<p style="margin-bottom:12px"><span class="q-type-tag qt-opinion">观点题</span></p><p style="margin-bottom:16px">${curPractice.ma2}</p>`+
+    `<p style="margin-bottom:12px"><span class="q-type-tag qt-exp">经验题</span></p><p>${curPractice.ma3}</p>`;
+  card.scrollIntoView({behavior:"smooth"});
+};
+
+/* ===== TOPIC LIBRARY ===== */
+function renderTopicLibChips(){
+  const box=document.getElementById("topicLibChips");box.innerHTML="";
+  TOPICS_DATA.forEach(t=>{
+    const b=document.createElement("button");
+    b.className="tc";
+    b.innerHTML=t.name+` <small style="opacity:.6">${t.pct}</small>`;
+    b.onclick=()=>{
+      box.querySelectorAll(".tc").forEach(c=>c.classList.remove("on"));
+      b.classList.add("on");
+      renderTopicDetail(t);
+    };
+    box.appendChild(b);
+  });
+}
+function renderTopicDetail(t){
+  const card=document.getElementById("topicDetail");card.classList.remove("hidden");
+  document.getElementById("topicDetailTitle").textContent=t.name+"（占比"+t.pct+"）";
+  let h=`<p style="margin-bottom:8px"><strong>关键词汇：</strong></p><div class="topic-chips" style="margin-bottom:12px">`;
+  t.kw.forEach(w=>{h+=`<span class="tc" style="cursor:default">${w}</span>`});
+  h+=`</div><p style="margin-bottom:8px"><strong>万能句型：</strong></p><ul style="padding-left:18px">`;
+  t.sentences.forEach(s=>{h+=`<li style="margin-bottom:4px">${s}</li>`});
+  h+=`</ul>`;
+  if(t.exam)h+=`<p style="margin-top:10px;font-size:13px;color:var(--muted)"><strong>真题出处：</strong>${t.exam}</p>`;
+  document.getElementById("topicDetailBody").innerHTML=h;
+}
+renderTopicLibChips();
+
+/* ===== CHECKLIST TOGGLE ===== */
+document.addEventListener("change",e=>{
+  if(e.target.type==="checkbox"){
+    const item=e.target.closest(".ck-item");
+    if(item)item.classList.toggle("checked",e.target.checked);
+  }
+});
+
+/* ===== INIT ===== */
+renderStats();
+</script>
+</body>
+</html>

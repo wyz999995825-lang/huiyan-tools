@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Johnson 小成功墙 🌟</title>
+<style>
+:root{
+  --bg:#faf5ec;--card:#fff8f0;--border:#e0d5c5;--text:#2c2418;--text2:#7a6e5e;
+  --accent:#1a7a6d;--accent-bg:#e8f5f0;--green:#1a8a5c;--green-bg:#e5f5ec;
+  --gold:#d4a017;--gold-bg:#fdf6e3;--orange:#d4790e;--orange-bg:#fdf0dc;
+  --blue:#2563eb;--blue-bg:#dbeafe;--red:#e74c3c;
+  --radius:14px;--shadow:0 2px 10px rgba(0,0,0,.06)
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1a16;--card:#262420;--border:#3e3a32;--text:#e8e2d8;--text2:#a09888;
+  --accent:#3dbfa8;--accent-bg:#1a2e2a;--green-bg:#1a2e22;--gold-bg:#2e2a18;
+  --orange-bg:#2e2618;--blue-bg:#1a2a4a
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;background:var(--bg);color:var(--text);padding:20px;max-width:700px;margin:0 auto;font-size:16px;line-height:1.6}
+
+h1{font-size:26px;text-align:center;margin-bottom:4px}
+.subtitle{text-align:center;color:var(--text2);font-size:14px;margin-bottom:24px}
+
+/* Streak */
+.streak-bar{background:var(--gold-bg);border:2px solid var(--gold);border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:20px;position:relative;overflow:hidden}
+.streak-bar .fire{font-size:40px}
+.streak-bar .streak-num{font-size:48px;font-weight:800;color:var(--gold);line-height:1}
+.streak-bar .streak-label{font-size:14px;color:var(--text2);margin-top:4px}
+.streak-bar .best{font-size:12px;color:var(--gold);margin-top:4px}
+.week-dots{display:flex;justify-content:center;gap:6px;margin-top:12px}
+.week-dots .dot{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text2);background:var(--card)}
+.week-dots .dot.done{background:var(--green);border-color:var(--green);color:#fff;font-size:16px}
+.week-dots .dot.today{border-color:var(--gold);border-width:3px}
+
+/* Stats row */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.stat{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center}
+.stat .num{font-size:28px;font-weight:700;color:var(--accent)}
+.stat .lbl{font-size:12px;color:var(--text2);margin-top:2px}
+
+/* Add win */
+.add-box{background:var(--accent-bg);border:2px dashed var(--accent);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.add-box h3{font-size:16px;color:var(--accent);margin-bottom:12px}
+.add-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.cat-btn{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-size:13px;transition:.2s}
+.cat-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.cat-btn:hover{border-color:var(--accent)}
+.add-input{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;background:var(--bg);color:var(--text);margin-bottom:10px}
+.add-input:focus{outline:none;border-color:var(--accent)}
+.add-btn{width:100%;padding:12px;border:none;border-radius:10px;background:var(--green);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.add-btn:hover{opacity:.9}
+.add-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* Quick wins */
+.quick-wins{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.qw{padding:6px 12px;border-radius:16px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:13px;transition:.2s}
+.qw:hover{background:var(--accent-bg);border-color:var(--accent)}
+
+/* Timeline */
+.timeline{margin-bottom:20px}
+.tl-date{font-size:13px;font-weight:700;color:var(--text2);margin:16px 0 8px;padding-left:4px}
+.win-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;box-shadow:var(--shadow);animation:slideIn .3s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.win-card .win-icon{font-size:24px;flex-shrink:0;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px}
+.win-card .win-body{flex:1}
+.win-card .win-text{font-size:15px;font-weight:600}
+.win-card .win-cat{font-size:11px;color:var(--text2);margin-top:2px}
+.win-card .win-del{color:var(--text2);cursor:pointer;font-size:18px;opacity:.4;padding:4px}
+.win-card .win-del:hover{opacity:1;color:var(--red)}
+
+/* Badges */
+.badges{margin-bottom:20px}
+.badges h3{font-size:16px;margin-bottom:12px}
+.badge-grid{display:flex;gap:10px;flex-wrap:wrap}
+.badge{width:70px;text-align:center;padding:10px 4px;border-radius:12px;background:var(--card);border:1.5px solid var(--border)}
+.badge.earned{border-color:var(--gold);background:var(--gold-bg)}
+.badge .b-icon{font-size:28px}
+.badge .b-name{font-size:10px;color:var(--text2);margin-top:4px;line-height:1.2}
+.badge.earned .b-name{color:var(--gold);font-weight:700}
+.badge:not(.earned){opacity:.35}
+
+/* Encouragement */
+.encourage{background:var(--green-bg);border:1.5px solid #a7d7b8;border-radius:var(--radius);padding:16px;text-align:center;margin-bottom:20px;font-size:15px;color:#1a5c36}
+@media(prefers-color-scheme:dark){.encourage{background:#1a2e22;border-color:#2a5a3a;color:#7dcea0}}
+
+/* Empty state */
+.empty{text-align:center;padding:40px;color:var(--text2);font-size:15px}
+.empty .big{font-size:48px;margin-bottom:10px}
+</style>
+</head>
+<body>
+
+<h1>🌟 Johnson 小成功墙</h1>
+<p class="subtitle">每一步进步都值得庆祝！</p>
+
+<div class="encourage" id="encourageBox"></div>
+
+<div class="streak-bar">
+  <div class="fire" id="streakIcon">🔥</div>
+  <div class="streak-num" id="streakNum">0</div>
+  <div class="streak-label">天连续学习</div>
+  <div class="best" id="bestStreak"></div>
+  <div class="week-dots" id="weekDots"></div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="totalWins">0</div><div class="lbl">总成就</div></div>
+  <div class="stat"><div class="num" id="weekWins">0</div><div class="lbl">本周</div></div>
+  <div class="stat"><div class="num" id="monthWins">0</div><div class="lbl">本月</div></div>
+</div>
+
+<div class="badges">
+  <h3>🏅 成就徽章</h3>
+  <div class="badge-grid" id="badgeGrid"></div>
+</div>
+
+<div class="add-box">
+  <h3>🎉 记录今天的小成功</h3>
+  <div class="add-row" id="catBtns"></div>
+  <div class="quick-wins" id="quickWins"></div>
+  <input class="add-input" id="winInput" placeholder="写下你今天的小成功..." />
+  <button class="add-btn" id="addBtn" onclick="addWin()">记录这个小成功！ 🌟</button>
+</div>
+
+<div class="timeline" id="timeline"></div>
+
+<script>
+const CATS = [
+  {id:'english',label:'📘 英语',icon:'📘',bg:'var(--blue-bg)'},
+  {id:'chinese',label:'📕 华文',icon:'📕',bg:'var(--orange-bg)'},
+  {id:'math',label:'📐 数学',icon:'📐',bg:'var(--green-bg)'},
+  {id:'science',label:'🔬 科学',icon:'🔬',bg:'var(--accent-bg)'},
+  {id:'habit',label:'💪 习惯',icon:'💪',bg:'var(--gold-bg)'},
+  {id:'other',label:'⭐ 其他',icon:'⭐',bg:'var(--card)'}
+];
+
+const QUICK = [
+  '完成了 OE 阅读训练一天','语法练习全对','背了 10 个新单词',
+  '华文作文写完了','数学作业自己完成','科学实验理解了',
+  '今天没有拖延','主动复习了错题','帮助了同学',
+  '阅读了 30 分钟','坚持了学习计划','考试进步了'
+];
+
+const BADGES = [
+  {id:'first',name:'第一步',icon:'🌱',desc:'记录第一个小成功',need:1},
+  {id:'five',name:'五连胜',icon:'⭐',desc:'累计5个小成功',need:5},
+  {id:'ten',name:'十全十美',icon:'🌟',desc:'累计10个小成功',need:10},
+  {id:'streak3',name:'三日连击',icon:'🔥',desc:'连续3天学习',need:0,type:'streak',val:3},
+  {id:'streak7',name:'一周勇士',icon:'💎',desc:'连续7天学习',need:0,type:'streak',val:7},
+  {id:'twenty',name:'成就满满',icon:'🏆',desc:'累计20个小成功',need:20},
+  {id:'streak14',name:'两周传奇',icon:'👑',desc:'连续14天学习',need:0,type:'streak',val:14},
+  {id:'fifty',name:'半百英雄',icon:'🎖️',desc:'累计50个小成功',need:50}
+];
+
+const ENCOURAGEMENTS = [
+  '今天也是进步的一天！加油 Johnson！💪',
+  '每一个小成功都在让你变得更强！🌟',
+  '坚持就是胜利，你已经在路上了！🚀',
+  '你的努力，我们都看在眼里！❤️',
+  '比昨天的自己进步一点点，就是最大的成功！',
+  '学习不是冲刺，是马拉松——你跑得很稳！🏃',
+  '错题不可怕，每道错题都是成长的机会！💡',
+  '今天的你比昨天更厉害了！继续保持！✨',
+  '小小的进步 × 每一天 = 巨大的飞跃！📈',
+  '你有能力做到的，相信自己！🌈'
+];
+
+let state = {wins:[], streak:0, bestStreak:0, lastDate:null, selectedCat:'english'};
+
+function load() {
+  try {
+    const s = localStorage.getItem('johnson_wins');
+    if (s) state = JSON.parse(s);
+  } catch(e) {}
+  // Ensure defaults
+  if (!state.wins) state.wins = [];
+  if (!state.streak) state.streak = 0;
+  if (!state.bestStreak) state.bestStreak = 0;
+}
+
+function save() {
+  try { localStorage.setItem('johnson_wins', JSON.stringify(state)); } catch(e) {}
+}
+
+function today() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function calcStreak() {
+  const dates = [...new Set(state.wins.map(w => w.date))].sort().reverse();
+  if (!dates.length) { state.streak = 0; return; }
+  const t = today();
+  let streak = 0;
+  let check = new Date(t);
+  // If today has wins, start from today; otherwise from yesterday
+  if (dates[0] === t) {
+    streak = 1;
+    check.setDate(check.getDate() - 1);
+    for (let i = 1; i < dates.length; i++) {
+      if (dates[i] === check.toISOString().slice(0,10)) {
+        streak++;
+        check.setDate(check.getDate() - 1);
+      } else break;
+    }
+  } else if (dates[0] === new Date(check.setDate(check.getDate()-1)).toISOString().slice(0,10)) {
+    // Yesterday was last active
+    streak = 1;
+    check = new Date(dates[0]);
+    check.setDate(check.getDate() - 1);
+    for (let i = 1; i < dates.length; i++) {
+      if (dates[i] === check.toISOString().slice(0,10)) {
+        streak++;
+        check.setDate(check.getDate() - 1);
+      } else break;
+    }
+  }
+  state.streak = streak;
+  if (streak > state.bestStreak) state.bestStreak = streak;
+}
+
+function render() {
+  calcStreak();
+
+  // Encouragement
+  document.getElementById('encourageBox').textContent = ENCOURAGEMENTS[Math.floor(Math.random()*ENCOURAGEMENTS.length)];
+
+  // Streak
+  document.getElementById('streakNum').textContent = state.streak;
+  document.getElementById('streakIcon').textContent = state.streak >= 7 ? '💎' : state.streak >= 3 ? '🔥' : state.streak >= 1 ? '✨' : '💤';
+  document.getElementById('bestStreak').textContent = state.bestStreak > 0 ? `最佳纪录：${state.bestStreak} 天` : '';
+
+  // Week dots
+  const wd = document.getElementById('weekDots');
+  const dayNames = ['日','一','二','三','四','五','六'];
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  let html = '';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - dayOfWeek + i);
+    const ds = d.toISOString().slice(0,10);
+    const done = state.wins.some(w => w.date === ds);
+    const isToday = ds === today();
+    html += `<div class="dot${done?' done':''}${isToday?' today':''}">${done?'✓':dayNames[i]}</div>`;
+  }
+  wd.innerHTML = html;
+
+  // Stats
+  const t = today();
+  const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate()-7);
+  const monthAgo = new Date(); monthAgo.setDate(monthAgo.getDate()-30);
+  document.getElementById('totalWins').textContent = state.wins.length;
+  document.getElementById('weekWins').textContent = state.wins.filter(w => new Date(w.date) >= weekAgo).length;
+  document.getElementById('monthWins').textContent = state.wins.filter(w => new Date(w.date) >= monthAgo).length;
+
+  // Badges
+  const bg = document.getElementById('badgeGrid');
+  bg.innerHTML = BADGES.map(b => {
+    let earned = false;
+    if (b.type === 'streak') earned = state.bestStreak >= b.val;
+    else earned = state.wins.length >= b.need;
+    return `<div class="badge${earned?' earned'}" title="${b.desc}"><div class="b-icon">${b.icon}</div><div class="b-name">${b.name}</div></div>`;
+  }).join('');
+
+  // Cat buttons
+  const cb = document.getElementById('catBtns');
+  cb.innerHTML = CATS.map(c => `<div class="cat-btn${state.selectedCat===c.id?' active':''}" onclick="selectCat('${c.id}')">${c.label}</div>`).join('');
+
+  // Quick wins
+  const qw = document.getElementById('quickWins');
+  qw.innerHTML = QUICK.map(q => `<div class="qw" onclick="quickAdd('${q.replace(/'/g,"\\'")}')">${q}</div>`).join('');
+
+  // Timeline
+  const tl = document.getElementById('timeline');
+  if (!state.wins.length) {
+    tl.innerHTML = '<div class="empty"><div class="big">🌟</div>还没有小成功记录<br>记录你的第一个小成功吧！</div>';
+    return;
+  }
+  const grouped = {};
+  state.wins.slice().reverse().forEach(w => {
+    if (!grouped[w.date]) grouped[w.date] = [];
+    grouped[w.date].push(w);
+  });
+  let tlHtml = '';
+  const dateLabels = (d) => {
+    if (d === today()) return '📅 今天';
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+    if (d === yesterday.toISOString().slice(0,10)) return '📅 昨天';
+    return '📅 ' + d;
+  };
+  for (const [date, wins] of Object.entries(grouped)) {
+    tlHtml += `<div class="tl-date">${dateLabels(date)} · ${wins.length} 个成功</div>`;
+    wins.forEach(w => {
+      const cat = CATS.find(c=>c.id===w.cat) || CATS[5];
+      tlHtml += `<div class="win-card"><div class="win-icon" style="background:${cat.bg}">${cat.icon}</div><div class="win-body"><div class="win-text">${esc(w.text)}</div><div class="win-cat">${cat.label}</div></div><div class="win-del" onclick="delWin('${w.id}')" title="删除">×</div></div>`;
+    });
+  }
+  tl.innerHTML = tlHtml;
+  save();
+}
+
+function esc(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+function selectCat(id) {
+  state.selectedCat = id;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.textContent.includes(CATS.find(c=>c.id===id).label.slice(2))));
+  render();
+}
+
+function addWin() {
+  const input = document.getElementById('winInput');
+  const text = input.value.trim();
+  if (!text) return;
+  state.wins.push({
+    id: Date.now().toString(36),
+    text: text,
+    cat: state.selectedCat,
+    date: today(),
+    time: new Date().toTimeString().slice(0,5)
+  });
+  input.value = '';
+  save();
+  render();
+  // Celebration
+  celebrate();
+}
+
+function quickAdd(text) {
+  document.getElementById('winInput').value = text;
+  addWin();
+}
+
+function delWin(id) {
+  state.wins = state.wins.filter(w => w.id !== id);
+  save();
+  render();
+}
+
+function celebrate() {
+  // Simple confetti burst
+  const colors = ['#f0c420','#ff6b6b','#48dbfb','#ff9ff3','#1dd1a1','#feca57'];
+  for (let i = 0; i < 20; i++) {
+    const c = document.createElement('div');
+    c.style.cssText = `position:fixed;width:8px;height:8px;border-radius:50%;background:${colors[i%colors.length]};top:50%;left:50%;pointer-events:none;z-index:9999;transition:all ${0.5+Math.random()*0.5}s ease-out;opacity:1;`;
+    document.body.appendChild(c);
+    requestAnimationFrame(() => {
+      c.style.top = (20 + Math.random()*60) + '%';
+      c.style.left = (10 + Math.random()*80) + '%';
+      c.style.opacity = '0';
+      c.style.transform = `scale(${1+Math.random()*2})`;
+    });
+    setTimeout(() => c.remove(), 1200);
+  }
+}
+
+load();
+render();
+</script>
+</body>
+</html>

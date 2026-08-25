@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Grammar Trainer · Eavan's Grammar Bootcamp</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--green:#58CC02;--green-dark:#4CAF00;--red:#FF4B4B;--blue:#1CB0F6;--gold:#FFC800;--purple:#A560E8;--bg:#F7F7F7;--card:#FFF;--text:#3C3C3C;--text-light:#777;--shadow:0 2px 12px rgba(0,0,0,.08)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.app{max-width:680px;margin:0 auto;padding:0 16px 100px}
+
+/* Top bar */
+.top-bar{display:flex;align-items:center;gap:12px;padding:16px 0;position:sticky;top:0;background:var(--bg);z-index:100}
+.top-bar .back{width:36px;height:36px;border-radius:50%;border:2px solid #ddd;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;flex-shrink:0}
+.top-bar .back:hover{background:#f0f0f0}
+.progress-bar{flex:1;height:16px;background:#E5E5E5;border-radius:8px;overflow:hidden}
+.progress-fill{height:100%;background:var(--green);border-radius:8px;transition:width .4s ease}
+.top-bar .hearts{display:flex;gap:2px;font-size:20px;flex-shrink:0}
+.heart-full{color:var(--red)}
+.heart-empty{color:#ddd}
+
+/* Screens */
+.screen{display:none;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Home screen */
+.home-header{text-align:center;padding:32px 0 16px}
+.home-header h1{font-size:32px;color:var(--text)}
+.home-header .sub{font-size:16px;color:var(--text-light);margin-top:4px}
+.streak-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#FFF3E0,#FFE0B2);padding:8px 16px;border-radius:20px;font-size:16px;font-weight:600;margin-top:12px}
+.day-grid{display:flex;flex-direction:column;gap:8px;margin-top:20px}
+.day-row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);cursor:pointer;transition:transform .15s}
+.day-row:hover{transform:scale(1.01)}
+.day-row.locked{opacity:.5;cursor:not-allowed}
+.day-row.locked:hover{transform:none}
+.day-row.completed{border-left:4px solid var(--green)}
+.day-row.current{border-left:4px solid var(--blue)}
+.day-row.test{border-left:4px solid var(--gold)}
+.day-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.day-info{flex:1}
+.day-info .title{font-weight:700;font-size:17px}
+.day-info .desc{font-size:14px;color:var(--text-light);margin-top:2px}
+.day-score{font-size:15px;font-weight:700;color:var(--green)}
+.day-row.test .day-icon{background:linear-gradient(135deg,#FFF8E1,#FFE082)}
+.stats-bar{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+.stat-card{flex:1;min-width:100px;background:var(--card);border-radius:12px;padding:14px;text-align:center;box-shadow:var(--shadow)}
+.stat-card .num{font-size:28px;font-weight:800}
+.stat-card .label{font-size:13px;color:var(--text-light);margin-top:2px}
+.export-btn{display:block;margin:20px auto 0;padding:10px 24px;border:2px solid #ddd;border-radius:12px;background:#fff;font-size:15px;cursor:pointer;color:var(--text-light)}
+.export-btn:hover{border-color:var(--blue);color:var(--blue)}
+
+/* Learn screen */
+.learn-card{background:var(--card);border-radius:20px;padding:28px 24px;box-shadow:var(--shadow);margin-top:16px;text-align:center}
+.learn-card .cat-badge{display:inline-block;padding:4px 14px;border-radius:12px;font-size:14px;font-weight:700;color:#fff;margin-bottom:12px}
+.learn-card .rule-title{font-size:22px;font-weight:800;margin-bottom:8px}
+.learn-card .rule-text{font-size:17px;line-height:1.6;color:var(--text)}
+.learn-card .example-box{margin-top:16px;text-align:left;background:#F8F9FA;border-radius:12px;padding:14px}
+.learn-card .ex-wrong{color:var(--red);text-decoration:line-through;font-size:16px;margin-bottom:6px}
+.learn-card .ex-right{color:var(--green-dark);font-weight:600;font-size:16px;margin-bottom:6px}
+.learn-card .ex-source{font-size:13px;color:var(--text-light);font-style:italic}
+.learn-card .ex-explain{font-size:15px;color:#555;margin-top:8px;padding-top:8px;border-top:1px solid #eee}
+.learn-card .tip-box{margin-top:14px;background:#FFF8E1;border-radius:10px;padding:10px 14px;font-size:15px;text-align:left}
+.learn-nav{display:flex;justify-content:center;gap:8px;margin-top:16px}
+.learn-dot{width:10px;height:10px;border-radius:50%;background:#ddd;cursor:pointer}
+.learn-dot.active{background:var(--blue)}
+.learn-dot.done{background:var(--green)}
+
+/* Question screen */
+.q-card{background:var(--card);border-radius:20px;padding:24px 20px;box-shadow:var(--shadow);margin-top:12px}
+.q-type-badge{display:inline-block;padding:3px 10px;border-radius:8px;font-size:13px;font-weight:700;color:#fff;margin-bottom:10px}
+.q-stem{font-size:19px;font-weight:600;line-height:1.5;margin-bottom:16px}
+.q-stem .highlight{background:#FFF3CD;padding:1px 4px;border-radius:4px}
+.q-stem .blank{display:inline-block;min-width:80px;border-bottom:2px solid var(--blue);text-align:center;font-weight:700;color:var(--blue)}
+
+/* MCQ */
+.mcq-options{display:flex;flex-direction:column;gap:8px}
+.mcq-opt{padding:14px 16px;border:2px solid #E5E5E5;border-radius:12px;cursor:pointer;font-size:17px;transition:all .15s;display:flex;align-items:center;gap:10px}
+.mcq-opt:hover{border-color:var(--blue);background:#F0F9FF}
+.mcq-opt.selected{border-color:var(--blue);background:#E3F2FD}
+.mcq-opt.correct{border-color:var(--green);background:#E8F5E9}
+.mcq-opt.wrong{border-color:var(--red);background:#FFEBEE}
+.mcq-opt .letter{width:28px;height:28px;border-radius:50%;border:2px solid #ddd;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0}
+.mcq-opt.selected .letter{border-color:var(--blue);color:var(--blue)}
+.mcq-opt.correct .letter{border-color:var(--green);background:var(--green);color:#fff}
+.mcq-opt.wrong .letter{border-color:var(--red);background:var(--red);color:#fff}
+
+/* Fill-in */
+.fill-input{width:100%;padding:14px 16px;border:2px solid #E5E5E5;border-radius:12px;font-size:18px;outline:none;transition:border-color .2s}
+.fill-input:focus{border-color:var(--blue)}
+.fill-input.correct{border-color:var(--green);background:#E8F5E9}
+.fill-input.wrong{border-color:var(--red);background:#FFEBEE}
+
+/* Error correction */
+.error-sentence{font-size:18px;line-height:1.8;padding:16px;background:#FFF8E1;border-radius:12px;margin-bottom:12px}
+.error-word{display:inline-block;padding:2px 6px;border-radius:6px;cursor:pointer;transition:all .15s}
+.error-word:hover{background:#FFE082}
+.error-word.selected{background:#FFD54F;font-weight:700}
+.error-word.correct-highlight{background:#C8E6C9;color:var(--green-dark)}
+.error-word.wrong-highlight{background:#FFCDD2;color:var(--red)}
+.correction-input{margin-top:8px;display:none}
+.correction-input.show{display:block}
+.correction-input label{font-size:15px;color:var(--text-light);display:block;margin-bottom:4px}
+
+/* Drag & Drop (click-to-match) */
+.match-container{display:flex;gap:16px}
+.match-col{flex:1;display:flex;flex-direction:column;gap:8px}
+.match-col-header{font-size:14px;font-weight:700;color:var(--text-light);text-align:center;margin-bottom:4px}
+.match-item{padding:10px 12px;border:2px solid #E5E5E5;border-radius:10px;font-size:16px;cursor:pointer;transition:all .15s;text-align:center;min-height:44px;display:flex;align-items:center;justify-content:center}
+.match-item:hover{border-color:var(--blue)}
+.match-item.selected{border-color:var(--blue);background:#E3F2FD;box-shadow:0 0 0 2px rgba(28,176,246,.3)}
+.match-item.matched{border-color:var(--green);background:#E8F5E9;cursor:default}
+.match-item.wrong-match{border-color:var(--red);background:#FFEBEE}
+.match-line{font-size:13px;color:var(--text-light);text-align:center;margin-top:2px}
+
+/* Feedback */
+.feedback{position:fixed;bottom:0;left:0;right:0;padding:20px 16px;padding-bottom:max(20px,env(safe-area-inset-bottom));z-index:200;animation:slideUp .3s ease}
+.feedback-inner{max-width:680px;margin:0 auto;border-radius:16px;padding:16px 20px}
+.feedback.correct .feedback-inner{background:#D7FFB8;border:2px solid var(--green)}
+.feedback.wrong .feedback-inner{background:#FFDFE0;border:2px solid var(--red)}
+.feedback .fb-header{display:flex;align-items:center;gap:8px;font-weight:800;font-size:20px;margin-bottom:6px}
+.feedback.correct .fb-header{color:var(--green-dark)}
+.feedback.wrong .fb-header{color:#CC0000}
+.feedback .fb-explain{font-size:16px;line-height:1.5;color:var(--text)}
+.feedback .fb-answer{font-weight:700;margin-top:4px}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+/* Buttons */
+.btn{display:block;width:100%;padding:16px;border:none;border-radius:14px;font-size:18px;font-weight:700;cursor:pointer;transition:all .15s;text-align:center}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green-dark)}
+.btn-primary:hover{background:#4DBF00}
+.btn-primary:disabled{background:#ccc;box-shadow:0 4px 0 #aaa;cursor:not-allowed}
+.btn-blue{background:var(--blue);color:#fff;box-shadow:0 4px 0 #0F9AE0}
+.btn-gold{background:var(--gold);color:#3C3C3C;box-shadow:0 4px 0 #E6B400}
+.btn-outline{background:#fff;color:var(--blue);border:2px solid var(--blue)}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 4px 0 #E63E3E}
+.btn-row{display:flex;gap:8px;margin-top:16px}
+.btn-row .btn{flex:1}
+.bottom-btn{position:fixed;bottom:0;left:0;right:0;padding:12px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));background:var(--bg);z-index:100}
+.bottom-btn .btn{max-width:680px;margin:0 auto}
+
+/* Results */
+.results-header{text-align:center;padding:40px 0 20px}
+.results-header .emoji{font-size:60px}
+.results-header h2{font-size:28px;margin-top:8px}
+.results-header .score-big{font-size:52px;font-weight:800;margin-top:8px}
+.results-header .score-big.great{color:var(--green)}
+.results-header .score-big.ok{color:var(--gold)}
+.results-header .score-big.bad{color:var(--red)}
+.cat-breakdown{margin-top:16px}
+.cat-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0f0f0}
+.cat-row .cat-name{flex:1;font-size:16px}
+.cat-row .cat-score{font-size:16px;font-weight:700}
+.cat-row .cat-bar{width:80px;height:8px;background:#E5E5E5;border-radius:4px;overflow:hidden}
+.cat-row .cat-bar-fill{height:100%;border-radius:4px;transition:width .5s}
+.q-review{margin-top:16px}
+.q-review-item{background:var(--card);border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:var(--shadow)}
+.q-review-item.q-correct{border-left:4px solid var(--green)}
+.q-review-item.q-wrong{border-left:4px solid var(--red)}
+.q-review-item .q-r-stem{font-size:16px;font-weight:600;margin-bottom:4px}
+.q-review-item .q-r-answer{font-size:15px}
+.q-review-item .q-r-explain{font-size:14px;color:var(--text-light);margin-top:4px}
+
+/* Celebration overlay */
+.celebration{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);animation:fadeIn .3s}
+.celebration-inner{background:#fff;border-radius:24px;padding:40px;text-align:center;max-width:420px;animation:popIn .4s ease}
+@keyframes popIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* Analytics */
+.analytics{margin-top:16px}
+.analytics h3{font-size:18px;margin-bottom:8px}
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.analytics-card{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+.analytics-card .a-cat{font-size:14px;font-weight:700;margin-bottom:4px}
+.analytics-card .a-bar{height:8px;background:#E5E5E5;border-radius:4px;margin:6px 0}
+.analytics-card .a-bar-fill{height:100%;border-radius:4px}
+.analytics-card .a-stats{font-size:13px;color:var(--text-light)}
+
+/* Phase tabs */
+.phase-tabs{display:flex;gap:0;margin:16px 0 8px;background:#E5E5E5;border-radius:12px;padding:3px}
+.phase-tab{flex:1;padding:10px;text-align:center;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;transition:all .2s}
+.phase-tab.active{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.phase-tab .tab-icon{font-size:20px;display:block;margin-bottom:2px}
+
+/* Responsive — mobile */
+@media(max-width:400px){.app{padding:0 10px 100px}.q-card{padding:18px 14px}.match-container{gap:8px}}
+
+/* Responsive — laptop/desktop */
+@media(min-width:768px){
+  .app{padding:0 32px 120px}
+  .day-row{padding:18px 24px;gap:16px;border-radius:18px}
+  .day-row:hover{transform:scale(1.015);box-shadow:0 4px 20px rgba(0,0,0,.1)}
+  .day-icon{width:52px;height:52px;font-size:26px}
+  .day-info .title{font-size:18px}
+  .day-info .desc{font-size:15px}
+  .stat-card{padding:18px 16px}
+  .stat-card .num{font-size:32px}
+  .stat-card .label{font-size:14px}
+  .learn-card{padding:36px 32px;border-radius:24px}
+  .learn-card .rule-title{font-size:24px}
+  .learn-card .example-box{padding:18px 20px}
+  .learn-card .ex-wrong,.learn-card .ex-right{font-size:17px}
+  .learn-card .ex-explain{font-size:16px}
+  .learn-card .tip-box{font-size:16px;padding:12px 18px}
+  .q-card{padding:32px 28px;border-radius:24px}
+  .q-stem{font-size:20px}
+  .mcq-opt{padding:16px 20px;font-size:18px;border-radius:14px}
+  .mcq-opt:hover{transform:translateX(4px);border-color:var(--blue);background:#F0F9FF}
+  .fill-input{padding:16px 20px;font-size:19px}
+  .error-sentence{font-size:19px;padding:20px;line-height:2}
+  .error-word{padding:3px 8px}
+  .match-container{gap:24px}
+  .match-item{padding:14px 16px;font-size:17px;min-height:52px;border-radius:12px}
+  .match-item:hover{transform:scale(1.02)}
+  .btn{padding:18px;font-size:19px;border-radius:16px}
+  .feedback-inner{padding:20px 28px;border-radius:20px}
+  .feedback .fb-header{font-size:22px}
+  .feedback .fb-explain{font-size:17px}
+  .bottom-btn{padding:16px 32px}
+  .results-header .emoji{font-size:72px}
+  .results-header h2{font-size:32px}
+  .results-header .score-big{font-size:56px}
+  .cat-row{padding:12px 0}
+  .cat-row .cat-name{font-size:17px}
+  .cat-row .cat-bar{width:120px;height:10px}
+  .q-review-item{padding:18px;border-radius:14px}
+  .q-review-item .q-r-stem{font-size:17px}
+  .analytics-grid{grid-template-columns:1fr 1fr 1fr;gap:12px}
+  .analytics-card{padding:16px}
+  .analytics-card .a-cat{font-size:15px}
+  .analytics-card .a-bar{height:10px}
+  .phase-tabs{border-radius:14px;padding:4px}
+  .phase-tab{padding:12px;font-size:17px;border-radius:12px}
+  .home-header{padding:40px 0 20px}
+  .home-header h1{font-size:36px}
+  .home-header .sub{font-size:17px}
+  .streak-badge{font-size:17px;padding:10px 20px}
+  .top-bar{padding:20px 0}
+  .progress-bar{height:18px}
+  .top-bar .back{width:40px;height:40px;font-size:22px}
+  .top-bar .hearts{font-size:22px}
+  /* Keyboard shortcut hint */
+  .kbd-hint{display:inline-block;font-size:12px;color:var(--text-light);background:#f0f0f0;padding:2px 8px;border-radius:4px;border:1px solid #ddd;margin-left:8px;vertical-align:middle;font-family:monospace}
+}
+@media(max-width:767px){.kbd-hint{display:none}}
+.sound-toggle{position:fixed;top:16px;right:16px;z-index:150;width:40px;height:40px;border-radius:50%;border:2px solid #ddd;background:#fff;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:all .15s}
+.sound-toggle:hover{border-color:var(--blue);transform:scale(1.05)}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ============================================================
+// DATA: Categories, Learn Content, Questions
+// ============================================================
+const CATEGORIES = [
+  {id:'tense',name:'Tense & Irregular Verbs',nameCn:'时态&不规则动词',icon:'⏰',color:'#7B1FA2',day:1},
+  {id:'sva',name:'Subject-Verb Agreement',nameCn:'主谓一致&代词',icon:'🤝',color:'#1565C0',day:2},
+  {id:'prep',name:'Prepositions',nameCn:'介词搭配',icon:'📍',color:'#C62828',day:3},
+  {id:'passive',name:'Passive Voice Order',nameCn:'被动语态语序',icon:'🔄',color:'#4E342E',day:3},
+  {id:'comp',name:'Comparative Structures',nameCn:'比较结构',icon:'⚖️',color:'#00695C',day:5},
+  {id:'formal',name:'Formal Expressions',nameCn:'正式表达(SW)',icon:'✉️',color:'#AD1457',day:5},
+  {id:'small',name:'Missing Small Words',nameCn:'缺小词',icon:'🔍',color:'#E65100',day:6},
+  {id:'advadj',name:'Adjective vs Adverb',nameCn:'形容词vs副词',icon:'🏷️',color:'#2E7D32',day:6},
+  {id:'tangled',name:'Tangled Expressions',nameCn:'表达混乱',icon:'🧶',color:'#37474F',day:8},
+  {id:'repeat',name:'Repetition & Redundancy',nameCn:'重复&冗余',icon:'🔁',color:'#795548',day:8},
+  {id:'showntell',name:'Show Don\'t Tell',nameCn:'展示而非讲述',icon:'🎭',color:'#546E7A',day:8},
+  {id:'subjectid',name:'Subject Identification',nameCn:'找真正主语',icon:'🔎',color:'#0277BD',day:'1+'},
+  {id:'pastcon',name:'Past Tense Consistency',nameCn:'过去时态一致性',icon:'⏪',color:'#6A1B9A',day:'1+'},
+];
+const CAT=id=>CATEGORIES.find(c=>c.id===id);
+
+const DAYS = [
+  {slot:0,day:1,part:1,label:'Day 1 · Part 1',title:'Tense & Irregular Verbs',cats:['tense'],type:'learn',icon:'⏰',color:'#7B1FA2'},
+  {slot:1,day:1,part:2,label:'Day 1 · Part 2',title:'Subject-Verb Agreement',cats:['sva'],type:'learn',icon:'🤝',color:'#1565C0'},
+  {slot:2,day:1,part:3,label:'Day 1 · Plus',title:'Subject ID + Past Tense Focus',cats:['subjectid','pastcon'],type:'learn',icon:'🎯',color:'#0277BD'},
+  {slot:3,day:2,part:1,label:'Day 2 · Part 1',title:'Prepositions + Passive Voice',cats:['prep','passive'],type:'learn',icon:'📍',color:'#C62828'},
+  {slot:4,day:2,part:2,label:'Day 2 · Part 2',title:'Test 1: Core Grammar',cats:['tense','sva','subjectid','pastcon','prep','passive'],type:'test',icon:'📝',color:'#FFC800'},
+  {slot:5,day:3,part:1,label:'Day 3 · Part 1',title:'Comparatives + Formal',cats:['comp','formal'],type:'learn',icon:'⚖️',color:'#00695C'},
+  {slot:6,day:3,part:2,label:'Day 3 · Part 2',title:'Small Words + Adj/Adv',cats:['small','advadj'],type:'learn',icon:'🔍',color:'#E65100'},
+  {slot:7,day:4,part:1,label:'Day 4 · Part 1',title:'Test 2: All Rules',cats:['tense','sva','subjectid','pastcon','prep','passive','comp','formal','small','advadj'],type:'test',icon:'📝',color:'#FFC800'},
+  {slot:8,day:4,part:2,label:'Day 4 · Part 2',title:'Style & Expression',cats:['tangled','repeat','showntell'],type:'learn',icon:'🧶',color:'#37474F'},
+  {slot:9,day:5,part:1,label:'Day 5 · Part 1',title:'Adaptive Review',cats:[],type:'review',icon:'🔄',color:'#A560E8'},
+  {slot:10,day:5,part:2,label:'Day 5 · Part 2',title:'Final Test',cats:CATEGORIES.map(c=>c.id),type:'test',icon:'🏆',color:'#FFC800'},
+];
+
+// Learn cards per category
+const LEARN = {
+tense:[
+  {rule:'had/has + past participle (V3), NOT past tense (V2)',ruleCn:'had/has 后面跟过去分词，不是过去式！',wrong:'She had went to the park',right:'She had gone to the park',source:'A Plan That Went Wrong',explain:'go → went (V2) → gone (V3). After "had", always use V3.',tip:'"I have ___?" test: go→gone, break→broken, become→become, swim→swum, write→written'},
+  {rule:'Keep tense consistent in past narratives',ruleCn:'过去叙事中保持时态一致',wrong:'whenever she dives into the water',right:'whenever she dived into the water',source:'A Plan That Went Wrong',explain:'The whole story is in past tense. "dives" is present tense — should be "dived" to match.',tip:'Read your story aloud. If it\'s all "she walked, she saw", every verb should match.'},
+  {rule:'Future events use "will be", not "would be"',ruleCn:'未来事件用will be，不是would be',wrong:'The movie would be screened at 3pm',right:'The movie will be screened at 3pm',source:'SW Apr 16 (Informal Letter)',explain:'"Would" implies uncertainty or condition. For a confirmed future event, use "will".',tip:'Confirmed plan = will. Imaginary/conditional = would.'},
+  {rule:'Commonly confused spellings',ruleCn:'常见拼写混淆',wrong:'It was nerve-wrecking',right:'It was nerve-wracking',source:'Trying Something New',explain:'"Wrack" means to cause suffering. "Wreck" means to destroy. The expression is "nerve-wracking".',tip:'Also: "in front" (two words, never "infront"), "a lot" (two words, never "alot")'},
+],
+sva:[
+  {rule:'Plural subject → plural verb',ruleCn:'复数主语 → 复数动词',wrong:'Her legs felt like it was going to give way',right:'Her legs felt like they were going to give way',source:'A Plan That Went Wrong',explain:'"Legs" is plural, so the pronoun must be "they" and the verb "were", not "it was".',tip:'Cover everything between subject and verb. "Legs...was" — sounds wrong? Fix it!'},
+  {rule:'everyone / each / nobody = SINGULAR',ruleCn:'everyone/each/nobody 是单数！',wrong:'Everyone in the group were excited',right:'Everyone in the group was excited',source:'Pattern',explain:'Even though "everyone" feels like many people, grammatically it\'s singular. Same for each, nobody, somebody.',tip:'Trick: "Every ONE" — the word itself has "one" in it = singular.'},
+  {rule:'Watch pronoun consistency',ruleCn:'代词前后要一致',wrong:'His mom wrapped her in a bear hug',right:'Her mom wrapped her in a bear hug',source:'A Plan That Went Wrong',explain:'The character is a girl (Eva). "His" was a slip — should be "Her" throughout.',tip:'Before handing in: scan all he/she/his/her — are they all referring to the right person?'},
+  {rule:'Singular vs plural nouns for body parts',ruleCn:'身体部位单复数',wrong:'Eva\'s jaws dropped',right:'Eva\'s jaw dropped',source:'A Misunderstanding',explain:'"Jaw dropped" is an idiom meaning surprised. We use singular "jaw" even though you have two sides.',tip:'Idiom check: jaw dropped ✓, jaws dropped ✗'},
+],
+subjectid:[
+  {rule:'Find the TRUE subject — ignore the "of ___" phrase!',ruleCn:'找到真正的主语——忽略"of ___"短语！',wrong:'Each of the students are late.',right:'Each of the students is late.',source:'Eavan Grammar Practice 4/28',explain:'The subject is "each" (singular), NOT "students". "Of the students" is just a prepositional phrase. Cross it out mentally: "Each [of the students] IS late."',tip:'Cover the "of ___" part with your finger. What\'s left? That\'s your subject!'},
+  {rule:'One of / Each of / None of / Neither of = SINGULAR',ruleCn:'One of / Each of / None of / Neither of = 单数',wrong:'One of the boys are missing.',right:'One of the boys is missing.',source:'PSLE-style',explain:'"One of" → the subject is "one" (singular). It doesn\'t matter that "boys" is plural — "boys" is inside the prepositional phrase.',tip:'These are ALL singular: one of, each of, every one of, none of, neither of, either of.'},
+  {rule:'Neither A nor B → verb agrees with B (the NEAREST)',ruleCn:'Neither A nor B → 动词跟B（最近的）一致',wrong:'Neither the teacher nor the students was ready.',right:'Neither the teacher nor the students were ready.',source:'PSLE-style',explain:'With "neither...nor" and "either...or", the verb matches the subject CLOSEST to it. "Students" is closer → "were".',tip:'Flip test: "Neither students nor the teacher WAS" — now "teacher" is closer so "was". The nearest one wins!'},
+  {rule:'Collective noun as ONE unit = singular',ruleCn:'集合名词作为一个整体 = 单数',wrong:'The committee have decided to cancel the event.',right:'The committee has decided to cancel the event.',source:'PSLE-style',explain:'"Committee" acts as one body making one decision → singular. Same for: team, class, group, family, crowd.',tip:'Ask: are they acting as ONE unit or as INDIVIDUALS? "The team has won" (one unit). "The team have gone to their homes" (individuals — rare in PSLE).'},
+],
+pastcon:[
+  {rule:'If the story is in past tense, EVERY verb should be past',ruleCn:'如果故事是过去时态，每个动词都应该是过去式',wrong:'She walked to the door and opens it slowly.',right:'She walked to the door and opened it slowly.',source:'Eavan Grammar Practice 4/28',explain:'"Walked" is past tense. The next verb must match: "opened", not "opens". Your instinct might write present tense, but the narrative is past.',tip:'Read the sentence before it. Is it past tense? Then yours should be too. Check every verb!'},
+  {rule:'Dialogue can be present tense inside a past-tense story',ruleCn:'对话可以在过去式故事里用现在时',wrong:'"I wanted to go home," she said.',right:'"I want to go home," she said.',source:'PSLE Composition Pattern',explain:'When a character SPEAKS, they speak in the moment. "I want" (present) is what she says NOW. But "she said" (past) is the narrator describing the action.',tip:'Outside quotes = past tense (narrator). Inside quotes = whatever the character would naturally say (usually present).'},
+  {rule:'Habitual past actions use "would" or "used to", not present tense',ruleCn:'过去的习惯用would或used to，不是现在时',wrong:'Every morning, she wakes up at 6am and runs to the bus stop.',right:'Every morning, she would wake up at 6am and run to the bus stop.',source:'PSLE Composition Pattern',explain:'If you\'re describing a past routine (not something happening now), use "would + base verb" or "used to + base verb".',tip:'Is the story set in the past? "Every morning she would..." not "every morning she wakes...". Present tense = happening NOW.'},
+  {rule:'General truths stay in present tense, even in a past-tense story',ruleCn:'普遍真理即使在过去时故事里也用现在时',wrong:'"The sun rose in the east," the teacher explained.',right:'"The sun rises in the east," the teacher explained.',source:'PSLE Pattern',explain:'Facts that are ALWAYS true use present tense, even when the story is in the past. The sun rising in the east is a permanent fact.',tip:'Is it ALWAYS true (fact/proverb)? → Present tense. Was it true only THEN? → Past tense.'},
+],
+prep:[
+  {rule:'"worth" directly takes -ing (NO "of"!)',ruleCn:'worth直接加-ing，不加of！',wrong:'It was worth of remembering',right:'It was worth remembering',source:'A Plan That Went Wrong',explain:'"Worth" connects directly to the verb: worth doing, worth reading, worth trying. Never "worth of".',tip:'"Worth of" is a very common Singapore English error. Drill it: worth remembering, worth trying, worth visiting.'},
+  {rule:'Preposition pairs: visitor TO, exception OF',ruleCn:'固定搭配：visitor to, exception of',wrong:'a visitor of the library',right:'a visitor to the library',source:'SW Apr 17 (Formal Email)',explain:'You visit TO a place, so you are a visitor TO a place. But: an exception OF something.',tip:'Must-know pairs: visitor to · commitment to · exception of · result of · afraid of · good at'},
+  {rule:'Don\'t confuse similar-sounding phrases',ruleCn:'别混淆发音相似的短语',wrong:'With me luck!',right:'Wish me luck!',source:'A Plan That Went Wrong',explain:'"With" and "Wish" sound similar but mean completely different things.',tip:'Say it out loud slowly. "Wish me luck" = hope for good luck. "With me luck" = meaningless!'},
+],
+passive:[
+  {rule:'"by + agent" always goes LAST in passive voice',ruleCn:'Subject + be + V3 + place + time + by agent',wrong:'...chewed by my pet dog in the balcony',right:'...chewed in the balcony by my pet dog',source:'S&T Apr 21 (MGS)',explain:'"By + agent" always goes LAST. Place and time come before it.',tip:'Think of "by ___" as the punchline — save it for the end!'},
+  {rule:'Full passive formula',ruleCn:'完整被动公式',wrong:'...written by Mary at school yesterday',right:'...written at school yesterday by Mary',source:'Pattern',explain:'Order: manner → place → time → by agent. Everything descriptive comes before "by".',tip:'Active: Tom ate the cake in the kitchen. → Passive: The cake was eaten in the kitchen by Tom.'},
+],
+comp:[
+  {rule:'"No..." sentences use "as...as", NOT "more...than"',ruleCn:'No开头的句子用as...as，不用more...than',wrong:'No violinist is more accomplished than Kelly',right:'No violinist is as accomplished as Kelly',source:'S&T Apr 21 (CHC)',explain:'"No X is as good as Y" = Y is the best. "No X is more...than Y" creates a logic error with the double negative.',tip:'Quick formula: No + noun + is as ___ as [name]. The two "as" must come in pairs.'},
+],
+formal:[
+  {rule:'Formal emails need: subject line + proper sign-off',ruleCn:'正式邮件必须有标题和正式结尾',wrong:'[No subject line] ... Regards',right:'Subject: Commendation for Ms Joan ... Yours sincerely',source:'SW Apr 17',explain:'Formal emails MUST have a subject line. Sign off with "Yours sincerely" (not just "Regards").',tip:'Formal email checklist: ① Subject line ② Dear Mr/Ms ③ Yours sincerely ④ Full dates ⑤ Formal vocabulary'},
+  {rule:'Use precise, formal vocabulary',ruleCn:'用精确正式的词汇',wrong:'the great service / On the 18th',right:'her excellent service / On 18 October',source:'SW Apr 17',explain:'"Great" is too casual for formal writing. "The 18th" lacks the month — always give full dates in formal letters.',tip:'"Great" → excellent/outstanding. "Nice" → commendable/pleasant. Always include month in dates.'},
+  {rule:'Don\'t translate Chinese phrasing directly',ruleCn:'别直译中文表达',wrong:'I hope you will be informed by our choice',right:'I am writing to inform you of our decision',source:'SW Apr 10',explain:'This sounds like a direct translation. English formal letters have standard phrases.',tip:'Standard openers: "I am writing to..." / "I would like to..." / "I wish to inform you that..."'},
+],
+small:[
+  {rule:'Body parts need possessive pronouns',ruleCn:'身体部位要加物主代词',wrong:'A sinking feeling settled in stomach',right:'A sinking feeling settled in her stomach',source:'Trying Something New',explain:'Whose stomach? You must say "her stomach", not just "stomach".',tip:'Read aloud. If a body part sounds "naked" without her/his/my, add one!'},
+  {rule:'Specific objects need "the"',ruleCn:'特定物体要加the',wrong:'She looked out of window at grey sky',right:'She looked out of the window at the grey sky',source:'Pattern',explain:'A specific window (the one she\'s near) and a specific sky (the one outside) need "the".',tip:'First mention = "a/an". Already known or specific = "the". "She entered a room. The room was dark."'},
+],
+advadj:[
+  {rule:'Verbs need adverbs (-ly), not adjectives',ruleCn:'动词后面用副词(-ly)，不是形容词',wrong:'The boat rocked agonising slow',right:'The boat rocked agonisingly slowly',source:'Trying Something New',explain:'"Rocked" is a verb. HOW did it rock? Slowly (adverb). "Slow" is an adjective — it describes nouns, not verbs.',tip:'Test: the word describes HOW something happens (a verb)? Add -ly! quiet→quietly, tight→tightly, steady→steadily'},
+],
+tangled:[
+  {rule:'If you can\'t explain it simply, rewrite it',ruleCn:'如果不能简单解释，就重写',wrong:'Clouds clouded Eva\'s vision',right:'Tears clouded Eva\'s vision / Eva\'s vision blurred',source:'A Plan That Went Wrong',explain:'"Clouds clouded" is a tautology (using the same word twice). What actually clouded her vision — tears? fog?',tip:'Read each sentence and ask: "Is this the clearest way to say this?" If not, simplify.'},
+],
+repeat:[
+  {rule:'Same verb 3+ times? Swap at least one',ruleCn:'同一个动词出现3次以上？至少换一个',wrong:'darted... darted... darted (3× in one paragraph)',right:'darted... weaved... swept past',source:'Trying Something New',explain:'Using "darted" for every fish is lazy. Each creature moves differently — show it!',tip:'Ctrl+F in your head: spot repeated words and swap for synonyms. kicked → propelled, thrust, pushed off'},
+],
+showntell:[
+  {rule:'Show emotions through actions, not labels',ruleCn:'用动作展示情绪，别贴标签',wrong:'Eva felt helpless.',right:'Eva\'s arms dropped to her sides, too tired to stand.',source:'A Plan That Went Wrong',explain:'"Felt helpless" TELLS the reader. Showing her body language lets the reader FEEL it.',tip:'Instead of "She felt sad/angry/happy", describe what her body does: slumped shoulders, clenched fists, bouncing on toes.'},
+  {rule:'Conclusions: show the lesson, don\'t preach it',ruleCn:'结尾展示教训，别说教',wrong:'This taught Eva an important lesson — never judge',right:'She made a quiet promise: next time, she would ask instead of assume.',source:'A Misunderstanding',explain:'Stating the moral directly sounds like a textbook. A character reflecting naturally is much more powerful.',tip:'Conclusion test: does it STATE a moral, or SHOW the character changing? Aim for showing.'},
+],
+};
+
+// Question bank
+const QUESTIONS = [
+// === DAY 1: TENSE ===
+{id:'d1q1',slot:0,cat:'tense',type:'mcq',phase:'practice',stem:'She had ___ to the park before it started raining.',options:['went','gone','going','go'],answer:1,explain:'"Had" requires the past participle (V3). go → went (V2) → gone (V3). So "had gone" is correct.',source:'A Plan That Went Wrong'},
+{id:'d1q2',slot:0,cat:'tense',type:'mcq',phase:'practice',stem:'After months of practice, she had finally ___ a confident swimmer.',options:['became','become','becoming','becomes'],answer:1,explain:'"Had" + past participle. become → became (V2) → become (V3). "Had become" is correct.',source:'Trying Something New'},
+{id:'d1q3',slot:0,cat:'tense',type:'fill',phase:'practice',stem:'The window was ___ by a stray football.',answer:'broken',accept:['broken','damaged','smashed','shattered','cracked','hit'],explain:'"Was" + past participle for passive voice. Any V3 works: broken, damaged, smashed, etc.',source:'Pattern'},
+{id:'d1q4',slot:0,cat:'tense',type:'error',phase:'practice',stem:'Whenever she dives into the water, she felt a rush of excitement.',errorIdx:[2],correction:'dived',altCorrections:['dove'],explain:'The story is in past tense ("felt"). "Dives" is present tense — should be "dived" to keep tense consistent.',source:'A Plan That Went Wrong'},
+{id:'d1q5',slot:0,cat:'tense',type:'mcq',phase:'practice',stem:'The film ___ at 3pm tomorrow. Please arrive early!',options:['would be screened','will be screened','was screened','is screening'],answer:1,explain:'A confirmed future event uses "will be", not "would be". "Would" implies uncertainty.',source:'SW Apr 16'},
+{id:'d1q6',slot:0,cat:'tense',type:'fill',phase:'practice',stem:'He has ___ away before anyone could stop him.',answer:'run',accept:['run'],explain:'run → ran (V2) → run (V3). "Has run" is the present perfect.',source:'Pattern'},
+{id:'d1q7',slot:0,cat:'tense',type:'error',phase:'practice',stem:'She had ran all the way to school but still arrived late.',errorIdx:[2],correction:'run',explain:'run → ran (V2) → run (V3). After "had", use V3: "had run".',source:'Pattern'},
+{id:'d1q8',slot:0,cat:'tense',type:'mcq',phase:'practice',stem:'Which spelling is correct?',options:['nerve-wrecking','nerve-wracking','nerve-racking','nerve-wreaking'],answer:1,explain:'"Wrack" means to cause suffering. The correct form is "nerve-wracking".',source:'Trying Something New'},
+
+// === DAY 2: SVA ===
+{id:'d2q1',slot:1,cat:'sva',type:'mcq',phase:'practice',stem:'Her legs felt like ___ going to give way.',options:['it was','they were','it is','they are'],answer:1,explain:'"Legs" is plural, so the pronoun must be "they" and the verb "were".',source:'A Plan That Went Wrong'},
+{id:'d2q2',slot:1,cat:'sva',type:'error',phase:'practice',stem:'Everyone in the class were eager to go for the field trip.',errorIdx:[4],correction:'was',explain:'"Everyone" is grammatically singular (every ONE). Use "was", not "were".',source:'Pattern'},
+{id:'d2q3',slot:1,cat:'sva',type:'mcq',phase:'practice',stem:'Each of the students ___ required to bring a permission slip.',options:['are','is','were','have been'],answer:1,explain:'"Each" is singular. "Each of the students IS required..." even though there are many students.',source:'PSLE-style'},
+{id:'d2q4',slot:1,cat:'sva',type:'fill',phase:'practice',stem:'Neither Tom nor his friends ___ willing to clean up.',answer:'were',accept:['were'],explain:'With "neither...nor", the verb agrees with the NEAREST subject. "Friends" is plural → "were".',source:'PSLE-style'},
+{id:'d2q5',slot:1,cat:'sva',type:'error',phase:'practice',stem:'Eva\'s jaws dropped when she saw the beautifully decorated room.',errorIdx:[1],correction:'jaw',explain:'"Jaw dropped" is an idiom. Use singular "jaw" even though you have two jaw sides.',source:'A Misunderstanding'},
+{id:'d2q6',slot:1,cat:'sva',type:'mcq',phase:'practice',stem:'His mom wrapped ___ in a tight bear hug when she got home safely.',options:['him','her','them','it'],answer:1,explain:'The character (Eva) is female. The pronoun must match: "Her mom wrapped her...".',source:'A Plan That Went Wrong'},
+{id:'d2q7',slot:1,cat:'sva',type:'fill',phase:'practice',stem:'Nothing compared to her ___ love and support.',answer:"parents'",accept:["parents'","parents'"],explain:'"Parents" is plural possessive. The apostrophe goes AFTER the s: parents\'.',source:'A Plan That Went Wrong'},
+{id:'d2q8',slot:1,cat:'sva',type:'mcq',phase:'practice',stem:'The team of volunteers ___ already arrived at the venue.',options:['has','have','is','are'],answer:0,explain:'"Team" is a collective noun treated as singular. "The team has arrived."',source:'PSLE-style'},
+
+// === DAY 1 PLUS: SUBJECT ID + PAST TENSE FOCUS ===
+{id:'d1pq1',slot:2,cat:'subjectid',type:'mcq',phase:'practice',stem:'Each of the girls ___ given a prize at the ceremony.',options:['were','was','are','have been'],answer:1,explain:'The subject is "each" (singular), not "girls". Cross out "of the girls" — "Each WAS given" is correct.',source:'PSLE-style'},
+{id:'d1pq2',slot:2,cat:'subjectid',type:'mcq',phase:'practice',stem:'What is the TRUE subject in this sentence?\n"One of the windows was broken."',options:['windows','One','broken','the'],answer:1,explain:'"One" is the subject. "Of the windows" is a prepositional phrase that describes which one. The verb "was" agrees with "one" (singular).',source:'PSLE-style'},
+{id:'d1pq3',slot:2,cat:'subjectid',type:'error',phase:'practice',stem:'Neither the principal nor the teachers was informed about the change.',errorIdx:[6],correction:'were',explain:'"Neither...nor" → verb agrees with the NEAREST subject. "Teachers" (plural) is nearest → "were".',source:'PSLE-style'},
+{id:'d1pq4',slot:2,cat:'subjectid',type:'fill',phase:'practice',stem:'None of the cake ___ left after the party.',answer:'was',accept:['was'],explain:'"None of" with an uncountable noun (cake) → singular → "was". (With countable plural: "None of the cakes were left" is also acceptable.)',source:'PSLE-style'},
+{id:'d1pq5',slot:2,cat:'subjectid',type:'mcq',phase:'practice',stem:'Every one of the students ___ to bring a calculator.',options:['need','needs','are needing','have needed'],answer:1,explain:'"Every one" is singular (just like "each"). Cross out "of the students" → "Every one NEEDS".',source:'PSLE-style'},
+{id:'d1pq6',slot:2,cat:'pastcon',type:'error',phase:'practice',stem:'She walked into the kitchen and opens the fridge to find something to eat.',errorIdx:[5],correction:'opened',explain:'The narrative is past tense ("walked"). "Opens" is present tense — should be "opened" to stay consistent.',source:'Eavan Grammar Practice 4/28'},
+{id:'d1pq7',slot:2,cat:'pastcon',type:'mcq',phase:'practice',stem:'Which sentence keeps tense consistent in a past-tense story?',options:['He grabbed his bag and rushes out the door.','He grabbed his bag and rushed out the door.','He grabs his bag and rushed out the door.','He grabs his bag and rushes out the door.'],answer:1,explain:'Both verbs should be past tense: "grabbed" and "rushed". Mixing tenses breaks the narrative flow.',source:'Composition Pattern'},
+{id:'d1pq8',slot:2,cat:'pastcon',type:'error',phase:'practice',stem:'Every morning, she wakes up early and runs to the bus stop before the sun rose.',errorIdx:[3,4,7,8],correction:'would wake up ... would run ... rose (or: woke up ... ran)',explain:'In a past-tense narrative about habits, use "would + base verb" or simple past. Mixing present tense ("wakes", "runs") with past ("rose") is inconsistent.',source:'PSLE Composition Pattern'},
+
+// === DAY 3: PREPOSITIONS + PASSIVE ===
+{id:'d3q1',slot:3,cat:'prep',type:'mcq',phase:'practice',stem:'The experience was worth ___.',options:['of remembering','remembering','to remember','for remembering'],answer:1,explain:'"Worth" directly takes the -ing form. Never "worth of"!',source:'A Plan That Went Wrong'},
+{id:'d3q2',slot:3,cat:'prep',type:'fill',phase:'practice',stem:'She was a regular visitor ___ the National Library.',answer:'to',accept:['to'],explain:'You visit TO a place, so you are a visitor TO a place.',source:'SW Apr 17'},
+{id:'d3q3',slot:3,cat:'prep',type:'error',phase:'practice',stem:'With me luck for the upcoming examination!',errorIdx:[0],correction:'Wish',explain:'"With" and "Wish" sound similar but are completely different words. "Wish me luck" is the correct phrase.',source:'A Plan That Went Wrong'},
+{id:'d3q4',slot:3,cat:'passive',type:'mcq',phase:'practice',stem:'Choose the correct passive sentence:',options:['The letter was delivered by the postman to my house yesterday.','The letter was delivered to my house yesterday by the postman.','The letter was delivered yesterday to my house by the postman.','The letter by the postman was delivered to my house yesterday.'],answer:1,explain:'Passive order: verb + place + time + by agent. "To my house" (place) → "yesterday" (time) → "by the postman" (agent).',source:'S&T Pattern'},
+{id:'d3q5',slot:3,cat:'passive',type:'error',phase:'practice',stem:'The ball was chewed by my pet dog in the garden.',errorIdx:[4,5,6,7],correction:'in the garden by my pet dog',explain:'"By + agent" must go LAST. Place ("in the garden") comes before "by my pet dog".',source:'S&T Apr 21'},
+{id:'d3q6',slot:3,cat:'passive',type:'mcq',phase:'practice',stem:'Rewrite: "Tom painted the fence in the backyard yesterday." → The fence was painted ___.',options:['by Tom in the backyard yesterday','in the backyard yesterday by Tom','yesterday in the backyard by Tom','in the backyard by Tom yesterday'],answer:1,explain:'Passive order: place (in the backyard) → time (yesterday) → by agent (by Tom).',source:'PSLE S&T style'},
+{id:'d3q7',slot:3,cat:'prep',type:'match',phase:'practice',stem:'Match each word to its correct preposition:',left:['worth','visitor','exception','afraid','committed'],right:['V-ing (no of!)','to','of','of','to'],explain:'Fixed pairs: worth+V-ing, visitor+to, exception+of, afraid+of, committed+to'},
+{id:'d3q8',slot:3,cat:'passive',type:'fill',phase:'practice',stem:'The cake was baked ___ ___ ___ (at home / by Grandma / last Sunday). Put in correct order:',answer:'at home last Sunday by Grandma',accept:['at home last Sunday by Grandma'],explain:'Place (at home) → Time (last Sunday) → By agent (by Grandma).',source:'Pattern'},
+
+// === DAY 5: COMPARATIVES + FORMAL ===
+{id:'d5q1',slot:5,cat:'comp',type:'mcq',phase:'practice',stem:'No student in the class is ___ Kelly.',options:['more hardworking than','as hardworking as','so hardworking as','hardworking than'],answer:1,explain:'"No...as...as" means Kelly is the MOST hardworking. "No...more...than" is a grammar error.',source:'S&T Apr 21'},
+{id:'d5q2',slot:5,cat:'comp',type:'error',phase:'practice',stem:'No swimmer in our school is more talented than James.',errorIdx:[6,7],correction:'as talented as',explain:'With "No...", use "as...as" not "more...than". Correct: "No swimmer is as talented as James."',source:'S&T Pattern'},
+{id:'d5q3',slot:5,cat:'comp',type:'fill',phase:'practice',stem:'No painting in the gallery is as ___ as the Mona Lisa.',answer:'beautiful',accept:['beautiful','famous','impressive','stunning','remarkable'],explain:'Any adjective works here. The pattern is: No + noun + is as [adj] as [name].',source:'PSLE-style'},
+{id:'d5q4',slot:5,cat:'formal',type:'mcq',phase:'practice',stem:'Which is the correct sign-off for a formal email to your school principal?',options:['Regards,','Yours sincerely,','Best wishes,','Cheers,'],answer:1,explain:'For formal letters/emails, use "Yours sincerely" (if you know the name) or "Yours faithfully" (if you don\'t).',source:'SW Apr 17'},
+{id:'d5q5',slot:5,cat:'formal',type:'error',phase:'practice',stem:'Dear Mr Tan, I am writing to commend the great service provided by your staff on the 18th.',errorIdx:[12,13],correction:'excellent service',explain:'"Great" is too casual for formal writing. Use "excellent" or "outstanding". Also, "the 18th" should include the month.',source:'SW Apr 17'},
+{id:'d5q6',slot:5,cat:'formal',type:'mcq',phase:'practice',stem:'What is MISSING from this formal email?\n\n"Dear Ms Lee,\nI am writing to request a meeting...\nRegards, Imran"',options:['A greeting','A subject line AND proper sign-off','A date','A phone number'],answer:1,explain:'Formal emails need: ① Subject line (e.g., "Subject: Meeting Request") ② Proper sign-off ("Yours sincerely" not "Regards").',source:'SW Apr 17'},
+{id:'d5q7',slot:5,cat:'formal',type:'match',phase:'practice',stem:'Match the informal expression to its formal equivalent:',left:['the great service','On the 18th','Regards','I hope you know about our choice'],right:['her excellent service','On 18 October','Yours sincerely','I am writing to inform you of our decision'],explain:'Formal writing requires precise, professional vocabulary and complete information.'},
+{id:'d5q8',slot:5,cat:'formal',type:'fill',phase:'practice',stem:'Complete the formal email opener: "I ___ ___ to inform you of the upcoming changes."',answer:'am writing',accept:['am writing','would like','wish'],explain:'Standard formal openers: "I am writing to...", "I would like to...", "I wish to..."',source:'SW Pattern'},
+
+// === DAY 6: SMALL WORDS + ADJ/ADV ===
+{id:'d6q1',slot:6,cat:'small',type:'error',phase:'practice',stem:'A sinking feeling settled in stomach as she waited for the results.',errorIdx:[5],correction:'her stomach',explain:'Body parts need possessive pronouns. Whose stomach? "Her stomach".',source:'Trying Something New'},
+{id:'d6q2',slot:6,cat:'small',type:'fill',phase:'practice',stem:'Tears rolled down ___ cheeks as she sat on ___ edge of ___ bed.',answer:'her, the, the',accept:['her, the, the','her the the'],explain:'Body parts → "her" cheeks. Specific objects → "the" edge, "the" bed.',source:'Pattern'},
+{id:'d6q3',slot:6,cat:'small',type:'error',phase:'practice',stem:'She stood infront of the door and took a deep breath.',errorIdx:[2],correction:'in front',explain:'"In front" is always TWO separate words. "Infront" is not a word!',source:'Trying Something New'},
+{id:'d6q4',slot:6,cat:'advadj',type:'mcq',phase:'practice',stem:'The boat rocked ___ on the waves.',options:['agonising slow','agonisingly slowly','agonising slowly','agonisingly slow'],answer:1,explain:'"Rocked" is a verb → needs adverbs. Both "agonisingly" AND "slowly" must be adverbs (-ly form).',source:'Trying Something New'},
+{id:'d6q5',slot:6,cat:'advadj',type:'fill',phase:'practice',stem:'She gripped the railing ___ and climbed ___.',answer:'tightly, steadily',accept:['tightly, steadily','tightly steadily'],explain:'Both describe HOW she did something (verbs "gripped" and "climbed") → need adverbs with -ly.',source:'Pattern'},
+{id:'d6q6',slot:6,cat:'advadj',type:'mcq',phase:'practice',stem:'He spoke ___ to her, his voice gentle.',options:['quiet','quietly','quietness','quieter'],answer:1,explain:'"Spoke" is a verb. HOW did he speak? Quietly (adverb). Note: "gentle" here describes "voice" (noun), so adjective is correct.',source:'Pattern'},
+{id:'d6q7',slot:6,cat:'small',type:'mcq',phase:'practice',stem:'She looked out of ___ window at ___ grey sky.',options:['a, a','the, the','a, the','the, a'],answer:1,explain:'Both are specific: THE window (the one she\'s at) and THE sky (the one outside). Specific = "the".',source:'Pattern'},
+{id:'d6q8',slot:6,cat:'advadj',type:'error',phase:'practice',stem:'The children played happy in the park while their parents watched careful.',errorIdx:[3,10],correction:'happily ... carefully',explain:'"Played" and "watched" are verbs → need adverbs. happy→happily, careful→carefully.',source:'PSLE-style'},
+
+// === DAY 8: STYLE ===
+{id:'d8q1',slot:8,cat:'tangled',type:'mcq',phase:'practice',stem:'Which version is clearer?\nOriginal: "Clouds clouded Eva\'s vision."',options:['Fog clouded Eva\'s vision.','Tears clouded Eva\'s vision.','The clouds made Eva\'s vision cloudy.','Eva\'s vision was clouded by clouds.'],answer:1,explain:'"Clouds clouded" is a tautology (same root word). "Tears clouded" makes the cause clear and avoids repetition.',source:'A Plan That Went Wrong'},
+{id:'d8q2',slot:8,cat:'tangled',type:'mcq',phase:'practice',stem:'"Her metal shoes made her sink deeper into the snow." What\'s wrong?',options:['Grammar error','Factual error — ski boots are plastic, not metal','Should be "sank" not "sink"','Nothing is wrong'],answer:1,explain:'Ski boots are made of plastic and foam, not metal. Always check if your descriptions match reality!',source:'A Plan That Went Wrong'},
+{id:'d8q3',slot:8,cat:'repeat',type:'mcq',phase:'practice',stem:'Which is the BEST revision?\nOriginal: "The clownfish darted past. A parrotfish darted by. Small fish darted everywhere."',options:['The clownfish swam past. A parrotfish swam by. Small fish swam everywhere.','The clownfish darted past. A parrotfish weaved through the coral. Small fish swept by in a silver flash.','The clownfish moved past. A parrotfish moved by. Small fish moved everywhere.','The clownfish darted fast. A parrotfish darted faster. Small fish darted fastest.'],answer:1,explain:'Option B uses three DIFFERENT verbs (darted, weaved, swept) that each paint a unique picture.',source:'Trying Something New'},
+{id:'d8q4',slot:8,cat:'repeat',type:'error',phase:'practice',stem:'She was a scared and frightened girl who had become a braver and fearless person.',errorIdx:[3,4,5,11,12,13],correction:'a terrified girl ... a fearless person',explain:'"Scared" and "frightened" mean the same thing — pick the stronger one. "Braver" and "fearless" overlap — "fearless" already implies bravery.',source:'Trying Something New'},
+{id:'d8q5',slot:8,cat:'showntell',type:'mcq',phase:'practice',stem:'Which SHOWS helplessness instead of telling it?\nOriginal: "Eva felt helpless."',options:['Eva was very helpless and didn\'t know what to do.','Eva felt extremely helpless and sad.','Eva\'s arms dropped to her sides. She sank into the snow, too tired to stand.','Eva thought to herself, "I feel so helpless right now."'],answer:2,explain:'Option C shows helplessness through physical actions (arms dropping, sinking, too tired). The reader FEELS it instead of being told.',source:'A Plan That Went Wrong'},
+{id:'d8q6',slot:8,cat:'showntell',type:'mcq',phase:'practice',stem:'Which is a better CONCLUSION?\nOriginal: "This misunderstanding taught Eva an important lesson — never judge before knowing the full truth."',options:['Eva learned that she should never judge people too quickly because it causes misunderstandings.','In conclusion, Eva learned that misunderstandings can be avoided if we communicate better.','She made a quiet promise to herself: next time doubt crept in, she would ask instead of assume.','The moral of the story is that we should always find out the truth before jumping to conclusions.'],answer:2,explain:'Option C SHOWS Eva\'s internal change through a specific action (making a promise). It doesn\'t preach — it lets the reader understand the lesson naturally.',source:'A Misunderstanding'},
+{id:'d8q7',slot:8,cat:'tangled',type:'mcq',phase:'practice',stem:'"Abby pried the bag off and kicked." What\'s missing?',options:['A period','The direction — kicked WHERE?','The subject','Nothing'],answer:1,explain:'"Kicked" alone is incomplete. Kicked where? "Kicked towards the surface" completes the picture.',source:'Trying Something New'},
+{id:'d8q8',slot:8,cat:'showntell',type:'mcq',phase:'practice',stem:'Which SHOWS excitement better?\nOriginal: "Excitement was bubbling within her."',options:['She was filled with excitement and joy.','She felt very excited about the trip.','She bounced on her toes, barely able to stand still, a grin spreading across her face.','Excitement and happiness bubbled inside her heart.'],answer:2,explain:'Option C uses concrete actions (bouncing, grinning) that the reader can visualize. The others just label the emotion.',source:'A Plan That Went Wrong'},
+
+// === TEST QUESTIONS (used in Day 4, 7, 10) ===
+{id:'t1',slot:0,cat:'tense',type:'mcq',phase:'test',stem:'By the time we arrived, the show had already ___.',options:['began','begun','begin','beginning'],answer:1,explain:'begin → began (V2) → begun (V3). "Had" requires V3.',source:'PSLE-style'},
+{id:'t2',slot:0,cat:'sva',type:'error',phase:'test',stem:'Nobody in the team were able to solve the problem within the time limit.',errorIdx:[4],correction:'was',explain:'"Nobody" is singular. "Nobody was" is correct.',source:'PSLE-style'},
+{id:'t3',slot:0,cat:'passive',type:'fill',phase:'test',stem:'Active: "The chef prepared the meal in the kitchen this morning."\nPassive: The meal was prepared ___ ___ ___ ___.',answer:'in the kitchen this morning by the chef',accept:['in the kitchen this morning by the chef'],explain:'Passive order: place → time → by agent.',source:'PSLE S&T'},
+{id:'t4',slot:0,cat:'prep',type:'mcq',phase:'test',stem:'The trip to the zoo was worth ___.',options:['of taking','taking','to take','for taking'],answer:1,explain:'"Worth" + V-ing directly. No preposition needed!',source:'Pattern'},
+{id:'t5',slot:0,cat:'tense',type:'error',phase:'test',stem:'She has ran the marathon three times and plans to do it again next year.',errorIdx:[2],correction:'run',explain:'run → ran (V2) → run (V3). "Has run" is correct.',source:'Pattern'},
+{id:'t6',slot:0,cat:'sva',type:'mcq',phase:'test',stem:'Each of the girls ___ given a certificate at the ceremony.',options:['were','was','are','have been'],answer:1,explain:'"Each" is singular → "was given".',source:'PSLE-style'},
+{id:'t7',slot:0,cat:'passive',type:'mcq',phase:'test',stem:'"The teacher praised Ali in front of the class yesterday." → Ali was praised ___.',options:['by the teacher in front of the class yesterday','in front of the class yesterday by the teacher','yesterday in front of the class by the teacher','in front of the class by the teacher yesterday'],answer:1,explain:'Place (in front of the class) → Time (yesterday) → By agent (by the teacher).',source:'PSLE S&T'},
+{id:'t8',slot:0,cat:'comp',type:'error',phase:'test',stem:'No athlete in our school is more determined than Sarah.',errorIdx:[6,7],correction:'as determined as',explain:'"No...as...as" is the correct structure. "No...more...than" is wrong.',source:'S&T Pattern'},
+{id:'t9',slot:0,cat:'formal',type:'mcq',phase:'test',stem:'Which formal email opening is BEST?',options:['Hi Mr Lee, I want to tell you about something.','Dear Mr Lee, I am writing to bring to your attention...','Hey Mr Lee, Just wanted to let you know...','To Mr Lee, I need to talk about a problem.'],answer:1,explain:'"Dear Mr Lee, I am writing to..." is the standard formal opening.',source:'SW Pattern'},
+{id:'t10',slot:0,cat:'small',type:'error',phase:'test',stem:'She reached into bag and pulled out crumpled letter that had been sitting there for days.',errorIdx:[2,6],correction:'her bag ... a crumpled',explain:'"Her bag" (possessive needed) and "a crumpled letter" (first mention needs article).',source:'Pattern'},
+{id:'t11',slot:0,cat:'advadj',type:'fill',phase:'test',stem:'The old man walked ___ (slow) across the road, looking ___ (careful) before each step.',answer:'slowly, carefully',accept:['slowly, carefully','slowly carefully'],explain:'Both "walked" and "looking" are verbs → need adverbs with -ly.',source:'PSLE-style'},
+{id:'t12',slot:0,cat:'tense',type:'mcq',phase:'test',stem:'The general truth: "Things aren\'t always what they ___."',options:['seemed','seem','seems','are seeming'],answer:1,explain:'General truths use present tense, even in a past-tense story. "Things aren\'t what they seem."',source:'A Misunderstanding'},
+{id:'t13',slot:0,cat:'sva',type:'fill',phase:'test',stem:'The group of tourists ___ (was/were) waiting at the entrance.',answer:'was',accept:['was'],explain:'"Group" is a collective noun → singular → "was".',source:'PSLE-style'},
+{id:'t14',slot:0,cat:'tangled',type:'mcq',phase:'test',stem:'"She was sitting more relaxed in the water." (She was swimming.) What\'s wrong?',options:['Nothing','You can\'t "sit" while swimming — use "feeling"','Should be "relaxedly"','Should be "more relaxing"'],answer:1,explain:'You sit on chairs, not in water while swimming. "Feeling more relaxed" is correct.',source:'Trying Something New'},
+{id:'t15',slot:0,cat:'repeat',type:'mcq',phase:'test',stem:'Original: "She kicked hard. She kicked again. She kicked upward." Best revision?',options:['She kicked hard. She kicked again. She kicked upward.','She kicked hard, propelled herself forward, then thrust upward.','She kicked very hard. She kicked even harder. She kicked the hardest.','She pushed hard. She pushed again. She pushed upward.'],answer:1,explain:'Option B uses three DIFFERENT verbs (kicked, propelled, thrust) for variety.',source:'Trying Something New'},
+{id:'t16',slot:0,cat:'showntell',type:'mcq',phase:'test',stem:'Which SHOWS sadness best?',options:['Eva was very sad.','Eva felt a wave of sadness wash over her.','Eva\'s shoulders slumped. She pressed her forehead against the cold window, watching the rain blur the streetlights below.','Eva\'s stomach lurched with sadness.'],answer:2,explain:'Option C paints a picture through physical actions and sensory details.',source:'Pattern'},
+{id:'t17',slot:0,cat:'prep',type:'fill',phase:'test',stem:'She was committed ___ finishing the project on time.',answer:'to',accept:['to'],explain:'Fixed pair: "committed to" (not "committed for" or "committed in").',source:'PSLE-style'},
+{id:'t18',slot:0,cat:'formal',type:'error',phase:'test',stem:'Dear Ms Wong, I hope you will be informed by our choice to hold the event at your venue.',errorIdx:[7,8,9,10],correction:'I am writing to inform you of our decision',explain:'Direct translation from Chinese. Use the standard formula: "I am writing to inform you of...".',source:'SW Apr 10'},
+{id:'t19',slot:0,cat:'passive',type:'fill',phase:'test',stem:'"The wind blew the papers across the room during the storm."\nPassive: The papers were blown ___ ___ ___.',answer:'across the room during the storm by the wind',accept:['across the room during the storm by the wind'],explain:'Place (across the room) → Time (during the storm) → By agent (by the wind).',source:'PSLE S&T'},
+{id:'t20',slot:0,cat:'comp',type:'fill',phase:'test',stem:'No singer in the choir is ___ ___ ___ (as/talented/as) Priya.',answer:'as talented as',accept:['as talented as'],explain:'Formula: No + noun + is as [adj] as [name].',source:'PSLE-style'},
+// === TEST: SUBJECT ID + PAST TENSE ===
+{id:'t21',slot:0,cat:'subjectid',type:'mcq',phase:'test',stem:'Neither the coach nor the players ___ happy with the result.',options:['was','were','is','has been'],answer:1,explain:'"Neither...nor" → verb agrees with the NEAREST subject. "Players" (plural) is nearest → "were".',source:'PSLE-style'},
+{id:'t22',slot:0,cat:'subjectid',type:'error',phase:'test',stem:'Each of the boxes are too heavy to carry upstairs.',errorIdx:[4],correction:'is',explain:'"Each" is singular. Cross out "of the boxes" → "Each IS too heavy".',source:'PSLE-style'},
+{id:'t23',slot:0,cat:'pastcon',type:'error',phase:'test',stem:'She picked up the phone and dials her mother\'s number quickly.',errorIdx:[6],correction:'dialled',explain:'The story is past tense ("picked up"). "Dials" breaks consistency — should be "dialled".',source:'Composition Pattern'},
+{id:'t24',slot:0,cat:'pastcon',type:'mcq',phase:'test',stem:'In a past-tense story, which sentence about a daily habit is correct?',options:['Every day, she walks to school.','Every day, she would walk to school.','Every day, she is walking to school.','Every day, she has walked to school.'],answer:1,explain:'Past habits use "would + base verb". "Walks" is present tense — wrong in a past narrative.',source:'PSLE Composition Pattern'},
+];
+
+// ============================================================
+// STATE & STORAGE
+// ============================================================
+const STORAGE_KEY='eavan_grammar_trainer_v1';
+let STATE;
+function defaultState(){return{currentDay:1,completedDays:[],dayScores:{},catStats:{},questionLog:[],streak:0,lastDate:null,hearts:3,totalXP:0}}
+function loadState(){try{const s=localStorage.getItem(STORAGE_KEY);STATE=s?JSON.parse(s):defaultState()}catch(e){STATE=defaultState()}}
+function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(STATE))}catch(e){}}
+function updateStreak(){
+  const oldStreak=STATE.streak;const today=new Date().toISOString().slice(0,10);if(STATE.lastDate===today)return;if(STATE.lastDate){const d=new Date(STATE.lastDate);d.setDate(d.getDate()+1);STATE.streak=d.toISOString().slice(0,10)===today?STATE.streak+1:1}else{STATE.streak=1}STATE.lastDate=today;if(STATE.streak>oldStreak&&STATE.streak>1)setTimeout(sfxStreak,200);saveState()}
+function getCatAccuracy(catId){const s=STATE.catStats[catId];if(!s||s.total===0)return null;return Math.round(s.correct/s.total*100)}
+function getOverallAccuracy(){let c=0,t=0;Object.values(STATE.catStats).forEach(s=>{c+=s.correct;t+=s.total});return t?Math.round(c/t*100):null}
+
+// ============================================================
+// SESSION STATE (in-memory for current practice/test)
+// ============================================================
+let SESSION={phase:null,dayIdx:null,questions:[],currentQ:0,hearts:3,answers:[],learnIdx:0,learnCats:[]};
+
+// ============================================================
+// RENDER ENGINE
+// ============================================================
+const $=id=>document.getElementById(id);
+const app=$('app');
+function render(html){app.innerHTML=html}
+
+// Home screen
+function showHome(){
+  updateStreak();
+  const acc=getOverallAccuracy();
+  const completed=STATE.completedDays.length;
+  let prevDay=0;
+  let dayHTML=DAYS.map((d,i)=>{
+    let sep='';
+    if(d.day!==prevDay&&prevDay!==0){sep='<div style="height:12px;border-top:2px solid #E5E5E5;margin:4px 0"></div>'}
+    prevDay=d.day;
+    const done=STATE.completedDays.includes(d.slot);
+    const score=STATE.dayScores[d.slot];
+    const cls=done?'completed':'';
+    const testCls=d.type==='test'?'test':'';
+    return sep+`<div class="day-row ${cls} ${testCls} " onclick="startDay(${i})">
+      <div class="day-icon" style="background:${done?'#E8F5E9':d.type==='test'?'#FFF8E1':'#F3E5F5'}">
+        ${done?'✅':d.icon}
+      </div>
+      <div class="day-info">
+        <div class="title">${d.label}: ${d.title}</div>
+        <div class="desc">${d.title}${d.type==='test'?' 📝':d.type==='review'?' 🔄':''}</div>
+      </div>
+      ${score!=null?`<div class="day-score">${score}%</div>`:''}
+    </div>`;
+  }).join('');
+
+  let statsHTML='';
+  if(completed>0){
+    statsHTML=`<div class="stats-bar">
+      <div class="stat-card"><div class="num" style="color:var(--green)">${completed}/10</div><div class="label">Days Done</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--blue)">${acc!=null?acc+'%':'—'}</div><div class="label">Accuracy</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--gold)">${STATE.totalXP}</div><div class="label">XP</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--red)">🔥${STATE.streak}</div><div class="label">Streak</div></div>
+    </div>`;
+  }
+
+  // Category breakdown
+  let catHTML='';
+  const catEntries=Object.entries(STATE.catStats).filter(([k,v])=>v.total>0);
+  if(catEntries.length>0){
+    catHTML=`<div class="analytics"><h3>📊 Category Breakdown</h3><div class="analytics-grid">${
+      catEntries.map(([k,v])=>{
+        const cat=CAT(k);
+        const pct=Math.round(v.correct/v.total*100);
+        const col=pct>=80?'var(--green)':pct>=60?'var(--gold)':'var(--red)';
+        return `<div class="analytics-card">
+          <div class="a-cat" style="color:${cat?.color||'#333'}">${cat?.icon||''} ${cat?.name||k}</div>
+          <div class="a-bar"><div class="a-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+          <div class="a-stats">${v.correct}/${v.total} (${pct}%)</div>
+        </div>`;
+      }).join('')
+    }</div></div>`;
+  }
+
+  render(`
+    <div class="home-header">
+      <h1>📝 Grammar Trainer</h1>
+      <div class="sub">Eavan's Grammar Bootcamp · 5 Days × 30 min</div>
+      ${STATE.streak>0?`<div class="streak-badge">🔥 ${STATE.streak} day streak!</div>`:''}
+    </div>
+    ${statsHTML}
+    <div class="day-grid">${dayHTML}</div>
+    ${catHTML}
+    <button class="export-btn" onclick="exportData()">📋 Export Training Data</button>
+  `);
+}
+
+// ============================================================
+// START DAY
+// ============================================================
+function startDay(idx){
+  const day=DAYS[idx];
+  // all topics freely accessible
+  SESSION={phase:null,dayIdx:idx,questions:[],currentQ:0,hearts:3,answers:[],learnIdx:0,learnCats:day.cats};
+
+  if(day.type==='test'){
+    prepareTest(day);
+    SESSION.phase='practice';
+    showQuestion();
+  } else if(day.type==='review'){
+    prepareAdaptive();
+    if(SESSION.questions.length===0){
+      SESSION.learnCats=CATEGORIES.map(c=>c.id);
+      SESSION.phase='learn';
+      showLearn();
+    } else {
+      SESSION.phase='practice';
+      showQuestion();
+    }
+  } else {
+    SESSION.phase='learn';
+    showLearn();
+  }
+}
+
+function prepareTest(day){
+  // Gather test questions for relevant categories
+  let pool=QUESTIONS.filter(q=>q.phase==='test'&&(day.cats.length===0||day.cats.includes(q.cat)));
+  // Also pull some practice questions as review
+  const practicePool=QUESTIONS.filter(q=>q.phase==='practice'&&day.cats.includes(q.cat));
+  // Shuffle and pick
+  shuffle(pool);
+  shuffle(practicePool);
+  const count=day.slot===10?20:15;
+  SESSION.questions=pool.slice(0,Math.min(pool.length,count));
+  // Fill remaining from practice
+  if(SESSION.questions.length<count){
+    const remaining=practicePool.filter(q=>!SESSION.questions.find(sq=>sq.id===q.id));
+    SESSION.questions.push(...remaining.slice(0,count-SESSION.questions.length));
+  }
+  shuffle(SESSION.questions);
+}
+
+function prepareAdaptive(){
+  // Find weak categories (accuracy < 80%)
+  const weakCats=[];
+  Object.entries(STATE.catStats).forEach(([k,v])=>{
+    if(v.total>0 && v.correct/v.total<0.8) weakCats.push(k);
+  });
+  if(weakCats.length===0){
+    // If all good, mix everything
+    const all=QUESTIONS.filter(q=>q.phase==='practice');
+    shuffle(all);
+    SESSION.questions=all.slice(0,10);
+  } else {
+    SESSION.learnCats=weakCats;
+    const pool=QUESTIONS.filter(q=>weakCats.includes(q.cat));
+    shuffle(pool);
+    SESSION.questions=pool.slice(0,10);
+  }
+  shuffle(SESSION.questions);
+}
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr}
+
+// ============================================================
+// LEARN PHASE
+// ============================================================
+function showLearn(){
+  const cats=SESSION.learnCats;
+  // Gather all learn cards for this day's categories
+  let allCards=[];
+  cats.forEach(catId=>{
+    const cards=LEARN[catId]||[];
+    cards.forEach((c,i)=>allCards.push({...c,catId,idx:i}));
+  });
+  if(allCards.length===0){startPractice();return}
+
+  const card=allCards[SESSION.learnIdx]||allCards[0];
+  const cat=CAT(card.catId);
+  const total=allCards.length;
+  const current=SESSION.learnIdx+1;
+  const pct=Math.round(current/total*100);
+
+  const dots=allCards.map((_,i)=>`<div class="learn-dot ${i<SESSION.learnIdx?'done':i===SESSION.learnIdx?'active':''}"></div>`).join('');
+
+  render(`
+    <div class="top-bar">
+      <div class="back" onclick="showHome()">✕</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div style="font-size:13px;color:var(--text-light)">${current}/${total}</div>
+    </div>
+    <div class="phase-tabs">
+      <div class="phase-tab active"><span class="tab-icon">📖</span>Learn</div>
+      <div class="phase-tab" style="opacity:.5"><span class="tab-icon">💪</span>Practice</div>
+    </div>
+    <div class="learn-card">
+      <div class="cat-badge" style="background:${cat?.color||'#333'}">${cat?.icon||''} ${cat?.name||card.catId}</div>
+      <div class="rule-title">${card.rule}</div>
+      <div class="example-box">
+        <div class="ex-wrong">✗ ${card.wrong}</div>
+        <div class="ex-right">✓ ${card.right}</div>
+        <div class="ex-source">— ${card.source}</div>
+        <div class="ex-explain">${card.explain}</div>
+      </div>
+      ${card.tip?`<div class="tip-box">💡 ${card.tip}</div>`:''}
+    </div>
+    <div class="learn-nav">${dots}</div>
+    <div class="bottom-btn">
+      <div class="btn-row">
+        ${SESSION.learnIdx>0?`<button class="btn btn-outline" onclick="prevLearn()">← Back</button>`:''}
+        <button class="btn btn-primary" onclick="nextLearn(${total})">${current>=total?'Start Practice →':'Got it →'}</button>
+      </div>
+      <div style="text-align:center;margin-top:8px">
+        <a href="#" onclick="event.preventDefault();startPractice()" style="font-size:14px;color:var(--text-light);text-decoration:underline">Skip to Practice →</a>
+      </div>
+    </div>
+  `);
+}
+
+function nextLearn(total){
+  SESSION.learnIdx++;
+  if(SESSION.learnIdx>=total){startPractice();return}
+  showLearn();
+}
+function prevLearn(){SESSION.learnIdx=Math.max(0,SESSION.learnIdx-1);showLearn()}
+
+function startPractice(){
+  const day=DAYS[SESSION.dayIdx];
+  SESSION.phase='practice';
+  SESSION.questions=QUESTIONS.filter(q=>q.slot===day.slot&&q.phase==='practice');
+  shuffle(SESSION.questions);
+  SESSION.currentQ=0;
+  SESSION.answers=[];
+  SESSION.hearts=3;
+  showQuestion();
+}
+
+// ============================================================
+// QUESTION RENDERING
+// ============================================================
+function showQuestion(){
+  if(SESSION.currentQ>=SESSION.questions.length||SESSION.hearts<=0){
+    showResults();return;
+  }
+  const q=SESSION.questions[SESSION.currentQ];
+  const total=SESSION.questions.length;
+  const current=SESSION.currentQ+1;
+  const pct=Math.round(current/total*100);
+  const cat=CAT(q.cat);
+  const day=DAYS[SESSION.dayIdx];
+  const isTest=day.type==='test';
+
+  const heartsHTML=Array.from({length:3},(_, i)=>
+    `<span class="${i<SESSION.hearts?'heart-full':'heart-empty'}">${i<SESSION.hearts?'❤️':'🤍'}</span>`
+  ).join('');
+
+  let qBody='';
+  const typeBadge=`<div class="q-type-badge" style="background:${cat?.color||'#333'}">${
+    q.type==='mcq'?'Multiple Choice':q.type==='fill'?'Fill in the Blank':q.type==='error'?'Find & Fix the Error':q.type==='match'?'Match the Pairs':'Question'
+  }</div>`;
+
+  if(q.type==='mcq') qBody=renderMCQ(q);
+  else if(q.type==='fill') qBody=renderFill(q);
+  else if(q.type==='error') qBody=renderError(q);
+  else if(q.type==='match') qBody=renderMatch(q);
+
+  render(`
+    <div class="top-bar">
+      <div class="back" onclick="confirmExit()">✕</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div style="font-size:14px;font-weight:700;color:var(--text-light);white-space:nowrap">${current}/${total}</div>
+      <div class="hearts">${heartsHTML}</div>
+    </div>
+    ${!isTest?`<div class="phase-tabs">
+      <div class="phase-tab" style="opacity:.5"><span class="tab-icon">📖</span>Learn</div>
+      <div class="phase-tab active"><span class="tab-icon">💪</span>Practice</div>
+    </div>`:''}
+    <div class="q-card">
+      ${typeBadge}
+      ${qBody}
+    </div>
+    <div class="bottom-btn">
+      <button class="btn btn-primary" id="checkBtn" onclick="checkAnswer()" disabled>Check <span class="kbd-hint">Enter</span></button>
+    </div>
+  `);
+}
+
+function renderMCQ(q){
+  const letters='ABCD';
+  return `
+    <div class="q-stem">${q.stem.replace(/\n/g,'<br>')}</div>
+    <div class="mcq-options" id="options">
+      ${q.options.map((o,i)=>`
+        <div class="mcq-opt" onclick="selectMCQ(${i})" data-idx="${i}">
+          <div class="letter">${letters[i]}</div>
+          <div>${o}</div><span class="kbd-hint">${i+1}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function selectMCQ(idx){
+  if(document.querySelector('.feedback'))return;
+  sfxClick();
+  document.querySelectorAll('.mcq-opt').forEach((el,i)=>{
+    el.classList.toggle('selected',i===idx);
+  });
+  SESSION._selected=idx;
+  const btn=document.getElementById('checkBtn');
+  if(btn)btn.disabled=false;
+}
+
+function renderFill(q){
+  return `
+    <div class="q-stem">${q.stem.replace(/___/g,'<span class="blank" id="fillDisplay"></span>').replace(/\n/g,'<br>')}</div>
+    <input type="text" class="fill-input" id="fillInput" placeholder="Type your answer..." oninput="onFillInput()" autocomplete="off" autocapitalize="off">
+  `;
+}
+
+function onFillInput(){
+  const v=document.getElementById('fillInput')?.value?.trim();
+  const btn=document.getElementById('checkBtn');
+  if(btn)btn.disabled=!v;
+  const display=document.getElementById('fillDisplay');
+  if(display)display.textContent=v||'___';
+  SESSION._fillValue=v;
+}
+
+function renderError(q){
+  const words=q.stem.split(/\s+/);
+  return `
+    <div class="q-stem">🔍 Find the error and tap the wrong word(s):</div>
+    <div class="error-sentence" id="errorSentence">
+      ${words.map((w,i)=>`<span class="error-word" onclick="selectErrorWord(${i})" data-idx="${i}">${w} </span>`).join('')}
+    </div>
+    <div class="correction-input" id="correctionBox">
+      <label>Correct it to:</label>
+      <input type="text" class="fill-input" id="correctionInput" placeholder="Type the correction..." oninput="onCorrectionInput()" autocomplete="off">
+    </div>
+  `;
+}
+
+function selectErrorWord(idx){
+  if(document.querySelector('.feedback'))return;
+  sfxClick();
+  document.querySelectorAll('.error-word').forEach(el=>{
+    el.classList.toggle('selected',parseInt(el.dataset.idx)===idx);
+  });
+  SESSION._errorIdx=idx;
+  const box=document.getElementById('correctionBox');
+  if(box)box.classList.add('show');
+  onCorrectionInput();
+}
+
+function onCorrectionInput(){
+  const v=document.getElementById('correctionInput')?.value?.trim();
+  const btn=document.getElementById('checkBtn');
+  if(btn)btn.disabled=!(SESSION._errorIdx!=null&&v);
+  SESSION._correction=v;
+}
+
+function renderMatch(q){
+  const leftItems=[...q.left];
+  const rightItems=shuffle([...q.right]);
+  SESSION._matchLeft=q.left;
+  SESSION._matchRight=rightItems;
+  SESSION._matchCorrect=q.right;
+  SESSION._matches={};
+  SESSION._matchSelected=null;
+  return `
+    <div class="q-stem">${q.stem}</div>
+    <div class="match-container">
+      <div class="match-col">
+        <div class="match-col-header">WRONG / WORD</div>
+        ${leftItems.map((item,i)=>`<div class="match-item" id="ml${i}" onclick="selectMatchLeft(${i})">${item}</div>`).join('')}
+      </div>
+      <div class="match-col">
+        <div class="match-col-header">CORRECT / PAIR</div>
+        ${rightItems.map((item,i)=>`<div class="match-item" id="mr${i}" onclick="selectMatchRight(${i})">${item}</div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function selectMatchLeft(i){
+  if(document.querySelector('.feedback'))return;
+  if(SESSION._matches[i]!=null)return;
+  sfxClick();
+  SESSION._matchSelected=i;
+  document.querySelectorAll('[id^="ml"]').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('ml'+i)?.classList.add('selected');
+}
+
+function selectMatchRight(j){
+  if(document.querySelector('.feedback'))return;
+  if(SESSION._matchSelected==null)return;
+  sfxClick();
+  const i=SESSION._matchSelected;
+  SESSION._matches[i]=j;
+  document.getElementById('ml'+i)?.classList.add('matched');
+  document.getElementById('mr'+j)?.classList.add('matched');
+  const line=document.createElement('div');
+  line.className='match-line';
+  line.textContent=SESSION._matchLeft[i]+' → '+SESSION._matchRight[j];
+  document.getElementById('ml'+i)?.after(line);
+  SESSION._matchSelected=null;
+  document.querySelectorAll('[id^="ml"]').forEach(el=>el.classList.remove('selected'));
+  // Check if all matched
+  if(Object.keys(SESSION._matches).length===SESSION._matchLeft.length){
+    const btn=document.getElementById('checkBtn');
+    if(btn)btn.disabled=false;
+  }
+}
+
+// ============================================================
+// CHECK ANSWER
+// ============================================================
+function checkAnswer(){
+  const q=SESSION.questions[SESSION.currentQ];
+  let correct=false;
+  let userAnswer='';
+
+  if(q.type==='mcq'){
+    correct=SESSION._selected===q.answer;
+    userAnswer=q.options[SESSION._selected]||'';
+    // Highlight options
+    document.querySelectorAll('.mcq-opt').forEach((el,i)=>{
+      if(i===q.answer)el.classList.add('correct');
+      else if(i===SESSION._selected)el.classList.add('wrong');
+    });
+  } else if(q.type==='fill'){
+    const v=(SESSION._fillValue||'').toLowerCase().trim();
+    const accepts=(q.accept||[q.answer]).map(a=>a.toLowerCase().trim());
+    correct=accepts.includes(v);
+    userAnswer=SESSION._fillValue||'';
+    const input=document.getElementById('fillInput');
+    if(input)input.classList.add(correct?'correct':'wrong');
+  } else if(q.type==='error'){
+    const errIdx=q.errorIdx||[];
+    correct=errIdx.includes(SESSION._errorIdx);
+    if(correct&&q.correction){
+      const cv=(SESSION._correction||'').toLowerCase().trim();
+      if(cv){
+        const validCorrections=[q.correction,...(q.altCorrections||[])].map(c=>c.toLowerCase().trim());
+        // Exact match first
+        if(!validCorrections.includes(cv)){
+          // Lenient: accept if user's answer matches ANY part split by '...' or '(or:'
+          const parts=[];
+          validCorrections.forEach(c=>{
+            c.replace(/\(or:.*?\)/g,'').split('...').forEach(p=>{
+              const t=p.trim(); if(t)parts.push(t);
+            });
+            // Also extract alternatives inside (or: X)
+            const orMatch=c.match(/\(or:\s*(.+?)\)/);
+            if(orMatch) orMatch[1].split('...').forEach(p=>{const t=p.trim();if(t)parts.push(t);});
+          });
+          correct=parts.some(p=>p===cv||cv===p)||validCorrections.some(c=>c.includes(cv)&&cv.length>=3);
+        }
+      } else {
+        correct=false; // Empty correction = wrong
+      }
+    }
+    userAnswer=`Word #${SESSION._errorIdx}: ${SESSION._correction||''}`;
+    // Highlight
+    document.querySelectorAll('.error-word').forEach(el=>{
+      const idx=parseInt(el.dataset.idx);
+      if(errIdx.includes(idx))el.classList.add('correct-highlight');
+      else if(idx===SESSION._errorIdx&&!correct)el.classList.add('wrong-highlight');
+    });
+  } else if(q.type==='match'){
+    let allCorrect=true;
+    Object.entries(SESSION._matches).forEach(([li,ri])=>{
+      const leftItem=SESSION._matchLeft[parseInt(li)];
+      const rightItem=SESSION._matchRight[parseInt(ri)];
+      const correctRight=SESSION._matchCorrect[parseInt(li)];
+      if(rightItem!==correctRight)allCorrect=false;
+    });
+    correct=allCorrect;
+    userAnswer=JSON.stringify(SESSION._matches);
+  }
+
+  // Record
+  const record={qId:q.id,cat:q.cat,correct,userAnswer,timestamp:Date.now()};
+  SESSION.answers.push(record);
+  STATE.questionLog.push(record);
+  if(!STATE.catStats[q.cat])STATE.catStats[q.cat]={correct:0,total:0};
+  STATE.catStats[q.cat].total++;
+  if(correct){
+    STATE.catStats[q.cat].correct++;
+    STATE.totalXP+=10;
+  } else {
+    SESSION.hearts--;
+  }
+  saveState();
+
+  // Show feedback
+  showFeedback(correct,q);
+}
+
+function showFeedback(correct,q){
+  if(correct){ sfxCorrect(); sfxXP(); } else { sfxWrong(); }
+  const btn=document.getElementById('checkBtn');
+  if(btn)btn.style.display='none';
+
+  const correctAnswer=q.type==='mcq'?q.options[q.answer]:q.type==='error'?q.correction:q.type==='match'?q.left.map((l,i)=>l+' → '+q.right[i]).join(', '):q.answer;
+  const fb=document.createElement('div');
+  fb.className=`feedback ${correct?'correct':'wrong'}`;
+  fb.innerHTML=`<div class="feedback-inner">
+    <div class="fb-header">${correct?'✅ Correct!':'❌ Not quite'}</div>
+    <div class="fb-explain">${q.explain}</div>
+    ${!correct?`<div class="fb-answer">Answer: ${correctAnswer}</div>`:''}
+    <button class="btn ${correct?'btn-primary':'btn-red'}" onclick="nextQuestion()" style="margin-top:12px">
+      ${SESSION.hearts<=0&&!correct?'See Results':'Continue'} <span class="kbd-hint">Enter</span>
+    </button>
+  </div>`;
+  document.body.appendChild(fb);
+}
+
+function nextQuestion(){
+  document.querySelector('.feedback')?.remove();
+  SESSION.currentQ++;
+  showQuestion();
+}
+
+function confirmExit(){
+  if(SESSION.answers.length>0){
+    if(confirm('Leave this session? Your progress so far is saved.')){showHome()}
+  } else {showHome()}
+}
+
+// ============================================================
+// RESULTS
+// ============================================================
+function showResults(){
+  const total=SESSION.answers.length;
+  const correct=SESSION.answers.filter(a=>a.correct).length;
+  const pct=total?Math.round(correct/total*100):0;
+  const day=DAYS[SESSION.dayIdx];
+
+  // Save score
+  STATE.dayScores[day.slot]=pct;
+  if(!STATE.completedDays.includes(day.slot))STATE.completedDays.push(day.slot);
+  if(day.slot>=STATE.currentDay&&day.slot<10)STATE.currentDay=day.slot+1;
+  updateStreak();
+  saveState();
+
+  const emoji=pct>=90?'🏆':pct>=70?'⭐':pct>=50?'💪':'📚';
+  // Sound
+  if(pct>=50){ sfxComplete(); }
+  const cls=pct>=80?'great':pct>=60?'ok':'bad';
+  const xpEarned=correct*10;
+  const msg=pct>=90?'Outstanding! Almost perfect!':pct>=70?'Great job! Keep it up!':pct>=50?'Good effort! Review the mistakes.':'Let\'s review and try again!';
+
+  // Category breakdown
+  const catCounts={};
+  SESSION.answers.forEach(a=>{
+    if(!catCounts[a.cat])catCounts[a.cat]={correct:0,total:0};
+    catCounts[a.cat].total++;
+    if(a.correct)catCounts[a.cat].correct++;
+  });
+
+  const catBreakdown=Object.entries(catCounts).map(([k,v])=>{
+    const cat=CAT(k);
+    const p=Math.round(v.correct/v.total*100);
+    const col=p>=80?'var(--green)':p>=60?'var(--gold)':'var(--red)';
+    return `<div class="cat-row">
+      <div class="cat-name">${cat?.icon||''} ${cat?.name||k}</div>
+      <div class="cat-bar"><div class="cat-bar-fill" style="width:${p}%;background:${col}"></div></div>
+      <div class="cat-score" style="color:${col}">${v.correct}/${v.total}</div>
+    </div>`;
+  }).join('');
+
+  // Question review
+  const qReview=SESSION.answers.map((a,i)=>{
+    const q=SESSION.questions[i];
+    if(!q)return'';
+    return `<div class="q-review-item ${a.correct?'q-correct':'q-wrong'}">
+      <div class="q-r-stem">${a.correct?'✅':'❌'} Q${i+1}: ${q.stem.slice(0,80)}${q.stem.length>80?'...':''}</div>
+      ${!a.correct?`<div class="q-r-answer">Correct answer: ${q.type==='mcq'?q.options[q.answer]:q.answer}</div>`:''}
+      <div class="q-r-explain">${q.explain}</div>
+    </div>`;
+  }).join('');
+
+  render(`
+    <div class="results-header">
+      <div class="emoji">${emoji}</div>
+      <h2>${day.label} Complete!</h2>
+      <div class="score-big ${cls}">${pct}%</div>
+      <div style="color:var(--text-light);margin-top:4px">${correct}/${total} correct · +${xpEarned} XP</div>
+      <div style="margin-top:8px;font-size:15px">${msg}</div>
+    </div>
+    <div class="cat-breakdown">
+      <h3 style="font-size:15px;margin-bottom:8px">📊 By Category</h3>
+      ${catBreakdown}
+    </div>
+    <div class="q-review">
+      <h3 style="font-size:15px;margin:16px 0 8px">📋 Question Review</h3>
+      ${qReview}
+    </div>
+    <div style="padding:16px 0">
+      <button class="btn btn-primary" onclick="showHome()">Back to Home</button>
+      ${pct<70?`<button class="btn btn-outline" onclick="startDay(${SESSION.dayIdx})" style="margin-top:8px">Try Again</button>`:''}
+    </div>
+  `);
+}
+
+// ============================================================
+// EXPORT DATA
+// ============================================================
+function exportData(){
+  const data={
+    exportDate:new Date().toISOString(),
+    student:'Eavan',
+    daysCompleted:STATE.completedDays,
+    dayScores:STATE.dayScores,
+    overallAccuracy:getOverallAccuracy(),
+    totalXP:STATE.totalXP,
+    streak:STATE.streak,
+    categoryBreakdown:{},
+    weakCategories:[],
+    strongCategories:[],
+    questionLog:STATE.questionLog.slice(-100)
+  };
+  Object.entries(STATE.catStats).forEach(([k,v])=>{
+    const pct=v.total?Math.round(v.correct/v.total*100):0;
+    data.categoryBreakdown[k]={correct:v.correct,total:v.total,accuracy:pct+'%'};
+    if(v.total>=2){
+      if(pct<70)data.weakCategories.push(k);
+      else if(pct>=85)data.strongCategories.push(k);
+    }
+  });
+  const json=JSON.stringify(data,null,2);
+  // Copy to clipboard
+  navigator.clipboard?.writeText(json).then(()=>{
+    alert('Training data copied to clipboard! 📋\n\nYou can paste it to save or share.');
+  }).catch(()=>{
+    // Fallback
+    const ta=document.createElement('textarea');
+    ta.value=json;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    alert('Training data copied to clipboard! 📋');
+  });
+}
+
+// ============================================================
+// SOUND EFFECTS (Web Audio API — no external files)
+// ============================================================
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let _audioCtx;
+function getAudio(){
+  if(!_audioCtx) _audioCtx = new AudioCtx();
+  if(_audioCtx.state === 'suspended') _audioCtx.resume();
+  return _audioCtx;
+}
+
+// Ensure AudioContext is unlocked on first user interaction
+['click','touchstart','keydown'].forEach(evt => {
+  document.addEventListener(evt, function unlock(){
+    getAudio();
+    document.removeEventListener(evt, unlock);
+  }, {once: true});
+});
+
+function playTone(freq, duration, type='sine', vol=0.3, ramp=true){
+  try {
+    const ctx = getAudio();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(vol, ctx.currentTime);
+    if(ramp) gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + duration);
+  } catch(e){}
+}
+
+function sfxCorrect(){
+  // Duolingo-style ascending two-note chime
+  playTone(523.25, 0.12, 'sine', 0.25);      // C5
+  setTimeout(()=> playTone(659.25, 0.18, 'sine', 0.3), 80);  // E5
+  setTimeout(()=> playTone(783.99, 0.25, 'sine', 0.25), 160); // G5
+}
+
+function sfxWrong(){
+  // Low descending buzz
+  playTone(311, 0.15, 'square', 0.15);
+  setTimeout(()=> playTone(233, 0.25, 'square', 0.12), 100);
+}
+
+function sfxXP(){
+  // Quick coin-collect blip
+  playTone(987.77, 0.06, 'sine', 0.2);  // B5
+  setTimeout(()=> playTone(1318.5, 0.1, 'sine', 0.2), 50); // E6
+}
+
+function sfxComplete(){
+  // Fanfare: ascending arpeggio
+  const notes = [523.25, 659.25, 783.99, 1046.5]; // C5 E5 G5 C6
+  notes.forEach((f, i) => {
+    setTimeout(()=> playTone(f, 0.2, 'sine', 0.25), i * 120);
+  });
+  // Final shimmer
+  setTimeout(()=> playTone(1046.5, 0.5, 'triangle', 0.2), 500);
+}
+
+function sfxClick(){
+  playTone(800, 0.04, 'sine', 0.1, false);
+}
+
+function sfxStreak(){
+  // Fire streak whoosh — rapid ascending
+  [440, 554, 659, 880, 1108].forEach((f,i) => {
+    setTimeout(()=> playTone(f, 0.08, 'triangle', 0.15), i*40);
+  });
+}
+
+
+// ============================================================
+// INIT
+// ============================================================
+let _soundOn = true;
+function toggleSound(){
+  _soundOn = !_soundOn;
+  document.getElementById('soundToggle').textContent = _soundOn ? '🔊' : '🔇';
+}
+// Override getAudio to respect mute
+const _origPlayTone = playTone;
+playTone = function(...args){
+  if(!_soundOn) return;
+  _origPlayTone(...args);
+};
+
+loadState();
+showHome();
+
+// Add persistent sound toggle button
+const soundBtn = document.createElement('div');
+soundBtn.id = 'soundToggle';
+soundBtn.className = 'sound-toggle';
+soundBtn.textContent = '🔊';
+soundBtn.onclick = toggleSound;
+document.body.appendChild(soundBtn);
+
+
+// ============================================================
+// KEYBOARD SHORTCUTS (laptop-friendly)
+// ============================================================
+document.addEventListener('keydown', function(e) {
+  // Don't intercept when typing in an input field
+  if(e.target.tagName==='INPUT' && e.key!=='Enter') return;
+
+  // Enter: check answer or continue
+  if(e.key==='Enter'){
+    e.preventDefault();
+    const fb = document.querySelector('.feedback');
+    if(fb){
+      // Feedback is showing — continue
+      nextQuestion();
+      return;
+    }
+    const checkBtn = document.getElementById('checkBtn');
+    if(checkBtn && !checkBtn.disabled){
+      checkAnswer();
+      return;
+    }
+    // Learn screen — advance
+    const learnBtn = document.querySelector('.learn-card + .bottom-btn .btn, .learn-card ~ div .btn-primary');
+    if(learnBtn) learnBtn.click();
+    return;
+  }
+
+  // 1-4 keys: select MCQ option
+  if(['1','2','3','4'].includes(e.key)){
+    const opts = document.querySelectorAll('.mcq-opt');
+    const idx = parseInt(e.key) - 1;
+    if(opts[idx] && !document.querySelector('.feedback')){
+      opts[idx].click();
+    }
+    return;
+  }
+
+  // Escape: go back to home
+  if(e.key==='Escape'){
+    const fb = document.querySelector('.feedback');
+    if(fb) return; // don't exit during feedback
+    const homeScreen = document.querySelector('#homeScreen');
+    if(homeScreen && homeScreen.classList.contains('active')) return; // already home
+    confirmExit();
+    return;
+  }
+});
+</script>
+</body>
+</html>

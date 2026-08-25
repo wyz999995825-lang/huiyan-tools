@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Johnson P5 数学专项训练</title>
+<style>
+:root{--teal:#1a7a6d;--teal-bg:#e6f7f5;--teal-lt:#b2e6df;--red:#d03b3b;--red-bg:#fef2f2;--amber:#b8860b;--amber-bg:#fef9e7;--blue:#2563eb;--blue-bg:#eff6ff;--green:#0d7a3e;--green-bg:#ecfdf5;--purple:#7c3aed;--purple-bg:#f5f3ff;--gray:#6b7280;--gray-bg:#f3f4f6;--gray-bd:#e5e7eb;--text:#1f2937;--text-lt:#6b7280}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--text);background:linear-gradient(135deg,#e6f7f5 0%,#eff6ff 100%);min-height:100vh}
+.app{max-width:640px;margin:0 auto;padding:16px}
+
+/* Header */
+.header{text-align:center;padding:20px 0 16px}
+.header h1{font-size:24px;color:var(--teal)}
+.header .name{font-size:14px;color:var(--text-lt);margin-top:4px}
+
+/* Stats bar */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+.stat{background:#fff;border-radius:12px;padding:12px 8px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.stat .v{font-size:24px;font-weight:700}
+.stat .l{font-size:10px;color:var(--text-lt);margin-top:2px}
+
+/* XP bar */
+.xp-wrap{background:#fff;border-radius:12px;padding:12px 16px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.xp-label{display:flex;justify-content:space-between;font-size:12px;color:var(--text-lt);margin-bottom:6px}
+.xp-bar{height:12px;background:var(--gray-bg);border-radius:6px;overflow:hidden}
+.xp-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--teal),var(--blue));transition:width .6s ease}
+
+/* Topic selector */
+.topics{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.topic-btn{flex:1;min-width:100px;padding:14px 8px;border:2px solid var(--gray-bd);border-radius:14px;background:#fff;cursor:pointer;text-align:center;transition:.2s;font-size:13px;font-weight:600}
+.topic-btn:hover{border-color:var(--teal);background:var(--teal-bg)}
+.topic-btn.active{border-color:var(--teal);background:var(--teal-bg);color:var(--teal)}
+.topic-btn .ico{font-size:28px;display:block;margin-bottom:4px}
+.topic-btn .cnt{font-size:10px;font-weight:400;color:var(--text-lt);margin-top:2px}
+
+/* Question card */
+.q-card{background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:16px;position:relative;overflow:hidden}
+.q-card.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.q-card.pulse{animation:pulse .5s}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+
+.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.q-badge{display:inline-block;font-size:11px;padding:4px 12px;border-radius:20px;font-weight:600}
+.q-badge-easy{background:var(--green-bg);color:var(--green)}
+.q-badge-mid{background:var(--blue-bg);color:var(--blue)}
+.q-badge-trap{background:var(--amber-bg);color:var(--amber)}
+.q-badge-hard{background:var(--purple-bg);color:var(--purple)}
+.q-number{font-size:13px;color:var(--text-lt)}
+
+.q-text{font-size:16px;line-height:1.8;margin-bottom:16px}
+.q-text strong{color:var(--teal)}
+
+/* Input area */
+.input-area{display:flex;gap:10px;align-items:center}
+.q-input{flex:1;padding:14px 18px;border:2px solid var(--gray-bd);border-radius:12px;font-size:18px;font-weight:600;outline:none;transition:.2s;text-align:center}
+.q-input:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(26,122,109,.12)}
+.q-input.correct{border-color:var(--green);background:var(--green-bg)}
+.q-input.wrong{border-color:var(--red);background:var(--red-bg)}
+.submit-btn{padding:14px 28px;border:none;border-radius:12px;background:var(--teal);color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap}
+.submit-btn:hover{background:#15695e;transform:scale(1.02)}
+.submit-btn:active{transform:scale(.97)}
+.submit-btn:disabled{background:var(--gray);cursor:not-allowed}
+
+/* MCQ options */
+.mcq-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.mcq-btn{padding:14px;border:2px solid var(--gray-bd);border-radius:12px;background:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;text-align:center}
+.mcq-btn:hover{border-color:var(--teal);background:var(--teal-bg)}
+.mcq-btn.selected{border-color:var(--teal);background:var(--teal-bg);color:var(--teal)}
+.mcq-btn.correct-choice{border-color:var(--green);background:var(--green-bg);color:var(--green)}
+.mcq-btn.wrong-choice{border-color:var(--red);background:var(--red-bg);color:var(--red)}
+
+/* Feedback */
+.feedback{margin-top:16px;padding:16px;border-radius:12px;font-size:14px;display:none;line-height:1.7}
+.feedback.show{display:block}
+.feedback.correct{background:var(--green-bg);border:1px solid #a7f3d0}
+.feedback.wrong{background:var(--red-bg);border:1px solid #f5c6c6}
+.fb-title{font-size:18px;font-weight:700;margin-bottom:8px}
+.fb-steps{font-size:13px;color:var(--text-lt);margin-top:8px}
+.fb-steps p{margin:3px 0}
+
+.next-btn{display:none;width:100%;padding:16px;border:none;border-radius:12px;background:var(--blue);color:#fff;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px;transition:.2s}
+.next-btn:hover{background:#1d4ed8}
+.next-btn.show{display:block}
+
+/* Streak */
+.streak-bar{position:fixed;top:0;left:0;right:0;height:4px;z-index:100}
+.streak-fill{height:100%;background:linear-gradient(90deg,var(--amber),#ef4444);transition:width .3s}
+
+/* Confetti */
+.confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1000}
+
+/* Complete screen */
+.complete{text-align:center;padding:40px 20px}
+.complete .emoji{font-size:64px}
+.complete h2{font-size:24px;margin:16px 0 8px;color:var(--teal)}
+.complete .stat-row{display:flex;gap:12px;justify-content:center;margin:20px 0}
+.complete .stat-item{background:#fff;padding:16px 24px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.complete .stat-item .v{font-size:28px;font-weight:700}
+.complete .stat-item .l{font-size:11px;color:var(--text-lt)}
+.retry-btn{padding:16px 40px;border:none;border-radius:12px;background:var(--teal);color:#fff;font-size:16px;font-weight:700;cursor:pointer;margin-top:20px}
+
+/* Hint */
+.hint-btn{display:inline-block;margin-top:8px;padding:6px 14px;border:1.5px solid var(--amber);border-radius:8px;background:none;color:var(--amber);font-size:12px;font-weight:600;cursor:pointer}
+.hint-btn:hover{background:var(--amber-bg)}
+.hint-text{display:none;margin-top:8px;padding:10px 14px;background:var(--amber-bg);border-radius:8px;font-size:13px;color:var(--amber)}
+.hint-text.show{display:block}
+
+@media(max-width:500px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .mcq-grid{grid-template-columns:1fr}
+  .q-text{font-size:15px}
+}
+</style>
+</head>
+<body>
+<div class="streak-bar"><div class="streak-fill" id="streakFill" style="width:0%"></div></div>
+<div class="app">
+
+<div class="header">
+  <h1>⚡ P5 数学专项训练</h1>
+  <div class="name">Johnson · P5 · 数学薄弱点专练</div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="v" id="s-score" style="color:var(--teal)">0</div><div class="l">得分</div></div>
+  <div class="stat"><div class="v" id="s-streak" style="color:var(--amber)">0</div><div class="l">连对🔥</div></div>
+  <div class="stat"><div class="v" id="s-done" style="color:var(--blue)">0</div><div class="l">已做</div></div>
+  <div class="stat"><div class="v" id="s-acc" style="color:var(--green)">-</div><div class="l">正确率</div></div>
+</div>
+
+<div class="xp-wrap">
+  <div class="xp-label"><span id="xp-level">Level 1 · 入门</span><span id="xp-pts">0 / 50 XP</span></div>
+  <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+</div>
+
+<div class="topics">
+  <button class="topic-btn active" onclick="selectTopic('time',this)">
+    <span class="ico">⏰</span>分段时间计算
+    <div class="cnt" id="cnt-time">0 题已做</div>
+  </button>
+  <button class="topic-btn" onclick="selectTopic('clock',this)">
+    <span class="ico">🕐</span>对称偏差·钟
+    <div class="cnt" id="cnt-clock">0 题已做</div>
+  </button>
+  <button class="topic-btn" onclick="selectTopic('mix',this)">
+    <span class="ico">🎲</span>随机混合
+    <div class="cnt" id="cnt-mix">0 题已做</div>
+  </button>
+</div>
+
+<div id="question-area"></div>
+
+</div>
+
+<script>
+// ===== Question Bank Generator =====
+var R=Math.random, F=Math.floor;
+function rInt(a,b){return F(R()*(b-a+1))+a}
+function pick(arr){return arr[F(R()*arr.length)]}
+
+// Names pool
+var names=['Ali','Sarah','Tom','Mei','Ravi','Lily','Ben','Zara','Wei','Priya','Ryan','Nora','Kai','Emma','Amir'];
+
+// ---- TOPIC 1: Segmented time/rate calculation ----
+function genTimeQ(){
+  var templates=[genTime1,genTime2,genTime3,genTime4,genTime5,genTime6];
+  return pick(templates)();
+}
+
+function genTime1(){ // basic: two rates
+  var name=pick(names);
+  var total=rInt(7,15);
+  var first=rInt(2,Math.min(5,total-2));
+  var r1=pick([10,12,15,20,25]);
+  var r2=pick([5,8,10,12,15].filter(x=>x!==r1));
+  var rest=total-first;
+  var ans=first*r1+rest*r2;
+  var unit=pick(['minutes','pages','dollars']);
+  var ctx;
+  if(unit==='minutes')ctx=name+' plays '+total+' rounds of a game. The first '+first+' rounds take '+r1+' minutes each. The remaining rounds take '+r2+' minutes each. What is the total time in minutes?';
+  else if(unit==='pages')ctx=name+' reads '+total+' chapters. The first '+first+' chapters have '+r1+' pages each. The remaining chapters have '+r2+' pages each. How many pages in total?';
+  else{ctx=name+' buys '+total+' items. The first '+first+' cost $'+r1+' each. The rest cost $'+r2+' each. How much does '+name+' pay in total?';ans='$'+ans;}
+  var trap=first*r1+total*r2;
+  return{text:ctx,answer:String(typeof ans==='number'?ans:ans),accepts:[String(ans)],diff:'easy',
+    hint:'先算剩余数量: '+total+' − '+first+' = '+rest+'，再用 '+rest+' 乘以 '+r2,
+    explain:'前'+first+'个: '+first+'×'+r1+' = '+(first*r1)+'\n剩余: '+total+'−'+first+' = '+rest+'（不是'+total+'！）\n'+rest+'×'+r2+' = '+(rest*r2)+'\n总: '+(first*r1)+' + '+(rest*r2)+' = '+ans+'\n\n⚠️ 常见错误: 用'+total+'代替'+rest+'→ '+(first*r1)+'+'+trap+' ← 这就是Q14的同类错误！',
+    trap:String(first*r1+total*r2),topic:'time'};
+}
+
+function genTime2(){ // reverse: given total, find quantity
+  var name=pick(names);
+  var baseCost=rInt(3,8);
+  var baseQty=rInt(2,4);
+  var extraRate=pick([1,2,3]);
+  var extraQty=rInt(3,8);
+  var totalCost=baseCost+extraQty*extraRate;
+  var totalQty=baseQty+extraQty;
+  return{text:name+' takes a taxi. The first '+baseQty+' km costs $'+baseCost+'. After that, each additional km costs $'+extraRate+'. '+name+' paid $'+totalCost+'. How many km did '+name+' travel?',
+    answer:String(totalQty),accepts:[String(totalQty),totalQty+' km',totalQty+'km'],diff:'mid',
+    hint:'先算额外费用: $'+totalCost+' − $'+baseCost+' = $'+(totalCost-baseCost)+'，再除以每公里费用',
+    explain:'额外费用: $'+totalCost+' − $'+baseCost+' = $'+(totalCost-baseCost)+'\n额外路程: $'+(totalCost-baseCost)+' ÷ $'+extraRate+' = '+extraQty+' km\n总: '+baseQty+' + '+extraQty+' = '+totalQty+' km',
+    topic:'time'};
+}
+
+function genTime3(){ // time conversion: total min → h min
+  var name=pick(names);
+  var total=rInt(8,14);
+  var first=rInt(2,5);
+  var r1=rInt(10,20);
+  var r2=rInt(5,15);
+  var rest=total-first;
+  var totalMin=first*r1+rest*r2;
+  var h=F(totalMin/60);
+  var m=totalMin%60;
+  var ansStr=h+'h '+m+'min';
+  return{text:name+' practises for '+total+' days. For the first '+first+' days, '+name+' practises '+r1+' minutes each day. For the remaining days, '+name+' practises '+r2+' minutes each day. Express the total time in hours and minutes.',
+    answer:ansStr,accepts:[ansStr,h+' h '+m+' min',h+'h'+m+'min',h+' hour '+m+' minutes',h+'h '+m+'m',totalMin+' minutes',totalMin+'min',String(totalMin)],diff:'trap',
+    hint:'先算总分钟数，再÷60转成小时和分钟。剩余天数 = '+total+' − '+first+' = '+rest,
+    explain:'前'+first+'天: '+first+'×'+r1+' = '+(first*r1)+' min\n剩余: '+total+'−'+first+' = '+rest+' 天\n'+rest+'×'+r2+' = '+(rest*r2)+' min\n总: '+(first*r1)+' + '+(rest*r2)+' = '+totalMin+' min\n'+totalMin+' ÷ 60 = '+h+' h '+m+' min',
+    topic:'time'};
+}
+
+function genTime4(){ // 3 segments
+  var name=pick(names);
+  var s1=rInt(2,4),r1=rInt(10,25);
+  var s2=rInt(3,6),r2=rInt(8,15);
+  var s3=rInt(2,4),r3=rInt(5,12);
+  var ans=s1*r1+s2*r2+s3*r3;
+  return{text:'A factory runs 3 shifts. Morning: '+s1+' hours, '+r1+' units/hour. Afternoon: '+s2+' hours, '+r2+' units/hour. Night: '+s3+' hours, '+r3+' units/hour. Total units produced?',
+    answer:String(ans),accepts:[String(ans)],diff:'hard',
+    hint:'分三段算: '+s1+'×'+r1+' + '+s2+'×'+r2+' + '+s3+'×'+r3,
+    explain:'Morning: '+s1+'×'+r1+' = '+(s1*r1)+'\nAfternoon: '+s2+'×'+r2+' = '+(s2*r2)+'\nNight: '+s3+'×'+r3+' = '+(s3*r3)+'\nTotal: '+(s1*r1)+' + '+(s2*r2)+' + '+(s3*r3)+' = '+ans,
+    topic:'time'};
+}
+
+function genTime5(){ // cost with tiers
+  var name=pick(names);
+  var base=rInt(2,5);
+  var baseHr=rInt(1,3);
+  var extra=rInt(1,4);
+  var totalHr=rInt(baseHr+2,baseHr+8);
+  var ans=base*baseHr+(totalHr-baseHr)*extra;
+  return{text:name+' rents a bicycle. The first '+baseHr+' hour'+(baseHr>1?'s':'')+' cost $'+base+' per hour. Each additional hour costs $'+extra+'. '+name+' rented for '+totalHr+' hours. How much did '+name+' pay?',
+    answer:'$'+ans,accepts:['$'+ans,String(ans),ans+' dollars'],diff:'mid',
+    hint:'额外小时 = '+totalHr+' − '+baseHr+' = '+(totalHr-baseHr),
+    explain:'前'+baseHr+'h: '+baseHr+'×$'+base+' = $'+(base*baseHr)+'\n额外: '+totalHr+'−'+baseHr+' = '+(totalHr-baseHr)+' h\n'+(totalHr-baseHr)+'×$'+extra+' = $'+((totalHr-baseHr)*extra)+'\n总: $'+(base*baseHr)+' + $'+((totalHr-baseHr)*extra)+' = $'+ans,
+    topic:'time'};
+}
+
+function genTime6(){ // MCQ style like original Q14
+  var name=pick(names);
+  var total=rInt(8,12);
+  var first=rInt(2,4);
+  var r1=pick([15,20,25]);
+  var r2=pick([8,10,12]);
+  var rest=total-first;
+  var correct=first*r1+rest*r2;
+  var wrong1=first*r1+total*r2; // the Q14 error
+  var wrong2=total*r1;
+  var wrong3=first*r2+rest*r1;
+  var h=F(correct/60),m=correct%60;
+  var opts=[correct,wrong1,wrong2,wrong3].sort(function(a,b){return a-b});
+  var ansStr=h+'h '+m+'min';
+  return{text:name+' plays '+total+' games. The first '+first+' games last '+r1+' minutes each. Each remaining game lasts '+r2+' minutes. What is the total playing time?',
+    type:'mcq',options:opts.map(function(v){var hh=F(v/60),mm=v%60;return hh+'h '+mm+'min';}),
+    answer:ansStr,accepts:[ansStr],diff:'trap',
+    hint:'剩余游戏 = '+total+' − '+first+' = '+rest+'，不是'+total+'！',
+    explain:'前'+first+'场: '+first+'×'+r1+' = '+(first*r1)+' min\n剩余: '+total+'−'+first+' = '+rest+'\n'+rest+'×'+r2+' = '+(rest*r2)+' min\n总: '+correct+' min = '+ansStr+'\n\n⚠️ 如果用'+total+'场: '+(first*r1)+'+'+(total*r2)+'='+wrong1+'min ← 这就是陷阱！',
+    topic:'time'};
+}
+
+// ---- TOPIC 2: Clock / symmetric deviation ----
+function genClockQ(){
+  var templates=[genClock1,genClock2,genClock3,genClock4,genClock5,genClock6];
+  return pick(templates)();
+}
+
+function genClock1(){ // simple: find correct time
+  var offset=pick([5,10,15,20]);
+  var realH=rInt(1,12);
+  var realM=rInt(0,49);
+  var fastM=realH*60+realM+offset;
+  var slowM=realH*60+realM-offset;
+  var fH=F(fastM/60),fM=fastM%60;
+  var sH=F(slowM/60),sM=slowM%60;
+  var pad=function(n){return n<10?'0'+n:String(n)};
+  return{text:'Clock A is '+offset+' minutes faster and Clock B is '+offset+' minutes slower than the correct time. Clock A shows '+fH+':'+pad(fM)+' and Clock B shows '+sH+':'+pad(sM)+'. What is the correct time?',
+    answer:realH+':'+pad(realM),accepts:[realH+':'+pad(realM),pad(realH)+':'+pad(realM)],diff:'easy',
+    hint:'对称偏差 → 取平均: (A + B) ÷ 2 = 正确时间',
+    explain:'A = '+fH+':'+pad(fM)+' (快'+offset+'min)\nB = '+sH+':'+pad(sM)+' (慢'+offset+'min)\n正确 = ('+fastM+' + '+slowM+') ÷ 2 = '+(realH*60+realM)+' min = '+realH+':'+pad(realM)+'\n或: A − '+offset+' = '+realH+':'+pad(realM)+' ✓',
+    topic:'clock'};
+}
+
+function genClock2(){ // find the difference
+  var offset=rInt(5,25);
+  var diff=offset*2;
+  return{text:'Clock A is '+offset+' minutes faster and Clock B is '+offset+' minutes slower. What is the difference between the times shown on the two clocks?',
+    answer:String(diff),accepts:[String(diff),diff+' minutes',diff+' min',diff+'min'],diff:'easy',
+    hint:'快钟 = T+'+offset+'，慢钟 = T−'+offset+'，差 = ?',
+    explain:'快钟 = T + '+offset+'\n慢钟 = T − '+offset+'\n差 = (T+'+offset+') − (T−'+offset+') = '+diff+' minutes\n\n规律: 差 = 两个偏差之和 = '+offset+' + '+offset+' = '+diff,
+    topic:'clock'};
+}
+
+function genClock3(){ // True/False: can readings coexist?
+  var offset=rInt(5,20);
+  var expectedDiff=offset*2;
+  var isTrue=R()>0.5;
+  var realH=rInt(1,11),realM=rInt(10,49);
+  var pad=function(n){return n<10?'0'+n:String(n)};
+  var fM,sM,fH,sH,actualDiff;
+  if(isTrue){
+    fM=realH*60+realM+offset;sM=realH*60+realM-offset;
+    actualDiff=expectedDiff;
+  }else{
+    var fakeDiff=expectedDiff+pick([-5,5,3,-3,7]);
+    fM=realH*60+realM+F(fakeDiff/2)+rInt(1,3);
+    sM=fM-Math.abs(fakeDiff);
+    actualDiff=Math.abs(fakeDiff);
+  }
+  fH=F(fM/60);var fMn=fM%60;sH=F(sM/60);var sMn=sM%60;
+  var ans=isTrue?'True':'False';
+  return{text:'Clock A is '+offset+' min faster, Clock B is '+offset+' min slower. Someone sees '+fH+':'+pad(fMn)+' on Clock A and '+sH+':'+pad(sMn)+' on Clock B. Is this possible?\n\nTrue or False?',
+    type:'mcq',options:['True','False'],answer:ans,accepts:[ans],diff:'mid',
+    hint:'两钟的差应该恒等于 '+expectedDiff+' 分钟。实际差是多少？',
+    explain:'应差 = '+offset+'+'+offset+' = '+expectedDiff+' min\n实际差 = '+fH+':'+pad(fMn)+' − '+sH+':'+pad(sMn)+' = '+actualDiff+' min\n'+actualDiff+(isTrue?' = ':' ≠ ')+expectedDiff+' → '+ans,
+    topic:'clock'};
+}
+
+function genClock4(){ // asymmetric deviation
+  var fast=rInt(5,15);
+  var slow=rInt(5,15);
+  while(slow===fast)slow=rInt(5,15);
+  var realH=rInt(1,11),realM=rInt(15,45);
+  var pad=function(n){return n<10?'0'+n:String(n)};
+  var fTotal=realH*60+realM+fast;
+  var sTotal=realH*60+realM-slow;
+  var fH=F(fTotal/60),fMn=fTotal%60;
+  var sH=F(sTotal/60),sMn=sTotal%60;
+  var midpoint=F((fTotal+sTotal)/2);
+  var midH=F(midpoint/60),midM=midpoint%60;
+  var canAvg=(fast===slow);
+  return{text:'Clock A is '+fast+' minutes faster. Clock B is '+slow+' minutes slower. A shows '+fH+':'+pad(fMn)+', B shows '+sH+':'+pad(sMn)+'. What is the correct time?',
+    answer:realH+':'+pad(realM),accepts:[realH+':'+pad(realM),pad(realH)+':'+pad(realM)],diff:'hard',
+    hint:'偏差不对称 ('+fast+'≠'+slow+')，不能直接取平均！从A减'+fast+'，或从B加'+slow,
+    explain:'从A: '+fH+':'+pad(fMn)+' − '+fast+' = '+realH+':'+pad(realM)+'\n从B: '+sH+':'+pad(sMn)+' + '+slow+' = '+realH+':'+pad(realM)+' ✓\n\n⚠️ 取平均 = '+midH+':'+pad(midM)+(midpoint===realH*60+realM?' ✓ (巧合)':' ≠ '+realH+':'+pad(realM)+' ← 不能用！')+'\n偏差不对称时必须各自还原！',
+    topic:'clock'};
+}
+
+function genClock5(){ // can Peter tell time? True/False reasoning
+  var offset=rInt(5,20);
+  return{text:'Peter has 2 clocks. One is '+offset+' minutes faster, the other is '+offset+' minutes slower. Neither shows the correct time. After observing a pattern, can Peter figure out the correct time?\n\nTrue or False?',
+    type:'mcq',options:['True','False'],answer:'True',accepts:['True'],diff:'mid',
+    hint:'设正确时间=T，快钟=T+'+offset+'，慢钟=T−'+offset+'。加起来除以2试试？',
+    explain:'快钟 = T + '+offset+'\n慢钟 = T − '+offset+'\n(快+慢) ÷ 2 = (T+'+offset+'+T−'+offset+') ÷ 2 = 2T ÷ 2 = T\n\n取平均 = 正确时间 → TRUE\nPeter不需要知道哪个快哪个慢！',
+    topic:'clock'};
+}
+
+function genClock6(){ // 3 clocks
+  var off=rInt(5,20);
+  var realH=rInt(2,10),realM=rInt(10,49);
+  var pad=function(n){return n<10?'0'+n:String(n)};
+  var fT=realH*60+realM+off,sT=realH*60+realM-off;
+  var fH=F(fT/60),fMn=fT%60,sH=F(sT/60),sMn=sT%60;
+  return{text:'Three clocks: A is '+off+' min fast, B is correct, C is '+off+' min slow.\nA shows '+fH+':'+pad(fMn)+', C shows '+sH+':'+pad(sMn)+'.\nWhat time does B show?',
+    answer:realH+':'+pad(realM),accepts:[realH+':'+pad(realM),pad(realH)+':'+pad(realM)],diff:'mid',
+    hint:'B = (A + C) ÷ 2 因为偏差对称',
+    explain:'A = '+fH+':'+pad(fMn)+' ('+fT+' min)\nC = '+sH+':'+pad(sMn)+' ('+sT+' min)\nB = ('+fT+'+'+sT+') ÷ 2 = '+(realH*60+realM)+' min = '+realH+':'+pad(realM),
+    topic:'clock'};
+}
+
+// ===== Game State =====
+var state={score:0,streak:0,maxStreak:0,done:0,correct:0,xp:0,level:1,topic:'time',topicCounts:{time:0,clock:0,mix:0},currentQ:null,answered:false,selectedMcq:null};
+var levelThresholds=[0,50,120,220,350,500];
+var levelNames=['入门','基础','进阶','高手','大师','学霸'];
+
+function updateUI(){
+  document.getElementById('s-score').textContent=state.score;
+  document.getElementById('s-streak').textContent=state.streak;
+  document.getElementById('s-done').textContent=state.done;
+  document.getElementById('s-acc').textContent=state.done?Math.round(state.correct/state.done*100)+'%':'-';
+  // XP
+  var lvl=state.level;
+  var nextXP=levelThresholds[lvl]||999;
+  var prevXP=levelThresholds[lvl-1]||0;
+  var pct=Math.min(100,Math.round((state.xp-prevXP)/(nextXP-prevXP)*100));
+  document.getElementById('xp-fill').style.width=pct+'%';
+  document.getElementById('xp-level').textContent='Level '+lvl+' · '+levelNames[lvl-1];
+  document.getElementById('xp-pts').textContent=state.xp+' / '+nextXP+' XP';
+  // Level up check
+  if(state.xp>=nextXP&&lvl<levelNames.length){state.level++;updateUI();showLevelUp();}
+  // Streak bar
+  document.getElementById('streakFill').style.width=Math.min(100,state.streak*20)+'%';
+  // Topic counts
+  document.getElementById('cnt-time').textContent=state.topicCounts.time+' 题已做';
+  document.getElementById('cnt-clock').textContent=state.topicCounts.clock+' 题已做';
+  document.getElementById('cnt-mix').textContent=state.topicCounts.mix+' 题已做';
+  // Save
+  try{localStorage.setItem('p5_math_trainer_'+state.topic,JSON.stringify(state));}catch(e){}
+}
+
+function showLevelUp(){
+  var area=document.getElementById('question-area');
+  var div=document.createElement('div');
+  div.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:32px 48px;border-radius:20px;box-shadow:0 8px 30px rgba(0,0,0,.2);text-align:center;z-index:999;animation:pulse .5s';
+  div.innerHTML='<div style="font-size:48px">🎉</div><div style="font-size:22px;font-weight:700;color:var(--teal);margin:12px 0">Level Up!</div><div style="font-size:16px">Level '+state.level+' · '+levelNames[state.level-1]+'</div>';
+  document.body.appendChild(div);
+  setTimeout(function(){div.remove();},2500);
+}
+
+function selectTopic(t,btn){
+  state.topic=t;
+  document.querySelectorAll('.topic-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  nextQuestion();
+}
+
+function nextQuestion(){
+  state.answered=false;
+  state.selectedMcq=null;
+  var q;
+  if(state.topic==='time')q=genTimeQ();
+  else if(state.topic==='clock')q=genClockQ();
+  else q=R()>0.5?genTimeQ():genClockQ();
+  state.currentQ=q;
+  renderQuestion(q);
+}
+
+function renderQuestion(q){
+  var area=document.getElementById('question-area');
+  var diffLabel={'easy':'入门','mid':'进阶','trap':'⚠️ 陷阱','hard':'🌟 挑战'}[q.diff]||q.diff;
+  var diffClass={'easy':'q-badge-easy','mid':'q-badge-mid','trap':'q-badge-trap','hard':'q-badge-hard'}[q.diff]||'q-badge-mid';
+
+  var html='<div class="q-card" id="qcard">';
+  html+='<div class="q-header"><span class="q-badge '+diffClass+'">'+diffLabel+'</span><span class="q-number">第 '+(state.done+1)+' 题</span></div>';
+  html+='<div class="q-text">'+q.text.replace(/\n/g,'<br>')+'</div>';
+
+  if(q.type==='mcq'){
+    html+='<div class="mcq-grid" id="mcq-grid">';
+    q.options.forEach(function(opt,i){
+      html+='<button class="mcq-btn" onclick="selectMcq(this,\''+opt.replace(/'/g,"\\'")+'\')">'+(i+1)+'. '+opt+'</button>';
+    });
+    html+='</div>';
+    html+='<button class="submit-btn" id="submit-btn" onclick="submitAnswer()" style="width:100%">提交答案</button>';
+  }else{
+    html+='<div class="input-area"><input class="q-input" id="q-input" placeholder="输入答案..." autofocus><button class="submit-btn" id="submit-btn" onclick="submitAnswer()">提交</button></div>';
+  }
+
+  html+='<button class="hint-btn" onclick="showHint()">💡 提示</button>';
+  html+='<div class="hint-text" id="hint-text">'+q.hint+'</div>';
+  html+='<div class="feedback" id="feedback"></div>';
+  html+='<button class="next-btn" id="next-btn" onclick="nextQuestion()">下一题 →</button>';
+  html+='</div>';
+  area.innerHTML=html;
+
+  if(!q.type||q.type!=='mcq'){
+    var inp=document.getElementById('q-input');
+    if(inp){inp.focus();inp.addEventListener('keydown',function(e){if(e.key==='Enter')submitAnswer();});}
+  }
+}
+
+function selectMcq(btn,val){
+  if(state.answered)return;
+  document.querySelectorAll('.mcq-btn').forEach(function(b){b.classList.remove('selected');});
+  btn.classList.add('selected');
+  state.selectedMcq=val;
+}
+
+function showHint(){
+  document.getElementById('hint-text').classList.toggle('show');
+}
+
+function submitAnswer(){
+  if(state.answered)return;
+  var q=state.currentQ;
+  var userAns;
+  if(q.type==='mcq'){
+    userAns=state.selectedMcq;
+    if(!userAns){alert('请先选择一个答案');return;}
+  }else{
+    userAns=document.getElementById('q-input').value.trim();
+    if(!userAns){return;}
+  }
+
+  state.answered=true;
+  state.done++;
+  state.topicCounts[state.topic]=(state.topicCounts[state.topic]||0)+1;
+  var card=document.getElementById('qcard');
+  var fb=document.getElementById('feedback');
+  var accepts=q.accepts.map(function(a){return a.toLowerCase().replace(/\s+/g,'');});
+  var clean=userAns.toLowerCase().replace(/\s+/g,'').replace(/^\$/,'');
+  var isCorrect=accepts.includes(clean)||accepts.includes(userAns.toLowerCase());
+  // also check without $
+  if(!isCorrect&&q.answer){
+    var ca=q.answer.toLowerCase().replace(/\s+/g,'').replace(/^\$/,'');
+    if(clean===ca)isCorrect=true;
+  }
+
+  if(isCorrect){
+    state.correct++;
+    state.streak++;
+    if(state.streak>state.maxStreak)state.maxStreak=state.streak;
+    var bonus=state.streak>=3?state.streak:0;
+    var pts={'easy':5,'mid':10,'trap':15,'hard':20}[q.diff]||10;
+    pts+=bonus;
+    state.score+=pts;
+    state.xp+=pts;
+    card.classList.add('pulse');
+    fb.className='feedback show correct';
+    fb.innerHTML='<div class="fb-title">✅ 正确！+'+(pts)+' 分'+(bonus?' (含连对奖励+'+bonus+')':'')+'</div><div class="fb-steps">'+q.explain.replace(/\n/g,'<br>')+'</div>';
+    if(q.type==='mcq'){
+      document.querySelectorAll('.mcq-btn').forEach(function(b){
+        if(b.textContent.includes(q.answer))b.classList.add('correct-choice');
+      });
+    }else{
+      document.getElementById('q-input').classList.add('correct');
+    }
+    if(state.streak>=5)miniConfetti();
+  }else{
+    state.streak=0;
+    card.classList.add('shake');
+    fb.className='feedback show wrong';
+    fb.innerHTML='<div class="fb-title">❌ 答案是: '+q.answer+'</div><div style="margin:6px 0;font-size:13px">你的答案: '+userAns+'</div><div class="fb-steps">'+q.explain.replace(/\n/g,'<br>')+'</div>';
+    if(q.type==='mcq'){
+      document.querySelectorAll('.mcq-btn').forEach(function(b){
+        if(b.textContent.includes(q.answer))b.classList.add('correct-choice');
+        if(b.classList.contains('selected')&&!b.textContent.includes(q.answer))b.classList.add('wrong-choice');
+      });
+    }else{
+      document.getElementById('q-input').classList.add('wrong');
+    }
+  }
+
+  document.getElementById('submit-btn').disabled=true;
+  document.getElementById('next-btn').classList.add('show');
+  updateUI();
+}
+
+function miniConfetti(){
+  var c=document.createElement('div');c.className='confetti';
+  var emojis=['🎉','⭐','🔥','💪','✨'];
+  for(var i=0;i<20;i++){
+    var s=document.createElement('span');
+    s.textContent=pick(emojis);
+    s.style.cssText='position:absolute;font-size:'+(16+R()*20)+'px;left:'+R()*100+'%;top:-20px;animation:fall '+(1+R()*2)+'s ease-out forwards;opacity:1';
+    c.appendChild(s);
+  }
+  document.body.appendChild(c);
+  setTimeout(function(){c.remove();},3000);
+}
+
+// CSS for confetti
+var sty=document.createElement('style');
+sty.textContent='@keyframes fall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}';
+document.head.appendChild(sty);
+
+// Init
+nextQuestion();
+</script>
+</body>
+</html>

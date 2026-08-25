@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSLE English Practice Platform</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f7fafc;color:#2d3748;min-height:100vh;display:flex;flex-direction:column}
+.header{background:linear-gradient(135deg,#1a365d 0%,#2b6cb0 50%,#3182ce 100%);color:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.header h1{font-size:1.5rem;font-weight:700;letter-spacing:.5px}
+.header .subtitle{font-size:.85rem;opacity:.85;margin-top:2px}
+.hamburger{display:none;background:none;border:none;color:#fff;font-size:1.6rem;cursor:pointer;padding:4px 8px}
+.app-layout{display:flex;flex:1;overflow:hidden}
+.sidebar{width:260px;background:#1a365d;color:#fff;overflow-y:auto;flex-shrink:0;transition:transform .3s}
+.sidebar .nav-section{padding:8px 0}
+.sidebar .nav-label{font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:#90cdf4;padding:12px 16px 4px;font-weight:600}
+.sidebar .nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;font-size:.85rem;transition:background .2s;border-left:3px solid transparent}
+.sidebar .nav-item:hover{background:rgba(255,255,255,.1)}
+.sidebar .nav-item.active{background:rgba(255,255,255,.15);border-left-color:#10B981}
+.sidebar .nav-item .icon{font-size:1.1rem;width:22px;text-align:center}
+.sidebar .nav-sub{padding-left:48px;font-size:.78rem;padding-top:6px;padding-bottom:6px;cursor:pointer;transition:background .2s;color:#bee3f8}
+.sidebar .nav-sub:hover{background:rgba(255,255,255,.08);color:#fff}
+.sidebar .nav-sub.active{color:#10B981;font-weight:600}
+.main-content{flex:1;overflow-y:auto;padding:24px;max-height:calc(100vh - 60px)}
+.card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.1);padding:20px;margin-bottom:16px}
+.card h2{font-size:1.15rem;color:#1a365d;margin-bottom:12px}
+.card h3{font-size:1rem;color:#2d3748;margin-bottom:8px}
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.dash-card{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:20px;cursor:pointer;transition:transform .15s,box-shadow .15s;border-left:4px solid #3182ce}
+.dash-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.dash-card h3{color:#1a365d;font-size:.95rem;margin-bottom:6px}
+.dash-card .stats{font-size:.8rem;color:#718096;margin-bottom:8px}
+.progress-bar{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,#10B981,#38a169);border-radius:4px;transition:width .4s}
+.q-container{margin-bottom:20px}
+.q-text{font-size:.95rem;line-height:1.6;margin-bottom:10px}
+.q-options{display:flex;flex-direction:column;gap:6px}
+.q-option{padding:10px 14px;border:2px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:.88rem;transition:all .2s}
+.q-option:hover:not(.disabled){border-color:#3182ce;background:#ebf8ff}
+.q-option.selected{border-color:#3182ce;background:#ebf8ff}
+.q-option.correct{border-color:#10B981;background:#f0fff4}
+.q-option.wrong{border-color:#e53e3e;background:#fff5f5}
+.q-option.disabled{cursor:default;opacity:.7}
+.q-option.disabled.correct{opacity:1}
+.q-explanation{margin-top:8px;padding:10px 14px;border-radius:8px;font-size:.85rem;line-height:1.5}
+.q-explanation.right{background:#f0fff4;color:#22543d;border:1px solid #c6f6d5}
+.q-explanation.wrong{background:#fff5f5;color:#742a2a;border:1px solid #fed7d7}
+.cloze-passage{font-size:.95rem;line-height:2.2;margin-bottom:16px}
+.cloze-blank{display:inline-block;min-width:100px;border-bottom:2px solid #3182ce;text-align:center;padding:2px 8px;cursor:pointer;border-radius:4px 4px 0 0;transition:.2s;font-weight:600;color:#2b6cb0;background:#ebf4ff;position:relative}
+.cloze-blank:hover{background:#bee3f8}
+.cloze-blank.filled{background:#e2e8f0;color:#2d3748}
+.cloze-blank.correct{border-bottom-color:#10B981;color:#22543d;background:#f0fff4;cursor:default}
+.cloze-blank.wrong{border-bottom-color:#e53e3e;color:#742a2a;background:#fff5f5;cursor:default}
+.cloze-blank .blank-num{font-size:.7rem;color:#718096;margin-right:3px}
+.word-bank{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0;padding:14px;background:#f7fafc;border:2px dashed #cbd5e0;border-radius:10px}
+.word-bank-title{font-size:.8rem;color:#718096;font-weight:600;width:100%;margin-bottom:4px}
+.word-chip{padding:6px 14px;background:#fff;border:2px solid #e2e8f0;border-radius:18px;cursor:pointer;font-size:.88rem;font-weight:500;transition:.2s;user-select:none}
+.word-chip:hover{border-color:#3182ce;background:#ebf8ff;transform:translateY(-1px)}
+.word-chip.selected{border-color:#3182ce;background:#bee3f8;color:#2b6cb0}
+.word-chip.used{opacity:.4;cursor:not-allowed;text-decoration:line-through}
+.word-chip.correct-chip{border-color:#10B981;background:#f0fff4;color:#22543d}
+.word-chip.wrong-chip{border-color:#e53e3e;background:#fff5f5;color:#742a2a}
+.cloze-answer-show{font-size:.78rem;color:#e53e3e;font-weight:600}
+.cloze-explain{margin-top:6px;padding:8px 12px;background:#fff5f5;border-left:3px solid #e53e3e;border-radius:4px;font-size:.82rem;color:#742a2a;line-height:1.5}
+.cloze-explain.right{background:#f0fff4;border-left-color:#10B981;color:#22543d}
+.visual-text-box{border:3px solid #2d3748;border-radius:8px;padding:20px;margin-bottom:16px;background:#fffff0;max-width:600px}
+.visual-text-box h4{text-align:center;font-size:1.1rem;border-bottom:2px solid #2d3748;padding-bottom:8px;margin-bottom:12px;text-transform:uppercase}
+.visual-text-box .vt-line{font-size:.88rem;margin-bottom:4px;line-height:1.5}
+.visual-text-box .vt-bold{font-weight:700}
+.visual-text-box .vt-center{text-align:center}
+.visual-text-box .vt-highlight{background:#fefcbf;padding:2px 6px;border-radius:3px}
+.edit-passage{font-size:.95rem;line-height:2}
+.edit-underline{text-decoration:underline;text-decoration-color:#e53e3e;cursor:pointer;padding:1px 2px;border-radius:3px;transition:background .2s}
+.edit-underline:hover{background:#fff5f5}
+.edit-underline.correct-mark{background:#f0fff4;text-decoration-color:#10B981}
+.edit-underline.wrong-mark{background:#fff5f5;text-decoration-color:#e53e3e}
+.st-input{width:100%;border:2px solid #e2e8f0;border-radius:8px;padding:10px 14px;font-size:.9rem;resize:vertical;min-height:60px;transition:border-color .2s;font-family:inherit}
+.st-input:focus{border-color:#3182ce;outline:none}
+.btn{padding:10px 20px;border:none;border-radius:8px;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-primary{background:#3182ce;color:#fff}
+.btn-primary:hover{background:#2b6cb0}
+.btn-success{background:#10B981;color:#fff}
+.btn-success:hover{background:#0d9668}
+.btn-outline{background:transparent;border:2px solid #3182ce;color:#3182ce}
+.btn-outline:hover{background:#ebf8ff}
+.btn-sm{padding:6px 14px;font-size:.8rem}
+.nav-buttons{display:flex;gap:10px;justify-content:space-between;margin-top:16px;flex-wrap:wrap}
+.timer-display{font-size:1.1rem;font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
+.score-box{text-align:center;padding:30px;background:linear-gradient(135deg,#ebf8ff,#f0fff4);border-radius:12px;margin:16px 0}
+.score-box .score-big{font-size:3rem;font-weight:800;color:#1a365d}
+.score-box .score-label{color:#718096;font-size:.9rem;margin-top:4px}
+.part-tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.part-tab{padding:8px 16px;border-radius:8px 8px 0 0;cursor:pointer;font-size:.82rem;font-weight:600;background:#e2e8f0;color:#4a5568;transition:all .2s}
+.part-tab.active{background:#3182ce;color:#fff}
+.part-tab .check{color:#10B981;margin-left:4px}
+.edit-options{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.edit-opt{padding:6px 12px;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;font-size:.82rem;transition:all .15s;display:inline-block}
+.edit-opt:hover{border-color:#3182ce;background:#ebf8ff}
+.edit-opt.correct{border-color:#10B981;background:#f0fff4}
+.edit-opt.wrong{border-color:#e53e3e;background:#fff5f5}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600}
+.badge-green{background:#f0fff4;color:#22543d}
+.passage-label{display:inline-block;background:#1a365d;color:#fff;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600;margin-bottom:8px}
+@media(max-width:768px){
+.hamburger{display:block}
+.sidebar{position:fixed;top:56px;left:0;bottom:0;z-index:999;transform:translateX(-100%)}
+.sidebar.open{transform:translateX(0)}
+.sidebar-overlay{display:none;position:fixed;inset:0;top:56px;background:rgba(0,0,0,.4);z-index:998}
+.sidebar-overlay.open{display:block}
+.main-content{padding:16px}
+.dash-grid{grid-template-columns:1fr}
+.header h1{font-size:1.1rem}
+}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:2px}
+.main-content::-webkit-scrollbar{width:6px}
+.main-content::-webkit-scrollbar-thumb{background:#cbd5e0;border-radius:3px}
+</style>
+</head>
+<body>
+<header class="header">
+<div style="display:flex;align-items:center;gap:12px">
+<button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+<div>
+<h1>PSLE English Practice Platform</h1>
+<div class="subtitle">Student: Johnson | Target: PSLE 2027</div>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:12px">
+<span id="globalTimer" class="timer-display" style="display:none">00:00</span>
+<button class="btn btn-sm" style="color:#fff;border:1px solid rgba(255,255,255,.4);background:transparent" onclick="toggleGlobalTimer()">&#9202; Timer</button>
+<button class="btn btn-sm" style="color:#fff;border:1px solid rgba(255,255,255,.4);background:transparent" onclick="resetAllProgress()">Reset</button>
+</div>
+</header>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="app-layout">
+<nav class="sidebar" id="sidebar">
+<div class="nav-section">
+<div class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')"><span class="icon">&#128202;</span>Dashboard</div>
+</div>
+<div class="nav-section">
+<div class="nav-label">Grammar MCQ (120 Q)</div>
+<div class="nav-item" data-page="mcq" onclick="navigate('mcq')"><span class="icon">&#9998;</span>Grammar MCQ</div>
+<div id="mcqSubs"></div>
+</div>
+<div class="nav-section">
+<div class="nav-label">Grammar Cloze (120 Blanks)</div>
+<div class="nav-item" data-page="cloze" onclick="navigate('cloze')"><span class="icon">&#128221;</span>Grammar Cloze</div>
+<div id="clozeSubs"></div>
+</div>
+<div class="nav-section">
+<div class="nav-label">Visual Text (60 Q)</div>
+<div class="nav-item" data-page="visual" onclick="navigate('visual')"><span class="icon">&#128444;</span>Visual Text</div>
+<div id="visualSubs"></div>
+</div>
+<div class="nav-section">
+<div class="nav-label">Editing (120 Corrections)</div>
+<div class="nav-item" data-page="editing" onclick="navigate('editing')"><span class="icon">&#9999;</span>Editing</div>
+<div id="editingSubs"></div>
+</div>
+<div class="nav-section">
+<div class="nav-label">S&amp;T (60 Q)</div>
+<div class="nav-item" data-page="st" onclick="navigate('st')"><span class="icon">&#128260;</span>S &amp; T</div>
+<div id="stSubs"></div>
+</div>
+<div class="nav-section">
+<div class="nav-item" data-page="wrong" onclick="navigate('wrong')"><span class="icon">&#10060;</span>Wrong Answers</div>
+</div>
+</nav>
+<main class="main-content" id="mainContent"></main>
+</div>
+<script>
+// ===== DATA =====
+var mcqData={
+1:{title:"Part 1 - Tenses",questions:[
+{q:"If she _____ the dentist earlier, she would not have lost her tooth.",o:["visits","visited","had visited","has visited"],a:2,e:"Third conditional requires past perfect in the if-clause. (2016 PSLE)"},
+{q:"_____ James put the compass in his bag, we would not be lost in the forest.",o:["If","Had","Has","Did"],a:1,e:"Had-inversion replaces 'If James had put...' (2024 PSLE)"},
+{q:"Rita _____ given up if her friends had not encouraged her.",o:["will have","would have","has","had"],a:1,e:"Third conditional main clause: would have + past participle. (2018 PSLE)"},
+{q:"Emily _____ forward to the school carnival since the beginning of the year.",o:["looks","looked","is looking","has been looking"],a:3,e:"'Since' signals present perfect continuous tense. (2023 PSLE)"},
+{q:"Jack and I _____ to the same school since Primary One.",o:["go","went","have gone","had gone"],a:2,e:"'Since Primary One' requires present perfect tense."},
+{q:"By the time the fire brigade arrived, the fire _____ already been put out by the neighbours.",o:["has","had","is","was"],a:1,e:"Past perfect: action completed before another past action."},
+{q:"She _____ her homework before she went out to play.",o:["finishes","finished","has finished","had finished"],a:3,e:"Past perfect for the earlier of two past actions."},
+{q:"The teacher _____ the lesson when the bell rang.",o:["just finished","has just finished","had just finished","is just finishing"],a:2,e:"Past perfect with 'just' for an action completed right before another past event."},
+{q:"We _____ in this neighbourhood for ten years now.",o:["live","lived","have lived","had lived"],a:2,e:"'For ten years now' signals present perfect."},
+{q:"If I _____ you, I would apologise to her.",o:["am","was","were","had been"],a:2,e:"Second conditional uses 'were' for all subjects."},
+{q:"The baby _____ soundly for two hours when the loud thunder woke him up.",o:["sleeps","slept","has been sleeping","had been sleeping"],a:3,e:"Past perfect continuous for duration before a past interruption."},
+{q:"By next Friday, they _____ all the preparations for the concert.",o:["complete","completed","will have completed","have completed"],a:2,e:"Future perfect for an action that will be done by a future time."},
+{q:"She had already _____ dinner when her father came home.",o:["eat","ate","eaten","eating"],a:2,e:"Past perfect: had + past participle (eaten)."},
+{q:"The children _____ playing in the field when it started to rain.",o:["are","were","have been","had been"],a:1,e:"Past continuous for an ongoing action interrupted by another past event."},
+{q:"Mr Tan _____ at this school since 2010.",o:["teaches","taught","has taught","is teaching"],a:2,e:"'Since 2010' requires present perfect."},
+{q:"_____ she studied harder, she would have passed the test.",o:["If","Had","Has","Should"],a:1,e:"Had-inversion in third conditional."},
+{q:"Mother _____ dinner every evening before Father reaches home.",o:["prepares","prepared","has prepared","is preparing"],a:0,e:"Simple present for habitual actions with 'every evening'."},
+{q:"Tom _____ his best friend since kindergarten.",o:["knows","knew","has known","had known"],a:2,e:"'Since kindergarten' requires present perfect."},
+{q:"They _____ the project by the time the teacher checks on them tomorrow.",o:["finish","finished","will have finished","have finished"],a:2,e:"Future perfect for completion before a future time."},
+{q:"If the rain _____ not stopped, the match would have been cancelled.",o:["has","had","did","was"],a:1,e:"Third conditional: 'If...had not stopped'."}
+]},
+2:{title:"Part 2 - Verb Forms & Connectors",questions:[
+{q:"Uncle Azman recounted how his mother would watch him _____ the bus for school every morning.",o:["board","boards","boarded","boarding"],a:0,e:"Sensory verb 'watch' + object + base form. (2016 PSLE)"},
+{q:"Judy witnessed a boy _____ the game cards into his bag.",o:["slip","slips","slipped","slipping"],a:0,e:"Sensory verb 'witnessed' + object + base form. (2022 PSLE)"},
+{q:"Krishnan helped the old lady _____ her keys from the drain.",o:["to retrieve","retrieve","retrieving","retrieved"],a:1,e:"'Help' + object + base form. (2017 PSLE)"},
+{q:"The children enjoy _____ songs together during recess.",o:["sing","sings","singing","to sing"],a:2,e:"'Enjoy' is followed by the gerund (-ing form)."},
+{q:"Mother made her children _____ up their rooms before going out.",o:["clean","cleans","cleaned","cleaning"],a:0,e:"'Make' + object + base form."},
+{q:"The teacher let the students _____ early for the holiday.",o:["leave","leaves","left","leaving"],a:0,e:"'Let' + object + base form."},
+{q:"_____ the heavy rain, the football match continued as planned.",o:["Although","Despite","Unless","Because"],a:1,e:"'Despite' is followed by a noun phrase."},
+{q:"We heard someone _____ for help in the distance.",o:["call","calls","called","calling"],a:0,e:"Sensory verb 'heard' + object + base form."},
+{q:"The old man sat by the river and watched the boats _____ by.",o:["sail","sails","sailed","sailing"],a:0,e:"'Watched' + object + base form for a complete action."},
+{q:"_____ she was tired, she continued to practise the piano.",o:["Although","Despite","However","Because"],a:0,e:"'Although' + subject + verb (full clause)."},
+{q:"The flowers need _____ every day during the dry season.",o:["water","waters","watering","watered"],a:2,e:"'Need' + gerund in passive sense."},
+{q:"My parents do not allow me _____ out on weekdays.",o:["go","goes","going","to go"],a:3,e:"'Allow' + object + to-infinitive."},
+{q:"_____ studying hard, he failed the examination.",o:["Although","Despite","Unless","Since"],a:1,e:"'Despite' + gerund phrase."},
+{q:"The boy was seen _____ across the road carelessly.",o:["run","runs","running","to run"],a:2,e:"Passive sensory: 'was seen running' (ongoing action)."},
+{q:"Please have the mechanic _____ my car by tomorrow.",o:["repair","repairs","repaired","repairing"],a:0,e:"Causative 'have' + person + base form."},
+{q:"She practised hard _____ she could win the singing competition.",o:["so that","despite","although","unless"],a:0,e:"'So that' expresses purpose."},
+{q:"_____ you return the library books by Friday, you will be fined.",o:["Although","Despite","Unless","Since"],a:2,e:"'Unless' = 'if not'."},
+{q:"The teacher noticed a pupil _____ during the lesson.",o:["sleep","sleeps","slept","sleeping"],a:3,e:"'Noticed' + object + present participle for ongoing observation."},
+{q:"He refused _____ the truth about what happened.",o:["tell","tells","telling","to tell"],a:3,e:"'Refuse' + to-infinitive."},
+{q:"They decided _____ the hiking trip _____ the bad weather forecast.",o:["to cancel ... because of","cancelling ... although","cancel ... despite","to cancel ... unless"],a:0,e:"'Decided' + to-infinitive; 'because of' + noun phrase."}
+]},
+3:{title:"Part 3 - Prepositions",questions:[
+{q:"The scientist is well-known _____ his expertise in designing robots.",o:["for","of","by","about"],a:0,e:"Fixed collocation: 'well-known for'. (2016 PSLE)"},
+{q:"Rashid accused me _____ copying his homework.",o:["for","about","of","with"],a:2,e:"Fixed collocation: 'accuse someone of'. (2018 PSLE)"},
+{q:"The host congratulated the young singer _____ his excellent performance.",o:["for","on","at","about"],a:1,e:"Fixed collocation: 'congratulate someone on'. (2023 PSLE)"},
+{q:"The performance by the teachers took us _____ surprise!",o:["in","at","by","with"],a:2,e:"Fixed expression: 'take by surprise'. (2025 PSLE)"},
+{q:"The children were afraid _____ the dark.",o:["at","of","with","about"],a:1,e:"Fixed collocation: 'afraid of'."},
+{q:"She is very interested _____ learning how to play the guitar.",o:["on","at","in","for"],a:2,e:"Fixed collocation: 'interested in'."},
+{q:"The robbers robbed him _____ all his money.",o:["from","of","with","for"],a:1,e:"Fixed collocation: 'rob someone of'."},
+{q:"We arrived at the airport well ahead _____ time.",o:["in","at","of","by"],a:2,e:"Fixed expression: 'ahead of time'."},
+{q:"He was _____ the impression that the meeting was cancelled.",o:["in","under","on","at"],a:1,e:"Fixed expression: 'under the impression'."},
+{q:"_____ response to the feedback, the school made several changes.",o:["On","In","At","For"],a:1,e:"Fixed expression: 'in response to'."},
+{q:"_____ spite of the heavy traffic, we arrived on time.",o:["In","On","At","With"],a:0,e:"Fixed expression: 'in spite of'."},
+{q:"The pupil apologised _____ the teacher _____ his rude behaviour.",o:["to ... for","for ... to","with ... about","at ... for"],a:0,e:"'Apologise to someone for something'."},
+{q:"She insisted _____ paying for the meal.",o:["in","on","at","for"],a:1,e:"Fixed collocation: 'insist on'."},
+{q:"The outcome of the match depends _____ the last player.",o:["at","in","on","for"],a:2,e:"Fixed collocation: 'depend on'."},
+{q:"We should not laugh _____ people who are less fortunate.",o:["on","at","about","for"],a:1,e:"Fixed collocation: 'laugh at'."},
+{q:"The boy was charged _____ stealing from the shop.",o:["for","of","with","about"],a:2,e:"Fixed collocation: 'charged with'."},
+{q:"She takes great pride _____ her work.",o:["on","in","of","at"],a:1,e:"Fixed collocation: 'take pride in'."},
+{q:"The manager was satisfied _____ the team's performance.",o:["about","at","with","on"],a:2,e:"Fixed collocation: 'satisfied with'."},
+{q:"They searched _____ the missing keys for hours.",o:["at","on","for","with"],a:2,e:"Fixed collocation: 'search for'."},
+{q:"Please refrain _____ talking during the concert.",o:["of","from","for","about"],a:1,e:"Fixed collocation: 'refrain from'."}
+]},
+4:{title:"Part 4 - Subject-Verb Agreement & Quantifiers",questions:[
+{q:"All the furniture _____ moved to another room just now.",o:["is","are","was","were"],a:2,e:"'Furniture' is uncountable = singular verb; past tense. (2016 PSLE)"},
+{q:"The news about the famous singer _____ since yesterday.",o:["circulates","has been circulating","have been circulating","circulated"],a:1,e:"'News' is uncountable = singular verb; 'since' = present perfect continuous. (2024 PSLE)"},
+{q:"Mrs Vishal, together with her children, _____ in the park every weekend.",o:["jog","jogs","are jogging","have jogged"],a:1,e:"'Together with' does not change the subject. Subject = Mrs Vishal (singular). (2018 PSLE)"},
+{q:"The number of students _____ increased this year.",o:["has","have","is","are"],a:0,e:"'The number of' = singular subject."},
+{q:"A number of books _____ missing from the library.",o:["is","was","are","has"],a:2,e:"'A number of' = plural."},
+{q:"Neither the boys nor their teacher _____ aware of the change.",o:["is","are","was","were"],a:0,e:"'Neither...nor' - verb agrees with nearest subject ('teacher' = singular)."},
+{q:"Each of the students _____ given a new textbook.",o:["is","are","was","were"],a:2,e:"'Each of' = singular; past context = 'was'."},
+{q:"There _____ much food left after the party.",o:["is","are","was","were"],a:2,e:"'Food' is uncountable, past tense = 'was'."},
+{q:"The luggage _____ still at the airport.",o:["is","are","has","have"],a:0,e:"'Luggage' is uncountable = singular verb."},
+{q:"Everyone in the class _____ excited about the field trip.",o:["is","are","was","were"],a:0,e:"'Everyone' = singular."},
+{q:"Mathematics _____ my favourite subject.",o:["is","are","was","were"],a:0,e:"'Mathematics' is singular despite the -s ending."},
+{q:"The scissors _____ on the table.",o:["is","are","was","were"],a:1,e:"'Scissors' is always plural."},
+{q:"_____ of the cake has been eaten.",o:["Many","Much","A few","Several"],a:1,e:"'Cake' uncountable here; 'much' for uncountable nouns."},
+{q:"There are very _____ seats left in the hall.",o:["little","less","few","much"],a:2,e:"'Seats' is countable; 'few' for countable nouns."},
+{q:"Tom, as well as his friends, _____ going to the zoo tomorrow.",o:["is","are","were","have been"],a:0,e:"'As well as' does not change the subject. Subject = Tom (singular)."},
+{q:"The committee _____ divided on the issue.",o:["is","are","was","were"],a:2,e:"Collective noun showing division; past tense = 'was'."},
+{q:"Every student and teacher _____ expected to attend the assembly.",o:["is","are","was","were"],a:0,e:"'Every' + compound subject = singular."},
+{q:"Either my sister or my parents _____ going to pick me up.",o:["is","are","was","has"],a:1,e:"'Either...or' - verb agrees with nearest subject ('parents' = plural)."},
+{q:"_____ money was spent on decorations.",o:["A little","A few","Many","Several"],a:0,e:"'Money' is uncountable; 'a little' for uncountable nouns."},
+{q:"None of the water _____ clean enough to drink.",o:["is","are","was","were"],a:0,e:"'Water' is uncountable; 'none of' + uncountable = singular."}
+]},
+5:{title:"Part 5 - Question Tags",questions:[
+{q:"The children have not finished their homework, _____?",o:["haven't they","have they","did they","don't they"],a:1,e:"Negative sentence -> positive tag."},
+{q:"Let us go to the park, _____?",o:["shall we","will we","do we","let us"],a:0,e:"'Let us' -> 'shall we?' is the standard tag."},
+{q:"She can swim well, _____?",o:["can she","can't she","could she","couldn't she"],a:1,e:"Positive sentence -> negative tag."},
+{q:"You are coming to the party, _____?",o:["are you","aren't you","do you","don't you"],a:1,e:"Positive 'are' -> negative 'aren't you'."},
+{q:"He rarely visits his grandparents, _____?",o:["doesn't he","does he","is he","isn't he"],a:1,e:"'Rarely' makes sentence negative -> positive tag."},
+{q:"Nobody called during the meeting, _____?",o:["didn't they","did they","do they","don't they"],a:1,e:"'Nobody' = negative -> positive tag."},
+{q:"I am your best friend, _____?",o:["am I","amn't I","aren't I","isn't I"],a:2,e:"'I am' -> 'aren't I?' is the accepted form."},
+{q:"She seldom eats fast food, _____?",o:["doesn't she","does she","isn't she","is she"],a:1,e:"'Seldom' = negative meaning -> positive tag."},
+{q:"The students must submit their work today, _____?",o:["must they","mustn't they","don't they","shouldn't they"],a:1,e:"Positive 'must' -> negative 'mustn't they'."},
+{q:"Everyone enjoyed the concert, _____?",o:["didn't they","did they","don't they","haven't they"],a:0,e:"Positive past tense -> 'didn't they'; 'they' for 'everyone'."},
+{q:"There is nothing in the box, _____?",o:["is there","isn't there","is it","isn't it"],a:0,e:"'Nothing' = negative -> positive tag 'is there'."},
+{q:"You won't forget to call me, _____?",o:["won't you","will you","do you","don't you"],a:1,e:"Negative 'won't' -> positive 'will you'."},
+{q:"She has never been to Japan, _____?",o:["hasn't she","has she","didn't she","did she"],a:1,e:"'Never' = negative -> positive tag."},
+{q:"They could hardly hear the announcement, _____?",o:["couldn't they","could they","can they","can't they"],a:1,e:"'Hardly' = negative -> positive tag."},
+{q:"Open the window, _____?",o:["will you","do you","don't you","shall we"],a:0,e:"Imperative -> 'will you?'"},
+{q:"We should leave now, _____?",o:["should we","shouldn't we","shall we","shan't we"],a:1,e:"Positive 'should' -> negative 'shouldn't we'."},
+{q:"The cat doesn't like water, _____?",o:["doesn't it","does it","is it","isn't it"],a:1,e:"Negative 'doesn't' -> positive 'does it'."},
+{q:"Father bought a new car, _____?",o:["didn't he","did he","doesn't he","hasn't he"],a:0,e:"Positive past tense -> 'didn't he'."},
+{q:"Somebody left their bag here, _____?",o:["didn't they","did they","doesn't they","don't they"],a:0,e:"Positive past -> 'didn't they'."},
+{q:"You would rather stay home, _____?",o:["would you","wouldn't you","will you","won't you"],a:1,e:"Positive 'would' -> negative 'wouldn't you'."}
+]},
+6:{title:"Part 6 - Mixed Practice",questions:[
+{q:"If he _____ more careful, the accident would not have happened.",o:["is","was","had been","has been"],a:2,e:"Third conditional: 'had been' in the if-clause."},
+{q:"She saw the thief _____ over the fence.",o:["climb","climbs","climbed","climbing"],a:0,e:"Sensory verb 'saw' + object + base form."},
+{q:"The police are well-known _____ their prompt response.",o:["for","of","by","about"],a:0,e:"Fixed collocation: 'well-known for'."},
+{q:"The equipment _____ delivered to the school yesterday.",o:["is","are","was","were"],a:2,e:"'Equipment' is uncountable = singular; past tense = 'was'."},
+{q:"You have been to the new mall, _____?",o:["have you","haven't you","did you","didn't you"],a:1,e:"Positive present perfect -> negative tag."},
+{q:"_____ completing the project, they celebrated with a party.",o:["Despite","After","Although","Unless"],a:1,e:"'After' + gerund phrase for sequence of events."},
+{q:"She _____ ballet since she was five years old.",o:["dances","danced","has danced","had danced"],a:2,e:"'Since she was five' requires present perfect."},
+{q:"The principal, along with the teachers, _____ present at the ceremony.",o:["is","are","was","were"],a:2,e:"'Along with' does not change subject; past context."},
+{q:"Please remind him _____ bring his sports attire.",o:["for","in","to","of"],a:2,e:"'Remind someone to do something'."},
+{q:"_____ he left earlier, he would have caught the bus.",o:["If","Had","Has","Should"],a:1,e:"Had-inversion: 'Had he left...'"},
+{q:"The boy enjoys _____ model aeroplanes in his free time.",o:["build","builds","building","to build"],a:2,e:"'Enjoy' + gerund."},
+{q:"A lot of information _____ been gathered for the report.",o:["has","have","is","are"],a:0,e:"'Information' is uncountable = singular verb."},
+{q:"There is hardly any milk left, _____?",o:["is there","isn't there","is it","isn't it"],a:0,e:"'Hardly' = negative -> positive tag."},
+{q:"They made the children _____ their toys after playing.",o:["keep","keeps","kept","keeping"],a:0,e:"'Make' + object + base form."},
+{q:"She was accused _____ cheating during the test.",o:["for","about","of","with"],a:2,e:"Fixed collocation: 'accused of'."},
+{q:"The class _____ preparing for the science fair for weeks.",o:["is","was","has been","have been"],a:2,e:"Present perfect continuous; 'class' = singular."},
+{q:"Neither the teacher nor the students _____ satisfied with the results.",o:["is","are","was","were"],a:3,e:"'Neither...nor' - verb agrees with 'students' (nearest, plural); past = 'were'."},
+{q:"In spite _____ his success, he remained humble.",o:["of","at","for","on"],a:0,e:"Fixed expression: 'in spite of'."},
+{q:"The little girl _____ to sleep by her mother every night.",o:["sings","sang","is sung","was sung"],a:2,e:"Passive voice: 'is sung to sleep' (habitual)."},
+{q:"Had the weather _____ better, we would have gone hiking.",o:["is","be","been","being"],a:2,e:"Had-inversion: 'Had the weather been better...'"}
+]}
+};
+
+var clozeData={
+1:[
+{title:"The Lost Puppy",passage:"Last Saturday, Tom {1} a small puppy wandering near his school. It {2} very thin and was shivering in the cold. He {3} never seen such a frightened animal before. Tom carefully {4} the puppy and wrapped it in his jacket. He {5} it some water from his bottle. The puppy {6} drinking eagerly, as if it had not {7} any water for days. Tom decided to {8} it home. His mother, who {9} always loved animals, agreed to keep the puppy {10} they could find its owner.",
+blanks:["found","was","had","picked","gave","started","had","bring","had","until"],
+bank:["found","was","had","picked","gave","started","had","bring","had","until","is","took","has","brought","since"],
+explains:["Simple past tense — the event happened last Saturday.","Past tense 'was' describes the puppy's state at that time.","Past perfect 'had' (+ never seen) — experience before a past event.","'Picked' (picked up) — simple past for the action he did.","Simple past — he gave water at that moment.","Simple past — the puppy started drinking.","Past perfect 'had' (+ had any water) — before Tom found it.","'To bring' — 'decided to + base form' is the correct pattern.","Past perfect 'had' (+ always loved) — she had always loved animals.","'Until' — they'd keep the puppy until they found the owner."]},
+{title:"The School Concert",passage:"Every year, our school {1} a concert to raise funds {2} charity. Last year, my class {3} asked to perform a dance item. We {4} very nervous at first because none of us {5} performed on stage before. However, our teacher {6} us practise every day {7} school. By the day of the concert, we {8} ready. The audience clapped loudly {9} we finished our performance. It was the {10} memorable experience of the year.",
+blanks:["holds","for","was","were","had","made","after","were","when","most"],
+bank:["holds","for","was","were","had","made","after","were","when","most","held","to","are","have","more"],
+explains:["Present tense 'holds' — habitual action (every year).","Fixed collocation: 'raise funds FOR charity'.","Passive voice: 'was asked' — the class was asked to perform.","Past tense 'were' — they were nervous at that time.","Past perfect 'had' (+ performed) — experience before a past event.","'Make + object + base form': made us practise.","'After school' — the time when they practised.","Past tense 'were' — by that day, they were ready.","'When' — time conjunction: the audience clapped when they finished.","Superlative: 'the most memorable' — comparing to all experiences."]}
+],
+2:[
+{title:"A Trip to the Zoo",passage:"My family and I {1} the zoo last Sunday. We arrived early {2} the morning so that we could {3} all the animals. My sister was very excited {4} she had never been to a zoo before. The first animals we {5} were the elephants. They were {6} given a bath by the zookeepers. We also {7} a dolphin show, which was truly {8}. Despite the hot weather, we {9} ourselves thoroughly. We did not leave {10} it was almost closing time.",
+blanks:["visited","in","see","because","saw","being","watched","amazing","enjoyed","until"],
+bank:["visited","in","see","because","saw","being","watched","amazing","enjoyed","until","at","visit","since","were","wonderful"],
+explains:["Simple past — they visited last Sunday.","'Early IN the morning' — fixed time preposition.","'Could see' — base form after modal verb 'could'.","'Because' — gives the reason she was excited.","Simple past 'saw' — they saw the elephants.","Passive continuous: 'were being given' — action in progress.","Simple past 'watched' — they watched a show.","Adjective 'amazing' describes the show.","'Enjoyed ourselves' — reflexive verb in past tense.","'Until' — they stayed until closing time."]},
+{title:"The New Neighbour",passage:"A new family {1} into the house next door last month. {2} first, I was curious about them. One day, I saw a boy who {3} about my age playing in {4} garden. I went over and introduced {5} to him. His name was Ravi, and he {6} just moved from India. Although he {7} shy at first, we soon became good friends. He taught {8} how to play cricket, and {9} return, I showed him around the neighbourhood. We have been {10} friends ever since.",
+blanks:["moved","At","was","the","myself","had","was","me","in","close"],
+bank:["moved","At","was","the","myself","had","was","me","in","close","On","him","were","has","good"],
+explains:["Simple past — they moved last month.","Fixed phrase: 'At first' (= in the beginning).","Past tense 'was' — describing his age at that time.","Definite article 'the' — referring to a specific garden.","Reflexive pronoun: 'introduced myself' — you introduce yourself.","Past perfect 'had' (+ just moved) — he had just moved before I met him.","Past tense 'was' — he was shy at first.","Object pronoun 'me' — he taught me.","Fixed phrase: 'in return' (= as a way of thanking).","Adjective 'close' — we have been close friends."]}
+],
+3:[
+{title:"The Science Experiment",passage:"During science class yesterday, our teacher {1} us to work in groups for an experiment. Each group {2} given different materials. My group had to find out {3} salt dissolves faster in hot water {4} cold water. First, we {5} two cups with equal amounts of water. Then, we added a teaspoon of salt {6} each cup. The salt in the hot water dissolved much {7} quickly than the one in cold water. We were very {8} with our findings and {9} them down carefully. The teacher praised us {10} our thorough work.",
+blanks:["asked","was","whether","or","filled","to","more","pleased","wrote","for"],
+bank:["asked","was","whether","or","filled","to","more","pleased","wrote","for","is","if","and","most","about"],
+explains:["Simple past 'asked' — the teacher asked yesterday.","Passive: 'was given' — each group was given materials.","'Whether...or' — used when there are two possibilities.","'Whether...or' — the second half of the pair.","Simple past 'filled' — they filled the cups.","Preposition 'to' — added salt to each cup.","Comparative: 'more quickly than' — comparing two results.","'Pleased with' — adjective + preposition collocation.","Simple past 'wrote' — they wrote down findings.","'Praised us FOR' — verb + preposition collocation."]},
+{title:"Saving the Environment",passage:"Nowadays, many people {1} concerned about the environment. Pollution {2} become a serious problem in many countries. {3} we do not take action now, the situation {4} only get worse. There are many things that we {5} do to help. For example, we should {6} off the lights when we leave a room. We can also {7} using plastic bags by bringing our {8} bags when we go shopping. {9} addition, planting more trees will help {10} keep the air clean.",
+blanks:["are","has","If","will","can","switch","avoid","own","In","to"],
+bank:["are","has","If","will","can","switch","avoid","own","In","to","is","had","When","would","turn"],
+explains:["Present tense 'are' — people are concerned nowadays.","Present perfect 'has become' — started in the past, still true now.","Conditional 'If' — if we don't act, something will happen.","Future tense 'will' — the situation will get worse.","Modal 'can' — things we can do.","Phrasal verb: 'switch off' the lights.","'Avoid + -ing': avoid using plastic bags.","Possessive 'own' — our own bags.","Fixed phrase: 'In addition' (= also/moreover).","'Help to + base form' — help to keep the air clean."]}
+],
+4:[
+{title:"A Day at the Beach",passage:"The sun {1} brightly when we arrived at the beach. My siblings and I quickly {2} our sandals and ran towards the water. Mother reminded {3} to put on sunscreen before {4} into the sea. The waves {5} gentle that day, so even my younger brother could play safely. After {6} for about an hour, we built a sandcastle {7} the shore. Father, who {8} been setting up the barbecue, called us for lunch. The food tasted {9} delicious because we were so hungry. We stayed at the beach {10} the sun began to set.",
+blanks:["shone","removed","us","going","were","swimming","on","had","very","until"],
+bank:["shone","removed","us","going","were","swimming","on","had","very","until","shined","took","we","went","are"],
+explains:["Past tense 'shone' — the sun was shining when they arrived.","Simple past 'removed' — they removed their sandals.","Object pronoun 'us' — Mother reminded us.","'Before going' — preposition 'before' + -ing form.","Past tense 'were' — the waves were gentle that day.","'After swimming' — preposition 'after' + -ing form.","Preposition 'on' — on the shore.","Past perfect 'had' (+ been setting up) — he had been doing it before calling them.","Adverb 'very' — very delicious.","'Until' — they stayed until sunset."]},
+{title:"The Library",passage:"Our school library {1} one of my favourite places. It is {2} on the third floor of the main building. Every week, I {3} at least two books from there. The librarian, Mrs Lee, is always helpful. She {4} recommend books based on what I enjoy {5}. Last week, she suggested a book {6} a boy who travels around the world. I found the book so interesting {7} I finished it in just three days. {8} the book, I learned about different cultures. I am now looking forward {9} reading more books {10} Mrs Lee's recommendation.",
+blanks:["is","located","borrow","would","reading","about","that","From","to","on"],
+bank:["is","located","borrow","would","reading","about","that","From","to","on","are","placed","lend","will","read"],
+explains:["Present tense 'is' — it is one of my favourite places.","Past participle 'located' — it is located on the third floor.","Present tense 'borrow' — habitual action (every week).","'Would recommend' — habitual past or polite suggestion.","'Enjoy + -ing': enjoy reading.","Preposition 'about' — a book about a boy.","'So...that' — so interesting that I finished it quickly.","'From the book' — source preposition.","'Looking forward TO + -ing' — fixed phrase.","Preposition 'on' — on Mrs Lee's recommendation."]}
+],
+5:[
+{title:"The Football Match",passage:"Last Friday, our school team {1} in the inter-school football finals. We had {2} training hard for months. The match {3} at 3 p.m. and the stadium was packed {4} supporters. During the first half, neither team {5} able to score. However, in the second half, our captain {6} a brilliant goal that surprised {7}. The opposing team tried hard to equalise, {8} our defence held firm. When the final whistle {9}, we erupted in joy. It was the first time our school {10} won the championship.",
+blanks:["played","been","started","with","was","scored","everyone","but","blew","had"],
+bank:["played","been","started","with","was","scored","everyone","but","blew","had","plays","being","begins","for","were"],
+explains:["Simple past 'played' — they played last Friday.","Past perfect continuous: 'had been training' — ongoing action before the match.","Simple past 'started' — the match started at 3 p.m.","'Packed with' — collocation meaning full of.","'Neither team WAS' — 'neither' takes a singular verb.","Simple past 'scored' — he scored a goal.","Pronoun 'everyone' — the goal surprised everyone.","Contrast connector 'but' — they tried but our defence held.","Simple past 'blew' — the whistle blew.","Past perfect 'had' (+ won) — 'It was the first time + had + past participle'."]},
+{title:"My Grandmother",passage:"My grandmother {1} the kindest person I know. She has {2} living with us since my grandfather {3} away five years ago. Every morning, she {4} up early to prepare breakfast for the whole family. {5} her age, she is still very active. She enjoys {6} in the garden and often {7} us fresh vegetables that she has grown. I love listening {8} her stories about the past. She {9} tell me about her childhood, which was very different {10} mine.",
+blanks:["is","been","passed","wakes","Despite","working","gives","to","would","from"],
+bank:["is","been","passed","wakes","Despite","working","gives","to","would","from","was","being","died","woke","Although"],
+explains:["Present tense 'is' — she is the kindest (current fact).","Present perfect continuous: 'has been living' — since 5 years ago until now.","'Passed away' — phrasal verb meaning died (simple past).","Present tense 'wakes' — habitual action (every morning).","'Despite + noun' — despite her age (= even though she is old).","'Enjoys + -ing': enjoys working in the garden.","Present tense 'gives' — she often gives us vegetables.","'Listening TO' — verb + preposition collocation.","'Would tell' — habitual past action (she used to tell).","'Different FROM' — adjective + preposition collocation."]}
+],
+6:[
+{title:"Technology in Schools",passage:"Technology {1} changed the way students learn. In the past, students {2} to rely solely on textbooks. Now, with computers and the internet, a wealth {3} information is available at their fingertips. Many schools {4} already introduced digital learning tools. For {5}, some teachers use interactive whiteboards to make lessons {6} engaging. Students can also submit {7} homework online, which is more convenient {8} the traditional method. However, it is important that students {9} not spend too much time on screens. A good balance {10} technology and traditional learning is essential.",
+blanks:["has","had","of","have","example","more","their","than","do","between"],
+bank:["has","had","of","have","example","more","their","than","do","between","was","must","for","as","much"],
+explains:["Present perfect 'has changed' — technology has changed things (result still relevant).","Past tense 'had to' — in the past, students had to rely on textbooks.","'A wealth OF information' — fixed phrase.","Present perfect 'have introduced' — many schools have already done this.","Fixed phrase: 'For example'.","Comparative: 'more engaging' — to make lessons more engaging.","Possessive 'their' — their homework.","Comparative: 'more convenient THAN' — comparing two methods.","Subjunctive: 'it is important that students DO not' — base form after 'it is important that'.","'A balance BETWEEN A and B' — preposition collocation."]},
+{title:"The Charity Run",passage:"Every year, our school {1} a charity run to raise money for the less fortunate. Last year, I decided {2} participate for the first time. I {3} been running regularly for a few months to prepare. On the day {4} the event, hundreds of students gathered at the field. The run {5} flagged off by our principal at 8 a.m. Although I {6} exhausted halfway through, I did not give {7}. My friends cheered me on, {8} motivated me to keep going. I {9} managed to complete the 5-kilometre run. It was a tiring {10} rewarding experience.",
+blanks:["organises","to","had","of","was","felt","up","which","finally","but"],
+bank:["organises","to","had","of","was","felt","up","which","finally","but","organised","for","has","at","is"],
+explains:["Present tense 'organises' — habitual action (every year).","'Decided TO + base form' — verb pattern.","Past perfect 'had been running' — preparation before the event.","'The day OF the event' — preposition of association.","Passive: 'was flagged off' — the run was flagged off by the principal.","Simple past 'felt' — I felt exhausted.","Phrasal verb: 'give up' — did not give up.","Relative pronoun 'which' — my friends cheered me on, which motivated me.","Adverb 'finally' — I finally managed to complete it.","Contrast connector 'but' — tiring but rewarding."]}
+]
+};
+
+var visualData={
+1:{title:"School Book Fair",
+stimulus:'<div class="visual-text-box"><h4>Greenfield Primary School<br>Annual Book Fair 2027</h4><div class="vt-line vt-center vt-bold">Date: 15-17 March 2027 (Monday to Wednesday)</div><div class="vt-line vt-center">Time: 9:00 a.m. to 4:00 p.m.</div><div class="vt-line vt-center">Venue: School Hall (Level 1)</div><br><div class="vt-line vt-bold">Special Offers:</div><div class="vt-line">&#8226; Buy 3 books, get 1 FREE (lowest-priced book)</div><div class="vt-line">&#8226; 20% discount for all fiction books on the last day</div><div class="vt-line">&#8226; Free bookmarks with every purchase above $15</div><br><div class="vt-line vt-bold">Author Meet &amp; Greet:</div><div class="vt-line">&#8226; Tuesday, 16 March, 2:00 p.m. - Ms Sarah Tan (Author of &quot;The Magic Garden&quot;)</div><br><div class="vt-line vt-center" style="font-size:.8rem;color:#666">For enquiries, contact Mrs Lim at 6234 5678 or email: bookfair@greenfield.edu.sg</div></div>',
+questions:[
+{q:"How many days will the book fair last?",o:["2 days","3 days","4 days","5 days"],a:1,e:"15-17 March = Monday to Wednesday = 3 days."},
+{q:"Where is the book fair held?",o:["School Library","School Hall","School Canteen","School Field"],a:1,e:"Venue: School Hall (Level 1)."},
+{q:"If a student buys 4 books priced at $8, $10, $12 and $6, how much does the student pay?",o:["$30","$36","$24","$26"],a:0,e:"Buy 3 get 1 free (lowest price). $8+$10+$12 = $30, $6 is free."},
+{q:"When can students meet Ms Sarah Tan?",o:["Monday morning","Tuesday afternoon","Wednesday morning","Monday afternoon"],a:1,e:"Tuesday, 16 March, 2:00 p.m."},
+{q:"What is the minimum amount to get free bookmarks?",o:["$10","$12","$15","$20"],a:2,e:"Free bookmarks with every purchase above $15."},
+{q:"The 20% fiction discount is available on _____.",o:["Monday only","Tuesday only","Wednesday only","All three days"],a:2,e:"'On the last day' = Wednesday."},
+{q:"What book did Ms Sarah Tan write?",o:["The Magic Forest","The Magic Garden","The Secret Garden","The Magic Tree"],a:1,e:"Author of 'The Magic Garden'."},
+{q:"Who should students contact for enquiries?",o:["Ms Sarah Tan","Mr Lim","Mrs Lim","The principal"],a:2,e:"Contact Mrs Lim."},
+{q:"What time does the book fair close each day?",o:["3:00 p.m.","3:30 p.m.","4:00 p.m.","5:00 p.m."],a:2,e:"Time: 9:00 a.m. to 4:00 p.m."},
+{q:"If Tom buys a fiction book priced at $20 on Wednesday, how much does he pay?",o:["$15","$16","$18","$20"],a:1,e:"20% discount: $20 x 0.80 = $16."}
+]},
+2:{title:"Community Health Notice",
+stimulus:'<div class="visual-text-box"><h4>Sunset Heights Community Centre<br>Free Health Screening</h4><div class="vt-line vt-center vt-bold">Saturday, 10 May 2027</div><div class="vt-line vt-center">8:30 a.m. - 12:30 p.m.</div><div class="vt-line vt-center">Multi-Purpose Hall, Block 45</div><br><div class="vt-line vt-bold">Services Available:</div><div class="vt-line">&#8226; Blood pressure check</div><div class="vt-line">&#8226; Blood sugar test</div><div class="vt-line">&#8226; Eye screening (for residents aged 40 and above)</div><div class="vt-line">&#8226; Dental check-up</div><br><div class="vt-line vt-bold">Who Can Participate:</div><div class="vt-line">&#8226; All Sunset Heights residents</div><div class="vt-line">&#8226; Please bring your NRIC for registration</div><div class="vt-line">&#8226; <span class="vt-highlight">Fast for at least 8 hours before the blood sugar test</span></div><br><div class="vt-line vt-center" style="font-size:.8rem">Register at the Community Centre office or call 6789 0123 by 5 May 2027</div></div>',
+questions:[
+{q:"What day of the week is the health screening?",o:["Friday","Saturday","Sunday","Monday"],a:1,e:"Saturday, 10 May 2027."},
+{q:"Who is the eye screening specifically for?",o:["All residents","Children","Residents aged 40 and above","Senior citizens above 65"],a:2,e:"Eye screening for residents aged 40 and above."},
+{q:"What must residents bring for registration?",o:["Passport","Driver's licence","NRIC","Community card"],a:2,e:"Please bring your NRIC."},
+{q:"What must one do before the blood sugar test?",o:["Drink lots of water","Exercise for 1 hour","Fast for at least 8 hours","Take medication"],a:2,e:"Fast for at least 8 hours."},
+{q:"What is the last date to register?",o:["5 May 2027","8 May 2027","10 May 2027","1 May 2027"],a:0,e:"Register by 5 May 2027."},
+{q:"How long does the screening last?",o:["3 hours","4 hours","5 hours","6 hours"],a:1,e:"8:30 a.m. to 12:30 p.m. = 4 hours."},
+{q:"Which service is NOT offered?",o:["Blood pressure check","Hearing test","Dental check-up","Blood sugar test"],a:1,e:"Hearing test is not listed."},
+{q:"Where is the screening held?",o:["Community Centre office","Block 45 Multi-Purpose Hall","Sunset Heights clinic","Block 45 playground"],a:1,e:"Multi-Purpose Hall, Block 45."},
+{q:"Can a 35-year-old get an eye screening?",o:["Yes, open to all","No, only for aged 40 and above","Yes, if registered early","No, only for seniors"],a:1,e:"Eye screening is for residents aged 40 and above."},
+{q:"How can residents register?",o:["Online only","At the office or by phone","By email only","Walk-in only"],a:1,e:"Register at the office or call 6789 0123."}
+]},
+3:{title:"Product Advertisement",
+stimulus:'<div class="visual-text-box"><h4>SuperClean Water Bottle</h4><div class="vt-line vt-center vt-bold" style="font-size:1.2rem;color:#e53e3e">NOW ONLY $12.90!</div><div class="vt-line vt-center" style="text-decoration:line-through;color:#999">Usual Price: $19.90</div><br><div class="vt-line vt-bold">Features:</div><div class="vt-line">&#8226; BPA-free material - safe for children</div><div class="vt-line">&#8226; Keeps drinks cold for 12 hours / hot for 8 hours</div><div class="vt-line">&#8226; Available in 4 colours: Blue, Pink, Green, Black</div><div class="vt-line">&#8226; Capacity: 500ml</div><div class="vt-line">&#8226; Comes with a 1-year warranty</div><br><div class="vt-line vt-bold">Special Bundle:</div><div class="vt-line">&#8226; Buy 2 bottles and get a FREE cleaning brush (worth $3.90)</div><br><div class="vt-line vt-center">Available at all MegaMart outlets and online at www.megamart.sg</div><div class="vt-line vt-center" style="font-size:.8rem;color:#666">Offer valid from 1-30 April 2027. While stocks last.</div></div>',
+questions:[
+{q:"How much can a customer save per bottle?",o:["$5.00","$7.00","$8.00","$12.90"],a:1,e:"$19.90 - $12.90 = $7.00 savings."},
+{q:"How long can the bottle keep drinks hot?",o:["6 hours","8 hours","10 hours","12 hours"],a:1,e:"Keeps drinks hot for 8 hours."},
+{q:"What free gift comes with buying 2 bottles?",o:["A straw","A cleaning brush","A bottle cap","A bag"],a:1,e:"Buy 2 get a FREE cleaning brush."},
+{q:"Which colour is NOT available?",o:["Blue","Pink","Red","Black"],a:2,e:"Available: Blue, Pink, Green, Black. No Red."},
+{q:"When does the offer end?",o:["30 March 2027","30 April 2027","1 May 2027","31 April 2027"],a:1,e:"Offer valid from 1-30 April 2027."},
+{q:"What is the bottle capacity?",o:["350ml","400ml","500ml","750ml"],a:2,e:"Capacity: 500ml."},
+{q:"BPA-free means the bottle is _____.",o:["expensive","safe for children","waterproof","recyclable"],a:1,e:"BPA-free material - safe for children."},
+{q:"Where can customers buy the bottle?",o:["Only online","Only at MegaMart","At MegaMart outlets and online","At any supermarket"],a:2,e:"At all MegaMart outlets and online."},
+{q:"How much is the cleaning brush worth?",o:["$2.90","$3.90","$4.90","$5.90"],a:1,e:"Cleaning brush worth $3.90."},
+{q:"If Mrs Wong buys 2 bottles, how much total?",o:["$19.90","$25.80","$29.80","$39.80"],a:1,e:"2 x $12.90 = $25.80 (free brush included)."}
+]},
+4:{title:"Library Reading Programme",
+stimulus:'<div class="visual-text-box"><h4>Woodlands Public Library<br>Holiday Reading Programme</h4><div class="vt-line vt-center vt-bold">June Holidays 2027</div><div class="vt-line vt-center">For children aged 7-12</div><br><div class="vt-line vt-bold">How It Works:</div><div class="vt-line">1. Register at the library counter from 1-7 June</div><div class="vt-line">2. Borrow and read at least 8 books during the holidays</div><div class="vt-line">3. Write a short review (50 words) for each book</div><div class="vt-line">4. Submit your reviews by 30 June</div><br><div class="vt-line vt-bold">Prizes:</div><div class="vt-line">&#8226; <span class="vt-highlight">Gold Reader (12+ books): $20 book voucher + certificate</span></div><div class="vt-line">&#8226; Silver Reader (10-11 books): $10 book voucher + certificate</div><div class="vt-line">&#8226; Bronze Reader (8-9 books): Certificate</div><br><div class="vt-line vt-bold">Storytelling Session:</div><div class="vt-line">Every Saturday in June, 10:00 a.m. - 11:00 a.m. (Activity Room 2)</div><br><div class="vt-line vt-center" style="font-size:.8rem">Registration is free. Limited to 200 participants.</div></div>',
+questions:[
+{q:"What is the age group for this programme?",o:["5-10","6-11","7-12","8-13"],a:2,e:"For children aged 7-12."},
+{q:"Minimum number of books to read?",o:["5","6","8","10"],a:2,e:"Read at least 8 books."},
+{q:"Deadline to submit reviews?",o:["7 June","15 June","28 June","30 June"],a:3,e:"Submit by 30 June."},
+{q:"If Amy reads 11 books, what prize?",o:["$20 voucher + certificate","$10 voucher + certificate","Certificate only","No prize"],a:1,e:"Silver Reader (10-11 books)."},
+{q:"How many words per book review?",o:["30 words","50 words","80 words","100 words"],a:1,e:"Write a short review (50 words)."},
+{q:"When can children register?",o:["1-7 June","1-15 June","1-30 June","Any time in June"],a:0,e:"Register from 1-7 June."},
+{q:"How often are storytelling sessions?",o:["Daily","Every Saturday","Every Sunday","Twice a week"],a:1,e:"Every Saturday in June."},
+{q:"Where are storytelling sessions held?",o:["Main Hall","Activity Room 1","Activity Room 2","Reading Corner"],a:2,e:"Activity Room 2."},
+{q:"How many children can participate?",o:["100","150","200","Unlimited"],a:2,e:"Limited to 200 participants."},
+{q:"Is there a registration fee?",o:["Yes, $5","Yes, $10","No, it is free","Not mentioned"],a:2,e:"Registration is free."}
+]},
+5:{title:"Zoo Information",
+stimulus:'<div class="visual-text-box"><h4>Wildlife Adventure Park</h4><div class="vt-line vt-center">Open Daily: 8:30 a.m. - 6:00 p.m. (Last entry at 5:00 p.m.)</div><br><div class="vt-line vt-bold">Admission:</div><div class="vt-line">&#8226; Adult (13 and above): $28</div><div class="vt-line">&#8226; Child (3-12): $18</div><div class="vt-line">&#8226; Senior (60 and above): $15</div><div class="vt-line">&#8226; <span class="vt-highlight">Children under 3: FREE</span></div><div class="vt-line">&#8226; Family Package (2 Adults + 2 Children): $80</div><br><div class="vt-line vt-bold">Show Times:</div><div class="vt-line">&#8226; Elephant Splash: 10:30 a.m. &amp; 3:00 p.m.</div><div class="vt-line">&#8226; Rainforest Flyers (Bird Show): 11:30 a.m. &amp; 2:00 p.m.</div><div class="vt-line">&#8226; Feeding Time (Lions): 1:00 p.m. daily</div><br><div class="vt-line vt-bold">Rules:</div><div class="vt-line">&#8226; No flash photography</div><div class="vt-line">&#8226; Do not feed the animals</div><div class="vt-line">&#8226; Stay on marked paths</div></div>',
+questions:[
+{q:"What time is the last entry?",o:["4:00 p.m.","5:00 p.m.","5:30 p.m.","6:00 p.m."],a:1,e:"Last entry at 5:00 p.m."},
+{q:"How much does a family save with the Family Package?",o:["$10","$12","$14","$16"],a:1,e:"Without: 2x$28+2x$18=$92. Package=$80. Save $12."},
+{q:"A 2-year-old's admission is _____.",o:["$10","$15","$18","Free"],a:3,e:"Children under 3: FREE."},
+{q:"How many times a day is Elephant Splash?",o:["Once","Twice","Three times","Four times"],a:1,e:"10:30 a.m. & 3:00 p.m. = twice."},
+{q:"Which show at 2:00 p.m.?",o:["Elephant Splash","Rainforest Flyers","Feeding Time","All shows"],a:1,e:"Rainforest Flyers at 2:00 p.m."},
+{q:"What are visitors NOT allowed to do?",o:["Take photos without flash","Feed the animals","Walk on marked paths","Buy souvenirs"],a:1,e:"Do not feed the animals."},
+{q:"How much for a 65-year-old visitor?",o:["$15","$18","$25","$28"],a:0,e:"Senior (60+): $15."},
+{q:"What time are lions fed?",o:["10:30 a.m.","11:30 a.m.","1:00 p.m.","3:00 p.m."],a:2,e:"Feeding Time (Lions): 1:00 p.m."},
+{q:"Total for Mr Lee (45), his mother (70) and son (10)?",o:["$56","$61","$63","$71"],a:1,e:"Adult $28 + Senior $15 + Child $18 = $61."},
+{q:"How many hours is the park open?",o:["8 hours","9 hours","9.5 hours","10 hours"],a:2,e:"8:30 a.m. to 6:00 p.m. = 9.5 hours."}
+]},
+6:{title:"Health & Safety Poster",
+stimulus:'<div class="visual-text-box"><h4>Beat the Haze!<br>Health Advisory</h4><div class="vt-line vt-center vt-bold" style="color:#e53e3e">PSI Level: 101-200 (Unhealthy)</div><br><div class="vt-line vt-bold">What You Should Do:</div><div class="vt-line">&#8226; Reduce outdoor activities, especially strenuous exercise</div><div class="vt-line">&#8226; Close windows and doors; use air purifiers if available</div><div class="vt-line">&#8226; Wear an N95 mask if you must go outdoors</div><div class="vt-line">&#8226; Drink plenty of water to stay hydrated</div><br><div class="vt-line vt-bold">Who Is Most at Risk:</div><div class="vt-line">&#8226; Elderly persons</div><div class="vt-line">&#8226; Children</div><div class="vt-line">&#8226; People with heart or lung conditions</div><br><div class="vt-line vt-bold">When to Seek Medical Help:</div><div class="vt-line">&#8226; Difficulty breathing</div><div class="vt-line">&#8226; Persistent coughing</div><div class="vt-line">&#8226; Eye or throat irritation that does not improve</div><br><div class="vt-line vt-center">Call the 24-hour Health Hotline: 1800-333-9999</div><div class="vt-line vt-center" style="font-size:.8rem;color:#666">Source: Ministry of Health, Singapore</div></div>',
+questions:[
+{q:"What PSI range does this advisory cover?",o:["0-50","51-100","101-200","201-300"],a:2,e:"PSI Level: 101-200."},
+{q:"What type of mask is recommended?",o:["Surgical mask","N95 mask","Cloth mask","Any mask"],a:1,e:"Wear an N95 mask."},
+{q:"Which should you do during haze?",o:["Exercise outdoors","Open windows","Drink plenty of water","Go swimming"],a:2,e:"Drink plenty of water."},
+{q:"Who is NOT specifically listed as at risk?",o:["Elderly persons","Children","Pregnant women","People with lung conditions"],a:2,e:"Pregnant women not listed."},
+{q:"When should you seek medical help?",o:["When warm","When breathing is difficult","When hungry","When sleepy"],a:1,e:"Difficulty breathing."},
+{q:"What number to call?",o:["999","1800-333-9999","1800-999-333","995"],a:1,e:"Call 1800-333-9999."},
+{q:"Source of this advisory?",o:["NEA","MOE","Ministry of Health","SportSG"],a:2,e:"Ministry of Health, Singapore."},
+{q:"Should you open windows during haze?",o:["Yes, for ventilation","No, close them","Only at night","Only if PSI below 150"],a:1,e:"Close windows and doors."},
+{q:"'Strenuous' most likely means _____.",o:["easy","gentle","demanding","fun"],a:2,e:"Strenuous = demanding/requiring effort."},
+{q:"What indoor device is recommended?",o:["Fan","Air conditioner","Air purifier","Humidifier"],a:2,e:"Use air purifiers if available."}
+]}
+};
+
+var editingData={
+1:{title:"The School Excursion",
+text:"Last Monday, our class {1} on an excursion to the Science Centre. Everyone {2} excited as they boarded the bus. The teacher {3} us to remain seated throughout the journey. When we {4}, we were greeted by a friendly guide {5} showed us around. The first exhibit {6} about volcanoes and it {7} very interesting. After that, we {8} to the space gallery. Some students {9} questions about the planets. We {10} a wonderful time and {11} the teacher for organising the trip. On the way {12}, most of the students {13} asleep on the bus. It was {14} a tiring but enjoyable day. Everyone {15} that it was the best excursion {16} had ever been on. The teacher {17} pleased that everyone {18} themselves. She promised to {19} another trip next term. We were all {20} forward to it.",
+items:[
+{word:"gone",correct:"went",options:["went","gone","go","going"]},
+{word:"was",correct:"was",options:["was","were","is","are"]},
+{word:"reminded",correct:"reminded",options:["reminded","remember","reminds","reminding"]},
+{word:"arrive",correct:"arrived",options:["arrived","arrive","arrives","arriving"]},
+{word:"which",correct:"who",options:["who","which","whom","whose"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"was",correct:"was",options:["was","is","were","are"]},
+{word:"go",correct:"went",options:["went","go","goes","going"]},
+{word:"ask",correct:"asked",options:["asked","ask","asks","asking"]},
+{word:"have",correct:"had",options:["had","have","has","having"]},
+{word:"thank",correct:"thanked",options:["thanked","thank","thanks","thanking"]},
+{word:"home",correct:"home",options:["home","house","school","back"]},
+{word:"fall",correct:"fell",options:["fell","fall","falls","fallen"]},
+{word:"truly",correct:"truly",options:["truly","real","true","truth"]},
+{word:"agree",correct:"agreed",options:["agreed","agree","agrees","agreeing"]},
+{word:"we",correct:"they",options:["they","we","he","she"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"enjoy",correct:"enjoyed",options:["enjoyed","enjoy","enjoys","enjoying"]},
+{word:"organised",correct:"organise",options:["organise","organised","organises","organising"]},
+{word:"looking",correct:"looking",options:["looking","look","looked","looks"]}
+]},
+2:{title:"A Visit to Grandmother",
+text:"Every weekend, my family {1} my grandmother who {2} alone in a small flat. She {3} always happy to see us. My mother would {4} her favourite dishes. Last Saturday, when we {5}, we noticed that grandmother {6} not feeling well. She {7} coughing the whole day. My father {8} her to see a doctor but she {9} that she was fine. {10}, my mother managed to {11} her to visit the clinic. The doctor {12} her some medicine and advised her to {13} plenty of rest. We {14} worried about her but she {15} us that she would take her medicine {16}. Before we {17}, grandmother thanked us for {18} concern. She {19} us to visit again the {20} weekend.",
+items:[
+{word:"visit",correct:"visits",options:["visits","visit","visited","visiting"]},
+{word:"live",correct:"lives",options:["lives","live","lived","living"]},
+{word:"is",correct:"is",options:["is","was","are","were"]},
+{word:"cook",correct:"cook",options:["cook","cooks","cooked","cooking"]},
+{word:"arrived",correct:"arrived",options:["arrived","arrive","arrives","arriving"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"has been",correct:"had been",options:["had been","has been","have been","was"]},
+{word:"persuade",correct:"persuaded",options:["persuaded","persuade","persuades","persuading"]},
+{word:"insist",correct:"insisted",options:["insisted","insist","insists","insisting"]},
+{word:"But",correct:"However",options:["However","But","Although","Despite"]},
+{word:"convince",correct:"convince",options:["convince","convinced","convinces","convincing"]},
+{word:"give",correct:"gave",options:["gave","give","gives","given"]},
+{word:"get",correct:"get",options:["get","got","gets","getting"]},
+{word:"are",correct:"were",options:["were","are","was","is"]},
+{word:"assure",correct:"assured",options:["assured","assure","assures","assuring"]},
+{word:"regular",correct:"regularly",options:["regularly","regular","regulate","regulation"]},
+{word:"leave",correct:"left",options:["left","leave","leaves","leaving"]},
+{word:"our",correct:"our",options:["our","us","we","ours"]},
+{word:"invite",correct:"invited",options:["invited","invite","invites","inviting"]},
+{word:"following",correct:"following",options:["following","next","last","previous"]}
+]},
+3:{title:"The Rainy Day",
+text:"It {1} been raining heavily since morning. The streets {2} flooded and traffic {3} to a standstill. Many people {4} stuck at home as they could not {5} to work. The children, {6}, were delighted because school {7} cancelled for the day. They spent the morning {8} board games and reading books. By {9}, the rain had finally {10}. The sun came out and a beautiful rainbow {11} across the sky. The children {12} outside to play in the puddles. Their mother {13} them to wear their boots. She did not want them to {14} a cold. After playing for an hour, the children {15} inside, tired but happy. They {16} their wet clothes and took warm showers. That evening, the family {17} around the television and watched a movie {18}. It turned out to be a {19} enjoyable day {20} the bad weather.",
+items:[
+{word:"has",correct:"had",options:["had","has","have","having"]},
+{word:"is",correct:"were",options:["were","is","was","are"]},
+{word:"come",correct:"came",options:["came","come","comes","coming"]},
+{word:"are",correct:"were",options:["were","are","was","is"]},
+{word:"travel",correct:"travel",options:["travel","travelled","travels","travelling"]},
+{word:"but",correct:"however",options:["however","but","although","despite"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"play",correct:"playing",options:["playing","play","played","plays"]},
+{word:"afternoon",correct:"afternoon",options:["afternoon","morning","evening","night"]},
+{word:"stop",correct:"stopped",options:["stopped","stop","stops","stopping"]},
+{word:"appear",correct:"appeared",options:["appeared","appear","appears","appearing"]},
+{word:"rush",correct:"rushed",options:["rushed","rush","rushes","rushing"]},
+{word:"remind",correct:"reminded",options:["reminded","remind","reminds","reminding"]},
+{word:"caught",correct:"catch",options:["catch","caught","catches","catching"]},
+{word:"come",correct:"came",options:["came","come","comes","coming"]},
+{word:"change",correct:"changed",options:["changed","change","changes","changing"]},
+{word:"gather",correct:"gathered",options:["gathered","gather","gathers","gathering"]},
+{word:"together",correct:"together",options:["together","alone","apart","separately"]},
+{word:"most",correct:"most",options:["most","more","very","much"]},
+{word:"despite",correct:"despite",options:["despite","although","because","since"]}
+]},
+4:{title:"The New Student",
+text:"A new student {1} our class last week. Her name {2} Mei Ling and she {3} from China. At first, she {4} very quiet as she could not {5} English well. Some students {6} to talk to her but she {7} too shy to respond. The teacher {8} Sarah to be her buddy. Sarah {9} very kind and patient. She {10} Mei Ling learn new words every day. Slowly, Mei Ling {11} to open up. She {12} the class that she {13} drawing. One day, she {14} a beautiful picture of the school. Everyone {15} impressed by her talent. The teacher {16} the picture on the notice board. Mei Ling felt very {17} and thanked her classmates for {18} so welcoming. By the end of the month, she {19} made many friends and {20} no longer the quiet girl she used to be.",
+items:[
+{word:"join",correct:"joined",options:["joined","join","joins","joining"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"come",correct:"came",options:["came","come","comes","coming"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"spoke",correct:"speak",options:["speak","spoke","speaks","speaking"]},
+{word:"try",correct:"tried",options:["tried","try","tries","trying"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"ask",correct:"asked",options:["asked","ask","asks","asking"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"help",correct:"helped",options:["helped","help","helps","helping"]},
+{word:"begin",correct:"began",options:["began","begin","begins","beginning"]},
+{word:"tell",correct:"told",options:["told","tell","tells","telling"]},
+{word:"enjoy",correct:"enjoyed",options:["enjoyed","enjoy","enjoys","enjoying"]},
+{word:"draw",correct:"drew",options:["drew","draw","draws","drawing"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"pin",correct:"pinned",options:["pinned","pin","pins","pinning"]},
+{word:"happily",correct:"happy",options:["happy","happily","happiness","happier"]},
+{word:"be",correct:"being",options:["being","be","been","was"]},
+{word:"has",correct:"had",options:["had","has","have","having"]},
+{word:"is",correct:"was",options:["was","is","were","are"]}
+]},
+5:{title:"The Sports Day",
+text:"Our school {1} its annual Sports Day last Friday. The event {2} held at the school field. Students from all {3} participated enthusiastically. The {4} began with an opening speech by the principal. She {5} the students to do their best and show good sportsmanship. The first event {6} the 100-metre race. The runners {7} at the starting line, waiting for the signal. When the whistle {8}, they sprinted as fast as they {9}. The crowd {10} loudly for their favourites. After the races, there {11} team events such as relay and tug-of-war. {12} class wanted to win the overall championship. The competition {13} fierce but friendly. At the end of the day, Class 6A {14} declared the champions. They {15} with joy when the results were announced. The {16} distributed medals to the winners. Everyone {17} the event, whether they won {18} lost. The students {19} the field tired but {20}.",
+items:[
+{word:"hold",correct:"held",options:["held","hold","holds","holding"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"level",correct:"levels",options:["levels","level","levelled","levelling"]},
+{word:"ceremony",correct:"ceremony",options:["ceremony","ceremonies","ceremonial","celebrate"]},
+{word:"encourage",correct:"encouraged",options:["encouraged","encourage","encourages","encouraging"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"line",correct:"lined",options:["lined","line","lines","lining"]},
+{word:"blow",correct:"blew",options:["blew","blow","blows","blown"]},
+{word:"can",correct:"could",options:["could","can","may","might"]},
+{word:"cheer",correct:"cheered",options:["cheered","cheer","cheers","cheering"]},
+{word:"is",correct:"were",options:["were","is","was","are"]},
+{word:"All",correct:"Every",options:["Every","All","Some","Most"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"shout",correct:"shouted",options:["shouted","shout","shouts","shouting"]},
+{word:"teacher",correct:"teachers",options:["teachers","teacher","teacher's","teachers'"]},
+{word:"enjoy",correct:"enjoyed",options:["enjoyed","enjoy","enjoys","enjoying"]},
+{word:"and",correct:"or",options:["or","and","but","nor"]},
+{word:"leave",correct:"left",options:["left","leave","leaves","leaving"]},
+{word:"satisfy",correct:"satisfied",options:["satisfied","satisfy","satisfies","satisfying"]}
+]},
+6:{title:"Helping Others",
+text:"Volunteering {1} a wonderful way to help the community. Last month, our school {2} a food donation drive. Students {3} encouraged to bring canned food and dry goods. The response {4} overwhelming. We {5} over 500 items in just one week. A group of students then {6} the items to a nearby welfare home. The residents {7} very grateful for the donations. One elderly lady {8} us with tears in her eyes. She {9} us that nobody {10} visited them for a long time. This experience {11} us realise how {12} a small act of kindness can mean to others. Since then, many students {13} signed up as regular volunteers. They visit the home every {14} to spend time with the {15}. Some read stories {16} others help with simple chores. The welfare home staff {17} told us that the visits {18} brightened the residents' days. We {19} proud to make a {20} in their lives.",
+items:[
+{word:"are",correct:"is",options:["is","are","was","were"]},
+{word:"organise",correct:"organised",options:["organised","organise","organises","organising"]},
+{word:"is",correct:"were",options:["were","is","was","are"]},
+{word:"is",correct:"was",options:["was","is","were","are"]},
+{word:"collect",correct:"collected",options:["collected","collect","collects","collecting"]},
+{word:"deliver",correct:"delivered",options:["delivered","deliver","delivers","delivering"]},
+{word:"is",correct:"were",options:["were","is","was","are"]},
+{word:"thank",correct:"thanked",options:["thanked","thank","thanks","thanking"]},
+{word:"tell",correct:"told",options:["told","tell","tells","telling"]},
+{word:"has",correct:"had",options:["had","has","have","having"]},
+{word:"make",correct:"made",options:["made","make","makes","making"]},
+{word:"many",correct:"much",options:["much","many","more","most"]},
+{word:"has",correct:"have",options:["have","has","had","having"]},
+{word:"month",correct:"month",options:["month","week","day","year"]},
+{word:"resident",correct:"residents",options:["residents","resident","resident's","residents'"]},
+{word:"when",correct:"while",options:["while","when","since","until"]},
+{word:"has",correct:"have",options:["have","has","had","having"]},
+{word:"has",correct:"have",options:["have","has","had","having"]},
+{word:"is",correct:"are",options:["are","is","was","were"]},
+{word:"differ",correct:"difference",options:["difference","differ","different","differently"]}
+]}
+};
+
+var stData={
+1:{title:"Part 1 - Direct/Indirect Speech",questions:[
+{q:'Tom said, "I am going to the library."',instruction:"Rewrite in indirect (reported) speech.",answer:["tom said that he was going to the library"],e:"Change: I->he, am going->was going."},
+{q:'"Please close the door," the teacher told the students.',instruction:"Rewrite in indirect speech.",answer:["the teacher told the students to close the door","the teacher asked the students to close the door"],e:"Requests: told/asked + to-infinitive."},
+{q:'She asked me, "Have you finished your homework?"',instruction:"Rewrite in indirect speech.",answer:["she asked me if i had finished my homework","she asked me whether i had finished my homework"],e:"Yes/No questions: asked if/whether."},
+{q:'"Where are you going?" Mother asked John.',instruction:"Rewrite in indirect speech.",answer:["mother asked john where he was going"],e:"Wh-questions keep the question word."},
+{q:'The coach said, "We will win the match tomorrow."',instruction:"Rewrite in indirect speech.",answer:["the coach said that they would win the match the next day","the coach said that they would win the match the following day"],e:"will->would, tomorrow->the next day."},
+{q:'"Do not run in the corridor," the prefect warned the boys.',instruction:"Rewrite in indirect speech.",answer:["the prefect warned the boys not to run in the corridor"],e:"Negative commands: warned + not to."},
+{q:'Mrs Lee said to her son, "I bought a present for you yesterday."',instruction:"Rewrite in indirect speech.",answer:["mrs lee told her son that she had bought a present for him the day before","mrs lee told her son that she had bought a present for him the previous day"],e:"bought->had bought, yesterday->the day before."},
+{q:'"Can you help me carry these books?" Sarah asked her friend.',instruction:"Rewrite in indirect speech.",answer:["sarah asked her friend if she could help her carry those books","sarah asked her friend whether she could help her carry those books"],e:"can->could, these->those."},
+{q:'The doctor advised the patient, "You should exercise regularly."',instruction:"Rewrite in indirect speech.",answer:["the doctor advised the patient to exercise regularly","the doctor advised the patient that he should exercise regularly"],e:"Advice: advised + to-infinitive."},
+{q:'"I have never been to Japan," said Mary.',instruction:"Rewrite in indirect speech.",answer:["mary said that she had never been to japan"],e:"have never been->had never been."}
+]},
+2:{title:"Part 2 - Active/Passive Voice",questions:[
+{q:"The teacher praised the students for their hard work.",instruction:"Rewrite in the passive voice.",answer:["the students were praised by the teacher for their hard work"],e:"Object becomes subject + were + past participle."},
+{q:"Someone stole my bicycle yesterday.",instruction:"Rewrite in the passive voice.",answer:["my bicycle was stolen yesterday"],e:"'Someone' is omitted in passive."},
+{q:"The children are cleaning the classroom now.",instruction:"Rewrite in the passive voice.",answer:["the classroom is being cleaned by the children now"],e:"Present continuous passive."},
+{q:"The school will organise a charity concert next month.",instruction:"Rewrite in the passive voice.",answer:["a charity concert will be organised by the school next month"],e:"Future passive: will be + past participle."},
+{q:"They have repaired the broken bridge.",instruction:"Rewrite in the passive voice.",answer:["the broken bridge has been repaired"],e:"Present perfect passive."},
+{q:"The famous author wrote this book in 2020.",instruction:"Rewrite in the passive voice.",answer:["this book was written by the famous author in 2020"],e:"Simple past passive."},
+{q:"Nobody has watered the plants for a week.",instruction:"Rewrite in the passive voice.",answer:["the plants have not been watered for a week"],e:"Nobody -> have not been."},
+{q:"The storm destroyed several buildings.",instruction:"Rewrite in the passive voice.",answer:["several buildings were destroyed by the storm"],e:"Simple past passive."},
+{q:"People speak English all over the world.",instruction:"Rewrite in the passive voice.",answer:["english is spoken all over the world"],e:"'People' omitted in passive."},
+{q:"The mechanic is repairing my car.",instruction:"Rewrite in the passive voice.",answer:["my car is being repaired by the mechanic"],e:"Present continuous passive."}
+]},
+3:{title:"Part 3 - Combining with Connectors",questions:[
+{q:"It was raining heavily. We decided to stay indoors.",instruction:'Combine using "as".',answer:["as it was raining heavily we decided to stay indoors","we decided to stay indoors as it was raining heavily"],e:"'As' shows reason."},
+{q:"She studied very hard. She wanted to pass the exam.",instruction:'Combine using "so that".',answer:["she studied very hard so that she could pass the exam","she studied very hard so that she would pass the exam"],e:"'So that' shows purpose."},
+{q:"He is very tall. He can reach the top shelf easily.",instruction:'Combine using "so...that".',answer:["he is so tall that he can reach the top shelf easily"],e:"so + adjective + that."},
+{q:"The food was delicious. The food was expensive.",instruction:'Combine using "although".',answer:["although the food was delicious it was expensive","although the food was expensive it was delicious"],e:"'Although' shows contrast."},
+{q:"Tom finished his homework. He went out to play.",instruction:'Combine using "after".',answer:["after tom finished his homework he went out to play","after finishing his homework tom went out to play","tom went out to play after he finished his homework","tom went out to play after finishing his homework"],e:"'After' shows sequence."},
+{q:"She ran as fast as she could. She missed the bus.",instruction:'Combine using "even though".',answer:["even though she ran as fast as she could she missed the bus","she missed the bus even though she ran as fast as she could"],e:"'Even though' shows contrast."},
+{q:"You must study hard. You will fail the test.",instruction:'Combine using "otherwise".',answer:["you must study hard otherwise you will fail the test"],e:"'Otherwise' = if not."},
+{q:"The boy was punished. He had lied to his teacher.",instruction:'Combine using "because".',answer:["the boy was punished because he had lied to his teacher"],e:"'Because' shows reason."},
+{q:"I will lend you the book. You must return it by Friday.",instruction:'Combine using "provided that".',answer:["i will lend you the book provided that you return it by friday"],e:"'Provided that' = on condition that."},
+{q:"She speaks English. She speaks Mandarin.",instruction:'Combine using "not only...but also".',answer:["she speaks not only english but also mandarin","not only does she speak english but she also speaks mandarin"],e:"Addition with not only...but also."}
+]},
+4:{title:"Part 4 - Relative Clauses",questions:[
+{q:"The woman lives next door. She is a doctor.",instruction:"Combine using a relative pronoun.",answer:["the woman who lives next door is a doctor"],e:"'Who' for people as subject."},
+{q:"I read the book. You recommended it.",instruction:"Combine using a relative pronoun.",answer:["i read the book that you recommended","i read the book which you recommended"],e:"'That/which' for things."},
+{q:"The park is very large. We often play there.",instruction:"Combine using a relative pronoun.",answer:["the park where we often play is very large"],e:"'Where' for places."},
+{q:"The boy won the race. His father is our coach.",instruction:"Combine using a relative pronoun.",answer:["the boy whose father is our coach won the race"],e:"'Whose' for possession."},
+{q:"I remember the day. We first met on that day.",instruction:"Combine using a relative pronoun.",answer:["i remember the day when we first met"],e:"'When' for time."},
+{q:"The cake was delicious. My mother baked it.",instruction:"Combine using a relative pronoun.",answer:["the cake which my mother baked was delicious","the cake that my mother baked was delicious"],e:"'Which/that' for things."},
+{q:"The teacher praised the girl. The girl helped her classmate.",instruction:"Combine using a relative pronoun.",answer:["the teacher praised the girl who helped her classmate"],e:"'Who' for people."},
+{q:"We visited the museum. The museum has a dinosaur exhibit.",instruction:"Combine using a relative pronoun.",answer:["we visited the museum which has a dinosaur exhibit","we visited the museum that has a dinosaur exhibit"],e:"'Which/that' for things."},
+{q:"The restaurant is closing down. We had dinner there last week.",instruction:"Combine using a relative pronoun.",answer:["the restaurant where we had dinner last week is closing down"],e:"'Where' for places."},
+{q:"The student received an award. Her project was the best.",instruction:"Combine using a relative pronoun.",answer:["the student whose project was the best received an award"],e:"'Whose' for possession."}
+]},
+5:{title:"Part 5 - Mixed Transformations",questions:[
+{q:"The box was too heavy for the child to carry.",instruction:'Rewrite using "so...that".',answer:["the box was so heavy that the child could not carry it"],e:"too + adj + to -> so + adj + that...cannot."},
+{q:"Tom is the tallest boy in the class.",instruction:'Rewrite using "taller".',answer:["tom is taller than all the other boys in the class","tom is taller than any other boy in the class","no other boy in the class is taller than tom"],e:"Superlative to comparative."},
+{q:"Must we wear uniforms to school?",instruction:'Rewrite beginning with "Do we..."',answer:["do we have to wear uniforms to school","do we need to wear uniforms to school"],e:"Must -> have to / need to."},
+{q:'"I will help you with your project," said Mary to Jane.',instruction:"Rewrite in indirect speech.",answer:["mary told jane that she would help her with her project"],e:"Direct to indirect speech."},
+{q:"The children were excited. They could not sit still.",instruction:'Combine using "so...that".',answer:["the children were so excited that they could not sit still"],e:"so + adjective + that."},
+{q:"Nobody in the team runs faster than Ali.",instruction:'Rewrite beginning with "Ali..."',answer:["ali runs the fastest in the team","ali is the fastest runner in the team"],e:"Comparative to superlative."},
+{q:"Without your help, I would not have finished the project.",instruction:'Rewrite beginning with "If you..."',answer:["if you had not helped me i would not have finished the project"],e:"Without -> If...had not."},
+{q:"The question was very difficult. None of the students could answer it.",instruction:'Combine using "such...that".',answer:["it was such a difficult question that none of the students could answer it"],e:"such + a/an + adj + noun + that."},
+{q:"Both Tom and Jerry were absent from school yesterday.",instruction:'Rewrite using "as well as".',answer:["tom as well as jerry was absent from school yesterday","jerry as well as tom was absent from school yesterday"],e:"Both...and -> as well as."},
+{q:"They built this bridge fifty years ago.",instruction:"Rewrite in the passive voice.",answer:["this bridge was built fifty years ago","this bridge was built by them fifty years ago"],e:"Simple past passive."}
+]},
+6:{title:"Part 6 - Mixed Transformations (Advanced)",questions:[
+{q:'She said, "I cannot come to the party tonight."',instruction:"Rewrite in indirect speech.",answer:["she said that she could not come to the party that night"],e:"cannot->could not, tonight->that night."},
+{q:"Unless you leave now, you will miss the train.",instruction:'Rewrite using "if".',answer:["if you do not leave now you will miss the train"],e:"Unless = if...not."},
+{q:"The movie was boring. We left the cinema early.",instruction:'Combine using "so...that".',answer:["the movie was so boring that we left the cinema early"],e:"so + adjective + that."},
+{q:"No other building in the city is as tall as this skyscraper.",instruction:'Rewrite using "tallest".',answer:["this skyscraper is the tallest building in the city","this is the tallest building in the city"],e:"as...as (negative) -> superlative."},
+{q:"Although she was ill, she went to school.",instruction:'Rewrite using "in spite of".',answer:["in spite of being ill she went to school","in spite of her illness she went to school"],e:"Although + clause -> In spite of + noun/-ing."},
+{q:"The man is my uncle. He is wearing a blue shirt.",instruction:"Combine using a relative pronoun.",answer:["the man who is wearing a blue shirt is my uncle"],e:"'Who' for people."},
+{q:"They have not cleaned the room yet.",instruction:"Rewrite in the passive voice.",answer:["the room has not been cleaned yet"],e:"Present perfect passive."},
+{q:'"Do not touch the exhibits," the guide told the visitors.',instruction:"Rewrite in indirect speech.",answer:["the guide told the visitors not to touch the exhibits"],e:"Negative imperative -> told + not to."},
+{q:"She is too young to drive a car.",instruction:'Rewrite using "not old enough".',answer:["she is not old enough to drive a car"],e:"too young -> not old enough."},
+{q:"If she had not reminded me, I would have forgotten the appointment.",instruction:'Rewrite beginning with "Had..."',answer:["had she not reminded me i would have forgotten the appointment"],e:"If + had -> Had (inversion)."}
+]}
+};
+
+// ===== APP STATE =====
+var STORAGE_PREFIX='psle_eng_';
+var currentPage='dashboard';
+var currentPart=1;
+var globalTimerInterval=null;
+var globalTimerSeconds=0;
+var globalTimerRunning=false;
+
+function loadState(key,def){try{var v=localStorage.getItem(STORAGE_PREFIX+key);return v?JSON.parse(v):def}catch(e){return def}}
+function saveState(key,val){try{localStorage.setItem(STORAGE_PREFIX+key,JSON.stringify(val))}catch(e){}}
+function getWrongAnswers(){return loadState('wrongAnswers',[])}
+function addWrongAnswer(entry){var wa=getWrongAnswers();var exists=wa.find(function(w){return w.section===entry.section&&w.part===entry.part&&w.qIndex===entry.qIndex});if(!exists){wa.push(entry);saveState('wrongAnswers',wa)}}
+function removeWrongAnswer(section,part,qIndex){var wa=getWrongAnswers();wa=wa.filter(function(w){return!(w.section===section&&w.part===part&&w.qIndex===qIndex)});saveState('wrongAnswers',wa)}
+function getProgress(section,part){return loadState('progress_'+section+'_'+part,{answered:0,correct:0,total:0})}
+function saveProgress(section,part,data){saveState('progress_'+section+'_'+part,data)}
+function getAnswerState(section,part){return loadState('answers_'+section+'_'+part,{})}
+function saveAnswerState(section,part,data){saveState('answers_'+section+'_'+part,data)}
+
+function navigate(page,part){
+currentPage=page;
+if(part!==undefined)currentPart=part;else currentPart=1;
+renderPage();
+document.querySelectorAll('.nav-item').forEach(function(el){el.classList.remove('active')});
+document.querySelectorAll('.nav-sub').forEach(function(el){el.classList.remove('active')});
+var navEl=document.querySelector('.nav-item[data-page="'+page+'"]');
+if(navEl)navEl.classList.add('active');
+document.getElementById('sidebar').classList.remove('open');
+document.getElementById('sidebarOverlay').classList.remove('open');
+document.getElementById('mainContent').scrollTop=0;
+}
+
+function toggleSidebar(){
+document.getElementById('sidebar').classList.toggle('open');
+document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+
+function buildSidebar(){
+var sections=[{id:'mcq',el:'mcqSubs',parts:6},{id:'cloze',el:'clozeSubs',parts:6},{id:'visual',el:'visualSubs',parts:6},{id:'editing',el:'editingSubs',parts:6},{id:'st',el:'stSubs',parts:6}];
+sections.forEach(function(s){
+var container=document.getElementById(s.el);
+var html='';
+for(var i=1;i<=s.parts;i++){
+html+='<div class="nav-sub" data-page="'+s.id+'" data-part="'+i+'" onclick="navigate(\''+s.id+'\','+i+')">Part '+i+'</div>';
+}
+container.innerHTML=html;
+});
+}
+
+function toggleGlobalTimer(){
+if(globalTimerRunning){clearInterval(globalTimerInterval);globalTimerRunning=false;document.getElementById('globalTimer').style.display='none'}
+else{globalTimerSeconds=0;globalTimerRunning=true;document.getElementById('globalTimer').style.display='inline';
+globalTimerInterval=setInterval(function(){globalTimerSeconds++;var m=Math.floor(globalTimerSeconds/60).toString().padStart(2,'0');var s=(globalTimerSeconds%60).toString().padStart(2,'0');document.getElementById('globalTimer').textContent=m+':'+s},1000)}
+}
+
+function renderPage(){
+var mc=document.getElementById('mainContent');
+switch(currentPage){
+case'dashboard':renderDashboard(mc);break;
+case'mcq':renderMCQ(mc);break;
+case'cloze':renderCloze(mc);break;
+case'visual':renderVisual(mc);break;
+case'editing':renderEditing(mc);break;
+case'st':renderST(mc);break;
+case'wrong':renderWrong(mc);break;
+default:renderDashboard(mc);
+}
+}
+
+function renderDashboard(mc){
+var sections=[
+{id:'mcq',name:'Grammar MCQ',total:120,parts:6,icon:'&#9998;'},
+{id:'cloze',name:'Grammar Cloze',total:120,parts:6,icon:'&#128221;'},
+{id:'visual',name:'Visual Text',total:60,parts:6,icon:'&#128444;'},
+{id:'editing',name:'Editing',total:120,parts:6,icon:'&#9999;'},
+{id:'st',name:'S & T',total:60,parts:6,icon:'&#128260;'}
+];
+var totalAnswered=0,totalCorrect=0,totalQ=0;
+var cardsHtml='';
+sections.forEach(function(s){
+var answered=0,correct=0;
+for(var p=1;p<=s.parts;p++){var pr=getProgress(s.id,p);answered+=(pr.answered||0);correct+=(pr.correct||0)}
+totalAnswered+=answered;totalCorrect+=correct;totalQ+=s.total;
+var pct=s.total>0?Math.round(answered/s.total*100):0;
+var accPct=answered>0?Math.round(correct/answered*100):0;
+cardsHtml+='<div class="dash-card" onclick="navigate(\''+s.id+'\')"><h3>'+s.icon+' '+s.name+'</h3><div class="stats">'+answered+' / '+s.total+' completed | Accuracy: '+accPct+'%</div><div class="progress-bar"><div class="fill" style="width:'+pct+'%"></div></div></div>';
+});
+var wa=getWrongAnswers();
+var overallPct=totalQ>0?Math.round(totalAnswered/totalQ*100):0;
+var overallAcc=totalAnswered>0?Math.round(totalCorrect/totalAnswered*100):0;
+mc.innerHTML='<div class="card" style="background:linear-gradient(135deg,#ebf8ff,#f0fff4);margin-bottom:20px"><h2>Welcome back, Johnson!</h2><div style="display:flex;gap:30px;flex-wrap:wrap;margin-top:12px"><div><div style="font-size:2rem;font-weight:800;color:#1a365d">'+overallPct+'%</div><div style="font-size:.8rem;color:#718096">Overall Progress</div></div><div><div style="font-size:2rem;font-weight:800;color:#10B981">'+overallAcc+'%</div><div style="font-size:.8rem;color:#718096">Accuracy</div></div><div><div style="font-size:2rem;font-weight:800;color:#e53e3e">'+wa.length+'</div><div style="font-size:.8rem;color:#718096">Wrong Answers</div></div><div><div style="font-size:2rem;font-weight:800;color:#3182ce">'+totalAnswered+'</div><div style="font-size:.8rem;color:#718096">Questions Done</div></div></div></div><h2 style="margin-bottom:16px;color:#1a365d">Section Overview</h2><div class="dash-grid">'+cardsHtml+'</div><div class="dash-card" style="margin-top:16px;border-left-color:#e53e3e;cursor:pointer" onclick="navigate(\'wrong\')"><h3>&#10060; Wrong Answers</h3><div class="stats">'+wa.length+' questions to review</div></div>';
+}
+
+function escHtml(str){if(!str)return'';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+function renderPartTabs(section,numParts){
+var html='<div class="part-tabs">';
+for(var i=1;i<=numParts;i++){
+var pr=getProgress(section,i);
+var done=pr.answered>0&&pr.answered>=pr.total&&pr.total>0;
+html+='<div class="part-tab'+(currentPart===i?' active':'')+'" onclick="navigate(\''+section+'\','+i+')">Part '+i+(done?' <span class="check">&#10004;</span>':'')+'</div>';
+}
+return html+'</div>';
+}
+
+function renderNavButtons(section,numParts){
+var html='<div class="nav-buttons">';
+if(currentPart>1)html+='<button class="btn btn-outline" onclick="navigate(\''+section+'\','+(currentPart-1)+')">&larr; Part '+(currentPart-1)+'</button>';
+else html+='<span></span>';
+if(currentPart<numParts)html+='<button class="btn btn-primary" onclick="navigate(\''+section+'\','+(currentPart+1)+')">Part '+(currentPart+1)+' &rarr;</button>';
+else html+='<span></span>';
+return html+'</div>';
+}
+
+// ===== MCQ =====
+function renderMCQ(mc){
+var data=mcqData[currentPart];if(!data){mc.innerHTML='<p>No data.</p>';return}
+var state=getAnswerState('mcq',currentPart);
+var html='<div class="card"><h2>Grammar MCQ - '+data.title+'</h2>'+renderPartTabs('mcq',6);
+var allAnswered=true;
+data.questions.forEach(function(q,i){
+var answered=state[i]!==undefined;if(!answered)allAnswered=false;
+var userAns=state[i];
+html+='<div class="q-container"><div class="q-text"><strong>Q'+(i+1)+'.</strong> '+q.q+'</div><div class="q-options">';
+q.o.forEach(function(opt,j){
+var cls='q-option';
+if(answered){cls+=' disabled';if(j===q.a)cls+=' correct';else if(j===userAns&&userAns!==q.a)cls+=' wrong'}
+html+='<div class="'+cls+'" onclick="answerMCQ('+i+','+j+')">('+String.fromCharCode(65+j)+') '+opt+'</div>';
+});
+html+='</div>';
+if(answered){var isCorrect=userAns===q.a;html+='<div class="q-explanation '+(isCorrect?'right':'wrong')+'">'+(isCorrect?'&#10004; Correct!':'&#10008; Wrong. Answer: ('+String.fromCharCode(65+q.a)+') '+q.o[q.a]+'.')+' '+q.e+'</div>'}
+html+='</div>';
+});
+if(allAnswered){var pr=getProgress('mcq',currentPart);html+='<div class="score-box"><div class="score-big">'+pr.correct+'/'+pr.total+'</div><div class="score-label">Score for '+data.title+'</div></div>'}
+html+=renderNavButtons('mcq',6)+'</div>';
+mc.innerHTML=html;
+}
+
+function answerMCQ(qIdx,optIdx){
+var state=getAnswerState('mcq',currentPart);if(state[qIdx]!==undefined)return;
+state[qIdx]=optIdx;saveAnswerState('mcq',currentPart,state);
+var q=mcqData[currentPart].questions[qIdx];var isCorrect=optIdx===q.a;
+var pr=getProgress('mcq',currentPart);pr.answered=Object.keys(state).length;pr.correct=(pr.correct||0)+(isCorrect?1:0);pr.total=mcqData[currentPart].questions.length;saveProgress('mcq',currentPart,pr);
+if(!isCorrect)addWrongAnswer({section:'mcq',part:currentPart,qIndex:qIdx,question:q.q,userAnswer:'('+String.fromCharCode(65+optIdx)+') '+q.o[optIdx],correctAnswer:'('+String.fromCharCode(65+q.a)+') '+q.o[q.a],explanation:q.e});
+renderMCQ(document.getElementById('mainContent'));
+}
+
+// ===== CLOZE (Pitaya-style word bank) =====
+var clozeActiveBlank=null; // {part, pi, blankIdx}
+
+function renderCloze(mc){
+var passages=clozeData[currentPart];if(!passages){mc.innerHTML='<p>No data.</p>';return}
+var html='<div class="card"><h2>Grammar Cloze - Part '+currentPart+'</h2>'+renderPartTabs('cloze',6)+'<p style="font-size:.85rem;color:#718096;margin-bottom:16px">\u{1F4CC} Click a blank in the passage, then select a word from the word bank below. Click \u201cCheck Answers\u201d when done.</p>';
+passages.forEach(function(p,pi){
+var stateKey='cloze_'+currentPart+'_'+pi;
+var submitted=loadState(stateKey+'_submitted',false);
+var savedAnswers=loadState(stateKey,{});
+html+='<div class="card" style="border-left:4px solid #3182ce"><span class="passage-label">Passage '+(pi+1)+'</span><h3>'+p.title+'</h3>';
+
+// Build passage with clickable blanks
+var passageHtml='<div class="cloze-passage" id="clozePassage_'+currentPart+'_'+pi+'">';
+var parts=p.passage.split(/\{(\d+)\}/);
+for(var k=0;k<parts.length;k++){
+if(k%2===0){passageHtml+=parts[k]}
+else{
+var bi=parseInt(parts[k])-1;
+var val=savedAnswers[bi]||'';
+if(submitted){
+var correct=p.blanks[bi].toLowerCase();
+var isCorrect=val.trim().toLowerCase()===correct;
+var cls='cloze-blank '+(isCorrect?'correct':'wrong');
+passageHtml+='<span class="'+cls+'"><span class="blank-num">('+(bi+1)+')</span> '+(val||'___')+'</span>';
+if(!isCorrect){
+passageHtml+=' <span class="cloze-answer-show">\u2192 '+p.blanks[bi]+'</span>';
+}
+} else {
+var isActive=clozeActiveBlank&&clozeActiveBlank.part===currentPart&&clozeActiveBlank.pi===pi&&clozeActiveBlank.blankIdx===bi;
+var cls='cloze-blank'+(val?' filled':'')+(isActive?' selected':'');
+passageHtml+='<span class="'+cls+'" onclick="selectClozeBlank('+currentPart+','+pi+','+bi+')" id="cb_'+currentPart+'_'+pi+'_'+bi+'"><span class="blank-num">('+(bi+1)+')</span> '+(val||'___')+'</span>';
+}
+}
+}
+passageHtml+='</div>';
+html+=passageHtml;
+
+// Word bank (only if not submitted) — each chip tracked by index
+if(!submitted){
+// Track which bank indices are used by which blank
+var usedBankIndices=loadState(stateKey+'_usedIdx',{});
+// Shuffle bank deterministically per part+passage using seed
+var bankIndices=[];for(var bii=0;bii<p.bank.length;bii++)bankIndices.push(bii);
+bankIndices.sort(function(a,b){
+var wa=p.bank[a],wb2=p.bank[b];
+var ha=a*7+currentPart*13+pi*17,hb=b*7+currentPart*13+pi*17;
+for(var ci=0;ci<wa.length;ci++)ha=(ha*31+wa.charCodeAt(ci))%999983;
+for(var ci=0;ci<wb2.length;ci++)hb=(hb*31+wb2.charCodeAt(ci))%999983;
+return ha-hb;
+});
+html+='<div class="word-bank" id="wb_'+currentPart+'_'+pi+'"><span class="word-bank-title">\u{1F4E6} Word Bank \u2014 click a blank, then pick a word (each word can only be used once):</span>';
+bankIndices.forEach(function(bankIdx){
+var w=p.bank[bankIdx];
+var isUsed=false;
+for(var uk in usedBankIndices){if(usedBankIndices[uk]===bankIdx){isUsed=true;break;}}
+var cls='word-chip'+(isUsed?' used':'');
+html+='<span class="'+cls+'" onclick="pickClozeWordByIdx('+currentPart+','+pi+','+bankIdx+')">'+w+'</span>';
+});
+html+='</div>';
+html+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn btn-primary" onclick="submitCloze('+currentPart+','+pi+')">Check Answers</button><button class="btn" style="background:#e2e8f0;color:#4a5568" onclick="clearClozePassage('+currentPart+','+pi+')">Clear All</button></div>';
+} else {
+// Show score + explanations
+var sc=loadState(stateKey+'_score',{correct:0,total:0});
+html+='<div style="margin-top:10px"><span class="badge badge-green" style="font-size:.9rem;padding:4px 12px">'+sc.correct+'/'+sc.total+' correct</span></div>';
+// Explanations for each blank
+if(p.explains){
+html+='<div style="margin-top:14px"><strong style="font-size:.9rem">\u{1F4D6} Explanations:</strong>';
+p.blanks.forEach(function(ans,ei){
+var userAns=(savedAnswers[ei]||'').trim().toLowerCase();
+var isRight=userAns===ans.toLowerCase();
+var cls=isRight?'cloze-explain right':'cloze-explain';
+html+='<div class="'+cls+'" style="margin-top:6px"><strong>('+(ei+1)+')</strong> ';
+if(!isRight){html+='Your answer: <span style="text-decoration:line-through;color:#e53e3e">'+(savedAnswers[ei]||'empty')+'</span> \u2192 Correct: <strong>'+ans+'</strong><br>';}
+else{html+='\u2705 <strong>'+ans+'</strong> — ';}
+html+=(p.explains[ei]||'')+'</div>';
+});
+html+='</div>';
+}
+}
+html+='</div>';
+});
+html+=renderNavButtons('cloze',6)+'</div>';mc.innerHTML=html;
+}
+
+function selectClozeBlank(part,pi,bi){
+var sk='cloze_'+part+'_'+pi;
+var saved=loadState(sk,{});
+var usedIdx=loadState(sk+'_usedIdx',{});
+// If clicking on a filled blank, clear it (release the word back to bank)
+if(saved[bi]){
+delete saved[bi];
+delete usedIdx[bi];
+saveState(sk,saved);
+saveState(sk+'_usedIdx',usedIdx);
+}
+clozeActiveBlank={part:part,pi:pi,blankIdx:bi};
+renderCloze(document.getElementById('mainContent'));
+// Scroll word bank into view
+var wb=document.getElementById('wb_'+part+'_'+pi);if(wb)wb.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function pickClozeWordByIdx(part,pi,bankIdx){
+if(!clozeActiveBlank||clozeActiveBlank.part!==part||clozeActiveBlank.pi!==pi)return;
+var bi=clozeActiveBlank.blankIdx;
+var sk='cloze_'+part+'_'+pi;
+var saved=loadState(sk,{});
+var usedIdx=loadState(sk+'_usedIdx',{});
+// Check if this bank chip is already used
+for(var uk in usedIdx){if(usedIdx[uk]===bankIdx)return;}
+// If this blank already had a word, free its old bank chip
+if(typeof usedIdx[bi]!=='undefined'){delete usedIdx[bi];}
+// Assign
+var word=clozeData[part][pi].bank[bankIdx];
+saved[bi]=word;
+usedIdx[bi]=bankIdx;
+saveState(sk,saved);
+saveState(sk+'_usedIdx',usedIdx);
+// Move to next empty blank
+var passage=clozeData[part][pi];
+var nextBlank=-1;
+for(var n=bi+1;n<passage.blanks.length;n++){if(!saved[n]){nextBlank=n;break}}
+if(nextBlank===-1){for(var n=0;n<bi;n++){if(!saved[n]){nextBlank=n;break}}}
+if(nextBlank>=0)clozeActiveBlank={part:part,pi:pi,blankIdx:nextBlank};
+else clozeActiveBlank=null;
+renderCloze(document.getElementById('mainContent'));
+}
+
+function clearClozePassage(part,pi){
+var sk='cloze_'+part+'_'+pi;saveState(sk,{});saveState(sk+'_usedIdx',{});clozeActiveBlank=null;
+renderCloze(document.getElementById('mainContent'));
+}
+
+function submitCloze(part,pi){
+var passage=clozeData[part][pi];var sk='cloze_'+part+'_'+pi;var saved=loadState(sk,{});
+var correct=0;var total=passage.blanks.length;
+passage.blanks.forEach(function(ans,i){
+var userAns=(saved[i]||'').trim().toLowerCase();
+if(userAns===ans.toLowerCase())correct++;
+else addWrongAnswer({section:'cloze',part:part,qIndex:pi*10+i,question:passage.title+' - Blank '+(i+1),userAnswer:saved[i]||'(empty)',correctAnswer:ans,explanation:(passage.explains&&passage.explains[i])?passage.explains[i]:'The correct word is "'+ans+'".'});
+});
+saveState(sk+'_submitted',true);saveState(sk+'_score',{correct:correct,total:total});
+var tc=0,ta=0;
+clozeData[part].forEach(function(p2,pi2){var sk2='cloze_'+part+'_'+pi2;if(loadState(sk2+'_submitted',false)){var s2=loadState(sk2+'_score',{correct:0,total:0});tc+=s2.correct;ta+=s2.total}});
+saveProgress('cloze',part,{answered:ta,correct:tc,total:20});
+clozeActiveBlank=null;
+renderCloze(document.getElementById('mainContent'));
+}
+
+// ===== VISUAL =====
+function renderVisual(mc){
+var data=visualData[currentPart];if(!data){mc.innerHTML='<p>No data.</p>';return}
+var state=getAnswerState('visual',currentPart);
+var html='<div class="card"><h2>Visual Text - '+data.title+'</h2>'+renderPartTabs('visual',6)+data.stimulus;
+var allAnswered=true;
+data.questions.forEach(function(q,i){
+var answered=state[i]!==undefined;if(!answered)allAnswered=false;
+var userAns=state[i];
+html+='<div class="q-container"><div class="q-text"><strong>Q'+(i+1)+'.</strong> '+q.q+'</div><div class="q-options">';
+q.o.forEach(function(opt,j){
+var cls='q-option';if(answered){cls+=' disabled';if(j===q.a)cls+=' correct';else if(j===userAns&&userAns!==q.a)cls+=' wrong'}
+html+='<div class="'+cls+'" onclick="answerVisual('+i+','+j+')">('+String.fromCharCode(65+j)+') '+opt+'</div>';
+});
+html+='</div>';
+if(answered){var isCorrect=userAns===q.a;html+='<div class="q-explanation '+(isCorrect?'right':'wrong')+'">'+(isCorrect?'&#10004; Correct!':'&#10008; Wrong. Answer: ('+String.fromCharCode(65+q.a)+') '+q.o[q.a]+'.')+' '+q.e+'</div>'}
+html+='</div>';
+});
+if(allAnswered){var pr=getProgress('visual',currentPart);html+='<div class="score-box"><div class="score-big">'+pr.correct+'/'+pr.total+'</div><div class="score-label">Score</div></div>'}
+html+=renderNavButtons('visual',6)+'</div>';mc.innerHTML=html;
+}
+
+function answerVisual(qIdx,optIdx){
+var state=getAnswerState('visual',currentPart);if(state[qIdx]!==undefined)return;
+state[qIdx]=optIdx;saveAnswerState('visual',currentPart,state);
+var q=visualData[currentPart].questions[qIdx];var isCorrect=optIdx===q.a;
+var pr=getProgress('visual',currentPart);pr.answered=Object.keys(state).length;pr.correct=(pr.correct||0)+(isCorrect?1:0);pr.total=visualData[currentPart].questions.length;saveProgress('visual',currentPart,pr);
+if(!isCorrect)addWrongAnswer({section:'visual',part:currentPart,qIndex:qIdx,question:q.q,userAnswer:'('+String.fromCharCode(65+optIdx)+') '+q.o[optIdx],correctAnswer:'('+String.fromCharCode(65+q.a)+') '+q.o[q.a],explanation:q.e});
+renderVisual(document.getElementById('mainContent'));
+}
+
+// ===== EDITING =====
+function renderEditing(mc){
+var data=editingData[currentPart];if(!data){mc.innerHTML='<p>No data.</p>';return}
+var state=getAnswerState('editing',currentPart);
+var html='<div class="card"><h2>Editing - '+data.title+'</h2>'+renderPartTabs('editing',6)+'<p style="font-size:.85rem;color:#718096;margin-bottom:12px">For each numbered word, select the correct form from the options below.</p>';
+var passageHtml='<div class="edit-passage" style="margin-bottom:20px">';
+var textParts=data.text.split(/\{(\d+)\}/);
+for(var k=0;k<textParts.length;k++){
+if(k%2===0){passageHtml+=textParts[k]}
+else{
+var idx=parseInt(textParts[k])-1;var item=data.items[idx];
+var answered=state[idx]!==undefined;
+var cls='edit-underline';
+if(answered){cls+=state[idx]===item.correct?' correct-mark':' wrong-mark'}
+passageHtml+='<span class="'+cls+'"><strong>('+( idx+1)+')</strong> '+item.word+'</span>';
+}
+}
+passageHtml+='</div>';html+=passageHtml;
+data.items.forEach(function(item,i){
+var answered=state[i]!==undefined;
+html+='<div class="q-container" style="padding:8px 0;border-bottom:1px solid #e2e8f0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong style="min-width:30px">('+( i+1)+')</strong>';
+item.options.forEach(function(opt){
+var cls='edit-opt';
+if(answered){if(opt===item.correct)cls+=' correct';else if(opt===state[i]&&state[i]!==item.correct)cls+=' wrong'}
+html+='<span class="'+cls+'" onclick="answerEditing('+i+',\''+opt.replace(/'/g,"\\'")+'\')">'+opt+'</span> ';
+});
+if(answered&&state[i]!==item.correct)html+='<span style="font-size:.8rem;color:#e53e3e;margin-left:8px">Correct: '+item.correct+'</span>';
+html+='</div></div>';
+});
+var allAnswered=Object.keys(state).length===data.items.length;
+if(allAnswered){var pr=getProgress('editing',currentPart);html+='<div class="score-box"><div class="score-big">'+pr.correct+'/'+pr.total+'</div><div class="score-label">Score</div></div>'}
+html+=renderNavButtons('editing',6)+'</div>';mc.innerHTML=html;
+}
+
+function answerEditing(idx,opt){
+var state=getAnswerState('editing',currentPart);if(state[idx]!==undefined)return;
+state[idx]=opt;saveAnswerState('editing',currentPart,state);
+var item=editingData[currentPart].items[idx];var isCorrect=opt===item.correct;
+var pr=getProgress('editing',currentPart);pr.answered=Object.keys(state).length;pr.correct=(pr.correct||0)+(isCorrect?1:0);pr.total=editingData[currentPart].items.length;saveProgress('editing',currentPart,pr);
+if(!isCorrect)addWrongAnswer({section:'editing',part:currentPart,qIndex:idx,question:editingData[currentPart].title+' - Item '+(idx+1)+': "'+item.word+'"',userAnswer:opt,correctAnswer:item.correct,explanation:'The correct form is "'+item.correct+'".'});
+renderEditing(document.getElementById('mainContent'));
+}
+
+// ===== S&T =====
+function renderST(mc){
+var data=stData[currentPart];if(!data){mc.innerHTML='<p>No data.</p>';return}
+var state=getAnswerState('st',currentPart);
+var html='<div class="card"><h2>Synthesis &amp; Transformation - '+data.title+'</h2>'+renderPartTabs('st',6)+'<p style="font-size:.85rem;color:#718096;margin-bottom:16px">Type your answer. Click "Check" to verify.</p>';
+data.questions.forEach(function(q,i){
+var answered=state[i]!==undefined;
+html+='<div class="q-container" style="padding-bottom:12px;border-bottom:1px solid #e2e8f0"><div class="q-text"><strong>Q'+(i+1)+'.</strong> '+escHtml(q.q)+'</div>';
+html+='<div style="font-size:.85rem;color:#3182ce;margin-bottom:8px"><em>'+q.instruction+'</em></div>';
+if(!answered){
+html+='<textarea class="st-input" id="st_input_'+i+'" placeholder="Type your answer here...">'+escHtml(loadState('st_draft_'+currentPart+'_'+i,''))+'</textarea>';
+html+='<div style="margin-top:6px"><button class="btn btn-primary btn-sm" onclick="answerST('+i+')">Check</button></div>';
+}else{
+var result=state[i];
+html+='<div style="padding:8px 12px;border-radius:8px;margin-top:4px;font-size:.9rem;'+(result.correct?'background:#f0fff4;border:1px solid #c6f6d5':'background:#fff5f5;border:1px solid #fed7d7')+'"><strong>Your answer:</strong> '+escHtml(result.userAnswer)+'<br>'+(result.correct?'&#10004; Correct!':'&#10008; <strong>Suggested answer:</strong> '+q.answer[0])+'</div>';
+html+='<div class="q-explanation '+(result.correct?'right':'wrong')+'">'+q.e+'</div>';
+}
+html+='</div>';
+});
+var allAnswered=Object.keys(state).length===data.questions.length;
+if(allAnswered){var pr=getProgress('st',currentPart);html+='<div class="score-box"><div class="score-big">'+pr.correct+'/'+pr.total+'</div><div class="score-label">Score</div></div>'}
+html+=renderNavButtons('st',6)+'</div>';mc.innerHTML=html;
+}
+
+function answerST(qIdx){
+var input=document.getElementById('st_input_'+qIdx);if(!input)return;
+var userAns=input.value.trim();if(!userAns){input.style.borderColor='#e53e3e';return}
+var q=stData[currentPart].questions[qIdx];
+var normalized=userAns.toLowerCase().replace(/[.,!?;:'"]/g,'').replace(/\s+/g,' ').trim();
+var isCorrect=false;
+for(var k=0;k<q.answer.length;k++){
+var normAns=q.answer[k].toLowerCase().replace(/[.,!?;:'"]/g,'').replace(/\s+/g,' ').trim();
+if(normalized===normAns){isCorrect=true;break}
+}
+var state=getAnswerState('st',currentPart);
+state[qIdx]={userAnswer:userAns,correct:isCorrect};
+saveAnswerState('st',currentPart,state);
+var pr=getProgress('st',currentPart);pr.answered=Object.keys(state).length;pr.correct=(pr.correct||0)+(isCorrect?1:0);pr.total=stData[currentPart].questions.length;saveProgress('st',currentPart,pr);
+if(!isCorrect)addWrongAnswer({section:'st',part:currentPart,qIndex:qIdx,question:q.q+' ('+q.instruction+')',userAnswer:userAns,correctAnswer:q.answer[0],explanation:q.e});
+saveState('st_draft_'+currentPart+'_'+qIdx,'');
+renderST(document.getElementById('mainContent'));
+}
+
+document.addEventListener('input',function(e){
+if(e.target&&e.target.id&&e.target.id.indexOf('st_input_')===0){
+var idx=parseInt(e.target.id.split('_')[2]);
+saveState('st_draft_'+currentPart+'_'+idx,e.target.value);
+}
+});
+
+// ===== WRONG ANSWERS =====
+function renderWrong(mc){
+var wa=getWrongAnswers();
+var html='<div class="card"><h2>&#10060; Wrong Answers Review</h2>';
+if(wa.length===0){html+='<p style="color:#718096;padding:20px 0">No wrong answers yet. Keep practising!</p>'}
+else{
+html+='<p style="font-size:.85rem;color:#718096;margin-bottom:16px">'+wa.length+' wrong answer(s) to review.</p>';
+var groups={};
+wa.forEach(function(w){var key=w.section.toUpperCase()+' Part '+w.part;if(!groups[key])groups[key]=[];groups[key].push(w)});
+Object.keys(groups).forEach(function(key){
+html+='<h3 style="margin:16px 0 8px;color:#1a365d">'+key+'</h3>';
+groups[key].forEach(function(w){
+html+='<div style="padding:10px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:8px;background:#fff5f5"><div style="font-size:.9rem;margin-bottom:4px"><strong>'+escHtml(w.question)+'</strong></div><div style="font-size:.82rem;color:#e53e3e">Your answer: '+escHtml(w.userAnswer)+'</div><div style="font-size:.82rem;color:#22543d">Correct: '+escHtml(w.correctAnswer)+'</div><div style="font-size:.8rem;color:#718096;margin-top:4px">'+w.explanation+'</div><button class="btn btn-sm btn-outline" style="margin-top:6px" onclick="removeWrongAndRefresh(\''+w.section+'\','+w.part+','+w.qIndex+')">&#10004; Mark Reviewed</button></div>';
+});
+});
+html+='<div style="margin-top:16px"><button class="btn btn-primary" onclick="clearAllWrong()">Clear All</button></div>';
+}
+html+='</div>';mc.innerHTML=html;
+}
+
+function removeWrongAndRefresh(section,part,qIndex){removeWrongAnswer(section,part,qIndex);renderWrong(document.getElementById('mainContent'))}
+function clearAllWrong(){if(confirm('Clear all wrong answers?')){saveState('wrongAnswers',[]);renderWrong(document.getElementById('mainContent'))}}
+
+function resetAllProgress(){
+if(confirm('This will reset ALL progress. Are you sure?')){
+var keys=[];for(var i=0;i<localStorage.length;i++){var key=localStorage.key(i);if(key&&key.indexOf(STORAGE_PREFIX)===0)keys.push(key)}
+keys.forEach(function(k){localStorage.removeItem(k)});navigate('dashboard');
+}
+}
+
+// ===== INIT =====
+buildSidebar();
+navigate('dashboard');
+</script>
+</body>
+</html>

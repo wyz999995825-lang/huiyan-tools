@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Situational Writing Trainer — WA3 Earth Warriors</title>
+<style>
+:root{
+  --bg:#FBF7F0; --card:#FFFFFF; --ink:#22303A; --muted:#6B7C89; --line:#E7E0D6;
+  --teal:#0E7C6B; --teal-l:#E3F3EF; --teal-d:#0A5D50;
+  --amber:#D98E22; --amber-l:#FDF1DD;
+  --red:#C9503B; --red-l:#FBE9E5;
+  --green:#2E9E5B; --green-l:#E6F5EC;
+  --violet:#6C5CE0; --violet-l:#EEEBFC;
+  --r:16px; --sh:0 2px 4px rgba(34,48,58,.04), 0 8px 24px rgba(34,48,58,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,"Helvetica Neue",Arial,sans-serif;
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:0 18px 80px}
+h1,h2,h3{line-height:1.25;margin:0}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+.hide{display:none !important}
+
+/* ---------- top bar ---------- */
+header.top{position:sticky;top:0;z-index:50;background:rgba(251,247,240,.92);
+  backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid var(--line)}
+.topin{max-width:880px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:-.2px}
+.brand .logo{width:30px;height:30px;border-radius:9px;background:var(--teal);color:#fff;
+  display:grid;place-items:center;font-size:16px;flex:none}
+.brand small{display:block;font-weight:500;font-size:11px;color:var(--muted);letter-spacing:0}
+.spacer{flex:1}
+.xpchip{display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);
+  border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600;box-shadow:var(--sh)}
+.btn-home{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 13px;
+  font-size:13px;font-weight:600;color:var(--ink);box-shadow:var(--sh)}
+.btn-home:hover{background:var(--teal-l);border-color:var(--teal)}
+
+/* ---------- generic ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;box-shadow:var(--sh);margin-bottom:16px}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+.small{font-size:13.5px}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:3px 9px;border-radius:999px;background:var(--teal-l);color:var(--teal-d)}
+.tag.amber{background:var(--amber-l);color:#8A5A08}
+.tag.red{background:var(--red-l);color:#8E3524}
+.tag.violet{background:var(--violet-l);color:#4B3EB0}
+.tag.green{background:var(--green-l);color:#1C6B3C}
+.btn{border:none;border-radius:12px;padding:11px 20px;font-weight:650;background:var(--teal);color:#fff;
+  box-shadow:0 2px 8px rgba(14,124,107,.25);transition:transform .08s ease, filter .15s ease}
+.btn:hover{filter:brightness(1.07)} .btn:active{transform:translateY(1px)}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn.ghost:hover{background:var(--teal-l);border-color:var(--teal)}
+.btn.sm{padding:7px 14px;font-size:13.5px;border-radius:10px}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ---------- hero ---------- */
+.hero{background:linear-gradient(135deg,#0E7C6B,#12A08A 60%,#2FB39B);color:#fff;border-radius:22px;
+  padding:26px 24px;margin:18px 0 16px;box-shadow:0 10px 30px rgba(14,124,107,.22)}
+.hero h1{font-size:26px;letter-spacing:-.4px}
+.hero p{margin:8px 0 0;opacity:.93;font-size:15px}
+.scorebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.scorepill{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:12px;
+  padding:8px 13px;font-size:13px;font-weight:600}
+.scorepill b{display:block;font-size:18px;font-weight:750}
+
+/* ---------- path ---------- */
+.path{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--sh)}
+.step .n{width:24px;height:24px;border-radius:8px;background:var(--teal-l);color:var(--teal-d);
+  display:grid;place-items:center;font-size:12px;font-weight:800;margin-bottom:8px}
+.step h4{margin:0 0 2px;font-size:14.5px}
+.step p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.45}
+
+/* ---------- module tiles ---------- */
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;
+  box-shadow:var(--sh);text-align:left;transition:transform .12s ease,box-shadow .12s ease,border-color .12s}
+.tile:hover{transform:translateY(-2px);border-color:var(--teal);box-shadow:0 6px 20px rgba(14,124,107,.14)}
+.tile .ico{font-size:22px} 
+.tile h3{font-size:15.5px;margin:6px 0 3px}
+.tile p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.45}
+.tile .meta{margin-top:9px;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted)}
+.bar{flex:1;height:6px;background:#EFEAE1;border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--teal);border-radius:999px;transition:width .4s ease}
+
+/* ---------- exercise ---------- */
+.qhead{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.progline{height:6px;background:#EFEAE1;border-radius:999px;overflow:hidden;margin:12px 0 18px}
+.progline i{display:block;height:100%;background:var(--teal);transition:width .35s ease}
+.stem{font-size:17px;font-weight:600;margin:2px 0 4px;line-height:1.45}
+.orig{background:var(--amber-l);border-left:3px solid var(--amber);border-radius:0 10px 10px 0;
+  padding:11px 14px;margin:12px 0;font-size:15.5px}
+.opts{display:grid;gap:9px;margin-top:14px}
+.opt{text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;
+  font-size:15px;line-height:1.5;transition:border-color .12s,background .12s;display:flex;gap:11px;align-items:flex-start}
+.opt:hover:not(:disabled){border-color:var(--teal);background:var(--teal-l)}
+.opt .k{width:22px;height:22px;border-radius:7px;background:#F1ECE3;color:var(--muted);flex:none;
+  display:grid;place-items:center;font-size:12px;font-weight:800;margin-top:1px}
+.opt.right{border-color:var(--green);background:var(--green-l)} .opt.right .k{background:var(--green);color:#fff}
+.opt.wrong{border-color:var(--red);background:var(--red-l)} .opt.wrong .k{background:var(--red);color:#fff}
+.opt.dim{opacity:.55}
+.fb{border-radius:12px;padding:14px 16px;margin-top:14px;font-size:14.5px;line-height:1.55}
+.fb.ok{background:var(--green-l);border:1px solid #BEE3CC}
+.fb.no{background:var(--red-l);border:1px solid #F0C9C0}
+.fb b{display:block;margin-bottom:4px}
+.fb .why{margin-top:8px;padding-top:8px;border-top:1px dashed rgba(0,0,0,.13);color:#3A4A55}
+textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:13px;font-family:inherit;
+  font-size:15.5px;line-height:1.6;resize:vertical;background:#FEFDFB;color:var(--ink)}
+textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-l)}
+input[type=text]{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;
+  font-family:inherit;font-size:15.5px;background:#FEFDFB;color:var(--ink)}
+input[type=text]:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-l)}
+.model{background:var(--teal-l);border:1px solid #BFE3DA;border-radius:12px;padding:14px 16px;margin-top:12px}
+.model .lbl{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-d);margin-bottom:5px}
+.check{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line);
+  border-radius:10px;margin-top:7px;background:var(--card);cursor:pointer;font-size:14px;line-height:1.45}
+.check input{margin-top:3px;flex:none;width:17px;height:17px;accent-color:var(--teal)}
+.check.on{background:var(--green-l);border-color:#BEE3CC}
+
+/* ---------- compare ---------- */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cmp>div{border-radius:12px;padding:14px;font-size:14.5px;line-height:1.6}
+.cmp .a{background:var(--amber-l);border:1px solid #EFD9AE}
+.cmp .b{background:var(--teal-l);border:1px solid #BFE3DA}
+.cmp .lbl{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;opacity:.75}
+mark{background:#FFE59A;padding:0 2px;border-radius:3px}
+mark.g{background:#B8ECCD}
+.notes{margin-top:12px;background:#F7F4EE;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.notes ol{margin:6px 0 0;padding-left:20px} .notes li{margin-bottom:6px;font-size:14.5px}
+
+/* ---------- builder ---------- */
+.slots{display:grid;gap:10px;margin:14px 0}
+.slot{border:1.5px dashed var(--line);border-radius:12px;padding:12px 14px;background:#FEFDFB;min-height:52px}
+.slot.filled{border-style:solid;border-color:var(--teal);background:var(--teal-l)}
+.slot .lbl{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;font-size:14px;
+  transition:.12s}
+.chip:hover{border-color:var(--teal);background:var(--teal-l)}
+.chip.used{opacity:.35;pointer-events:none}
+.sentence{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;font-size:16px;
+  line-height:1.6;min-height:56px;margin-top:6px}
+
+/* ---------- order ---------- */
+.pool,.tray{display:grid;gap:9px;margin-top:8px}
+.piece{border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:11px 14px;
+  font-size:14.5px;line-height:1.5;text-align:left;display:flex;gap:10px;align-items:flex-start}
+.piece:hover{border-color:var(--teal);background:var(--teal-l)}
+.piece .num{width:22px;height:22px;border-radius:7px;background:var(--teal);color:#fff;flex:none;
+  display:grid;place-items:center;font-size:12px;font-weight:800}
+.piece.ok{border-color:var(--green);background:var(--green-l)}
+.piece.bad{border-color:var(--red);background:var(--red-l)}
+.dropzone{border:1.5px dashed var(--line);border-radius:12px;padding:10px;background:#FEFDFB;min-height:60px}
+
+/* ---------- flashcard ---------- */
+.flip{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px 22px;text-align:center;
+  box-shadow:var(--sh);min-height:190px;display:grid;place-content:center;gap:10px}
+.flip .weak{font-size:20px;font-weight:650;color:var(--red)}
+.flip .strong{font-size:20px;font-weight:700;color:var(--teal-d)}
+.flip .learn{font-size:14px;color:var(--muted);margin-top:4px}
+
+/* ---------- lessons ---------- */
+.lesson{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:10px;background:var(--card)}
+.lesson>button{width:100%;text-align:left;background:none;border:none;padding:14px 16px;display:flex;
+  align-items:center;gap:11px;font-size:15px;font-weight:650}
+.lesson>button:hover{background:var(--teal-l)}
+.lesson .body{padding:0 16px 16px;font-size:14.5px}
+.ex{display:grid;gap:6px;margin:10px 0}
+.ex div{border-radius:10px;padding:9px 12px;font-size:14.5px}
+.ex .o{background:#F4F1EA} .ex .x{background:var(--red-l)} .ex .v{background:var(--green-l)}
+.rule{background:var(--violet-l);border-left:3px solid var(--violet);border-radius:0 10px 10px 0;padding:10px 13px;
+  font-size:14px;margin-top:10px}
+
+/* ---------- progress ---------- */
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center;box-shadow:var(--sh)}
+.stat b{display:block;font-size:24px;line-height:1.2}
+.stat span{font-size:12px;color:var(--muted)}
+.mrow{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:9px;background:var(--card)}
+.mrow .q{font-weight:600;font-size:14.5px;margin-bottom:6px}
+.mrow .l{font-size:13.5px;margin:2px 0}
+.mrow .l .k{display:inline-block;width:74px;font-weight:700;color:var(--muted);font-size:11.5px;
+  letter-spacing:.05em;text-transform:uppercase}
+.catbar{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13.5px}
+.catbar .nm{width:190px;flex:none;font-weight:600}
+.catbar .bar{height:9px}
+.catbar .pc{width:56px;text-align:right;font-weight:700;font-size:13px}
+
+.footer{text-align:center;color:var(--muted);font-size:12.5px;margin-top:30px;line-height:1.7}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--ink);
+  color:#fff;padding:11px 20px;border-radius:999px;font-size:14px;font-weight:600;opacity:0;
+  transition:.28s cubic-bezier(.2,.9,.3,1);z-index:99;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:640px){
+  .tiles,.path,.cmp,.statgrid{grid-template-columns:1fr}
+  .hero h1{font-size:22px}
+  .catbar .nm{width:120px}
+}
+@media print{ header.top,.btn,.toast{display:none!important} body{background:#fff} }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topin">
+    <div class="brand">
+      <div class="logo">🐼</div>
+      <div>Situational Writing Trainer<small id="paperName">WA3 · Earth Warriors Email</small></div>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn-home hide" id="homeBtn">← Home</button>
+    <div class="xpchip">⭐ <span id="xpVal">0</span> XP</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- ============ HOME ============ -->
+  <section id="view-home">
+    <div class="hero">
+      <div class="eyebrow" style="color:rgba(255,255,255,.8)">Your mission</div>
+      <h1 id="heroTitle">Turn a good email into a persuasive one</h1>
+      <p id="heroSub">You are Melissa. Write to your cousin Sarah so she doesn't just <em>know</em> about the Earth Warriors programme — she <em>wants</em> to join it.</p>
+      <div class="scorebar" id="scorebar"></div>
+    </div>
+
+    <div class="path">
+      <div class="step"><div class="n">1</div><h4>Learn</h4><p>Six quick lessons on the exact things that cost you marks.</p></div>
+      <div class="step"><div class="n">2</div><h4>Practise</h4><p>Compare, grammar, phrases, persuasion and paragraph order.</p></div>
+      <div class="step"><div class="n">3</div><h4>Test</h4><p>Write it yourself, then compare with the model version.</p></div>
+    </div>
+
+    <div class="card" style="background:var(--amber-l);border-color:#EFD9AE">
+      <div class="row" style="gap:14px;flex-wrap:nowrap;align-items:flex-start">
+        <div style="font-size:26px">🎯</div>
+        <div>
+          <b>Not sure where to start?</b>
+          <div class="small muted" style="margin-top:2px">Your content marks are already strong (●/6). Almost every lost mark is in <b>Language &amp; Organisation</b>. Start with <b>Lesson 1</b>, then go straight to the Grammar Gym.</div>
+          <div class="row" style="margin-top:11px">
+            <button class="btn sm" onclick="go('lessons')">Start Lesson 1 →</button>
+            <button class="btn sm ghost" onclick="go('compare')">Or see my email vs the upgrade</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="eyebrow" style="margin:22px 0 10px">All modules</div>
+    <div class="tiles" id="tiles"></div>
+
+    <div class="footer">Built from your marked WA3 paper · Content ●/6 · Language &amp; Organisation ●/8<br>Next target: keep Content at 5–6, lift Language &amp; Organisation to 7–8.</div>
+  </section>
+
+  <!-- ============ GENERIC MODULE VIEW ============ -->
+  <section id="view-mod" class="hide">
+    <div id="modHead" style="margin:20px 0 4px"></div>
+    <div id="modBody"></div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+const PAPERS = [
+{
+ "id": "wa3",
+ "name": "WA3 · Earth Warriors Email",
+ "mission": "You are Melissa. Write an email to your cousin Sarah to encourage her to join the Earth Warriors Holiday Volunteer Programme.",
+ "scores": [
+  [
+   "Content",
+   "5 / 6"
+  ],
+  [
+   "Language & Organisation",
+   "6 / 8"
+  ],
+  [
+   "Total",
+   "11 / 14"
+  ],
+  [
+   "Next target",
+   "13 / 14"
+  ]
+ ],
+ "lessons": [
+  {
+   "id": "purpose",
+   "icon": "🎯",
+   "title": "Say your PURPOSE in the first paragraph",
+   "line": "Your email gave the background first, so Sarah had to read three sentences before she knew what you wanted.",
+   "ex": [
+    [
+     "Original",
+     "At school, there was an assembly talk about a programme called “Earth Warriors Holiday Volunteer Programme”."
+    ],
+    [
+     "Common mistake",
+     "Start with everything that happened, and hope the reader works out why you are writing."
+    ],
+    [
+     "Fix",
+     "Recently, I attended an assembly talk in school by a speaker from Earth Warriors. He shared about a volunteer programme, and I would like to encourage you to take part in it with me."
+    ]
+   ],
+   "rule": "Greeting → one friendly line → WHY you are writing + WHAT you want the reader to do. Purpose belongs in paragraph 1, not paragraph 3."
+  },
+  {
+   "id": "active",
+   "icon": "🙋",
+   "title": "Active and personal beats 'there was' and 'one'",
+   "line": "'There was an assembly talk' and 'one will get to' are grammatically fine but they push you and Sarah out of the sentence.",
+   "ex": [
+    [
+     "Original",
+     "At school, there was an assembly talk. In the programme, one will get to pick up litter."
+    ],
+    [
+     "Common mistake",
+     "Using 'there was / there is / one / participants' when you actually mean 'I' and 'you'."
+    ],
+    [
+     "Fix",
+     "Recently, I attended an assembly talk. During the programme, you will help to pick up litter along the beach."
+    ]
+   ],
+   "rule": "In an email to a real person: use I for what you did, and you for what the reader will do. Save 'one' and 'participants' for a formal report."
+  },
+  {
+   "id": "verbpat",
+   "icon": "🔧",
+   "title": "Natural verb patterns: recommend, suggest, encourage, invite",
+   "line": "'I recommend you to join' is the single most common expression error in this kind of email — and it cost you a language mark.",
+   "ex": [
+    [
+     "Original",
+     "I recommend you to join this activity."
+    ],
+    [
+     "Common mistake",
+     "recommend / suggest + somebody + to do  ✗"
+    ],
+    [
+     "Fix",
+     "I encourage you to join this activity.  ✓   /   I recommend that you join this activity.  ✓"
+    ]
+   ],
+   "rule": "encourage · advise · invite · remind · persuade + SOMEBODY + to do.\nrecommend · suggest + THAT + clause, or + ‑ing. Never 'suggest me to'."
+  },
+  {
+   "id": "precise",
+   "icon": "🔍",
+   "title": "Precise expressions and the small prepositions",
+   "line": "A few fixed phrases appear in almost every situational writing paper. Getting them exactly right is free marks.",
+   "ex": [
+    [
+     "Original",
+     "I am looking forward to hear from you. Please reply me soon."
+    ],
+    [
+     "Common mistake",
+     "Dropping 'to' after reply, and using the base verb after 'looking forward to'."
+    ],
+    [
+     "Fix",
+     "I am looking forward to hearing from you. Please reply to me soon."
+    ]
+   ],
+   "rule": "looking forward TO + ‑ing · interested IN + ‑ing · thank you FOR + ‑ing · reply TO someone · take part IN something · passionate ABOUT + ‑ing."
+  },
+  {
+   "id": "benefit",
+   "icon": "💖",
+   "title": "Reason + Benefit + Togetherness = persuasion",
+   "line": "You gave a reason (Sarah likes the environment) but stopped there. A reason tells; a benefit sells.",
+   "ex": [
+    [
+     "Original",
+     "I know that you like to protect the environment, so I recommend you to join this activity, and I will sign up for this programme too."
+    ],
+    [
+     "Common mistake",
+     "Stating the fact and assuming the reader will work out why it matters to her."
+    ],
+    [
+     "Fix",
+     "Since you are passionate about conserving the environment, I think this programme would be perfect for you. You will be able to make a real difference by helping to keep East Coast Beach clean. I am also planning to sign up, so we can volunteer together."
+    ]
+   ],
+   "rule": "PERSONAL LINK (you care about X) + BENEFIT (you will be able to achieve Y) + TOGETHERNESS (we can do it together). Three moves, three sentences."
+  },
+  {
+   "id": "ending",
+   "icon": "🌟",
+   "title": "An ending does two jobs: warmth AND a call to action",
+   "line": "'I hope to see you there!' is friendly, but it adds no last push and asks for nothing.",
+   "ex": [
+    [
+     "Original",
+     "I hope to see you there!"
+    ],
+    [
+     "Common mistake",
+     "Ending on a wish instead of a request — the reader has nothing to do next."
+    ],
+    [
+     "Fix",
+     "I believe we will really enjoy being part of this meaningful programme together. I really hope you can join me, and I look forward to your reply!"
+    ]
+   ],
+   "rule": "Last paragraph = remind them why it matters + ask for a reply. Keep the sign‑off suited to the reader ('Cheers,' is right for a cousin; 'Yours sincerely,' is not)."
+  }
+ ],
+ "grammar": [
+  {
+   "id": "g1",
+   "cat": "verbpat",
+   "mode": "fix",
+   "lesson": "verbpat",
+   "stem": "One of these is correct English. Which one?",
+   "orig": "I recommend you to join this activity.",
+   "options": [
+    "I encourage you to join this activity.",
+    "I recommend you that you join this activity.",
+    "I recommend you to joining this activity.",
+    "I recommend you joining this activity."
+   ],
+   "answer": 0,
+   "why": "'Recommend' cannot take 'somebody to do'. Use encourage / advise / invite + somebody + to do, or 'I recommend that you join'."
+  },
+  {
+   "id": "g2",
+   "cat": "verbpat",
+   "mode": "fix",
+   "lesson": "verbpat",
+   "stem": "Which sentence is correct?",
+   "orig": "My teacher suggested me to sign up for the competition.",
+   "options": [
+    "My teacher was suggesting me to sign up for the competition.",
+    "My teacher suggested me that I sign up for the competition.",
+    "My teacher suggested that I sign up for the competition.",
+    "My teacher suggested me signing up for the competition."
+   ],
+   "answer": 2,
+   "why": "'Suggest' never takes an object + to‑infinitive. Use 'suggest that + clause' or 'suggest + ‑ing'."
+  },
+  {
+   "id": "g3",
+   "cat": "verbpat",
+   "mode": "fix",
+   "lesson": "verbpat",
+   "stem": "Which sentence is correct?",
+   "orig": "I would like to invite you joining us on Saturday.",
+   "options": [
+    "I would like to invite you for joining us on Saturday.",
+    "I would like to invite you that you join us on Saturday.",
+    "I would like to invite you join us on Saturday.",
+    "I would like to invite you to join us on Saturday."
+   ],
+   "answer": 3,
+   "why": "'Invite' belongs to the encourage family: invite + somebody + TO DO."
+  },
+  {
+   "id": "g4",
+   "cat": "precise",
+   "mode": "fix",
+   "lesson": "precise",
+   "stem": "Which sentence is correct?",
+   "orig": "I am looking forward to hear from you.",
+   "options": [
+    "I am looking forward to heard from you.",
+    "I am looking forward to hearing from you.",
+    "I am looking forward that I hear from you.",
+    "I am looking forward for hearing from you."
+   ],
+   "answer": 1,
+   "why": "In 'look forward to', the 'to' is a preposition, so the verb after it takes ‑ing."
+  },
+  {
+   "id": "g5",
+   "cat": "precise",
+   "mode": "fix",
+   "lesson": "precise",
+   "stem": "Which sentence is correct?",
+   "orig": "Please reply me as soon as possible.",
+   "options": [
+    "Please reply to me as soon as possible.",
+    "Please reply me back as soon as it is possible.",
+    "Please reply back me as soon as possible.",
+    "Please replying to me as soon as possible."
+   ],
+   "answer": 0,
+   "why": "You reply TO a person. 'Reply back' is also repetitive — 'reply' already means writing back."
+  },
+  {
+   "id": "g6",
+   "cat": "precise",
+   "mode": "fix",
+   "lesson": "precise",
+   "stem": "Which sentence is correct?",
+   "orig": "I am interested to join the programme with you.",
+   "options": [
+    "I am interested about join the programme with you.",
+    "I am interested in joining the programme with you.",
+    "I am interested for joining the programme with you.",
+    "I am having interest to join the programme with you."
+   ],
+   "answer": 1,
+   "why": "interested IN + ‑ing. The same pattern gives 'passionate about conserving', 'keen on joining'."
+  },
+  {
+   "id": "g7",
+   "cat": "precise",
+   "mode": "fix",
+   "lesson": "precise",
+   "stem": "Which sentence is correct?",
+   "orig": "Thank you for inform me about the programme.",
+   "options": [
+    "Thank you for you informed me about the programme.",
+    "Thank you to inform me about the programme.",
+    "Thank you for informing me about the programme.",
+    "Thank you for the inform about the programme."
+   ],
+   "answer": 2,
+   "why": "After the preposition 'for', a verb must take ‑ing."
+  },
+  {
+   "id": "g8",
+   "cat": "precise",
+   "mode": "fix",
+   "lesson": "precise",
+   "stem": "The programme has not happened yet. Which sentence is correct?",
+   "orig": "The programme is held from 8 to 12 September 2026 at East Coast Beach.",
+   "options": [
+    "The programme is going to held from 8 to 12 September 2026 at East Coast Beach.",
+    "The programme will held from 8 to 12 September 2026 at East Coast Beach.",
+    "The programme will be held from 8 to 12 September 2026 at East Coast Beach.",
+    "The programme will be hold from 8 to 12 September 2026 at East Coast Beach."
+   ],
+   "answer": 2,
+   "why": "A future event needs 'will be' + past participle: will be HELD (hold → held)."
+  },
+  {
+   "id": "u1",
+   "cat": "purpose",
+   "mode": "up",
+   "lesson": "purpose",
+   "stem": "You have written 'Dear Sarah, how are you?' What should the NEXT sentence do?",
+   "orig": "At school, there was an assembly talk about a programme.",
+   "options": [
+    "I am writing to encourage you to take part in a volunteer programme with me.",
+    "There is something I really want to say to you about a programme in the holidays.",
+    "I am writing this email to tell you some information about something interesting.",
+    "Let me tell you about what happened at my school assembly last week."
+   ],
+   "answer": 0,
+   "why": "Name the purpose AND the action you want, straight away. 'Something interesting' tells Sarah nothing."
+  },
+  {
+   "id": "u2",
+   "cat": "active",
+   "mode": "up",
+   "lesson": "active",
+   "stem": "All four are grammatical. Which sounds most active and personal?",
+   "orig": "At school, there was an assembly talk about a programme.",
+   "options": [
+    "A programme was talked about at an assembly held in my school.",
+    "At school, an assembly talk about a programme was held for all of us.",
+    "There was, at school, an assembly talk about a programme.",
+    "Recently, I attended an assembly talk in school about a programme."
+   ],
+   "answer": 3,
+   "why": "Put yourself in the sentence. 'I attended' is clearer, more personal and sounds more mature than 'there was'."
+  },
+  {
+   "id": "u3",
+   "cat": "active",
+   "mode": "up",
+   "lesson": "active",
+   "stem": "You are writing to Sarah. Which version speaks to her directly?",
+   "orig": "One will get to pick up litter at the beach.",
+   "options": [
+    "One is able to pick up litter along the beach.",
+    "Participants will get to pick up litter along the beach.",
+    "Litter along the beach will be picked up by everyone there.",
+    "You will help to pick up litter along the beach."
+   ],
+   "answer": 3,
+   "why": "'One' and 'participants' sound like a rulebook. In an email to your cousin, say 'you'."
+  },
+  {
+   "id": "u4",
+   "cat": "benefit",
+   "mode": "up",
+   "lesson": "benefit",
+   "stem": "Which opening to the persuasion paragraph is strongest?",
+   "orig": "I know that you like to protect the environment.",
+   "options": [
+    "I know that you like to protect the environment very much, so I am telling you that you can join this programme.",
+    "You like the environment, so this programme is quite good for you.",
+    "Since you are passionate about conserving the environment, this programme would be perfect for you.",
+    "Because of your love of the environment, I am telling you about this programme."
+   ],
+   "answer": 2,
+   "why": "Precise words ('passionate about conserving') plus a judgement ('would be perfect for you') do the persuading."
+  },
+  {
+   "id": "u5",
+   "cat": "benefit",
+   "mode": "up",
+   "lesson": "benefit",
+   "stem": "Which sentence best explains the BENEFIT to Sarah?",
+   "orig": "It is a good programme about the environment.",
+   "options": [
+    "It is a very good and meaningful programme, and you will surely enjoy it very much.",
+    "The programme is about the environment, which you like very much.",
+    "You will be able to make a real difference by helping to keep the beach clean.",
+    "You will be doing some work at the beach for five days in September."
+   ],
+   "answer": 2,
+   "why": "A benefit is what SHE will achieve, not how nice the programme is. 'Make a real difference' names the achievement."
+  },
+  {
+   "id": "u6",
+   "cat": "benefit",
+   "mode": "up",
+   "lesson": "benefit",
+   "stem": "Turn this fact into a reason for Sarah to join. Which works best?",
+   "orig": "I will sign up for this programme too.",
+   "options": [
+    "I will sign up for this programme too, which is a good thing to do.",
+    "I am also planning to sign up, so we can volunteer together.",
+    "I am also going to sign up for this programme by myself.",
+    "I will also be one of the people who is signing up for this programme."
+   ],
+   "answer": 1,
+   "why": "A fact becomes persuasion when you say what it means for HER: 'so we can volunteer together'."
+  },
+  {
+   "id": "u7",
+   "cat": "ending",
+   "mode": "up",
+   "lesson": "ending",
+   "stem": "Which ending is strongest?",
+   "orig": "I hope to see you there!",
+   "options": [
+    "I hope you can come to the beach on that day with me!",
+    "I really hope you can join me, and I look forward to your reply!",
+    "I hope to see you there very soon, my dear cousin!",
+    "I hope to see you there and I hope you will have a lot of fun at the beach!"
+   ],
+   "answer": 1,
+   "why": "A strong ending does two jobs — warmth AND a clear request for a reply."
+  },
+  {
+   "id": "u8",
+   "cat": "purpose",
+   "mode": "up",
+   "lesson": "purpose",
+   "stem": "Which sentence links the registration facts to Sarah's decision?",
+   "orig": "To register for this programme, you need to fill in a form at www.earthwarriors.sg by 31 August 2026.",
+   "options": [
+    "Registration is at www.earthwarriors.sg and it closes on 31 August 2026.",
+    "You are required to complete the registration form found at www.earthwarriors.sg by 31 August 2026.",
+    "The way to register is that you must go and fill in a form at www.earthwarriors.sg before 31 August 2026.",
+    "If you are keen to join, simply fill in the registration form at www.earthwarriors.sg by 31 August 2026."
+   ],
+   "answer": 3,
+   "why": "'If you are keen to join' turns a rule into an invitation, and keeps the persuasive tone running."
+  },
+  {
+   "id": "p1",
+   "cat": "proof",
+   "mode": "proof",
+   "lesson": "active",
+   "stem": "Which part is wrong?",
+   "orig": "During the programme, you will help to pick up litter along the beach and recycle the items collected.",
+   "options": [
+    "Nothing is wrong",
+    "and recycle the items collected",
+    "you will help to pick up litter",
+    "During the programme,"
+   ],
+   "answer": 0,
+   "why": "This is the reference version: direct ('you will help'), correctly linked, and both tasks are included. Not every sentence has an error — don't invent one."
+  },
+  {
+   "id": "p2",
+   "cat": "proof",
+   "mode": "proof",
+   "lesson": "verbpat",
+   "stem": "Which part is wrong?",
+   "orig": "I am writing to encourage you to joining the programme with me next month.",
+   "options": [
+    "to joining the programme",
+    "with me next month",
+    "I am writing to encourage you",
+    "Nothing is wrong"
+   ],
+   "answer": 0,
+   "why": "'Encourage you TO JOIN' — after 'to' in a to‑infinitive you need the base verb, not ‑ing."
+  }
+ ],
+ "phrases": [
+  {
+   "weak": "there was an assembly talk",
+   "strong": "I attended an assembly talk",
+   "learn": "Use active, personal phrasing.",
+   "cloze": "Recently, I ______ an assembly talk in school.",
+   "ans": [
+    "attended",
+    "went to"
+   ]
+  },
+  {
+   "weak": "one will get to",
+   "strong": "you will get to / you will help to",
+   "learn": "Write directly to the reader.",
+   "cloze": "During the programme, ______ will help to pick up litter.",
+   "ans": [
+    "you"
+   ]
+  },
+  {
+   "weak": "I recommend you to join",
+   "strong": "I encourage you to join / I think you should join",
+   "learn": "Learn natural verb patterns.",
+   "cloze": "I ______ you to join this programme with me.",
+   "ans": [
+    "encourage",
+    "invite",
+    "advise",
+    "urge"
+   ]
+  },
+  {
+   "weak": "protect the environment",
+   "strong": "care about protecting / conserve the environment",
+   "learn": "Use precise expressions.",
+   "cloze": "Since you are passionate about ______ the environment...",
+   "ans": [
+    "conserving",
+    "protecting"
+   ]
+  },
+  {
+   "weak": "I will sign up too",
+   "strong": "we can volunteer together",
+   "learn": "Turn facts into persuasion.",
+   "cloze": "I am also planning to sign up, so we can ______ together.",
+   "ans": [
+    "volunteer",
+    "go",
+    "participate"
+   ]
+  },
+  {
+   "weak": "I hope to see you there!",
+   "strong": "I really hope you can join me. I look forward to your reply!",
+   "learn": "Write a fuller ending.",
+   "cloze": "I look forward to ______ from you!",
+   "ans": [
+    "hearing"
+   ]
+  },
+  {
+   "weak": "I want to tell you about something",
+   "strong": "I am writing to tell you about...",
+   "learn": "Name your purpose immediately.",
+   "cloze": "I am ______ to encourage you to take part in this programme.",
+   "ans": [
+    "writing"
+   ]
+  },
+  {
+   "weak": "it is a very good programme",
+   "strong": "this programme would be perfect for you",
+   "learn": "Judge it FOR the reader, not in general.",
+   "cloze": "I think this programme would be ______ for you.",
+   "ans": [
+    "perfect",
+    "ideal",
+    "great"
+   ]
+  },
+  {
+   "weak": "you can learn something",
+   "strong": "you will be able to make a real difference",
+   "learn": "Name the achievement, not a vague gain.",
+   "cloze": "You will be able to make a real ______ by keeping the beach clean.",
+   "ans": [
+    "difference",
+    "impact"
+   ]
+  },
+  {
+   "weak": "please reply me",
+   "strong": "I look forward to your reply",
+   "learn": "Reply TO someone — or use the noun.",
+   "cloze": "Please reply ______ me as soon as you can.",
+   "ans": [
+    "to"
+   ]
+  },
+  {
+   "weak": "you need to fill in a form",
+   "strong": "if you are keen to join, simply fill in the form",
+   "learn": "Attach the action to her decision.",
+   "cloze": "If you are ______ to join, simply fill in the registration form.",
+   "ans": [
+    "keen",
+    "eager",
+    "happy",
+    "interested"
+   ]
+  }
+ ],
+ "build": [
+  {
+   "id": "b1",
+   "scene": "Earth Warriors beach clean‑up · writing to your cousin Sarah",
+   "note": "Sarah loves the environment. The programme runs 8–12 September at East Coast Beach.",
+   "link": [
+    [
+     "Since you are passionate about conserving the environment,",
+     1
+    ],
+    [
+     "Since you like nature and stuff,",
+     0
+    ],
+    [
+     "Because I know you are a person who cares deeply about our beaches,",
+     1
+    ],
+    [
+     "You know a lot about the environment,",
+     0
+    ]
+   ],
+   "benefit": [
+    [
+     "you will be able to make a real difference by keeping East Coast Beach clean",
+     1
+    ],
+    [
+     "you will have something to do during the holidays",
+     0
+    ],
+    [
+     "you will see for yourself how much waste ends up on our shores, and help recycle it",
+     1
+    ],
+    [
+     "it is quite a fun programme in September",
+     0
+    ]
+   ],
+   "together": [
+    [
+     "and I am signing up too, so we can volunteer side by side",
+     1
+    ],
+    [
+     "and I will also be there at the beach",
+     0
+    ],
+    [
+     "and since I am joining as well, we can spend the holidays doing something meaningful together",
+     1
+    ],
+    [
+     "and my friends might come too",
+     0
+    ]
+   ],
+   "model": "Since you are passionate about conserving the environment, you will be able to make a real difference by keeping East Coast Beach clean — and I am signing up too, so we can volunteer side by side."
+  },
+  {
+   "id": "b2",
+   "scene": "School book‑donation drive · writing to your friend Priya",
+   "note": "Priya reads constantly and has boxes of old books. The drive collects books for children's homes.",
+   "link": [
+    [
+     "Since you are always the first to finish a new book,",
+     1
+    ],
+    [
+     "Since you have many books,",
+     0
+    ],
+    [
+     "Knowing how much you love reading and how many books you have outgrown,",
+     1
+    ],
+    [
+     "You read books very often,",
+     0
+    ]
+   ],
+   "benefit": [
+    [
+     "you can pass that same joy on to a child who has never owned a book",
+     1
+    ],
+    [
+     "you can clear some space on your shelf",
+     0
+    ],
+    [
+     "your old books will go straight to children's homes instead of the recycling bin",
+     1
+    ],
+    [
+     "you will get a certificate for helping",
+     0
+    ]
+   ],
+   "together": [
+    [
+     "and I am sorting my own pile this weekend, so we could pack them together",
+     1
+    ],
+    [
+     "and I am also donating some books",
+     0
+    ],
+    [
+     "and if we bring our boxes down on the same afternoon, it will be far less work for both of us",
+     1
+    ],
+    [
+     "and other classmates are donating too",
+     0
+    ]
+   ],
+   "model": "Knowing how much you love reading and how many books you have outgrown, you can pass that same joy on to a child who has never owned a book — and I am sorting my own pile this weekend, so we could pack them together."
+  },
+  {
+   "id": "b3",
+   "scene": "Holiday coding camp · writing to your cousin Daniel",
+   "note": "Daniel spends hours playing and modding games. The camp teaches you to build your own game in five days.",
+   "link": [
+    [
+     "Since you already spend hours building levels in your favourite game,",
+     1
+    ],
+    [
+     "Since you like computer games,",
+     0
+    ],
+    [
+     "Because you are the one who taught me how to mod a game,",
+     1
+    ],
+    [
+     "You play games a lot,",
+     0
+    ]
+   ],
+   "benefit": [
+    [
+     "you would walk out of the camp with a game of your own that other people can play",
+     1
+    ],
+    [
+     "you would learn some coding during the holidays",
+     0
+    ],
+    [
+     "you would finally be the one writing the rules instead of playing by someone else's",
+     1
+    ],
+    [
+     "you would get to use their computers",
+     0
+    ]
+   ],
+   "together": [
+    [
+     "and I have already booked a place, so we would be on the same team",
+     1
+    ],
+    [
+     "and I will be there as well",
+     0
+    ],
+    [
+     "and since I am going too, we could keep working on our game together after the camp ends",
+     1
+    ],
+    [
+     "and it is not very expensive",
+     0
+    ]
+   ],
+   "model": "Since you already spend hours building levels in your favourite game, you would walk out of the camp with a game of your own that other people can play — and I have already booked a place, so we would be on the same team."
+  }
+ ],
+ "order": [
+  {
+   "id": "o1",
+   "title": "Level 1 · Order the facts inside the details paragraph",
+   "hint": "Easy Organisation Trick: WHEN + WHERE → WHAT YOU WILL DO → HOW TO REGISTER",
+   "pieces": [
+    "The Earth Warriors Holiday Volunteer Programme will be held from 8 to 12 September 2026 at East Coast Beach.",
+    "During the programme, you will help to pick up litter along the beach and recycle the items collected.",
+    "If you are keen to join, simply fill in the registration form at www.earthwarriors.sg by 31 August 2026."
+   ],
+   "why": "When and where set the scene, what you will do fills it in, and how to register is the action — so it comes last, right before the persuasion."
+  },
+  {
+   "id": "o2",
+   "title": "Level 2 · Order the whole email",
+   "hint": "Purpose → Details → Persuasion → Ending. The greeting and sign‑off are already in place.",
+   "pieces": [
+    "How are you? I hope you are doing well. Recently, I attended an assembly talk by a speaker from Earth Warriors, and I would like to encourage you to take part in the programme with me.",
+    "The programme will be held from 8 to 12 September 2026 at East Coast Beach. During the programme, you will help to pick up litter and recycle the items collected. If you are keen, simply register at www.earthwarriors.sg by 31 August 2026.",
+    "Since you are passionate about conserving the environment, I think this programme would be perfect for you. You will be able to make a real difference, and I am also planning to sign up so we can volunteer together.",
+    "I believe we will really enjoy being part of this meaningful programme together. I really hope you can join me, and I look forward to your reply!"
+   ],
+   "why": "Every situational writing task follows this shape: why I am writing → the facts they need → why they should say yes → warm close + ask for a reply."
+  }
+ ],
+ "compare": [
+  {
+   "id": "c1",
+   "title": "Paragraph 1 · Opening & Purpose",
+   "sub": "A good opening should tell Sarah why you are writing.",
+   "quiz": "Before you look — what is the main thing the reference version adds here?",
+   "opts": [
+    "It states the purpose of the email straight away.",
+    "It adds more facts about the beach.",
+    "It makes the email longer and more formal.",
+    "It corrects a spelling mistake."
+   ],
+   "ans": 0,
+   "a": "Dear Sarah,\n\nHow are you? I hope you are doing fine. At school, there was an assembly talk about a programme called “Earth Warriors Holiday Volunteer Programme”.",
+   "b": "Dear Sarah,\n\nHow are you? I hope you are doing well. Recently, I attended an assembly talk in school by a speaker from Earth Warriors. He shared about a volunteer programme his organisation has planned for the school holidays, and I would like to encourage you to take part in it with me.",
+   "notes": [
+    "Say the purpose earlier. The original gives background first, but Sarah should quickly know why you are writing: you want to encourage her to join.",
+    "Use a more active sentence. 'I attended an assembly talk...' sounds clearer and more personal than 'there was an assembly talk...'",
+    "Make it warm. Adding 'with me' makes the invitation feel friendlier and more appealing."
+   ],
+   "upgrade": [
+    "There was an assembly talk about a programme.",
+    "Recently, I attended an assembly talk in school by a speaker from Earth Warriors.",
+    "The improved sentence is clearer, more direct and gives useful context."
+   ]
+  },
+  {
+   "id": "c2",
+   "title": "Paragraph 2 · Programme Details",
+   "sub": "Your facts are all correct. Now make them easy to read.",
+   "quiz": "What does the reference version change about these facts?",
+   "opts": [
+    "It adds a new fact the original missed.",
+    "It speaks directly to Sarah and reorders the facts.",
+    "It removes the registration deadline.",
+    "It changes the dates of the programme."
+   ],
+   "ans": 1,
+   "a": "In the programme, one will get to pick up litter at the beach and recycle the items collected. It will take place from 8 to 12 September 2026, at East Coast Beach. To register for this programme, you need to fill in a form at www.earthwarriors.sg by 31 August 2026.",
+   "b": "The Earth Warriors Holiday Volunteer Programme will be held from 8 to 12 September 2026 at East Coast Beach. During the programme, you will help to pick up litter along the beach and recycle the items collected. If you are keen to join, simply fill in the registration form at www.earthwarriors.sg by 31 August 2026.",
+   "notes": [
+    "Speak directly to Sarah. Use 'you will help...' instead of the impersonal 'one will get to...'",
+    "Keep date and place together. Your facts are correct; the improved version simply presents them more smoothly.",
+    "Link registration naturally. 'If you are keen to join...' connects the information to the action Sarah needs to take."
+   ],
+   "upgrade": [
+    "One will get to pick up litter at the beach.",
+    "During the programme, you will help to pick up litter along the beach.",
+    "'You' pulls Sarah into the picture; 'one' keeps her at arm's length."
+   ]
+  },
+  {
+   "id": "c3",
+   "title": "Paragraph 3 · Persuasion Power",
+   "sub": "This is your biggest area to improve.",
+   "quiz": "Your reason was right. What did the reference version do with it?",
+   "opts": [
+    "It replaced your reason with a different one.",
+    "It shortened the reason to save words.",
+    "It kept your reason and added the benefit and togetherness.",
+    "It made the paragraph more formal."
+   ],
+   "ans": 2,
+   "a": "I know that you like to protect the environment, so I recommend you to join this activity, and I will sign up for this programme too.",
+   "b": "Since you are passionate about conserving the environment, I think this programme would be perfect for you. You will be able to make a real difference by helping to keep East Coast Beach clean and by recycling the waste collected. I am also planning to sign up, so we can volunteer together and make the experience even more enjoyable.",
+   "notes": [
+    "Your basic idea is correct. Sarah caring about the environment is a sensible own‑information point.",
+    "Explain the benefit. Do not stop at 'you like the environment'. Tell her what she can achieve: help keep the beach clean, recycle waste and make a real difference.",
+    "Fix the phrase. 'I recommend you to join' is not natural. Use 'I encourage you to join' or 'I think you should join'.",
+    "Turn 'I will sign up too' into persuasion. Explain why that matters: 'we can volunteer together'. This is warmer and more convincing."
+   ],
+   "upgrade": [
+    "I recommend you to join this activity.",
+    "I encourage you to join this activity — I think it would be perfect for you.",
+    "'Recommend somebody to do' is not natural English, and adding a judgement makes it persuasive."
+   ]
+  },
+  {
+   "id": "c4",
+   "title": "Paragraph 4 · A Strong Ending",
+   "sub": "Finish with warmth, encouragement and a clear request.",
+   "quiz": "What is missing from your original ending?",
+   "opts": [
+    "A friendly tone.",
+    "A request for a reply.",
+    "The sign‑off.",
+    "The name of the programme."
+   ],
+   "ans": 1,
+   "a": "I hope to see you there!\n\nCheers,\nMelissa",
+   "b": "I believe we will definitely enjoy being part of this meaningful programme together. I really hope you can join me, and I look forward to your reply!\n\nCheers,\nMelissa",
+   "notes": [
+    "Friendly, but too short. 'I hope to see you there!' is acceptable, but it does not add any final persuasion.",
+    "Remind Sarah why it matters. Calling the programme 'meaningful' reinforces the value of joining.",
+    "Ask for a response. 'I look forward to your reply!' gives the email a complete and natural ending.",
+    "Keep 'Cheers,'. This is suitable for a cousin and matches the friendly tone."
+   ],
+   "upgrade": [
+    "I hope to see you there!",
+    "I really hope you can join me, and I look forward to your reply!",
+    "Warmth plus a call to action — the reader now knows exactly what to do next."
+   ]
+  }
+ ],
+ "write": [
+  {
+   "id": "w1",
+   "task": "Make Melissa sound more active.",
+   "orig": "At school, there was an assembly talk about a programme.",
+   "hint": "Put yourself in the sentence. Who attended the talk?",
+   "model": "Recently, I attended an assembly talk in school by a speaker from Earth Warriors.",
+   "checks": [
+    "I used 'I' (not 'there was').",
+    "I used an active verb such as attended / went to / listened to.",
+    "I kept the facts accurate (an assembly talk, in school)."
+   ]
+  },
+  {
+   "id": "w2",
+   "task": "Write directly to Sarah.",
+   "orig": "One will get to pick up litter at the beach.",
+   "hint": "Who are you writing to? Use her pronoun.",
+   "model": "During the programme, you will help to pick up litter along the beach.",
+   "checks": [
+    "I used 'you' (not 'one' or 'participants').",
+    "I kept the task exactly the same (picking up litter at the beach).",
+    "My sentence would sound natural if I read it aloud to a cousin."
+   ]
+  },
+  {
+   "id": "w3",
+   "task": "Correct the expression and make it persuasive.",
+   "orig": "I recommend you to join this activity.",
+   "hint": "Which verbs take 'somebody + to do'? Then add a reason why it suits her.",
+   "model": "I encourage you to join this programme — I really think it would be perfect for you.",
+   "checks": [
+    "I avoided 'recommend you to' (used encourage / invite / think you should).",
+    "I added something that makes it feel chosen for HER.",
+    "The sentence is grammatically correct."
+   ]
+  },
+  {
+   "id": "w4",
+   "task": "Turn this fact into a reason for Sarah to join.",
+   "orig": "I will sign up too.",
+   "hint": "So what? Say what your signing up means for her.",
+   "model": "I am also planning to sign up, so we can volunteer together and enjoy the experience even more.",
+   "checks": [
+    "I said what it means for Sarah ('we can... together').",
+    "I used 'we' somewhere in the sentence.",
+    "It now sounds like a reason, not just a fact."
+   ]
+  },
+  {
+   "id": "w5",
+   "task": "Write a warmer, fuller ending.",
+   "orig": "I hope to see you there!",
+   "hint": "An ending does two jobs: last push + ask for a reply.",
+   "model": "I believe we will really enjoy being part of this meaningful programme together. I really hope you can join me, and I look forward to your reply!",
+   "checks": [
+    "I reminded Sarah why the programme matters.",
+    "I asked for a reply.",
+    "It is at least two sentences and still sounds friendly."
+   ]
+  },
+  {
+   "id": "w6",
+   "task": "FINAL CHALLENGE · Write the persuasion paragraph from scratch.",
+   "orig": "Sarah cares about protecting the environment. The programme is a five‑day beach clean‑up and recycling drive at East Coast Beach. You are signing up too.",
+   "hint": "Use the formula: PERSONAL LINK + BENEFIT + TOGETHERNESS. Three sentences is plenty.",
+   "model": "Since you are passionate about conserving the environment, I think this programme would be perfect for you. You will be able to make a real difference by helping to keep East Coast Beach clean and by recycling the waste collected. I am also planning to sign up, so we can volunteer together and make the experience even more enjoyable.",
+   "checks": [
+    "PERSONAL LINK — I connected the programme to something Sarah already cares about.",
+    "BENEFIT — I said what Sarah will be able to achieve, not just that it is 'good'.",
+    "TOGETHERNESS — I said we can do it together.",
+    "I avoided 'recommend you to' and 'one will get to'.",
+    "Every sentence is grammatically correct when I read it aloud."
+   ]
+  }
+ ],
+ "cats": {
+  "purpose": "Purpose first",
+  "active": "Active & personal voice",
+  "verbpat": "Verb patterns",
+  "precise": "Precise expressions",
+  "benefit": "Reason + benefit",
+  "ending": "Strong ending",
+  "proof": "Proofreading"
+ }
+}
+];
+let PAPER = PAPERS[0];
+/* ================= state ================= */
+const S = { xp:0, stats:{}, mistakes:[], prog:{}, seen:{} };
+const $ = id => document.getElementById(id);
+const esc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const nl = t => esc(t).replace(/\n/g,'<br>');
+
+const MODULES = [
+ {id:'lessons', ico:'📖', name:'Quick Lessons',       desc:'Six short lessons on the exact things that cost you marks.', unit:'lessons', n:()=>PAPER.lessons.length},
+ {id:'compare', ico:'🔍', name:'Compare',             desc:'Your paragraph vs the upgraded version, with the teacher’s reasons.', unit:'paragraphs', n:()=>PAPER.compare.length},
+ {id:'gym',     ico:'🏋️', name:'Grammar Gym',         desc:'Fix it, upgrade it, proofread it — built from your own errors.', unit:'questions', n:()=>PAPER.grammar.length},
+ {id:'phrases', ico:'🧰', name:'Phrase Bank',         desc:'Flashcards, then fill in the upgraded expression yourself.', unit:'phrases', n:()=>PAPER.phrases.length},
+ {id:'build',   ico:'💖', name:'Persuasion Builder',  desc:'Assemble LINK + BENEFIT + TOGETHERNESS in three scenarios.', unit:'scenarios', n:()=>PAPER.build.length},
+ {id:'order',   ico:'🧭', name:'Paragraph Order',     desc:'Put the facts — and the whole email — in the right order.', unit:'levels', n:()=>PAPER.order.length},
+ {id:'write',   ico:'✍️', name:'Write It',            desc:'Write your own version, then compare with the model line by line.', unit:'challenges', n:()=>PAPER.write.length},
+ {id:'progress',ico:'📊', name:'My Progress',         desc:'Accuracy by skill, plus every question you got wrong.', unit:'', n:()=>0},
+];
+
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),1900); }
+function addXP(n){ S.xp+=n; $('xpVal').textContent=S.xp; }
+function score(cat, ok){ const s=S.stats[cat]||(S.stats[cat]={r:0,t:0}); s.t++; if(ok)s.r++; }
+function logMiss(o){ if(!S.mistakes.some(m=>m.id===o.id)) S.mistakes.push(o); }
+function markFixed(id){ const m=S.mistakes.find(x=>x.id===id); if(m) m.fixed=true; }
+function setProg(mod,done,total){ S.prog[mod]={d:done,t:total}; }
+
+/* ================= navigation ================= */
+function go(mod){
+  window.scrollTo(0,0);
+  if(mod==='home'){ $('view-home').classList.remove('hide'); $('view-mod').classList.add('hide');
+    $('homeBtn').classList.add('hide'); renderTiles(); return; }
+  $('view-home').classList.add('hide'); $('view-mod').classList.remove('hide');
+  $('homeBtn').classList.remove('hide');
+  ({lessons:renderLessons,compare:renderCompare,gym:renderGym,phrases:renderPhrases,
+    build:renderBuild,order:renderOrder,write:renderWrite,progress:renderProgress}[mod])();
+}
+function head(ico,title,sub){
+  $('modHead').innerHTML = `<div class="eyebrow">${ico} ${esc(title)}</div>
+    <h2 style="font-size:23px;letter-spacing:-.3px;margin:4px 0 2px">${esc(sub)}</h2>`;
+}
+
+/* ================= home ================= */
+function renderTiles(){
+  $('paperName').textContent = PAPER.name;
+  $('scorebar').innerHTML = PAPER.scores.map(s=>
+    `<div class="scorepill">${esc(s[0])}<b>${esc(s[1])}</b></div>`).join('');
+  $('tiles').innerHTML = MODULES.map(m=>{
+    const p=S.prog[m.id]; const pct=p&&p.t?Math.round(100*p.d/p.t):0;
+    const meta = m.id==='progress'
+      ? `<div class="meta"><span>${S.mistakes.filter(x=>!x.fixed).length} to review</span></div>`
+      : `<div class="meta"><div class="bar"><i style="width:${pct}%"></i></div><span>${p?p.d:0}/${m.n()} ${m.unit}</span></div>`;
+    return `<button class="tile" onclick="go('${m.id}')"><div class="ico">${m.ico}</div>
+      <h3>${esc(m.name)}</h3><p>${m.desc}</p>${meta}</button>`;
+  }).join('');
+}
+
+/* ================= 1. LESSONS ================= */
+function renderLessons(){
+  head('📖','Step 1 · Learn','Six lessons, straight from your marked paper');
+  $('modBody').innerHTML = PAPER.lessons.map((L,i)=>`
+    <div class="lesson" id="les-${L.id}">
+      <button onclick="toggleLesson('${L.id}')"><span style="font-size:19px">${L.icon}</span>
+        <span style="flex:1">${i+1}. ${esc(L.title)}</span><span class="muted" style="font-size:13px">▾</span></button>
+      <div class="body hide">
+        <p class="muted small" style="margin:0 0 4px">${esc(L.line)}</p>
+        <div class="ex">${L.ex.map(([k,v],j)=>
+          `<div class="${j===0?'o':j===1?'x':'v'}"><b class="small">${esc(k)}</b><br>${nl(v)}</div>`).join('')}</div>
+        <div class="rule">📌 ${nl(L.rule)}</div>
+      </div>
+    </div>`).join('') +
+    `<div class="row" style="margin-top:18px"><button class="btn" onclick="go('gym')">I've read these → Grammar Gym</button>
+     <button class="btn ghost" onclick="go('compare')">See my email vs the upgrade</button></div>`;
+  setProg('lessons',0,PAPER.lessons.length);
+}
+function toggleLesson(id){
+  const el=$('les-'+id), b=el.querySelector('.body');
+  b.classList.toggle('hide');
+  if(!b.classList.contains('hide') && !S.seen['les'+id]){
+    S.seen['les'+id]=1; addXP(3);
+    const p=S.prog.lessons||{d:0,t:PAPER.lessons.length}; setProg('lessons',p.d+1,p.t);
+  }
+}
+function openLesson(id){ go('lessons'); setTimeout(()=>{ const el=$('les-'+id);
+  el.querySelector('.body').classList.remove('hide'); el.scrollIntoView({behavior:'smooth',block:'center'}); },60); }
+
+/* ================= 2. COMPARE ================= */
+let cI=0, cPhase=0;
+function renderCompare(){ cI=0; cPhase=0; drawCompare(); }
+function drawCompare(){
+  const C=PAPER.compare[cI];
+  head('🔍','Step 2 · Practise','Compare');
+  let h=`<div class="progline"><i style="width:${100*cI/PAPER.compare.length}%"></i></div>
+   <div class="card"><div class="row" style="justify-content:space-between">
+     <span class="tag">${cI+1} of ${PAPER.compare.length}</span><span class="muted small">${esc(C.sub)}</span></div>
+   <h3 style="margin:10px 0 0;font-size:19px">${esc(C.title)}</h3>`;
+  if(cPhase===0){
+    h+=`<div class="stem" style="margin-top:14px">${esc(C.quiz)}</div>
+      <div class="opts">${C.opts.map((o,i)=>
+      `<button class="opt" onclick="cmpAns(${i})"><span class="k">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>`;
+  } else {
+    h+=`<div class="cmp" style="margin-top:14px">
+        <div class="a"><div class="lbl">🐾 Your version</div>${nl(C.a)}</div>
+        <div class="b"><div class="lbl">✨ Reference version</div>${nl(C.b)}</div></div>
+      <div class="notes"><b>🐾 Teacher's paw notes</b><ol>${C.notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ol></div>
+      <div class="model"><div class="lbl">✨ Sentence upgrade</div>
+        <div style="margin-bottom:6px"><b>Original:</b> ${esc(C.upgrade[0])}</div>
+        <div style="margin-bottom:6px"><b>Better:</b> ${esc(C.upgrade[1])}</div>
+        <div class="small muted"><b>Why?</b> ${esc(C.upgrade[2])}</div></div>
+      <div class="row" style="margin-top:16px">
+        ${cI<PAPER.compare.length-1?`<button class="btn" onclick="cNext()">Next paragraph →</button>`
+          :`<button class="btn" onclick="go('gym')">Done → Grammar Gym</button>`}
+        <button class="btn ghost" onclick="go('home')">Back to menu</button></div>`;
+  }
+  $('modBody').innerHTML=h+`</div>`;
+}
+function cmpAns(i){
+  const C=PAPER.compare[cI], ok=i===C.ans;
+  score('compare',ok); if(ok) addXP(5);
+  document.querySelectorAll('#modBody .opt').forEach((b,j)=>{ b.disabled=true;
+    if(j===C.ans) b.classList.add('right'); else if(j===i) b.classList.add('wrong'); else b.classList.add('dim'); });
+  $('modBody').querySelector('.opts').insertAdjacentHTML('afterend',
+    `<div class="fb ${ok?'ok':'no'}"><b>${ok?'✅ Exactly.':'💡 Not quite.'}</b>
+      The key change here: ${esc(C.opts[C.ans])}</div>
+     <div class="row" style="margin-top:14px"><button class="btn" onclick="cPhase=1;drawCompare()">Show me the two versions →</button></div>`);
+}
+function cNext(){ cI++; cPhase=0; setProg('compare',cI,PAPER.compare.length); drawCompare(); }
+
+/* ================= 3. GRAMMAR GYM ================= */
+let gI=0, gRight=0, gOrder=[];
+function renderGym(){ gI=0; gRight=0; gOrder=PAPER.grammar.map((_,i)=>i); drawGym(); }
+function drawGym(){
+  if(gI>=gOrder.length) return gymDone();
+  const q=PAPER.grammar[gOrder[gI]];
+  const badge = q.mode==='fix' ? '<span class="tag red">Fix the error</span>'
+             : q.mode==='up'  ? '<span class="tag amber">Upgrade it</span>'
+                              : '<span class="tag violet">Proofread</span>';
+  head('🏋️','Step 2 · Practise','Grammar Gym');
+  $('modBody').innerHTML=`
+   <div class="progline"><i style="width:${100*gI/gOrder.length}%"></i></div>
+   <div class="card">
+     <div class="qhead">${badge}<span class="tag green">${esc(PAPER.cats[q.cat]||q.cat)}</span>
+       <span class="spacer"></span><span class="muted small">${gI+1} / ${gOrder.length} · ${gRight} correct</span></div>
+     <div class="stem">${esc(q.stem)}</div>
+     <div class="orig">${q.mode==='up'?'Your original: ':''}${esc(q.orig)}</div>
+     <div class="opts">${q.options.map((o,i)=>
+       `<button class="opt" onclick="gymAns(${i})"><span class="k">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>
+     <div id="gfb"></div>
+     <div class="row" id="gLesson" style="margin-top:14px"><button class="btn ghost sm" onclick="openLesson('${q.lesson}')">📖 See the lesson</button></div>
+   </div>`;
+}
+function gymAns(i){
+  const q=PAPER.grammar[gOrder[gI]], ok=i===q.answer;
+  score(q.cat,ok); if(ok){gRight++; addXP(6); markFixed(q.id);} else logMiss(
+    {id:q.id,cat:q.cat,lesson:q.lesson,q:q.orig,you:q.options[i],right:q.options[q.answer],why:q.why});
+  document.querySelectorAll('#modBody .opt').forEach((b,j)=>{ b.disabled=true;
+    if(j===q.answer) b.classList.add('right'); else if(j===i) b.classList.add('wrong'); else b.classList.add('dim'); });
+  $('gLesson').classList.add('hide');
+  $('gfb').innerHTML=`<div class="fb ${ok?'ok':'no'}">
+     <b>${ok?'✅ Correct.':'💡 Not this one.'}</b>
+     ${ok?'':`<div class="small"><b>You chose:</b> ${esc(q.options[i])}<br><b>Correct:</b> ${esc(q.options[q.answer])}</div>`}
+     <div class="why">${esc(q.why)}</div></div>
+   <div class="row" style="margin-top:14px">
+     <button class="btn" onclick="gI++;setProg('gym',gI,gOrder.length);drawGym()">Next →</button>
+     ${ok?'':`<button class="btn ghost" onclick="openLesson('${q.lesson}')">📖 Read the lesson</button>`}</div>`;
+}
+function gymDone(){
+  const pct=Math.round(100*gRight/gOrder.length);
+  setProg('gym',gOrder.length,gOrder.length);
+  const wrongCats=[...new Set(S.mistakes.filter(m=>!m.fixed).map(m=>m.lesson))];
+  head('🏋️','Grammar Gym','Set complete');
+  $('modBody').innerHTML=`<div class="card" style="text-align:center">
+     <div style="font-size:44px">${pct>=90?'🏆':pct>=70?'🐼':'💪'}</div>
+     <h2 style="margin:6px 0">${gRight} / ${gOrder.length} correct (${pct}%)</h2>
+     <p class="muted">${pct>=90?'That is a Language & Organisation 8 standard. Go and write it for real.'
+       :pct>=70?'Solid. Clear up the misses below and you are at target.'
+       :'Read the lessons for the misses, then run the set again — the same errors keep coming back until you name them.'}</p>
+     ${wrongCats.length?`<div class="row" style="justify-content:center;margin-top:12px">
+       ${wrongCats.map(c=>`<button class="btn ghost sm" onclick="openLesson('${c}')">📖 ${esc((PAPER.lessons.find(l=>l.id===c)||{}).title||c)}</button>`).join('')}</div>`:''}
+     <div class="row" style="justify-content:center;margin-top:16px">
+       <button class="btn" onclick="renderGym()">Run it again</button>
+       ${retryableIds().length?`<button class="btn ghost" onclick="retryMisses()">Retry only my misses (${retryableIds().length})</button>`:''}
+       <button class="btn ghost" onclick="go('write')">Go to Write It ✍️</button></div>
+   </div>`;
+}
+function retryableIds(){ const gid=PAPER.grammar.map(q=>q.id);
+  return S.mistakes.filter(m=>!m.fixed&&gid.includes(m.id)).map(m=>m.id); }
+function retryMisses(){
+  const ids=retryableIds();
+  gOrder=PAPER.grammar.map((q,i)=>ids.includes(q.id)?i:-1).filter(i=>i>=0);
+  if(!gOrder.length){ toast('Nothing left to retry 🎉'); return renderGym(); }
+  gI=0; gRight=0; drawGym();
+}
+
+/* ================= 4. PHRASE BANK ================= */
+let pI=0, pFlip=false, pMode='card';
+function renderPhrases(){ pI=0; pFlip=false; pMode='card'; drawPhrase(); }
+function drawPhrase(){
+  const P=PAPER.phrases[pI];
+  head('🧰','Step 2 · Practise','Phrase Bank');
+  if(pMode==='card'){
+    $('modBody').innerHTML=`
+     <div class="progline"><i style="width:${100*pI/PAPER.phrases.length}%"></i></div>
+     <div class="row" style="margin-bottom:10px"><span class="tag">Flashcard ${pI+1} / ${PAPER.phrases.length}</span>
+       <span class="spacer"></span><button class="btn ghost sm" onclick="pMode='cloze';drawPhrase()">Skip to fill‑in →</button></div>
+     <div class="flip" onclick="pFlip=!pFlip;drawPhrase()">
+       <div class="weak">✗ ${esc(P.weak)}</div>
+       ${pFlip?`<div style="font-size:20px">↓</div><div class="strong">✓ ${esc(P.strong)}</div>
+                <div class="learn">${esc(P.learn)}</div>`
+              :`<div class="muted small">Tap the card to see the upgrade</div>`}
+     </div>
+     <div class="row" style="margin-top:14px;justify-content:space-between">
+       <button class="btn ghost sm" onclick="pI=Math.max(0,pI-1);pFlip=false;drawPhrase()" ${pI?'':'disabled'}>← Previous</button>
+       ${pI<PAPER.phrases.length-1
+         ?`<button class="btn" onclick="pI++;pFlip=false;setProg('phrases',pI,PAPER.phrases.length);drawPhrase()">Next card →</button>`
+         :`<button class="btn" onclick="pI=0;pMode='cloze';addXP(8);setProg('phrases',PAPER.phrases.length,PAPER.phrases.length);drawPhrase()">Now test me ✍️</button>`}
+     </div>`;
+  } else {
+    $('modBody').innerHTML=`
+     <div class="progline"><i style="width:${100*pI/PAPER.phrases.length}%"></i></div>
+     <div class="card">
+       <div class="qhead"><span class="tag amber">Fill in the upgrade</span><span class="spacer"></span>
+         <span class="muted small">${pI+1} / ${PAPER.phrases.length}</span></div>
+       <div class="stem" style="margin-top:8px">${esc(P.cloze)}</div>
+       <div class="small muted" style="margin:6px 0 12px">Weak version: <s>${esc(P.weak)}</s></div>
+       <input type="text" id="clozeIn" placeholder="Type the missing word…" autocomplete="off"
+         onkeydown="if(event.key==='Enter')clozeShow()">
+       <div id="clozeFb"></div>
+       <div class="row" style="margin-top:14px"><button class="btn" id="clozeGo" onclick="clozeShow()">Show the answer</button></div>
+     </div>`;
+    setTimeout(()=>{const e=$('clozeIn'); if(e)e.focus();},50);
+  }
+}
+function clozeShow(){
+  const P=PAPER.phrases[pI];
+  const you=($('clozeIn').value||'').trim();
+  const hit=P.ans.some(a=>you.toLowerCase()===a.toLowerCase());
+  $('clozeFb').innerHTML=`<div class="model"><div class="lbl">Accepted answers</div>
+      <b>${P.ans.map(esc).join(' · ')}</b>
+      <div class="small" style="margin-top:8px">Full upgrade: <b>${esc(P.strong)}</b> — ${esc(P.learn)}</div>
+      ${you?`<div class="small muted" style="margin-top:8px">You wrote: “${esc(you)}”</div>`:''}</div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn sm" onclick="clozeMark(true)">${hit?'✅ I got it':'✅ Mine works too'}</button>
+      <button class="btn ghost sm" onclick="clozeMark(false)">✗ Not yet</button></div>`;
+  $('clozeGo').disabled=true; window._clYou=you;
+}
+function clozeMark(ok){
+  const P=PAPER.phrases[pI];
+  score('precise',ok); if(ok) addXP(5);
+  else logMiss({id:'ph'+pI,cat:'precise',lesson:'precise',q:P.cloze,you:(window._clYou||'(left blank)'),right:P.ans[0],why:P.learn+' → '+P.strong});
+  if(pI<PAPER.phrases.length-1){ pI++; drawPhrase(); }
+  else { head('🧰','Phrase Bank','Complete');
+    $('modBody').innerHTML=`<div class="card" style="text-align:center"><div style="font-size:42px">🧰</div>
+      <h2>Phrase Bank done</h2><p class="muted">These eleven swaps are the fastest marks in the paper. Keep them in your head, not in a list.</p>
+      <div class="row" style="justify-content:center;margin-top:14px">
+        <button class="btn" onclick="renderPhrases()">Go again</button>
+        <button class="btn ghost" onclick="go('build')">Persuasion Builder 💖</button></div></div>`; }
+}
+
+/* ================= 5. PERSUASION BUILDER ================= */
+let bI=0, bPick={};
+function renderBuild(){ bI=0; bPick={}; drawBuild(); }
+function slotHTML(key,label,B){
+  const p=bPick[key];
+  return `<div class="slot ${p!=null?'filled':''}"><div class="lbl">${label}</div>
+    <div>${p!=null?esc(B[key][p][0]):'<span class="muted small">Choose one below…</span>'}</div></div>`;
+}
+function drawBuild(){
+  const B=PAPER.build[bI];
+  head('💖','Step 2 · Practise','Persuasion Builder');
+  const all=['link','benefit','together'];
+  const done=all.every(k=>bPick[k]!=null);
+  $('modBody').innerHTML=`
+   <div class="progline"><i style="width:${100*bI/PAPER.build.length}%"></i></div>
+   <div class="card">
+     <div class="qhead"><span class="tag">Scenario ${bI+1} / ${PAPER.build.length}</span></div>
+     <h3 style="margin:8px 0 2px;font-size:17px">${esc(B.scene)}</h3>
+     <p class="muted small" style="margin:0">${esc(B.note)}</p>
+     <div class="rule" style="margin-top:12px">💖 <b>PERSONAL LINK</b> + <b>BENEFIT</b> + <b>TOGETHERNESS</b></div>
+     <div class="slots">
+       ${slotHTML('link','1 · Personal link — what she already cares about',B)}
+       ${slotHTML('benefit','2 · Benefit — what she will be able to achieve',B)}
+       ${slotHTML('together','3 · Togetherness — why doing it with you matters',B)}
+     </div>
+     ${all.map((k,i)=>bPick[k]!=null?'':`
+       <div style="margin-top:14px"><div class="eyebrow">Pick your ${k==='link'?'personal link':k==='benefit'?'benefit':'togetherness'}</div>
+       <div class="chips">${B[k].map((c,j)=>
+         `<button class="chip" onclick="bSet('${k}',${j})">${esc(c[0])}</button>`).join('')}</div></div>`).join('')}
+     ${done?`<div class="row" style="margin-top:16px"><button class="btn" onclick="bCheck()">Check my sentence</button>
+        <button class="btn ghost" onclick="bPick={};drawBuild()">Start over</button></div>`:''}
+     <div id="bfb"></div>
+   </div>`;
+}
+function bSet(k,j){ bPick[k]=j; drawBuild(); }
+function bCheck(){
+  const B=PAPER.build[bI];
+  const keys=['link','benefit','together'];
+  const strong=keys.filter(k=>B[k][bPick[k]][1]===1).length;
+  let mine=B.link[bPick.link][0]+' '+B.benefit[bPick.benefit][0]+' — '+B.together[bPick.together][0];
+  mine=mine.replace(/\s+/g,' ').trim(); if(!/[.!?]$/.test(mine)) mine+='.';
+  score('benefit',strong===3); addXP(4+strong*3);
+  if(strong<3) logMiss({id:'bd'+bI,cat:'benefit',lesson:'benefit',q:B.scene,
+    you:mine, right:B.model, why:'Each of the three moves must be specific: a link only she has, an achievement only she gains, and a reason your presence changes things.'});
+  const tips={link:'A personal link must be something only SHE does — “you like nature” could be anyone.',
+              benefit:'A benefit is what she will ACHIEVE, not that the event is nice or convenient.',
+              together:'Togetherness must show why your presence changes things for her, not just that you are attending.'};
+  const weak=keys.filter(k=>B[k][bPick[k]][1]!==1);
+  $('bfb').innerHTML=`
+    <div class="model"><div class="lbl">Your sentence</div><div style="font-size:16px">${esc(mine)}</div></div>
+    <div class="fb ${strong===3?'ok':'no'}"><b>${strong===3?'✅ All three moves are strong.':`💡 ${strong} of 3 moves are strong.`}</b>
+      ${weak.length?`<div class="why">${weak.map(k=>'• '+tips[k]).join('<br>')}</div>`:'<div class="why">This is exactly the shape the marker is looking for in the own‑information paragraph.</div>'}</div>
+    <div class="model"><div class="lbl">✨ One strong version</div>${esc(B.model)}</div>
+    <div class="row" style="margin-top:14px">
+      ${bI<PAPER.build.length-1
+        ?`<button class="btn" onclick="bI++;bPick={};setProg('build',bI,PAPER.build.length);drawBuild()">Next scenario →</button>`
+        :`<button class="btn" onclick="setProg('build',PAPER.build.length,PAPER.build.length);go('order')">Done → Paragraph Order 🧭</button>`}
+      <button class="btn ghost" onclick="bPick={};drawBuild()">Try a different combination</button></div>`;
+}
+
+/* ================= 6. ORDER ================= */
+let oI=0, oTray=[], oPool=[];
+function renderOrder(){ oI=0; startOrder(); }
+function startOrder(){
+  const O=PAPER.order[oI];
+  oPool=O.pieces.map((t,i)=>({t,i})); oTray=[];
+  // deterministic scramble
+  oPool=oPool.slice().sort((a,b)=>((a.i*7+3)%O.pieces.length)-((b.i*7+3)%O.pieces.length));
+  if(oPool.every((p,k)=>p.i===k)) oPool.reverse();
+  drawOrder();
+}
+function drawOrder(){
+  const O=PAPER.order[oI];
+  head('🧭','Step 2 · Practise','Paragraph Order');
+  $('modBody').innerHTML=`
+   <div class="progline"><i style="width:${100*oI/PAPER.order.length}%"></i></div>
+   <div class="card">
+     <h3 style="font-size:17px;margin:0 0 4px">${esc(O.title)}</h3>
+     <div class="rule">🧭 ${esc(O.hint)}</div>
+     <div class="eyebrow" style="margin:16px 0 6px">Your order</div>
+     <div class="dropzone"><div class="tray">${oTray.length?oTray.map((p,k)=>
+       `<button class="piece" onclick="oBack(${k})"><span class="num">${k+1}</span><span>${esc(p.t)}</span></button>`).join('')
+       :'<div class="muted small" style="padding:8px">Tap the pieces below in the right order.</div>'}</div></div>
+     ${oPool.length?`<div class="eyebrow" style="margin:16px 0 6px">Pieces</div>
+       <div class="pool">${oPool.map((p,k)=>
+       `<button class="piece" onclick="oTake(${k})"><span class="num" style="background:#EFEAE1;color:var(--muted)">+</span><span>${esc(p.t)}</span></button>`).join('')}</div>`:''}
+     <div class="row" style="margin-top:16px">
+       <button class="btn" onclick="oCheck()" ${oPool.length?'disabled':''}>Check my order</button>
+       <button class="btn ghost" onclick="startOrder()">Reset</button></div>
+     <div id="ofb"></div>
+   </div>`;
+}
+function oTake(k){ oTray.push(oPool.splice(k,1)[0]); drawOrder(); }
+function oBack(k){ oPool.push(oTray.splice(k,1)[0]); drawOrder(); }
+function oCheck(){
+  const O=PAPER.order[oI];
+  const ok=oTray.every((p,k)=>p.i===k);
+  score('purpose',ok); addXP(ok?10:2);
+  if(!ok) logMiss({id:'or'+oI,cat:'purpose',lesson:'purpose',q:O.title,
+    you:oTray.map(p=>p.i+1).join(' → '), right:O.pieces.map((_,i)=>i+1).join(' → '), why:O.why});
+  document.querySelectorAll('#modBody .tray .piece').forEach((el,k)=>
+    el.classList.add(oTray[k].i===k?'ok':'bad'));
+  $('ofb').innerHTML=`<div class="fb ${ok?'ok':'no'}"><b>${ok?'✅ That is the order.':'💡 Not yet — green pieces are in the right place.'}</b>
+     <div class="why">${esc(O.why)}</div></div>
+   ${ok?'':`<div class="model"><div class="lbl">Correct order</div>${O.pieces.map((t,i)=>
+       `<div style="margin-bottom:6px"><b>${i+1}.</b> ${esc(t)}</div>`).join('')}</div>`}
+   <div class="row" style="margin-top:14px">
+     ${oI<PAPER.order.length-1
+       ?`<button class="btn" onclick="oI++;setProg('order',oI,PAPER.order.length);startOrder()">Next level →</button>`
+       :`<button class="btn" onclick="setProg('order',PAPER.order.length,PAPER.order.length);go('write')">Done → Write It ✍️</button>`}
+     <button class="btn ghost" onclick="startOrder()">Try again</button></div>`;
+}
+
+/* ================= 7. WRITE IT ================= */
+let wI=0, wRevealed=false, wTicks={};
+function renderWrite(){ wI=0; wRevealed=false; wTicks={}; drawWrite(); }
+function drawWrite(){
+  const W=PAPER.write[wI], last=wI===PAPER.write.length-1;
+  head('✍️','Step 3 · Test','Write It');
+  $('modBody').innerHTML=`
+   <div class="progline"><i style="width:${100*wI/PAPER.write.length}%"></i></div>
+   <div class="card">
+     <div class="qhead"><span class="tag ${last?'violet':'amber'}">${last?'Final challenge':'Challenge '+(wI+1)+' / '+(PAPER.write.length-1)}</span></div>
+     <div class="stem" style="margin-top:8px">${esc(W.task)}</div>
+     <div class="orig">${nl(W.orig)}</div>
+     <textarea id="wIn" rows="${last?7:3}" placeholder="Write your version here…"
+       oninput="$('wGo').disabled=this.value.trim().length<12"></textarea>
+     <div class="row" style="margin-top:12px">
+       <button class="btn" id="wGo" disabled onclick="wReveal()">I'm done → show the model</button>
+       <button class="btn ghost sm" onclick="toast('💡 '+${JSON.stringify(W.hint)})">💡 Hint</button>
+     </div>
+     <div id="wfb"></div>
+   </div>`;
+}
+function wReveal(){
+  const W=PAPER.write[wI], you=$('wIn').value.trim();
+  wTicks={};
+  $('wIn').setAttribute('readonly','readonly');
+  $('wGo').disabled=true;
+  $('wfb').innerHTML=`
+    <div class="model"><div class="lbl">✨ Model version</div><div style="font-size:15.5px">${nl(W.model)}</div></div>
+    <div class="eyebrow" style="margin:16px 0 6px">Now mark your own — tick only what is really there</div>
+    <div id="wChecks">${W.checks.map((c,i)=>
+      `<label class="check" id="ck${i}"><input type="checkbox" onchange="wTick(${i},this)"><span>${esc(c)}</span></label>`).join('')}</div>
+    <div class="row" style="margin-top:16px"><button class="btn" onclick="wNext()">${
+      wI<PAPER.write.length-1?'Next challenge →':'Finish and see my report'}</button></div>`;
+  window._wYou=you;
+}
+function wTick(i,el){ wTicks[i]=el.checked; $('ck'+i).classList.toggle('on',el.checked); }
+function wNext(){
+  const W=PAPER.write[wI];
+  const got=Object.values(wTicks).filter(Boolean).length, tot=W.checks.length;
+  score('write', got===tot); addXP(4+got*2);
+  if(got<tot) logMiss({id:W.id,cat:'write',lesson: wI>=4?'ending':wI===2?'verbpat':wI===3?'benefit':'active',
+    q:W.task, you:(window._wYou||'').slice(0,160), right:W.model,
+    why:'You did not tick: '+W.checks.filter((_,i)=>!wTicks[i]).join(' | ')});
+  if(wI<PAPER.write.length-1){ wI++; setProg('write',wI,PAPER.write.length); drawWrite(); }
+  else { setProg('write',PAPER.write.length,PAPER.write.length); go('progress'); }
+}
+
+/* ================= 8. PROGRESS ================= */
+function renderProgress(){
+  head('📊','Your report','How you are doing');
+  const cats=Object.keys(S.stats);
+  const tot=cats.reduce((a,c)=>a+S.stats[c].t,0), rig=cats.reduce((a,c)=>a+S.stats[c].r,0);
+  const open=S.mistakes.filter(m=>!m.fixed);
+  const col=p=>p>=80?'var(--green)':p>=50?'var(--amber)':'var(--red)';
+  $('modBody').innerHTML=`
+   <div class="statgrid">
+     <div class="stat"><b>${S.xp}</b><span>XP earned</span></div>
+     <div class="stat"><b>${tot?Math.round(100*rig/tot):0}%</b><span>Overall accuracy</span></div>
+     <div class="stat"><b>${open.length}</b><span>Still to fix</span></div>
+   </div>
+   <div class="card">
+     <div class="eyebrow" style="margin-bottom:12px">Accuracy by skill</div>
+     ${cats.length?cats.map(c=>{const s=S.stats[c], p=Math.round(100*s.r/s.t);
+       return `<div class="catbar"><div class="nm">${esc(PAPER.cats[c]||(c==='write'?'Own writing':c==='compare'?'Spotting the change':c))}</div>
+         <div class="bar"><i style="width:${p}%;background:${col(p)}"></i></div><div class="pc">${p}%</div></div>`;}).join('')
+      :'<p class="muted small">Nothing yet — go and do a set.</p>'}
+   </div>
+   <div class="card">
+     <div class="eyebrow" style="margin-bottom:10px">My mistakes (${open.length} open · ${S.mistakes.length-open.length} fixed)</div>
+     ${S.mistakes.length?S.mistakes.map(m=>`
+       <div class="mrow" style="${m.fixed?'opacity:.5':''}">
+         <div class="q">${m.fixed?'✅ ':''}${esc(m.q)}</div>
+         <div class="l"><span class="k">You</span> ${esc(m.you)}</div>
+         <div class="l"><span class="k">Better</span> ${esc(m.right)}</div>
+         <div class="l muted" style="margin-top:5px">${esc(m.why)}</div>
+         <div class="row" style="margin-top:9px"><button class="btn ghost sm" onclick="openLesson('${m.lesson}')">📖 Lesson</button></div>
+       </div>`).join('')
+      :'<p class="muted small">No mistakes logged yet.</p>'}
+     ${retryableIds().length?`<div class="row" style="margin-top:12px"><button class="btn" onclick="retryMissesFromReport()">Retry my ${retryableIds().length} open grammar mistakes</button></div>`:''}
+   </div>
+   <div class="card" style="background:var(--teal-l);border-color:#BFE3DA">
+     <b>🐼 Before your next situational writing paper</b>
+     <ol style="margin:8px 0 0;padding-left:20px;font-size:14.5px">
+       <li>Paragraph 1: say <b>why</b> you are writing and <b>what</b> you want them to do.</li>
+       <li>Use <b>I</b> and <b>you</b> — never “there was”, never “one will get to”.</li>
+       <li><b>encourage / invite / advise</b> + somebody + to do. Never “recommend you to”.</li>
+       <li>Own information = <b>link + benefit + togetherness</b>, three sentences.</li>
+       <li>Ending = why it matters + <b>ask for a reply</b>.</li>
+       <li>Read it aloud in your head. If it sounds like a notice, it is not an email.</li>
+     </ol>
+   </div>
+   <div class="row"><button class="btn ghost" onclick="window.print()">🖨️ Print / save this report</button>
+     <button class="btn ghost" onclick="go('home')">Back to menu</button></div>`;
+}
+function retryMissesFromReport(){ go('gym'); setTimeout(retryMisses,40); }
+
+/* ================= boot ================= */
+$('homeBtn').onclick=()=>go('home');
+renderTiles();
+</script>
+</body></html>

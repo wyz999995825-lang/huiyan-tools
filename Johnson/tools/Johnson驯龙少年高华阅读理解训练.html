@@ -1,0 +1,1499 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Johnson的驯龙少年 · 高华阅读修炼</title>
+<style>
+:root{--ink:#1a2a2f;--muted:#5a6e78;--line:#d4dfe3;--paper:#f7f9fa;--panel:#fff;--green:#0d7a50;--green-soft:#e2f5ec;--blue:#1a5f8a;--blue-soft:#e3f0f8;--gold:#9b6a16;--gold-soft:#fff6e0;--rose:#c0392b;--rose-soft:#fdecea;--orange:#e67e22;--shadow:0 8px 28px rgba(0,0,0,.06)}
+*{box-sizing:border-box;margin:0}
+body{min-height:100vh;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.6}
+button,textarea,input,select{font:inherit}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:90;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px clamp(12px,3vw,32px);background:#fff;border-bottom:2px solid var(--line)}
+.topbar h1{font-size:18px}
+.topbar .ey{color:var(--muted);font-size:11px;font-weight:700}
+
+/* TIMER */
+.tmr-block{display:flex;align-items:center;gap:10px}
+.tmr-ring{position:relative;width:62px;height:62px}
+.tmr-ring svg{transform:rotate(-90deg)}
+.tmr-ring circle{fill:none;stroke-width:5}
+.tmr-ring .bg{stroke:var(--line)}
+.tmr-ring .fg{stroke:var(--green);stroke-linecap:round;transition:stroke .3s}
+.tmr-ring.warn .fg{stroke:var(--orange)}
+.tmr-ring.danger .fg{stroke:var(--rose);animation:pulse .7s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.tmr-txt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900}
+.tmr-ctrl{display:flex;flex-direction:column;gap:3px}
+.tmr-lbl{font-size:11px;font-weight:800;color:var(--muted)}
+.tmr-lbl.warn{color:var(--orange)}
+.tmr-lbl.danger{color:var(--rose)}
+
+/* Q-TIMER */
+.qt{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:var(--blue-soft);font-weight:800;font-size:13px;color:var(--blue)}
+.qt.warn{background:#fff3e0;color:var(--orange)}
+.qt.danger{background:var(--rose-soft);color:var(--rose);animation:pulse .7s infinite}
+
+/* STATS */
+.stats{display:flex;gap:5px}
+.stat{padding:5px 8px;border:1px solid var(--line);border-radius:6px;text-align:center}
+.stat strong{display:block;font-size:18px}
+.stat small{color:var(--muted);font-size:10px}
+
+/* BUTTONS */
+.btn{min-height:38px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:var(--panel);cursor:pointer;font-weight:700;font-size:14px}
+.btn-g{border-color:var(--green);background:var(--green);color:#fff;font-weight:800}
+.btn-gold{border-color:var(--gold);background:var(--gold-soft);color:var(--gold);font-weight:800}
+.btn-rose{border-color:var(--rose);background:var(--rose-soft);color:var(--rose)}
+.btn-sm{min-height:32px;padding:0 10px;font-size:13px}
+.btn-big{min-height:52px;width:100%;font-size:17px;border-radius:12px}
+
+/* LAYOUT */
+.main{padding:12px clamp(12px,3vw,32px) 32px}
+.card{padding:16px;border:1px solid var(--line);border-radius:10px;background:var(--panel);box-shadow:var(--shadow);margin-bottom:12px}
+.card h2{font-size:17px;margin-bottom:8px}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}
+.work-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:860px){.work-grid{grid-template-columns:1fr}}
+
+/* FIELDS */
+.field{display:grid;gap:5px;margin-top:10px}
+.field span{color:var(--muted);font-size:13px;font-weight:700}
+textarea,select{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px;resize:vertical;line-height:1.6}
+textarea:focus,input:focus{outline:3px solid rgba(37,95,133,.2);outline-offset:2px}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.chip{min-height:32px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel);cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{border-color:var(--blue);background:var(--blue-soft);color:var(--blue);font-weight:800}
+
+/* BOXES */
+.gbox{padding:10px;border:1px solid var(--line);border-radius:8px;background:#f5faf7;line-height:1.7;font-size:14px}
+.gbox p{margin-bottom:3px}
+.tbox{padding:10px;border:1px solid #efd59c;border-radius:8px;background:var(--gold-soft);line-height:1.7}
+
+/* SLOTS */
+.slots{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:8px}
+.slots label{display:grid;gap:3px;color:var(--muted);font-size:12px;font-weight:700}
+.slots input{min-width:0;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:15px}
+
+/* CHECKLIST */
+.cklist{display:grid;gap:6px;margin-top:8px}
+.ck{display:flex;gap:7px;align-items:flex-start;padding:7px 9px;border:1px solid var(--line);border-radius:8px}
+.ck input{margin-top:3px}
+
+/* TECHNIQUE CARD */
+.tip-card{padding:14px;border:2px solid var(--green);border-radius:12px;background:var(--green-soft);margin-bottom:12px}
+.tip-card h3{color:var(--green);font-size:16px;margin-bottom:8px}
+.tip-formula{padding:10px 14px;border-radius:8px;background:#fff;border:1px dashed var(--green);font-size:16px;font-weight:800;color:var(--blue);margin:8px 0;line-height:1.8}
+.tip-example{padding:10px 14px;border-radius:8px;background:var(--gold-soft);border:1px solid #efd59c;margin:8px 0;line-height:1.7;font-size:14px}
+.tip-example strong{color:var(--gold)}
+.tip-warn{padding:8px 12px;border-radius:8px;background:var(--rose-soft);color:var(--rose);font-size:13px;font-weight:700;margin:6px 0}
+.model-ans{padding:12px;border:2px solid var(--blue);border-radius:10px;background:var(--blue-soft);margin-top:10px;line-height:1.7;font-size:14px;display:none}
+.model-ans h4{color:var(--blue);margin-bottom:6px}
+.model-ans .pts{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--green);color:#fff;font-size:12px;font-weight:800;margin:2px}
+
+/* GENERATED MODEL ANSWERS */
+.gen-ans-card{padding:16px;border:2px solid var(--blue);border-radius:12px;background:var(--blue-soft);margin-bottom:14px;line-height:1.8}
+.gen-ans-card .q-num{display:inline-block;width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;text-align:center;line-height:28px;font-weight:900;font-size:14px;margin-right:8px}
+.gen-ans-card .q-text{font-weight:700;font-size:15px;color:var(--ink);margin-bottom:8px}
+.gen-ans-card .q-type-tag{display:inline-block;padding:2px 10px;border-radius:999px;background:var(--green);color:#fff;font-size:12px;font-weight:800;margin-left:6px}
+.gen-ans-card .ans-body{padding:12px;border-radius:8px;background:#fff;border:1px solid var(--line);margin:8px 0;font-size:15px;color:var(--ink)}
+.gen-ans-card .scoring{padding:8px 12px;border-radius:8px;background:var(--gold-soft);border:1px solid #efd59c;font-size:13px;margin-top:8px}
+.gen-ans-card .scoring strong{color:var(--gold)}
+.gen-ans-card .key-sent{padding:8px 12px;border-radius:8px;background:var(--green-soft);border:1px solid #b8e0cc;font-size:13px;margin-top:8px;color:var(--green)}
+.gen-ans-card .formula-remind{padding:6px 10px;border-radius:6px;background:#f0f0f5;font-size:13px;color:var(--muted);margin-top:6px;font-style:italic}
+
+/* FLASH CARD */
+.fc-type{font-size:20px;font-weight:900;color:var(--green);margin-bottom:6px}
+.fc-kw{color:var(--muted);font-size:13px;margin-bottom:10px}
+.fc-kw span{display:inline-block;padding:2px 8px;border-radius:999px;background:var(--blue-soft);color:var(--blue);font-weight:700;margin:2px;font-size:12px}
+.fc-formula{padding:12px 16px;border-radius:10px;background:#fff;border:2px dashed var(--green);font-size:18px;font-weight:800;color:var(--blue);line-height:1.8;margin-bottom:8px}
+.fc-formula.blur{filter:blur(8px);cursor:pointer}
+.fc-steps{display:grid;gap:4px;font-size:14px;line-height:1.6}
+.fc-steps .step{display:flex;gap:8px;align-items:flex-start}
+.fc-steps .sn{min-width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:12px;flex-shrink:0;margin-top:2px}
+.fc-counter{text-align:center;font-size:13px;color:var(--muted);margin-top:8px}
+.all-formulas-grid{display:grid;gap:8px}
+.af-item{padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.af-item strong{color:var(--green);font-size:15px}
+.af-item p{color:var(--blue);font-weight:800;margin-top:4px}
+
+/* CONFIDENCE */
+.conf{display:flex;align-items:center;gap:8px;margin-top:10px}
+.conf input{flex:1}
+.conf strong{color:var(--green);font-size:15px;min-width:36px}
+
+/* WORD COUNT */
+.wc-bar{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:13px;font-weight:700}
+.wc-bar .ct{color:var(--blue)}
+.wc-bar .over{color:var(--rose)}
+
+/* MODE TABS */
+.modes{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.mode-btn{min-height:44px;padding:0 18px;border:2px solid var(--line);border-radius:12px;background:var(--panel);cursor:pointer;font-weight:800;font-size:15px}
+.mode-btn.on{border-color:var(--green);background:var(--green);color:#fff}
+.mode-btn .sub{display:block;font-size:11px;font-weight:600;opacity:.8}
+
+/* PASSAGE BOX */
+.passage{padding:14px;border:1px solid var(--blue);border-radius:10px;background:var(--blue-soft);line-height:1.9;font-size:15px;margin-bottom:12px;max-height:300px;overflow-y:auto}
+.passage h3{color:var(--blue);margin-bottom:6px}
+
+/* Q-LIST in paste mode */
+.q-list{display:grid;gap:8px;margin-top:10px}
+.q-item{display:flex;gap:8px;align-items:flex-start;padding:10px;border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.q-item:hover{background:var(--green-soft)}
+.q-item.done{opacity:.5;text-decoration:line-through}
+.q-item .num{min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--blue);color:#fff;font-weight:900;font-size:13px;flex-shrink:0}
+.q-item.done .num{background:var(--green)}
+
+/* DAY PLAN */
+.day-plan{padding:12px;border:1px solid var(--green);border-radius:10px;background:var(--green-soft);margin-bottom:12px;line-height:1.7}
+.day-plan h3{color:var(--green);margin-bottom:4px}
+.focus-tag{display:inline-block;padding:3px 10px;border-radius:999px;background:var(--green);color:#fff;font-weight:800;font-size:13px;margin:3px 2px}
+
+/* START SCREEN */
+.start{max-width:520px;margin:50px auto;text-align:center;padding:36px 24px;border-radius:18px;background:#fff;box-shadow:var(--shadow)}
+.start h2{font-size:24px;margin-bottom:6px}
+.start p{color:var(--muted);margin-bottom:16px}
+.day-sel{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:18px}
+.day-btn{min-height:40px;padding:0 14px;border:2px solid var(--line);border-radius:999px;background:var(--panel);cursor:pointer;font-weight:700;font-size:14px}
+.day-btn.on{border-color:var(--green);background:var(--green);color:#fff}
+.pbar{height:6px;border-radius:3px;background:var(--line);margin-top:8px;overflow:hidden}
+.pbar .fill{height:100%;background:var(--green);border-radius:3px;transition:width .3s}
+
+/* OVERLAYS */
+.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.45);align-items:center;justify-content:center;padding:16px}
+.overlay.show{display:flex}
+.ocard{max-width:480px;width:100%;max-height:88vh;overflow-y:auto;padding:28px 22px;border-radius:16px;background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.ocard h2{font-size:22px;margin-bottom:14px;text-align:center}
+.done-num{font-size:52px;font-weight:900;color:var(--green);text-align:center}
+.rstep{display:flex;align-items:flex-start;gap:10px;padding:9px;margin-bottom:5px;border-radius:8px;background:var(--green-soft)}
+.snum{min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--green);color:#fff;font-weight:900;font-size:14px}
+.rstep small{display:block;color:var(--muted);font-size:12px}
+.rstarters{padding:10px;border-radius:8px;background:var(--gold-soft);margin:12px 0;line-height:1.8;font-size:14px}
+
+/* HISTORY */
+.hist{padding:8px;border:1px solid var(--line);border-radius:8px;margin-bottom:5px}
+.hist strong{font-size:13px}
+.hist small{color:var(--muted)}
+
+/* WORD BANK */
+.wb{margin-top:10px;padding:12px;border:2px solid var(--gold);border-radius:10px;background:var(--gold-soft)}
+.wb h4{color:var(--gold);font-size:14px;margin-bottom:8px}
+.wb-group{margin-bottom:8px}
+.wb-group .wb-label{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.wb-chips{display:flex;flex-wrap:wrap;gap:5px}
+.wb-chip{padding:4px 10px;border:1px solid #efd59c;border-radius:999px;background:#fff;cursor:pointer;font-size:14px;font-weight:600;transition:all .15s}
+.wb-chip:hover{border-color:var(--green);background:var(--green-soft);transform:scale(1.06)}
+.wb-chip:active{background:var(--green);color:#fff}
+.wb-copied{position:fixed;z-index:300;padding:6px 16px;border-radius:999px;background:var(--green);color:#fff;font-size:14px;font-weight:800;pointer-events:none;animation:wbfade 1s ease forwards}
+@keyframes wbfade{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-20px)}}
+
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="startScreen" class="start">
+  <p style="font-size:15px;color:var(--muted);margin-bottom:4px" id="greeting"></p>
+  <h2 style="font-size:28px">Johnson 的驯龙之路</h2>
+  <p>7天修炼 x 30分钟 = 解锁阅读理解龙息</p>
+  <div id="daySel" class="day-sel"></div>
+  <button id="startBtn" class="btn btn-g btn-big">Johnson，开始今天的修炼！(30:00)</button>
+  <div style="margin-top:14px">
+    <p style="font-size:13px;color:var(--muted)">Johnson的修炼进度 <strong id="sDone">0</strong> / 7 天</p>
+    <div class="pbar"><div id="sBar" class="fill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+  <header class="topbar">
+    <div>
+      <p class="ey" id="dayLbl">Day 1</p>
+      <h1>Johnson · 驯龙少年</h1>
+    </div>
+    <div class="qt" id="qt"><span>本题</span><strong id="qtTxt">3:00</strong></div>
+    <div class="tmr-block">
+      <div class="tmr-ring" id="ring">
+        <svg width="62" height="62" viewBox="0 0 62 62"><circle class="bg" cx="31" cy="31" r="27"/><circle class="fg" id="arc" cx="31" cy="31" r="27" stroke-dasharray="169.6" stroke-dashoffset="0"/></svg>
+        <div class="tmr-txt" id="tTxt">30:00</div>
+      </div>
+      <div class="tmr-ctrl">
+        <span class="tmr-lbl" id="tLbl">总计时</span>
+        <button class="btn btn-sm" id="pauseBtn">暂停</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><strong id="nDone">0</strong><small>今日斩杀</small></div>
+      <div class="stat"><strong id="nWeek">0</strong><small>总经验</small></div>
+    </div>
+  </header>
+
+  <div class="main">
+    <!-- DAY PLAN -->
+    <div class="day-plan" id="dayPlan"></div>
+
+    <!-- MODE SELECTOR -->
+    <!-- PART SELECTOR -->
+    <div class="modes">
+      <button class="mode-btn on" data-m="paste">Part 1 · 作业模式<span class="sub">贴学校文章+题目，一步步教你答</span></button>
+      <button class="mode-btn" data-m="drill">Part 2 · 练习模式<span class="sub">内置短文+教套路+看范答</span></button>
+    </div>
+
+    <!-- ========== PART 1: 作业模式 ========== -->
+    <div id="mPaste">
+      <div class="card">
+        <h2>Johnson，把学校作业贴过来！</h2>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:8px">纸质作业可以拍照后用手机的文字识别复制，再粘贴到这里</p>
+        <div class="field"><span>文章（把学校的阅读短文粘贴到这里）</span>
+          <textarea id="pastePassage" rows="6" placeholder="把整篇阅读短文粘贴到这里……"></textarea>
+        </div>
+        <div class="field"><span>所有题目（每题一行，或一次性粘贴）</span>
+          <textarea id="pasteQs" rows="5" placeholder="1. 为什么小明不敢一个人回家？&#10;2. 从哪里看出妈妈很担心？&#10;3. 用不超过30个字概括短文的中心思想。"></textarea>
+        </div>
+        <button class="btn btn-g" id="parseBtn" style="margin-top:10px">分析题目，逐个击破！</button>
+      </div>
+      <!-- parsed passage display -->
+      <div class="passage hidden" id="pastePassageBox"></div>
+      <!-- parsed question list -->
+      <div class="q-list hidden" id="pasteQList"></div>
+      <!-- 一键生成满分答案 -->
+      <div id="genAnsSection" class="hidden" style="margin-top:12px">
+        <button class="btn btn-g btn-big" id="genAllAnsBtn" style="background:var(--blue);border-color:var(--blue)">⚡ 一键生成全部满分答案</button>
+        <div id="allModelAns" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <!-- ========== PART 2: 练习模式 ========== -->
+    <div id="mDrill" class="hidden">
+
+      <!-- 公式速记卡 -->
+      <div class="card" style="border:2px solid var(--green);margin-bottom:12px">
+        <div class="card-head">
+          <div>
+            <p class="ey" style="color:var(--green)">Johnson的九大龙技</p>
+            <h2>公式速记卡</h2>
+          </div>
+          <div style="display:flex;gap:5px">
+            <button class="btn btn-sm" id="prevCard">&lt;</button>
+            <button class="btn btn-g btn-sm" id="nextCard">下一张 &gt;</button>
+          </div>
+        </div>
+        <div id="flashCard" style="min-height:180px">
+          <!-- filled by JS -->
+        </div>
+        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn btn-sm" id="hideFormula" style="border-color:var(--gold);color:var(--gold)">遮住公式，自己背！</button>
+          <button class="btn btn-sm" id="showAll9">一次看全部9个</button>
+        </div>
+        <div id="allFormulas" class="hidden" style="margin-top:10px"></div>
+      </div>
+
+      <!-- Quick type selector to practice -->
+      <div class="card" style="margin-bottom:8px">
+        <h2>选一个题型直接练</h2>
+        <p style="color:var(--muted);font-size:13px;margin-bottom:8px">点一下就弹出公式+填空，不用文章也能练套路</p>
+        <div class="chips" id="quickChips"></div>
+      </div>
+
+      <!-- Built-in drills -->
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h2>内置短文练习</h2>
+            <p style="color:var(--muted);font-size:13px">每篇都有范答可以对照，写完记得看！</p>
+          </div>
+          <button class="btn btn-sm" id="nextDrill">换一篇</button>
+        </div>
+        <div class="passage" id="drillPassage"></div>
+        <div class="q-list" id="drillQList"></div>
+      </div>
+    </div>
+
+    <!-- ========== ANSWER WORKSPACE (shared) ========== -->
+    <div id="workspace" class="hidden">
+      <!-- TECHNIQUE CARD (shows before answering) -->
+      <div class="tip-card" id="tipCard">
+        <h3 id="tipTitle">答题秘籍</h3>
+        <div class="tip-formula" id="tipFormula"></div>
+        <div class="tip-example" id="tipExample"></div>
+        <div class="tip-warn" id="tipWarn"></div>
+        <p style="font-size:12px;color:var(--muted);margin-top:6px">Johnson，记住这个公式，每次都用！</p>
+      </div>
+      <div class="work-grid">
+        <div>
+          <!-- current question display -->
+          <div class="card" id="curQCard">
+            <div class="card-head">
+              <div><p class="ey">当前目标</p><h2 id="curQText">—</h2></div>
+              <button class="btn btn-sm" id="backToListBtn">返回题目列表</button>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+              <button class="btn btn-g btn-sm" id="detectBtn">鉴定技能</button>
+              <button class="btn btn-sm" id="showTipBtn" style="border-color:var(--green);color:var(--green)">看答题秘籍</button>
+              <span id="detectHint" style="color:var(--muted);font-size:13px">自动识别或手动选</span>
+            </div>
+            <div class="chips" id="typeChips"></div>
+          </div>
+          <div class="card">
+            <p class="ey">Step 2 · 侦察</p>
+            <h2>在文章里搜索线索</h2>
+            <div class="gbox" id="locBox"></div>
+            <div class="field"><span>我找到的关键句</span>
+              <textarea id="evInput" rows="3" placeholder="关键词、句子或段落大意"></textarea>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-head">
+              <div><p class="ey">Step 3 · 释放龙息</p><h2>组装答案</h2></div>
+              <button class="btn btn-sm" id="copyBtn">复制</button>
+            </div>
+            <div class="tbox" id="tmplBox"></div>
+            <div class="slots" id="slotBox"></div>
+            <!-- word bank for 心情/品质 types -->
+            <div id="wordBank" class="wb hidden"></div>
+            <!-- word count for 概括/限字 -->
+            <div class="wc-bar hidden" id="wcBar">字数：<span class="ct" id="wcNum">0</span> / <span id="wcLimit">30</span></div>
+            <div class="field"><span>完整答案</span>
+              <textarea id="ansOut" rows="5"></textarea>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div><p class="ey">Step 4 · 龙鳞检验</p><h2>战利品清点</h2></div>
+              <button class="btn btn-g" id="saveBtn">斩杀完成！</button>
+            </div>
+            <div class="cklist" id="ckBox"></div>
+            <div class="conf">
+              <span style="font-size:12px;color:var(--muted)">战力值</span>
+              <input id="confIn" type="range" min="1" max="5" value="3">
+              <strong id="confTxt">3/5</strong>
+            </div>
+          </div>
+          <button class="btn btn-sm" id="showModelBtn" style="width:100%;margin-bottom:8px;border-color:var(--blue);color:var(--blue)">写完了？看范答对一对</button>
+          <div class="model-ans" id="modelAnsBox"><h4>范答</h4><div id="modelAnsText"></div></div>
+          <button class="btn btn-gold btn-big" id="rescueBtn">召唤龙族长老！</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="card" style="margin-top:12px"><h2>修炼日志</h2><div id="histBox"></div></div>
+  </div>
+</div>
+
+<!-- DONE OVERLAY -->
+<div class="overlay" id="doneOv">
+  <div class="ocard">
+    <h2>Johnson，今日修炼完成！</h2>
+    <div class="done-num" id="doneN">0</div>
+    <p style="text-align:center">只怪兽被Johnson斩杀</p>
+    <p id="doneMsg" style="text-align:center;color:var(--muted)"></p>
+    <p id="doneTime" style="text-align:center;font-size:14px"></p>
+    <button class="btn btn-g btn-big" style="margin-top:14px" id="doneClose">Johnson收刀入鞘！明天继续</button>
+  </div>
+</div>
+
+<!-- RESCUE OVERLAY -->
+<div class="overlay" id="rescueOv">
+  <div class="ocard">
+    <h2 style="color:var(--gold)">Johnson，听龙族长老的指引</h2>
+    <div class="rstep"><span class="snum">1</span><span>这题问什么？<small>圈出"为什么/感到/从哪里/意思/认为/启示/概括"</small></span></div>
+    <div class="rstep"><span class="snum">2</span><span>它是哪一类题？<small>看上面的题型标签</small></span></div>
+    <div class="rstep"><span class="snum">3</span><span>答案在哪一段？<small>找同词、找情绪词、找"可是/但是/原来/没想到"</small></span></div>
+    <div class="rstep"><span class="snum">4</span><span>用模板开头！<small>先写第一句就好</small></span></div>
+    <div class="rstep"><span class="snum">5</span><span>先写出来，最后再改<small>写了总比空着好！</small></span></div>
+    <div class="rstarters">
+      <p><strong>万能开头：</strong></p>
+      <p>原因题 → 这是因为……</p>
+      <p>心情题 → 他/她因为……，所以感到……</p>
+      <p>证据题 → 可以从……看出，因为……</p>
+      <p>词语题 → 这个词在文中的意思是……</p>
+      <p>评价题 → 我认为他/她是一个……的人</p>
+      <p>标题题 → 我认为《……》最适合，因为全文主要写……</p>
+      <p>概括题 → 短文主要写了……，最后……</p>
+      <p>启示题 → 我从短文中学到……例如有一次我……</p>
+    </div>
+    <button class="btn btn-g btn-big" id="rescueClose">收到！继续战斗！</button>
+  </div>
+</div>
+
+<script>
+/* ===== TYPES ===== */
+const T={
+  reason:{n:"原因题",kw:["为什么","原因","为何","怎么会"],
+    loc:["找事情发生前的一两句话","留意：因为、所以、原来、没想到","答案要写为什么，不只写结果"],
+    tpl:"这是因为【原因】，所以【结果】。",sl:["原因","结果"],
+    ck:["写出了原因","写出了结果","句子完整"]},
+  feeling:{n:"心情题",kw:["感到","觉得","心情","心里","反应"],
+    loc:["找人物看到/听到/想到的事情","找附近的心情词","答案要有：谁+原因+心情"],
+    tpl:"【人物】因为【事情】，所以感到【心情】。",sl:["人物","事情","心情"],
+    ck:["有写人物","有写原因","有写心情词"],
+    words:{title:"常用心情词",groups:[
+      {label:"开心类",items:["高兴","开心","欣慰","满足","自豪","骄傲","兴奋","得意","欣喜","幸福"]},
+      {label:"难过类",items:["伤心","难过","失落","沮丧","痛心","心酸","委屈","悲伤","失望","无奈"]},
+      {label:"害怕类",items:["害怕","恐惧","担心","紧张","不安","焦虑","惊慌","忐忑"]},
+      {label:"生气类",items:["生气","愤怒","不满","气愤","恼怒","不耐烦"]},
+      {label:"感动类",items:["感动","感激","温暖","欣慰","惭愧","内疚","羞愧","后悔"]}
+    ]}},
+  evidence:{n:"证据题",kw:["从哪里看出","看出","哪句话","说明","怎么知道"],
+    loc:["找动作、语言或心理描写","可以引用短句或转述","必须解释为什么这句能证明"],
+    tpl:"可以从【证据】看出，因为这说明【解释】。",sl:["证据","解释"],
+    ck:["有文中证据","有解释","没有只抄一句"]},
+  vocab:{n:"词语理解",kw:["意思","指的是","这个词","这个短语","这句话"],
+    loc:["看这个词前后1-2句","判断它在文中指什么","用自己的话，不重复关键词"],
+    tpl:"这个词/短语在文中的意思是【解释】。",sl:["解释"],
+    ck:["用了自己的话","没重复关键词","结合了上下文"]},
+  character:{n:"人物评价",kw:["怎样的人","性格","品质","认为","懂事","细心"],
+    loc:["找人物做了什么、说了什么","选准确性格词","用文中事例证明"],
+    tpl:"我认为【人物】是一个【品质】的人。因为他/她【事例】，这表现出他/她【品质】。",sl:["人物","品质","事例"],
+    ck:["有性格词","有文中事例","品质词准确"],
+    words:{title:"常用品质词（点一下就复制）",groups:[
+      {label:"善良/助人",items:["善良","乐于助人","有爱心","热心","慷慨","无私","体贴","关心他人"]},
+      {label:"勇敢/坚强",items:["勇敢","坚强","有毅力","不怕困难","坚持不懈","不轻易放弃","有勇气","敢于尝试"]},
+      {label:"聪明/能干",items:["聪明","机智","有智慧","能干","灵活","善于思考","反应快","有主见"]},
+      {label:"细心/负责",items:["细心","认真","有责任感","负责任","一丝不苟","做事仔细","踏实","守信用"]},
+      {label:"孝顺/懂事",items:["孝顺","懂事","听话","体谅父母","有礼貌","尊敬长辈","知恩图报","感恩"]},
+      {label:"其他好品质",items:["有耐心","宽容","大方","诚实","正直","谦虚","自信","有创意","用心良苦","以身作则"]}
+    ]}},
+  title:{n:"标题题",kw:["题目","标题","最适合","作为题目"],
+    loc:["看全文主要人物+事件","看最后表达的道理","解释要扣全文，不是一个小情节"],
+    tpl:"我认为《【标题】》最适合作为题目。因为短文主要写了【内容】，表达了【中心】。",sl:["标题","内容","中心"],
+    ck:["没有只勾选","解释扣住全文","写出中心思想"]},
+  summary:{n:"概括/段落大意",kw:["概括","中心思想","主要内容","不超过","用一句话","简要说明","大意","段落大意"],
+    loc:["看指定段落讲了谁+做了什么+结果","抓主线，删细节","注意字数限制（通常15-20字）！"],
+    tpl:"第X段主要写了【谁做了什么】，【结果/道理】。",sl:["谁做了什么","结果/道理"],
+    ck:["抓住了主要人物和事件","删掉了细节","字数在限制内","有结果或道理"],wordLimit:true},
+  compare:{n:"变化比较",kw:["一开始","后来","之前","之后","不同","比较","变化"],
+    loc:["找前半段的想法/做法","找后半段的改变","前后都要写"],
+    tpl:"一开始，【之前】；后来，【之后】。这说明【变化】。",sl:["之前","之后","变化"],
+    ck:["写了之前","写了之后","形成对比"]},
+  lesson:{n:"启示题",kw:["学到","启示","结合生活","举例","你会不会","明白"],
+    loc:["看文章最后人物明白了什么","把道理说清楚","加自己的生活例子"],
+    tpl:"我从这篇短文中学到【道理】。文中的【文章例子】让我明白这一点。例如，有一次我【生活例子】。",sl:["道理","文章例子","生活例子"],
+    ck:["有道理","有文章根据","有生活例子"]}
+};
+
+/* ===== TECHNIQUE TIPS ===== */
+const TIPS={
+  reason:{
+    title:"原因题秘籍",
+    formula:"因为【原因】，所以【结果】。",
+    example:"<strong>题：</strong>为什么小明不敢回家？<br><strong>范答：</strong>这是因为小明打破了妈妈最喜欢的花瓶，所以他害怕回家被妈妈骂。<br><strong>得分点：</strong><span class='pts'>原因</span><span class='pts'>结果</span>",
+    warn:"只写结果不写原因=0分！比如只写“他害怕“就没分，要写清楚怕什么、为什么怕。"
+  },
+  feeling:{
+    title:"心情题秘籍",
+    formula:"【人物】因为【事情】，所以感到【心情词】。",
+    example:"<strong>题：</strong>妈妈听到消息后心情怎样？<br><strong>范答：</strong>妈妈因为听到儿子考了第一名，所以感到非常高兴和欣慰。<br><strong>得分点：</strong><span class='pts'>人物</span><span class='pts'>原因</span><span class='pts'>心情词</span>",
+    warn:"只写“很开心“=扣分！一定要写谁+为什么+心情词，三个都要有。"
+  },
+  evidence:{
+    title:"证据题秘籍",
+    formula:"可以从【文中证据】看出，因为这说明【解释】。",
+    example:"<strong>题：</strong>从哪里看出爸爸很紧张？<br><strong>范答：</strong>可以从“爸爸不停地来回走动，还一直看手表“看出，因为这些动作说明他心里很着急、很紧张。<br><strong>得分点：</strong><span class='pts'>引用证据</span><span class='pts'>解释</span>",
+    warn:"只抄一句话不解释=只拿一半分！必须加“因为这说明……“"
+  },
+  vocab:{
+    title:"词语理解秘籍",
+    formula:"这个词在文中的意思是【用自己的话解释】。",
+    example:"<strong>题：</strong>“他心里乐开了花“是什么意思？<br><strong>范答：</strong>这句话在文中的意思是他心里非常高兴、非常满足。<br><strong>得分点：</strong><span class='pts'>自己的话</span><span class='pts'>结合上下文</span>",
+    warn:"不能重复题目里的关键词！比如题目问“乐开了花“，答案不能再写“乐开了花“。"
+  },
+  character:{
+    title:"人物评价秘籍",
+    formula:"我认为【人物】是一个【品质词】的人。因为他/她【文中事例】，这表现出他/她的【品质】。",
+    example:"<strong>题：</strong>你认为小红是怎样的人？<br><strong>范答：</strong>我认为小红是一个乐于助人的人。因为她看到丽文没有尺子，毫不犹豫地把自己的尺子折成两半分给丽文，这表现出她的善良和慷慨。<br><strong>得分点：</strong><span class='pts'>品质词</span><span class='pts'>事例</span><span class='pts'>回扣品质</span>",
+    warn:"只说“他很好“=0分！品质词要具体：善良、勇敢、细心、有责任感、乐于助人……"
+  },
+  title:{
+    title:"标题题秘籍",
+    formula:"我认为《【标题】》最适合。因为短文主要写了【内容】，表达了【中心思想】。",
+    example:"<strong>题：</strong>以下哪个最适合做题目？<br><strong>范答：</strong>我认为《迟到的道歉》最适合作为题目。因为短文主要写了小杰因为没有认真道歉而失去朋友，最后诚恳道歉和好的经过，表达了要认真对待别人感受的道理。<br><strong>得分点：</strong><span class='pts'>选择</span><span class='pts'>全文内容</span><span class='pts'>中心思想</span>",
+    warn:"只打勾不解释=0分！必须写出全文主要写了什么+表达了什么道理。"
+  },
+  summary:{
+    title:"概括/段落大意秘籍",
+    formula:"第X段主要写了【谁】+【做了什么】+【结果/道理】。",
+    example:"<strong>真题格式：</strong>请用不超过15个字，写出第四段的段落大意。(4分)<br><strong>范答：</strong>爷爷每天坚持浇花，花终于开了。(13字)<br><strong>字数范围：</strong>考试通常要求<strong>15-20字</strong>，必须精简！<br><strong>得分点：</strong><span class='pts'>主要人物</span><span class='pts'>主要事件</span><span class='pts'>结果/道理</span><span class='pts'>字数达标</span>",
+    warn:"考试限15-20字！写太多细节会超字数！只抓主线：谁+做了什么+结果。"
+  },
+  compare:{
+    title:"变化比较秘籍",
+    formula:"一开始，【之前的想法/做法】；后来，【之后的改变】。",
+    example:"<strong>题：</strong>小芳对游泳的态度有什么变化？<br><strong>范答：</strong>一开始，小芳看到水就害怕，不敢下水；后来，她在教练鼓励下一步步学习，最终能自己游十米，变得很开心和自信。<br><strong>得分点：</strong><span class='pts'>之前</span><span class='pts'>之后</span><span class='pts'>形成对比</span>",
+    warn:"只写一边=扣分！前和后都要写，最好用“一开始……后来……“开头。"
+  },
+  lesson:{
+    title:"启示题秘籍",
+    formula:"我从短文中学到【道理】。文中【文章例子】让我明白这点。有一次我【生活例子】。",
+    example:"<strong>题：</strong>你学到了什么？结合生活。<br><strong>范答：</strong>我从短文中学到遇到困难不能放弃，要一步步尝试。文中小芳从害怕水到能游十米，说明坚持就能成功。有一次我学骑自行车，一开始一直摔倒，但我没有放弃，最后终于学会了。<br><strong>得分点：</strong><span class='pts'>道理</span><span class='pts'>文章根据</span><span class='pts'>生活例子</span>",
+    warn:"生活例子不能太笼统！不能只说“我也遇到过困难“，要写具体是什么事、怎么做的。"
+  }
+};
+
+/* ===== BUILT-IN DRILLS ===== */
+const DRILLS=[
+{
+"title": "王爷爷的杂货店",
+"passage": "放学后，小光跑进巷子里的杂货店，想买一支铅笔。老板王爷爷坐在柜台后面，正在看报纸。小光说：“王爷爷，我要一支铅笔。”王爷爷头也没抬，指了指右边的架子说：“自己去找。”\\n\\n小光觉得王爷爷真冷冰冰的。他走到架子前，翻了好久，终于找到铅笔，还发现旁边有一盒漂亮的彩色笔。他拿着铅笔回到柜台，王爷爷放下报纸，笑着说：“你自己找到了吧？以后什么事都要先自己试试看。”小光这才明白，王爷爷不是不理他，而是想让他学会独立。\\n\\n从那以后，小光遇到问题不再马上求助，而是先自己想办法。他觉得王爷爷教给他的，比一支铅笔值钱多了。",
+"qs": [
+{
+"q": "为什么小光一开始觉得王爷爷冷冰冰的？(2分)",
+"type": "reason",
+"pts": 2,
+"ma": "这是因为小光叫王爷爷帮他拿铅笔，王爷爷头也没抬，只是指了指架子让他自己去找，所以小光觉得王爷爷对他很冷淡、不关心他。"
+},
+{
+"q": "王爷爷让小光自己找铅笔，从哪里可以看出他其实是为了小光好？(2分)",
+"type": "evidence",
+"pts": 2,
+"ma": "可以从王爷爷最后笑着说“你自己找到了吧？以后什么事都要先自己试试看”看出，因为这说明王爷爷让小光自己找铅笔是有意训练他独立，而不是不关心他。"
+},
+{
+"q": "“王爷爷教给他的，比一支铅笔值钱多了”这句话在文中是什么意思？(2分)",
+"type": "vocab",
+"pts": 2,
+"ma": "这句话在文中的意思是王爷爷教会小光遇事要先自己想办法、学会独立，这个道理比一支铅笔的价值大得多。"
+},
+{
+"q": "你认为王爷爷是一个怎样的人？请举出文中例子说明。(3分)",
+"type": "character",
+"pts": 3,
+"ma": "我认为王爷爷是一个用心良苦的人。因为他没有直接帮小光拿铅笔，而是让他自己找，最后还笑着告诉他以后什么事都要先自己试试看，这表现出王爷爷善于用行动教育孩子的品质。"
+},
+{
+"q": "请用不超过18个字，写出文中第二段的段落大意。(4分)",
+"type": "summary",
+"pts": 4,
+"limit": 18,
+"ma": "小光找不到铅笔，王爷爷让他自己再找。(16字)"
+},
+{
+"q": "你从这篇短文中学到了什么？请结合自己的生活例子说明。(4分)",
+"type": "lesson",
+"pts": 4,
+"ma": "我从短文中学到遇到问题要先自己尝试解决，不要马上依赖别人。文中王爷爷让小光自己找铅笔，小光不仅找到了，还明白了独立的重要。有一次我数学题不会做，想直接问妈妈答案，但我先自己想了一遍，结果真的做出来了，感觉比直接得到答案开心多了。"
+}
+]
+},
+{
+"title": "折尺子的小红",
+"passage": "考试那天，丽文发现自己忘了带尺子。她急得快哭了，因为数学考试需要画图。坐在旁边的小红看到了，没有说话，默默拿起自己的尺子，“啪”一声折成两半，把其中半截递给丽文。\\n\\n丽文愣住了，小声说：“你的尺子……”小红笑了笑说：“没关系，半截也能用。”考试结束后，丽文跑到小红面前说：“谢谢你！可是你的尺子断了……”小红摆摆手说：“尺子可以再买，但是朋友考不好我会难过。”\\n\\n丽文听了，心里暖暖的。她决定以后也要像小红一样，在别人需要帮助的时候毫不犹豫地伸出手。",
+"qs": [
+{
+"q": "丽文为什么急得快哭了？(1分)",
+"type": "reason",
+"pts": 1,
+"ma": "这是因为丽文发现自己忘了带尺子，而数学考试需要用尺子画图，所以她急得快哭了。"
+},
+{
+"q": "小红是怎么帮助丽文的？(2分)",
+"type": "reason",
+"pts": 2,
+"ma": "小红看到丽文没有尺子，默默把自己的尺子折成两半，把其中半截递给丽文，用这种方式帮助了她。"
+},
+{
+"q": "丽文听了小红的话后心里有什么感受？为什么？(2分)",
+"type": "feeling",
+"pts": 2,
+"ma": "丽文听了小红的话后心里感到非常温暖和感动。因为小红说“尺子可以再买，但是朋友考不好我会难过”，这让丽文感受到小红对她的关心和重视。"
+},
+{
+"q": "“心里暖暖的”在文中是什么意思？(2分)",
+"type": "vocab",
+"pts": 2,
+"ma": "“心里暖暖的”在文中的意思是丽文被小红的善良和友爱深深感动，内心充满温暖和感激。"
+},
+{
+"q": "你认为小红是一个怎样的人？请用文中例子说明。(3分)",
+"type": "character",
+"pts": 3,
+"ma": "我认为小红是一个乐于助人、重视友情的人。因为她毫不犹豫地把自己的尺子折断分给丽文，还说“尺子可以再买，但是朋友考不好我会难过”，这表现出她把朋友的需要看得比自己的东西更重要。"
+},
+{
+"q": "请用不超过15个字，写出文中第二段的段落大意。(4分)",
+"type": "summary",
+"pts": 4,
+"limit": 15,
+"ma": "小红折断尺子，分一半给丽文。(13字)"
+},
+{
+"q": "读了这篇短文，你学到了什么？请结合生活举例。(4分)",
+"type": "lesson",
+"pts": 4,
+"ma": "我从短文中学到在朋友需要帮助时要毫不犹豫地伸出手。文中小红宁愿折断自己的尺子也要帮助丽文，这种无私让人感动。有一次同学忘了带课本，我主动和他一起看我的课本，他很感谢我，我也觉得帮助别人很开心。"
+}
+]
+},
+{
+"title": "迟到的道歉",
+"passage": "小杰和志明是最好的朋友，每天一起上学、一起吃午饭。可是有一天，志明突然不理小杰了。小杰跟他说话，他装作没听见；小杰约他一起吃饭，他说要一个人吃。\\n\\n小杰又伤心又生气，心想：“我又没做错什么，他凭什么不理我！”接下来几天，两个人都不说话，班上的同学也觉得气氛怪怪的。\\n\\n李老师发现了，把两个人叫到办公室。她温和地问志明怎么了。志明低着头，小声说：“上星期小杰把我画了一个月的画弄坏了，他都不说对不起……”小杰这才想起来，上星期他不小心把水泼到志明的画上。当时他觉得没什么大不了，随口说了句“没事吧”就走了。\\n\\n小杰涨红了脸，对志明说：“对不起，我当时不知道那幅画对你那么重要。”志明抬起头，眼眶红红的，但还是笑了。从那以后，小杰明白了：如果伤害了别人，一定要认真道歉，不能觉得无所谓。",
+"qs": [
+{
+"q": "志明为什么突然不理小杰了？(2分)",
+"type": "reason",
+"pts": 2,
+"ma": "这是因为上星期小杰不小心把水泼到志明画了一个月的画上，当时只随口说了句“没事吧”就走了，没有认真道歉，所以志明很伤心，不愿意理他。"
+},
+{
+"q": "小杰当时有什么反应？他心里是什么感受？(2分)",
+"type": "feeling",
+"pts": 2,
+"ma": "小杰又伤心又生气，心想“我又没做错什么，他凭什么不理我”。他感到委屈和不解，因为他当时不知道自己做错了什么。"
+},
+{
+"q": "从哪里可以看出李老师很细心？(2分)",
+"type": "evidence",
+"pts": 2,
+"ma": "可以从李老师“发现了”两人的异常并“温和地问志明怎么了”看出，因为这说明李老师注意到了班上气氛的变化，还用温和的方式了解情况，没有直接批评，表现出她的细心和体贴。"
+},
+{
+"q": "“涨红了脸”说明小杰当时有什么感受？(2分)",
+"type": "vocab",
+"pts": 2,
+"ma": "“涨红了脸”说明小杰当时感到非常羞愧和内疚，因为他这才意识到自己弄坏了志明花一个月画的画却没有认真道歉，觉得对不起朋友。"
+},
+{
+"q": "小杰对待志明的态度前后有什么不同？(2分)",
+"type": "compare",
+"pts": 2,
+"ma": "一开始，小杰觉得弄坏志明的画没什么大不了，随口说了句“没事吧”就走了，态度很轻率；后来，他知道了那幅画对志明很重要，涨红了脸认真地说了“对不起”，态度变得诚恳了。"
+},
+{
+"q": "请写出这件事的起因、经过和结果。(3分)",
+"type": "summary",
+"pts": 3,
+"ma": "起因是小杰不小心把水泼到志明画了一个月的画上，却没有认真道歉。经过是志明因此不理小杰，李老师发现后把两人叫到办公室了解情况。结果是小杰明白了自己的错误，认真向志明道歉，两人和好了。"
+},
+{
+"q": "以下哪个最适合作为这篇短文的题目？请说明原因。\\n(A)《上学的路上》(B)《迟到的道歉》(C)《李老师的办公室》(3分)",
+"type": "title",
+"pts": 3,
+"ma": "我认为《迟到的道歉》最适合作为题目。因为短文主要写了小杰弄坏志明的画后没有认真道歉，导致友谊出现裂痕，最后在老师帮助下认识到错误并诚恳道歉的经过，表达了要认真对待别人感受的道理。"
+},
+{
+"q": "你从这篇短文中学到了什么？请结合生活例子。(4分)",
+"type": "lesson",
+"pts": 4,
+"ma": "我从短文中学到如果伤害了别人，一定要认真道歉，不能觉得无所谓。文中小杰因为没有认真道歉差点失去好朋友，说明轻率的态度会伤害别人的感情。有一次我不小心弄坏了弟弟的玩具，一开始觉得没什么，后来看到他很难过，我认真跟他说了对不起，他才原谅我。"
+}
+]
+},
+{
+"title": "学游泳",
+"passage": "暑假到了，妈妈给小芳报了游泳班。第一天到游泳池，小芳看到蓝蓝的水就害怕了。她紧紧抓住妈妈的手说：“我不要下水！”教练陈叔叔走过来，蹲下来对她说：“第一天我们不游泳，只在浅水区玩水，好不好？”\\n\\n小芳勉强下了水，发现水只到膝盖，没那么可怕。第二天，陈叔叔教她把头埋进水里吹泡泡。小芳试了好几次，每次都呛水，急得想哭。陈叔叔没有催她，只是说：“没关系，慢慢来。你今天比昨天已经勇敢多了。”\\n\\n就这样，一天比一天多学一点。两个星期后，小芳竟然可以自己游十米了！她从水里探出头，开心地喊：“妈妈！你看我！”妈妈在池边拍手，眼睛里闪着泪光。\\n\\n后来小芳在日记里写道：“害怕的时候，不是不可以害怕，而是要一步一步慢慢来。只要不放弃，害怕的事也会变成开心的事。”",
+"qs": [
+{
+"q": "小芳为什么一开始不想下水？(1分)",
+"type": "reason",
+"pts": 1,
+"ma": "这是因为小芳看到游泳池蓝蓝的水就害怕了，不敢下水。"
+},
+{
+"q": "陈叔叔第一天是怎么让小芳愿意下水的？(2分)",
+"type": "reason",
+"pts": 2,
+"ma": "陈叔叔蹲下来对小芳说第一天不游泳，只在浅水区玩水，用降低难度的方式让小芳不那么害怕，愿意先下水试试。"
+},
+{
+"q": "从哪里可以看出陈叔叔很有耐心？请写出证据并解释。(2分)",
+"type": "evidence",
+"pts": 2,
+"ma": "可以从陈叔叔“没有催她，只是说‘没关系，慢慢来。你今天比昨天已经勇敢多了’”看出，因为这说明他没有因为小芳呛水就着急或批评她，而是用鼓励的方式让她慢慢进步，表现出他很有耐心。"
+},
+{
+"q": "小芳学会游泳后心里是什么感受？(2分)",
+"type": "feeling",
+"pts": 2,
+"ma": "小芳学会游泳后感到非常开心和自豪。因为她能自己游十米了，从水里探出头开心地喊“妈妈！你看我！”，说明她为自己的进步感到骄傲。"
+},
+{
+"q": "“妈妈在池边拍手，眼睛里闪着泪光”——妈妈为什么会这样？(2分)",
+"type": "reason",
+"pts": 2,
+"ma": "这是因为妈妈看到小芳从一开始害怕水到现在能自己游十米，为女儿的勇敢和进步感到非常骄傲和感动，所以眼睛里闪着泪光。"
+},
+{
+"q": "小芳对游泳的态度前后有什么变化？(2分)",
+"type": "compare",
+"pts": 2,
+"ma": "一开始，小芳看到水就害怕，紧紧抓住妈妈的手不敢下水；后来，经过教练耐心教导和自己一天天的练习，她能自己游十米了，变得开心而自信。"
+},
+{
+"q": "你认为陈叔叔是一个怎样的教练？请用文中例子说明。(3分)",
+"type": "character",
+"pts": 3,
+"ma": "我认为陈叔叔是一个有耐心、善于鼓励学生的教练。因为他第一天不急着教游泳，只让小芳在浅水区玩水，小芳呛水时也没有催她，而是说“没关系，慢慢来，你今天比昨天已经勇敢多了”，这表现出他懂得循序渐进、用鼓励帮助学生克服恐惧。"
+},
+{
+"q": "请用不超过20个字，写出文中第三段的段落大意。(4分)",
+"type": "summary",
+"pts": 4,
+"limit": 20,
+"ma": "小芳每天练习，终于能自己游十米了。(16字)"
+},
+{
+"q": "你从这篇短文中学到了什么？请结合自己的经历说明。(4分)",
+"type": "lesson",
+"pts": 4,
+"ma": "我从短文中学到害怕的时候不要放弃，要一步一步慢慢来。文中小芳从不敢下水到能游十米，靠的是每天多学一点点。有一次我学骑自行车，一开始摔了好几次很想放弃，但我告诉自己慢慢来，最后终于能骑稳了，那种感觉和小芳一样开心。"
+}
+]
+},
+{
+"title": "丢失的钥匙（短篇·原因+心情）",
+"passage": "放学后，小伟发现书包里的家门钥匙不见了。他翻遍了每一个口袋，又跑回教室找了一遍，还是没找到。他蹲在学校门口，越想越着急，眼眶都红了。这时，好朋友阿凯跑过来说：“你是不是在找这个？刚才掉在操场上了。”小伟接过钥匙，长长地舒了一口气，紧紧握住阿凯的手说：“谢谢你！你真是太好了！”",
+"qs": [
+{
+"q": "小伟为什么蹲在学校门口？(2分)",
+"type": "reason",
+"pts": 2,
+"ma": "这是因为小伟发现家门钥匙不见了，翻遍书包和教室都没找到，又急又担心不知道怎么回家，所以蹲在学校门口。"
+},
+{
+"q": "小伟接过钥匙后心里是什么感受？为什么？(2分)",
+"type": "feeling",
+"pts": 2,
+"ma": "小伟接过钥匙后感到非常轻松和感激。因为他一直找不到钥匙，非常着急，现在终于找回来了，而且是好朋友帮他捡到的，所以他长长地舒了一口气，还紧紧握住阿凯的手道谢。"
+},
+{
+"q": "从哪里可以看出小伟找钥匙时非常着急？(2分)",
+"type": "evidence",
+"pts": 2,
+"ma": "可以从小伟“翻遍了每一个口袋，又跑回教室找了一遍”“蹲在学校门口，越想越着急，眼眶都红了”看出，因为这些动作说明他到处找都找不到，急得快哭了。"
+}
+]
+},
+{
+"title": "迟到的值日生（短篇·评价+证据）",
+"passage": "今天轮到小美打扫教室，可她因为参加合唱团排练迟到了半小时。她跑进教室时，发现同组的志强已经把地扫完了，桌椅也擦得干干净净。小美不好意思地说：“对不起，谢谢你帮我。”志强笑着说：“没关系，我知道你今天有排练，反正我做完功课也没事，就先帮你打扫了。”小美心里很过意不去，决定下次志强有事时一定主动帮他。",
+"qs": [
+{
+"q": "你认为志强是一个怎样的人？请用文中例子说明。(3分)",
+"type": "character",
+"pts": 3,
+"ma": "我认为志强是一个体贴又乐于助人的人。因为他知道小美今天有合唱团排练会迟到，就主动提前帮她把教室打扫干净，还笑着说“没关系”，这表现出他善于为别人着想，愿意主动帮助同学。"
+},
+{
+"q": "从哪里可以看出志强不是随便帮忙，而是有心为小美着想的？(2分)",
+"type": "evidence",
+"pts": 2,
+"ma": "可以从志强说的“我知道你今天有排练”看出，因为这说明他事先就知道小美会迟到，所以特意提前帮她做好值日，是有计划地为朋友分担，不是碰巧而已。"
+}
+]
+},
+{
+"title": "外婆的红豆汤（短篇·词语+启示）",
+"passage": "每次考试前，外婆都会煮一碗红豆汤给小薇喝。小薇觉得红豆汤甜甜的，喝完心里就不那么紧张了。今年外婆生病住院，考试前没有人煮红豆汤。小薇走进考场，心里空落落的。考完试回家，她看到桌上放着一碗红豆汤和一张纸条：“外婆让邻居王阿姨煮的，祝你考试顺利。”小薇端起碗喝了一口，眼泪忍不住流了下来。",
+"qs": [
+{
+"q": "“心里空落落的”在文中是什么意思？(2分)",
+"type": "vocab",
+"pts": 2,
+"ma": "这句话在文中的意思是小薇因为外婆住院了，考试前没有人煮红豆汤给她，她感到很失落、很不安，像少了什么重要的东西一样。"
+},
+{
+"q": "小薇为什么喝了一口红豆汤就流泪了？(2分)",
+"type": "reason",
+"pts": 2,
+"ma": "这是因为小薇原以为今年没有红豆汤了，没想到外婆虽然住院了还惦记着她，特意托邻居煮了红豆汤，她被外婆的爱和关心深深感动，所以忍不住流泪了。"
+},
+{
+"q": "你从这篇短文中学到了什么？请结合生活例子。(4分)",
+"type": "lesson",
+"pts": 4,
+"ma": "我从短文中学到亲人的爱常常藏在日常小事里，我们应该珍惜和感恩。文中外婆每次考试都煮红豆汤，住院了还托人代劳，说明她一直把小薇放在心上。有一次我生病了，妈妈半夜起来帮我量体温、喂我吃药，当时我觉得理所当然，现在想想应该好好跟她说声谢谢。"
+}
+]
+},
+{
+"title": "新来的同学（短篇·变化+概括）",
+"passage": "班上来了一个新同学叫大卫。他不太会说华语，同学们和他说话他常常听不懂，只能笑一笑。一开始大家觉得跟他沟通很麻烦，都不太愿意和他一起玩。小杰觉得大卫一个人很可怜，就主动教他说华语。两个月后，大卫能用简单的华语和大家聊天了，同学们发现他其实很幽默，都喜欢跟他玩了。大卫在作文里写道：“谢谢小杰，是他让我在新学校有了朋友。”",
+"qs": [
+{
+"q": "同学们对大卫的态度前后有什么变化？(2分)",
+"type": "compare",
+"pts": 2,
+"ma": "一开始，同学们觉得和大卫沟通很麻烦，不太愿意跟他一起玩；后来，大卫学会了简单华语能和大家聊天了，同学们发现他其实很幽默，都喜欢跟他玩了。"
+},
+{
+"q": "请用不超过15个字，写出文中第二段的段落大意。(4分)",
+"type": "summary",
+"pts": 4,
+"limit": 15,
+"ma": "小杰主动教大卫说华语。(10字)"
+},
+{
+"q": "你从这篇短文中学到了什么？(4分)",
+"type": "lesson",
+"pts": 4,
+"ma": "我从短文中学到我们应该主动帮助有困难的人，不能因为沟通困难就排斥别人。文中小杰主动教大卫说华语，让大卫交到了朋友，这说明一个人的善意可以改变很多事。有一次班上有个新同学不认识路，我主动带他参观学校，后来我们成了好朋友。"
+}
+]
+}
+];
+
+/* ===== WEEK PLAN ===== */
+const WPLAN=[
+  {day:1,title:"幼龙觉醒 · 原因+心情",focus:["reason","feeling"],goal:"完成4-6题，练\"因为所以\"和\"谁+原因+心情\""},
+  {day:2,title:"利爪初试 · 证据+词语",focus:["evidence","vocab"],goal:"学会\"证据+解释\"，用自己的话转述"},
+  {day:3,title:"龙鳞闪耀 · 评价+标题",focus:["character","title"],goal:"\"性格词+事例+回扣\"和标题解释"},
+  {day:4,title:"蓄力龙息 · 概括+比较",focus:["summary","compare"],goal:"练概括限字数、前后变化比较"},
+  {day:5,title:"龙翼展开 · 启示+例子",focus:["lesson","summary"],goal:"写具体生活例子，不空洞"},
+  {day:6,title:"龙骑士出征 · 整篇实战",focus:["reason","feeling","evidence","summary","lesson"],goal:"30分钟做完一整篇，不空题"},
+  {day:7,title:"驯龙大师 · 终极回顾",focus:["reason","feeling","evidence","vocab","character","summary","lesson"],goal:"重做错题，对比进步"}
+];
+
+/* ===== STATE ===== */
+const KEY="j-hcl-7d-v3";
+let S=load();
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.v===3)return s}catch{}return{v:3,day:1,tot:1800,qt:180,on:false,recs:[],done:[]}}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+
+let tId=null;
+let curType="reason";
+let mode="paste"; // paste|quick|drill
+let drillIdx=0;
+let pasteQs=[];
+let curQIdx=-1;
+let wordLimit=0;
+
+const $=id=>document.getElementById(id);
+const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+
+/* ===== TIMER ===== */
+const C=2*Math.PI*27;
+function uTmr(){
+  const p=S.tot/1800;
+  $("arc").setAttribute("stroke-dashoffset",C*(1-p));
+  $("tTxt").textContent=fmt(S.tot);
+  const r=$("ring"),l=$("tLbl");
+  r.classList.remove("warn","danger");l.classList.remove("warn","danger");l.textContent="总计时";
+  if(S.tot<=300){r.classList.add("danger");l.classList.add("danger");l.textContent="快没时间了！"}
+  else if(S.tot<=600){r.classList.add("warn");l.classList.add("warn");l.textContent="注意时间"}
+}
+function uQt(){
+  const e=$("qt");$("qtTxt").textContent=fmt(S.qt);
+  e.classList.remove("warn","danger");
+  if(S.qt<=30)e.classList.add("danger");else if(S.qt<=60)e.classList.add("warn");
+}
+function tick(){
+  if(S.tot>0)S.tot--;if(S.qt>0)S.qt--;
+  uTmr();uQt();
+  if(S.tot<=0){stop();showDone()}
+}
+function start(){if(S.on)return;S.on=true;tId=setInterval(tick,1000);$("pauseBtn").textContent="暂停"}
+function stop(){S.on=false;clearInterval(tId);tId=null;$("pauseBtn").textContent="继续"}
+function rstQt(){S.qt=180;uQt()}
+
+/* ===== TECHNIQUE CARD ===== */
+let curModelAns="";
+function showTip(t){
+  const tip=TIPS[t];if(!tip){$("tipCard").style.display="none";return}
+  $("tipCard").style.display="block";
+  $("tipTitle").textContent="Johnson的"+tip.title;
+  $("tipFormula").innerHTML="\u516c\u5f0f\uff1a"+tip.formula;
+  $("tipExample").innerHTML=tip.example;
+  $("tipWarn").textContent="\u26a0\ufe0f "+tip.warn;
+}
+function showModel(){
+  const box=$("modelAnsBox");
+  if(box.style.display==="block"){box.style.display="none";$("showModelBtn").textContent="\u5199\u5b8c\u4e86\uff1f\u770b\u8303\u7b54\u5bf9\u4e00\u5bf9";return}
+  if(curModelAns){$("modelAnsText").innerHTML="<p>"+curModelAns+"</p>";box.style.display="block";$("showModelBtn").textContent="\u6536\u8d77\u8303\u7b54"}
+  else{$("modelAnsText").innerHTML="<p style='color:var(--muted)'>\u8fd9\u9898\u6ca1\u6709\u5185\u7f6e\u8303\u7b54\uff0c\u7528\u79d8\u7c4d\u516c\u5f0f\u81ea\u5df1\u7ec4\u88c5\u5427\uff01</p>";box.style.display="block"}
+}
+
+/* ===== TYPE ===== */
+function detect(txt){let b="reason",sc=-1;Object.entries(T).forEach(([k,v])=>{const s=v.kw.reduce((a,w)=>a+(txt.includes(w)?1:0),0);if(s>sc){sc=s;b=k}});return b}
+function setT(t){
+  curType=t;
+  wordLimit=T[t].wordLimit?15:0;
+  rChips();rLoc();rSlots();rWordBank();rCk();buildAns();showTip(t);
+  $("wcBar").classList.toggle("hidden",!T[t].wordLimit);
+  $("modelAnsBox").style.display="none";
+  $("showModelBtn").textContent="\u5199\u5b8c\u4e86\uff1f\u770b\u8303\u7b54\u5bf9\u4e00\u5bf9";
+}
+function rChips(){
+  [$("typeChips"),$("quickChips")].forEach(box=>{
+    if(!box)return;
+    box.innerHTML="";
+    Object.entries(T).forEach(([k,v])=>{
+      const b=document.createElement("button");
+      b.className="chip"+(k===curType?" on":"");
+      b.textContent=v.n;
+      b.onclick=()=>{setT(k);if(box===$("quickChips"))openWorkspace("",k)};
+      box.appendChild(b);
+    });
+  });
+}
+function rLoc(){$("locBox").innerHTML=T[curType].loc.map(l=>`<p>${l}</p>`).join("");$("tmplBox").innerHTML=`<strong>${T[curType].n} \u2014 \u56fa\u5b9a\u516c\u5f0f</strong><p style="font-size:17px;font-weight:800;color:var(--blue);margin:6px 0">${T[curType].tpl}</p><p style="font-size:12px;color:var(--muted)">Johnson\uff0c\u6309\u8fd9\u4e2a\u516c\u5f0f\u586b\u7a7a\u5c31\u884c\uff01\u2193</p>`}
+function rSlots(){
+  const b=$("slotBox");b.innerHTML="";
+  T[curType].sl.forEach(s=>{
+    const l=document.createElement("label");l.textContent=s;
+    const i=document.createElement("input");i.placeholder=`填写${s}`;i.dataset.s=s;i.addEventListener("input",buildAns);
+    l.appendChild(i);b.appendChild(l);
+  });
+}
+function rWordBank(){
+  const wb=$("wordBank");
+  const w=T[curType].words;
+  if(!w){wb.classList.add("hidden");wb.innerHTML="";return}
+  wb.classList.remove("hidden");
+  let h=`<h4>${w.title}</h4>`;
+  w.groups.forEach(g=>{
+    h+=`<div class="wb-group"><div class="wb-label">${g.label}</div><div class="wb-chips">`;
+    g.items.forEach(item=>{
+      h+=`<span class="wb-chip" data-word="${item}">${item}</span>`;
+    });
+    h+=`</div></div>`;
+  });
+  wb.innerHTML=h;
+  wb.querySelectorAll(".wb-chip").forEach(chip=>{
+    chip.onclick=function(e){
+      const word=this.dataset.word;
+      /* find the matching slot input: 心情 or 品质 */
+      const targetSlot=curType==="feeling"?"\u5fc3\u60c5":curType==="character"?"\u54c1\u8d28":null;
+      if(targetSlot){
+        const inp=document.querySelector(`#slotBox input[data-s="${targetSlot}"]`);
+        if(inp){
+          const cur=inp.value.trim();
+          inp.value=cur?(cur+"\u3001"+word):word;
+          buildAns();
+        }
+      }
+      /* toast feedback */
+      const toast=document.createElement("div");
+      toast.className="wb-copied";
+      toast.textContent="\u2714 "+word;
+      toast.style.left=e.clientX+"px";
+      toast.style.top=(e.clientY-10)+"px";
+      document.body.appendChild(toast);
+      setTimeout(()=>toast.remove(),1000);
+    };
+  });
+}
+function rCk(){
+  const b=$("ckBox");b.innerHTML="";
+  T[curType].ck.forEach((c,i)=>{
+    const l=document.createElement("label");l.className="ck";
+    const inp=document.createElement("input");inp.type="checkbox";
+    const sp=document.createElement("span");sp.textContent=c;
+    l.appendChild(inp);l.appendChild(sp);b.appendChild(l);
+  });
+}
+function buildAns(){
+  let a=T[curType].tpl;
+  document.querySelectorAll("#slotBox input").forEach(i=>{
+    const v=i.value.trim()||`【${i.dataset.s}】`;
+    a=a.replaceAll(`【${i.dataset.s}】`,v);
+  });
+  const ev=$("evInput").value.trim();
+  if(ev&&curType!=="evidence")a+=` 文中证据是：${ev}`;
+  $("ansOut").value=a;
+  updateWc();
+}
+function updateWc(){
+  if(!T[curType].wordLimit)return;
+  const n=$("ansOut").value.replace(/\s/g,"").length;
+  $("wcNum").textContent=n;
+  const lim=wordLimit||15;
+  $("wcLimit").textContent=lim;
+  $("wcNum").className=n>lim?"over":"ct";
+}
+
+/* ===== MODES ===== */
+function setMode(m){
+  mode=m;
+  document.querySelectorAll(".mode-btn").forEach(b=>b.classList.toggle("on",b.dataset.m===m));
+  $("mPaste").classList.toggle("hidden",m!=="paste");
+  $("mDrill").classList.toggle("hidden",m!=="drill");
+  $("workspace").classList.add("hidden");
+  $("tipCard").style.display="none";
+  if(m==="drill")renderDrill();
+}
+
+/* ===== PASTE MODE ===== */
+function parsePaste(){
+  const passage=$("pastePassage").value.trim();
+  const raw=$("pasteQs").value.trim();
+  if(!raw){alert("请先粘贴题目");return}
+  // split questions by newline or numbered pattern
+  pasteQs=raw.split(/\n/).map(l=>l.trim()).filter(Boolean).map((q,i)=>{
+    const cleaned=q.replace(/^\d+[\.\、\)\）]\s*/,"");
+    return{q:cleaned,type:detect(cleaned),pts:2,done:false,limit:0};
+  });
+  // detect word limits
+  pasteQs.forEach(q=>{
+    const m=q.q.match(/不超过(\d+)个?字/);
+    if(m)q.limit=parseInt(m[1]);
+  });
+  // show passage
+  if(passage){
+    $("pastePassageBox").classList.remove("hidden");
+    $("pastePassageBox").innerHTML=`<h3>文章</h3><p>${passage.replace(/\n/g,"<br>")}</p>`;
+  }
+  // show question list
+  renderPasteQList();
+}
+function renderPasteQList(){
+  const box=$("pasteQList");box.classList.remove("hidden");
+  box.innerHTML="";
+  pasteQs.forEach((q,i)=>{
+    const div=document.createElement("div");
+    div.className="q-item"+(q.done?" done":"");
+    div.innerHTML=`<span class="num">${i+1}</span><span>${q.q}<br><small style="color:var(--muted)">${T[q.type]?.n||""}${q.limit?" · 限"+q.limit+"字":""}</small></span>`;
+    div.onclick=()=>{if(!q.done)openWorkspace(q.q,q.type,i,q.limit,q.modelAns||"")};
+    box.appendChild(div);
+  });
+  // Show generate button
+  $("genAnsSection").classList.remove("hidden");
+}
+
+/* ===== 满分答案生成引擎 ===== */
+function genAllAnswers(){
+  const passage=$("pastePassage").value.trim();
+  if(!passage){alert("请先粘贴文章再生成答案！");return}
+  if(!pasteQs.length){alert('请先粘贴题目并点击"分析题目"！');return}
+  const box=$("allModelAns");box.innerHTML="";
+  // Split passage into paragraphs and sentences
+  const paras=passage.split(/\n+/).filter(p=>p.trim());
+  const allSents=[];
+  paras.forEach((p,pi)=>{
+    p.split(/[。！？；\n]/).filter(s=>s.trim()).forEach(s=>{
+      allSents.push({text:s.trim(),para:pi});
+    });
+  });
+
+  pasteQs.forEach((q,i)=>{
+    const type=q.type;
+    const qText=q.q;
+    const limit=q.limit||0;
+    // Find relevant sentences
+    const relSents=findRelevantSentences(qText,allSents,passage,paras);
+    // Generate model answer
+    const ans=generateModelAnswer(type,qText,relSents,paras,passage,limit);
+    // Build card
+    const card=document.createElement("div");
+    card.className="gen-ans-card";
+    let cardHtml='<div class="q-text"><span class="q-num">'+(i+1)+'</span>'+qText+'<span class="q-type-tag">'+(T[type]?.n||"未知")+'</span></div>';
+    cardHtml+='<div class="key-sent"><strong>📍 定位关键句：</strong>'+relSents.slice(0,3).map(s=>"「"+s.text+"」").join("；")+'</div>';
+    cardHtml+='<div class="formula-remind">📐 公式：'+(T[type]?.tpl||"")+'</div>';
+    cardHtml+='<div class="ans-body"><strong>✅ 满分答案：</strong><br>'+ans.answer+'</div>';
+    cardHtml+='<div class="scoring"><strong>📊 得分要点：</strong>'+ans.scoring+'</div>';
+    if(ans.tips)cardHtml+='<div style="padding:6px 10px;border-radius:6px;background:var(--rose-soft);font-size:12px;color:var(--rose);margin-top:6px"><strong>⚠️ 常见扣分：</strong>'+ans.tips+'</div>';
+    card.innerHTML=cardHtml;
+    box.appendChild(card);
+  });
+  // Also generate each answer as curModelAns for individual workspace
+  pasteQs.forEach((q,i)=>{
+    const relSents=findRelevantSentences(q.q,allSents,passage,paras);
+    const ans=generateModelAnswer(q.type,q.q,relSents,paras,passage,q.limit||0);
+    q.modelAns=ans.answer;
+  });
+}
+
+function findRelevantSentences(qText,allSents,passage,paras){
+  // Extract keywords from question (remove common question words)
+  const stopWords=["为什么","从哪里","看出","什么","怎样","如何","哪个","这个","那个","认为","你","觉得","请","用","说明","文中","短文","指的是","意思是","一词","一句","不超过","个字","概括","段落","大意","写出","主要","内容","中心","思想","举例","结合","生活","学到","启示","最适合","作为","题目","标题","心情","感受","变化","态度","品质","性格","怎样的人","是一个"];
+  let kws=qText.replace(/[？。！，、""''（）\(\)\[\]【】\d\.]/g," ").split(/\s+/).filter(w=>w.length>=2&&!stopWords.some(sw=>w.includes(sw)||sw.includes(w)));
+  // Also extract quoted terms or names
+  const quoted=qText.match(/[""'']([^""'']+)[""'']/g);
+  if(quoted)quoted.forEach(q=>kws.push(q.replace(/[""'']/g,"")));
+  // Extract paragraph reference
+  const paraRef=qText.match(/第([一二三四五六七八九十\d]+)段/);
+  let targetPara=-1;
+  if(paraRef){
+    const numMap={"一":0,"二":1,"三":2,"四":3,"五":4,"六":5,"七":6,"八":7,"九":8,"十":9};
+    targetPara=numMap[paraRef[1]]!==undefined?numMap[paraRef[1]]:(parseInt(paraRef[1])-1);
+  }
+  // Score each sentence
+  const scored=allSents.map(s=>{
+    let score=0;
+    kws.forEach(kw=>{if(s.text.includes(kw))score+=3});
+    // Boost if in target paragraph
+    if(targetPara>=0&&s.para===targetPara)score+=5;
+    // Boost sentences with emotional/reason markers
+    if(qText.includes("为什么")||qText.includes("原因")){
+      if(s.text.match(/因为|所以|由于|因此|为了|是因为/))score+=2;
+    }
+    if(qText.includes("心情")||qText.includes("感")){
+      if(s.text.match(/高兴|伤心|难过|开心|生气|害怕|紧张|激动|感动|温暖|欣慰|骄傲|失望|担心|着急/))score+=3;
+    }
+    if(qText.includes("看出")||qText.includes("证据")){
+      if(s.text.match(/[""'']|说|叫|喊|笑|哭|跑|走|拿|放|打|踢|摇|点头|皱眉/))score+=2;
+    }
+    if(qText.includes("变化")||qText.includes("一开始")||qText.includes("后来")){
+      if(s.text.match(/可是|但是|后来|然而|最终|终于|从此|从那以后|一开始|原来/))score+=3;
+    }
+    return{...s,score};
+  });
+  scored.sort((a,b)=>b.score-a.score);
+  return scored.filter(s=>s.score>0).slice(0,5);
+}
+
+function generateModelAnswer(type,qText,relSents,paras,passage,limit){
+  const topSents=relSents.slice(0,3).map(s=>s.text);
+  const mainEvidence=topSents[0]||"";
+  const secondEvidence=topSents[1]||"";
+  let answer="",scoring="",tips="";
+
+  // Extract person name from question or passage
+  const personMatch=qText.match(/([^\s，。！？、]{1,4}(?:爷爷|奶奶|爸爸|妈妈|老师|同学|哥哥|姐姐|弟弟|妹妹|叔叔|阿姨))|([A-Za-z一-龥]{2,4}(?=是|的|了|从|把|被|在|也|都|不|没))/);
+  const person=personMatch?personMatch[0]:"他/她";
+
+  // Find emotion words in relevant sentences
+  const emotionWords=["高兴","开心","快乐","伤心","难过","痛苦","生气","愤怒","害怕","恐惧","紧张","焦虑","激动","兴奋","感动","温暖","欣慰","骄傲","自豪","失望","担心","着急","惊讶","委屈","后悔","愧疚","幸福","满足","安心","放心","羡慕","尴尬","无奈","孤独","思念"];
+  const foundEmotions=[];
+  relSents.forEach(s=>{emotionWords.forEach(e=>{if(s.text.includes(e)&&!foundEmotions.includes(e))foundEmotions.push(e)})});
+
+  // Find personality words
+  const charWords=["善良","乐于助人","有爱心","勇敢","坚强","聪明","机智","细心","认真","有责任感","孝顺","懂事","有耐心","宽容","大方","诚实","正直","谦虚","自信","用心良苦","无私","体贴","慷慨","热心","有毅力","坚持不懈"];
+
+  switch(type){
+    case "reason":{
+      // Find cause-effect in relevant sentences
+      const causeSent=relSents.find(s=>s.text.match(/因为|所以|由于|因此|为了|是因为/))||relSents[0];
+      const cause=causeSent?causeSent.text:mainEvidence;
+      answer=`这是因为${cause}，所以${secondEvidence||"（产生了题目中所说的结果）"}。`;
+      if(answer.length>80)answer=`这是因为${cause}。`;
+      scoring=`<span class="pts">原因</span><span class="pts">结果/影响</span> — 2分题需写清原因+结果，缺一扣1分`;
+      tips='只写结果不写原因=0分；原因太笼统（如"他害怕"）不写具体怕什么也会扣分';
+      break;
+    }
+    case "feeling":{
+      const emotion=foundEmotions.length?foundEmotions.join("、"):"（从文中找心情词）";
+      const causeSent=relSents.find(s=>s.text.match(/因为|所以|由于|因此|为了/))||relSents[0];
+      answer=`${person}因为${causeSent?causeSent.text:mainEvidence}，所以感到${emotion}。`;
+      scoring=`<span class="pts">人物</span><span class="pts">原因</span><span class="pts">心情词</span> — 三要素缺一不可`;
+      tips='只写"很开心"没有原因=扣分；心情词要具体准确，不能只写"不好"';
+      break;
+    }
+    case "evidence":{
+      const evidSent=relSents.find(s=>s.text.match(/[""'']|说|叫|喊|笑|哭|跑|走|拿|放|摇|点头|皱眉|不停|一直|反复|默默|毫不犹豫/))||relSents[0];
+      answer=`可以从"${evidSent?evidSent.text:mainEvidence}"看出，因为这${evidSent&&evidSent.text.match(/说|叫|喊/)?"句话":"个动作/描写"}说明${person}（内心的想法/态度/情感）。`;
+      scoring=`<span class="pts">引用文中证据</span><span class="pts">解释为什么能证明</span> — 只抄不解释只得一半分`;
+      tips='只抄一句话不加解释=只拿1分；必须写"因为这说明……"';
+      break;
+    }
+    case "vocab":{
+      const quoted2=qText.match(/[""'']([^""'']+)[""'']/);
+      const targetWord=quoted2?quoted2[1]:"这个词/句";
+      answer=`"${targetWord}"在文中的意思是（用自己的话解释：结合上下文，这里指的是……的意思/表达了……的感情）。`;
+      if(mainEvidence)answer=`"${targetWord}"在文中的意思是${mainEvidence.replace(targetWord,"")}，表达了（人物的感情/态度）。`;
+      scoring=`<span class="pts">用自己的话</span><span class="pts">结合上下文</span> — 不能重复关键词本身`;
+      tips="不能把原词重复一遍当解释；不能脱离上下文只写字面意思";
+      break;
+    }
+    case "character":{
+      // Find actions that show character
+      const actionSent=relSents.find(s=>s.text.match(/把|帮|让|送|教|拿|跑|走|说|笑|默默|毫不犹豫|坚持|主动/))||relSents[0];
+      // Guess appropriate character word
+      let charWord="（选择准确的品质词）";
+      const passLower=passage;
+      if(passLower.match(/帮|助|分|给|送|让/))charWord="乐于助人";
+      else if(passLower.match(/坚持|不放弃|不怕|努力|终于/))charWord="坚持不懈";
+      else if(passLower.match(/教|告诉|提醒|道理/))charWord="用心良苦";
+      else if(passLower.match(/细心|认真|仔细/))charWord="细心认真";
+      answer=`我认为${person}是一个${charWord}的人。因为${actionSent?"文中写道"+actionSent.text:mainEvidence}，这表现出${person}的${charWord}。`;
+      scoring=`<span class="pts">品质词</span><span class="pts">文中事例</span><span class="pts">回扣品质</span> — 3分题三个要素各1分`;
+      tips='只说"他很好"=0分；品质词要具体（善良、勇敢、细心等）；事例要从文中找';
+      break;
+    }
+    case "title":{
+      // Check if question has options
+      const options=qText.match(/[《]([^》]+)[》]/g);
+      const mainContent=paras.length>1?paras[Math.floor(paras.length/2)].slice(0,30):mainEvidence;
+      const lastPara=paras[paras.length-1]||"";
+      answer=`我认为${options?options[0]:"《……》"}最适合作为题目。因为短文主要写了${mainContent}……，表达了${lastPara.slice(0,20)}……的道理/中心思想。`;
+      scoring=`<span class="pts">选择</span><span class="pts">全文主要内容</span><span class="pts">中心思想</span> — 只勾选不解释=0分`;
+      tips="只打勾不写解释=0分；内容要概括全文而不是某个小情节";
+      break;
+    }
+    case "summary":{
+      // Find target paragraph
+      const paraRef2=qText.match(/第([一二三四五六七八九十\d]+)段/);
+      let targetP=paras[0]||"";
+      if(paraRef2){
+        const numMap2={"一":0,"二":1,"三":2,"四":3,"五":4,"六":5,"七":6,"八":7,"九":8,"十":9};
+        const idx=numMap2[paraRef2[1]]!==undefined?numMap2[paraRef2[1]]:(parseInt(paraRef2[1])-1);
+        if(paras[idx])targetP=paras[idx];
+      }
+      // Extract who + did what + result (compress to limit)
+      const whoMatch=targetP.match(/([^\s，。！？、]{1,4}(?:爷爷|奶奶|爸爸|妈妈|老师|同学|哥哥|姐姐|弟弟|妹妹|叔叔|阿姨))|([A-Za-z一-龥]{2,3}(?=[，。！？]))/);
+      const who=whoMatch?whoMatch[0]:"主人公";
+      const sents2=targetP.split(/[。！？]/).filter(s=>s.trim());
+      const action=sents2[0]?sents2[0].trim().slice(0,limit?limit-4:15):"（主要事件）";
+      answer=`${who}${action}。`;
+      const charCount=answer.replace(/\s/g,"").length;
+      answer+=`(${charCount}字)`;
+      if(limit)answer+=` [要求不超过${limit}字]`;
+      scoring=`<span class="pts">主要人物</span><span class="pts">主要事件</span><span class="pts">结果/道理</span><span class="pts">字数达标</span> — 超字数扣分！`;
+      tips=`限${limit||15}字！只写主线：谁+做了什么+结果。细节（时间、地点、对话）全部删掉`;
+      break;
+    }
+    case "compare":{
+      const beforeSent=relSents.find(s=>s.text.match(/一开始|起初|以前|原来|当时|那时/))||relSents[0];
+      const afterSent=relSents.find(s=>s.text.match(/后来|最终|终于|从此|从那以后|现在|最后/))||relSents[1]||relSents[0];
+      answer=`一开始，${beforeSent?beforeSent.text:"（之前的想法/做法/态度）"}；后来，${afterSent&&afterSent!==beforeSent?afterSent.text:"（之后的改变）"}。这说明（总结变化的原因/意义）。`;
+      scoring=`<span class="pts">之前</span><span class="pts">之后</span><span class="pts">形成对比</span> — 只写一边=扣分`;
+      tips='前后都要写！最好用"一开始……后来……"的固定句式开头';
+      break;
+    }
+    case "lesson":{
+      const lastSent=relSents.find(s=>s.text.match(/明白|学到|懂得|知道|道理|以后|决定/))||relSents[relSents.length-1]||{text:""};
+      answer=`我从这篇短文中学到${lastSent.text||"（文章传达的道理）"}。文中${mainEvidence||"（文章中的例子）"}让我明白这一点。例如，有一次我（写一个具体的生活经历：什么事+怎么做的+什么结果）。`;
+      scoring=`<span class="pts">道理</span><span class="pts">文章根据</span><span class="pts">生活例子</span> — 4分题三个部分各占分`;
+      tips='生活例子不能太笼统！不能只说"我也遇到过"，要写具体是什么事、怎么做的、什么结果';
+      break;
+    }
+    default:{
+      answer=`根据文中"${mainEvidence}"可知，（按照题目要求组织答案）。`;
+      scoring=`按题目分值分配要点数量`;
+      tips="";
+    }
+  }
+  return{answer,scoring,tips};
+}
+
+/* ===== DRILL MODE ===== */
+function renderDrill(){
+  const d=DRILLS[drillIdx];
+  $("drillPassage").innerHTML=`<h3>${d.title}</h3><p>${d.passage.replace(/\n/g,"<br>")}</p>`;
+  const box=$("drillQList");box.innerHTML="";
+  d.qs.forEach((q,i)=>{
+    const div=document.createElement("div");
+    div.className="q-item";
+    div.innerHTML=`<span class="num">${i+1}</span><span>${q.q}<br><small style="color:var(--muted)">${T[q.type]?.n} · ${q.pts}分${q.limit?" · 限"+q.limit+"字":""}</small></span>`;
+    div.onclick=()=>openWorkspace(q.q,q.type,i,q.limit||0,q.ma||"");
+    box.appendChild(div);
+  });
+}
+
+/* ===== WORKSPACE ===== */
+function openWorkspace(qText,type,idx,limit,ma){
+  curQIdx=idx!==undefined?idx:-1;
+  wordLimit=limit||0;
+  curModelAns=ma||"";
+  $("workspace").classList.remove("hidden");
+  $("curQText").textContent=qText||"（直接选题型答题）";
+  setT(type);
+  if(limit){$("wcBar").classList.remove("hidden");$("wcLimit").textContent=limit}
+  // clear fields
+  ["evInput","ansOut"].forEach(id=>$(id).value="");
+  document.querySelectorAll("#slotBox input").forEach(i=>i.value="");
+  document.querySelectorAll(".ck input").forEach(i=>i.checked=false);
+  buildAns();
+  rstQt();
+  $("workspace").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ===== SAVE ===== */
+function saveRec(){
+  const conf=Number($("confIn").value);
+  const ans=$("ansOut").value;
+  S.recs.push({type:curType,conf,ans:ans.slice(0,150),date:today(),
+    time:new Date().toLocaleTimeString("zh-SG",{hour:"2-digit",minute:"2-digit"})});
+  save();
+  // mark done in paste mode
+  if(mode==="paste"&&curQIdx>=0&&pasteQs[curQIdx]){
+    pasteQs[curQIdx].done=true;
+    renderPasteQList();
+  }
+  uStats();rHist();
+  // clear & hide workspace for next question
+  $("workspace").classList.add("hidden");
+  rstQt();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ===== STATS ===== */
+function uStats(){
+  const td=S.recs.filter(r=>r.date===today()).length;
+  $("nDone").textContent=td;
+  $("nWeek").textContent=S.recs.length;
+}
+function rHist(){
+  const b=$("histBox");
+  if(!S.recs.length){b.innerHTML="<p style='color:var(--muted)'>Johnson还没有修炼记录，开始战斗吧！</p>";return}
+  b.innerHTML=S.recs.slice(-15).reverse().map(r=>`<div class="hist"><strong>${r.date} ${r.time} · ${T[r.type]?.n||"题"} · 战力${r.conf}/5</strong><br><small>${r.ans}</small></div>`).join("");
+}
+
+/* ===== DAY PLAN ===== */
+function rDay(){
+  const d=WPLAN[S.day-1];
+  $("dayLbl").textContent=`Day ${d.day} · ${d.title}`;
+  $("dayPlan").innerHTML=`<h3>Day ${d.day} · ${d.title}</h3><div>${d.focus.map(f=>`<span class="focus-tag">${T[f].n}</span>`).join("")}</div><p style="margin-top:6px"><strong>Johnson今天的目标：</strong>${d.goal}</p>`;
+}
+
+/* ===== DONE ===== */
+function showDone(){
+  stop();
+  const n=S.recs.filter(r=>r.date===today()).length;
+  $("doneN").textContent=n;
+  const el=1800-S.tot;$("doneTime").textContent=`用时 ${fmt(el)}`;
+  if(n>=6)$("doneMsg").textContent="Johnson龙息全开！6只以上！你已经是真正的驯龙大师！";
+  else if(n>=4)$("doneMsg").textContent="Johnson龙爪锋利！4只以上，明天继续升级！";
+  else if(n>=2)$("doneMsg").textContent="Johnson幼龙出击！已经开始战斗了！继续加油！";
+  else $("doneMsg").textContent="Johnson踏出了第一步，这就是勇气！";
+  if(!S.done.includes(S.day))S.done.push(S.day);
+  save();
+  $("doneOv").classList.add("show");
+}
+
+/* ===== START SCREEN ===== */
+function rStart(){
+  const sel=$("daySel");sel.innerHTML="";
+  WPLAN.forEach(d=>{
+    const b=document.createElement("button");
+    b.className="day-btn"+(d.day===S.day?" on":"");
+    b.innerHTML=`Day ${d.day}${S.done.includes(d.day)?" ✓":""}`;
+    b.onclick=()=>{S.day=d.day;save();rStart()};
+    sel.appendChild(b);
+  });
+  $("sDone").textContent=S.done.length;
+  $("sBar").style.width=(S.done.length/7*100)+"%";
+}
+
+/* ===== FLASH CARDS ===== */
+const typeKeys=Object.keys(T);
+let cardIdx=0;
+let formulaHidden=false;
+function renderCard(){
+  const k=typeKeys[cardIdx];
+  const t=T[k];
+  const tip=TIPS[k]||{};
+  const steps=t.ck||[];
+  $("flashCard").innerHTML=`
+    <div class="fc-type">${t.n}</div>
+    <div class="fc-kw">识别词：${t.kw.map(w=>"<span>"+w+"</span>").join("")}</div>
+    <div class="fc-formula${formulaHidden?" blur":""}" id="fcFormula">${t.tpl}</div>
+    <div class="fc-steps">
+      <div class="step"><span class="sn">1</span><span>判断题型：看到${t.kw.slice(0,2).join("/")}就是<strong>${t.n}</strong></span></div>
+      <div class="step"><span class="sn">2</span><span>套公式：${t.tpl}</span></div>
+      <div class="step"><span class="sn">3</span><span>得分点检查：${steps.join(" / ")}</span></div>
+    </div>
+    <div class="fc-counter">${cardIdx+1} / ${typeKeys.length}</div>`;
+  if(formulaHidden){
+    document.getElementById("fcFormula").onclick=()=>{formulaHidden=false;renderCard()};
+  }
+}
+function renderAllFormulas(){
+  const box=$("allFormulas");
+  if(!box.classList.contains("hidden")){box.classList.add("hidden");$("showAll9").textContent="一次看全部9个";return}
+  box.classList.remove("hidden");
+  $("showAll9").textContent="收起";
+  box.innerHTML='<div class="all-formulas-grid">'+typeKeys.map(k=>{
+    const t=T[k];
+    return `<div class="af-item"><strong>${t.n}</strong><div class="fc-kw" style="margin:4px 0">${t.kw.map(w=>"<span>"+w+"</span>").join("")}</div><p>${t.tpl}</p></div>`;
+  }).join("")+"</div>";
+}
+
+/* ===== GREETING ===== */
+function greet(){
+  const h=new Date().getHours();
+  let g;
+  if(h<12)g="Johnson早上好！新的一天，龙骑士准备出发！";
+  else if(h<14)g="Johnson中午好！吃饱了就来修炼吧！";
+  else if(h<18)g="Johnson下午好！放学后正是修炼好时机！";
+  else g="Johnson晚上好！今天的修炼完成了吗？";
+  const el=$("greeting");if(el)el.textContent=g;
+}
+
+/* ===== INIT ===== */
+function init(){
+  greet();
+  rStart();
+
+  $("startBtn").onclick=()=>{
+    $("startScreen").classList.add("hidden");
+    $("app").classList.remove("hidden");
+    S.tot=1800;S.qt=180;save();
+    rDay();rChips();rLoc();rSlots();rCk();uTmr();uQt();uStats();rHist();
+    start();
+  };
+
+  $("pauseBtn").onclick=()=>{S.on?stop():start()};
+
+  // modes
+  document.querySelectorAll(".mode-btn").forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+
+  // paste
+  $("parseBtn").onclick=parsePaste;
+  $("genAllAnsBtn").onclick=genAllAnswers;
+
+  // flash cards
+  renderCard();
+  $("nextCard").onclick=()=>{cardIdx=(cardIdx+1)%typeKeys.length;formulaHidden=false;renderCard()};
+  $("prevCard").onclick=()=>{cardIdx=(cardIdx-1+typeKeys.length)%typeKeys.length;formulaHidden=false;renderCard()};
+  $("hideFormula").onclick=()=>{formulaHidden=!formulaHidden;renderCard();$("hideFormula").textContent=formulaHidden?"\u70b9\u516c\u5f0f\u770b\u7b54\u6848":"\u906e\u4f4f\u516c\u5f0f\uff0c\u81ea\u5df1\u80cc\uff01"};
+  $("showAll9").onclick=renderAllFormulas;
+
+  // drill
+  $("nextDrill").onclick=()=>{drillIdx=(drillIdx+1)%DRILLS.length;renderDrill()};
+
+  // detect
+  $("detectBtn").onclick=()=>{const t=detect($("curQText").textContent);setT(t);$("detectHint").textContent=`\u2192 ${T[t].n}`};
+
+  // show tip & model answer buttons
+  $("showTipBtn").onclick=()=>{const tc=$("tipCard");tc.style.display=tc.style.display==="none"?"block":"none"};
+  $("showModelBtn").onclick=showModel;
+
+  // back to list
+  $("backToListBtn").onclick=()=>{$("workspace").classList.add("hidden");$("tipCard").style.display="none";window.scrollTo({top:0,behavior:"smooth"})};
+
+  // clear
+  $("clearBtn")&&($("clearBtn").onclick=()=>{["evInput","ansOut"].forEach(id=>$(id).value="");document.querySelectorAll("#slotBox input").forEach(i=>i.value="");buildAns()});
+
+  // evidence
+  $("evInput").addEventListener("input",buildAns);
+
+  // answer word count
+  $("ansOut").addEventListener("input",updateWc);
+
+  // copy
+  $("copyBtn").onclick=async()=>{try{await navigator.clipboard.writeText($("ansOut").value)}catch{$("ansOut").select();document.execCommand("copy")}$("copyBtn").textContent="已复制";setTimeout(()=>$("copyBtn").textContent="复制",1200)};
+
+  // confidence
+  $("confIn").oninput=()=>{$("confTxt").textContent=$("confIn").value+"/5"};
+
+  // save
+  $("saveBtn").onclick=saveRec;
+
+  // rescue
+  $("rescueBtn").onclick=()=>$("rescueOv").classList.add("show");
+  $("rescueClose").onclick=()=>$("rescueOv").classList.remove("show");
+  $("rescueOv").onclick=e=>{if(e.target===$("rescueOv"))$("rescueOv").classList.remove("show")};
+
+  // done
+  $("doneClose").onclick=()=>{
+    $("doneOv").classList.remove("show");
+    $("app").classList.add("hidden");
+    $("startScreen").classList.remove("hidden");
+    if(S.day<7)S.day++;save();rStart();
+  };
+
+  // finish early button — double click pause to finish
+  let pauseClicks=0;
+  const origPause=$("pauseBtn").onclick;
+  $("pauseBtn").onclick=()=>{
+    pauseClicks++;
+    if(pauseClicks>=3&&!S.on){showDone();pauseClicks=0;return}
+    setTimeout(()=>pauseClicks=0,2000);
+    S.on?stop():start();
+  };
+}
+
+init();
+</script>
+</body>
+</html>

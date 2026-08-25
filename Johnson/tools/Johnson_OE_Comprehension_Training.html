@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Johnson P5 OE Comprehension — 7-Day Training</title>
+<style>
+:root{
+  --bg:#faf5ec;--card:#fff8f0;--border:#e0d5c5;--text:#2c2418;--text2:#7a6e5e;
+  --accent:#1a7a6d;--accent-bg:#e8f5f0;--green:#1a8a5c;--green-bg:#e5f5ec;
+  --red:#c0392b;--red-bg:#fce8e6;--orange:#d4790e;--orange-bg:#fdf0dc;
+  --yellow:#9a7b1a;--yellow-bg:#fdf6e3;
+  --radius:12px;--shadow:0 2px 8px rgba(0,0,0,.06);
+  --font-body:17px;--font-passage:17px;--font-q:16px;--lh:1.9
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1a16;--card:#262420;--border:#3e3a32;--text:#e8e2d8;--text2:#a09888;
+  --accent:#3dbfa8;--accent-bg:#1a2e2a;--green-bg:#1a2e22;--red-bg:#2e1a1a;
+  --orange-bg:#2e2618;--yellow-bg:#2e2a18
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Georgia","Noto Serif SC","Times New Roman",serif;background:var(--bg);color:var(--text);line-height:var(--lh);padding:20px;max-width:820px;margin:0 auto;font-size:var(--font-body)}
+h1{font-size:24px;margin-bottom:4px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.subtitle{color:var(--text2);font-size:15px;margin-bottom:20px;font-family:-apple-system,sans-serif}
+/* Day Tabs */
+.day-tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;position:sticky;top:0;z-index:10;background:var(--bg);padding:10px 0;font-family:-apple-system,sans-serif}
+.day-tab{padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-size:14px;font-weight:500;transition:.2s;min-width:44px;text-align:center}
+.day-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.day-tab.locked{opacity:.4;cursor:not-allowed}
+.day-tab.done{border-color:var(--green);color:var(--green)}
+.day-tab.done.active{background:var(--green);color:#fff}
+/* Day Content */
+.day{display:none}
+.day.active{display:block}
+.day-header{background:var(--accent-bg);border:1.5px solid var(--accent);border-radius:var(--radius);padding:18px 20px;margin-bottom:20px}
+.day-header h2{font-size:19px;color:var(--accent);margin-bottom:6px;font-family:-apple-system,sans-serif}
+.day-header .day-focus{font-size:15px;color:var(--text2)}
+.day-header .day-skills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.day-header .skill-tag{font-size:12px;background:var(--card);border:1px solid var(--border);padding:3px 10px;border-radius:14px;font-family:-apple-system,sans-serif}
+/* Framework Box */
+.framework{background:var(--card);border:2px solid var(--accent);border-radius:var(--radius);padding:18px;margin-bottom:20px}
+.framework h3{font-size:16px;color:var(--accent);margin-bottom:10px;font-family:-apple-system,sans-serif}
+.fw-step{display:flex;gap:12px;margin-bottom:10px;font-size:15px}
+.fw-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;font-family:-apple-system,sans-serif}
+.fw-p .fw-icon{background:#dbeafe;color:#2563eb}
+.fw-e .fw-icon{background:#fef3cd;color:#92400e}
+.fw-x .fw-icon{background:#d1fae5;color:#065f46}
+@media(prefers-color-scheme:dark){
+.fw-p .fw-icon{background:#1e3a5a;color:#93c5fd}
+.fw-e .fw-icon{background:#3d3019;color:#fbbf24}
+.fw-x .fw-icon{background:#1a3a2a;color:#6ee7b7}
+}
+/* Passage */
+.passage{background:var(--yellow-bg);border-left:5px solid var(--orange);padding:20px 22px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:22px;font-size:var(--font-passage);line-height:2.1}
+.passage-title{font-weight:700;font-size:15px;color:var(--accent);margin-bottom:12px;font-family:-apple-system,sans-serif}
+.passage .ln{color:var(--orange);font-size:13px;margin-right:8px;user-select:none;font-weight:700;font-family:-apple-system,sans-serif}
+.kw{background:#ffe8b0;padding:2px 5px;border-radius:4px;font-weight:600}
+@media(prefers-color-scheme:dark){.kw{background:#4a3a18}}
+/* Question Card */
+.qcard{background:var(--card);border:2px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;box-shadow:var(--shadow);transition:border-color .3s}
+.qcard.st-correct{border-color:var(--green)}
+.qcard.st-partial{border-color:var(--orange)}
+.qcard.st-wrong{border-color:var(--red)}
+.qcard .qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-family:-apple-system,sans-serif}
+.qcard .qnum{font-weight:700;font-size:15px;color:var(--accent)}
+.qcard .qmarks{font-size:13px;color:var(--text2);background:var(--bg);padding:3px 10px;border-radius:10px}
+.qcard .qtext{font-size:var(--font-q);margin-bottom:12px;line-height:1.7}
+.qcard .error-ref{display:inline-block;font-size:12px;background:var(--orange-bg);color:var(--orange);padding:3px 10px;border-radius:6px;margin-bottom:10px;font-family:-apple-system,sans-serif}
+.qcard textarea{width:100%;min-height:100px;border:2px solid var(--border);border-radius:10px;padding:14px;font-size:16px;font-family:inherit;resize:vertical;background:var(--bg);color:var(--text);line-height:1.7}
+.qcard textarea:focus{outline:none;border-color:var(--accent)}
+.qcard textarea:disabled{opacity:.5}
+.qcard .btnrow{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;font-family:-apple-system,sans-serif}
+.btn{padding:10px 20px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:.2s;font-family:-apple-system,sans-serif}
+.btn-go{background:var(--accent);color:#fff}
+.btn-go:hover{opacity:.9}
+.btn-go:disabled{opacity:.35;cursor:not-allowed}
+.btn-hint{background:var(--bg);border:1.5px solid var(--border);color:var(--text2)}
+.btn-retry{background:var(--orange);color:#fff;display:none}
+.wcount{font-size:13px;color:var(--text2);margin-left:auto;font-family:-apple-system,sans-serif}
+.wcount .wc{font-weight:700}
+.hint{margin-top:10px;padding:14px;background:var(--yellow-bg);border-radius:10px;font-size:15px;color:var(--yellow);display:none;line-height:1.7}
+.hint.show{display:block}
+.fb{margin-top:12px;padding:14px 16px;border-radius:10px;font-size:15px;line-height:1.7;display:none}
+.fb.correct{display:block;background:var(--green-bg);border:1.5px solid #a7d7b8;color:#1a5c36}
+.fb.partial{display:block;background:var(--orange-bg);border:1.5px solid #e0c8a0;color:#7a5a1a}
+.fb.wrong{display:block;background:var(--red-bg);border:1.5px solid #e8b0aa;color:#7a1a1a}
+@media(prefers-color-scheme:dark){
+.fb.correct{background:#1a2e22;border-color:#2a5a3a;color:#7dcea0}
+.fb.partial{background:#2e2618;border-color:#5a4a28;color:#e8c870}
+.fb.wrong{background:#2e1a1a;border-color:#5a2a2a;color:#e8a0a0}
+}
+.att{font-size:12px;color:var(--text2)}
+/* Progress */
+.pbar{height:8px;background:var(--border);border-radius:4px;margin-bottom:18px;overflow:hidden}
+.pfill{height:100%;background:var(--green);border-radius:4px;transition:width .4s}
+/* Summary */
+.summary{background:var(--card);border:2px solid var(--green);border-radius:var(--radius);padding:24px;margin-top:24px;text-align:center;display:none}
+.summary h3{font-size:20px;margin-bottom:6px;font-family:-apple-system,sans-serif}
+.summary .bscore{font-size:42px;font-weight:700;color:var(--accent);font-family:-apple-system,sans-serif}
+.summary .detail{font-size:14px;color:var(--text2);margin-top:6px}
+.nbtn{display:block;width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;margin-top:14px;font-family:-apple-system,sans-serif}
+.nbtn:hover{opacity:.9}
+.nbtn:disabled{opacity:.35;cursor:not-allowed}
+.rbtn{display:block;width:100%;padding:12px;background:transparent;color:var(--text2);border:1.5px solid var(--border);border-radius:10px;font-size:14px;cursor:pointer;margin-top:8px;font-family:-apple-system,sans-serif}
+/* Overall progress */
+.overall{background:var(--accent-bg);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;font-family:-apple-system,sans-serif}
+.overall h3{font-size:15px;color:var(--accent);margin-bottom:8px}
+.overall .week-bar{display:flex;gap:4px;height:12px}
+.overall .week-seg{flex:1;border-radius:3px;background:var(--border);transition:background .3s}
+.overall .week-seg.done{background:var(--green)}
+.overall .week-seg.current{background:var(--accent)}
+</style>
+</head>
+<body>
+<h1>Johnson OE Comprehension · 7-Day Training</h1>
+<p class="subtitle">P5 Term 3 · 基于 28 道错题定制 · 每天 1 篇 + 5 道题</p>
+
+<div class="overall">
+  <h3>Week Progress</h3>
+  <div class="week-bar" id="weekBar"></div>
+</div>
+
+<div class="day-tabs" id="dayTabs"></div>
+<div id="dayContainer"></div>
+
+<script>
+// ======================== DATA ========================
+const DAYS = [
+{
+  title: "Day 1: PEE 答题框架",
+  focus: "学会用 Point-Evidence-Explanation 写出完整的 2 分答案",
+  skills: ["PEE 框架","比喻解读","2 分题结构"],
+  framework: {
+    title: "PEE 答题框架（每道 OE 题都要用）",
+    steps: [
+      {cls:"fw-p",icon:"P",html:"<strong>Point</strong> — 先写你的观点/答案（用完整句）<br><em>例：Ethan felt defeated and hopeless.</em>"},
+      {cls:"fw-e",icon:"E",html:"<strong>Evidence</strong> — 引用原文证据（用引号）<br><em>例：The text says he \"sank into the sofa like a deflated balloon\".</em>"},
+      {cls:"fw-x",icon:"X",html:"<strong>Explanation</strong> — 用自己的话解释为什么<br><em>例：This suggests he had lost all energy and felt empty inside, just like a balloon with no air.</em>"}
+    ]
+  },
+  passage: `<span class="ln">1</span>Every Saturday morning, eleven-year-old Maya would visit her grandmother's flat in Toa Payoh. The familiar smell of pandan cake greeted her as she stepped through the door, and Ah Ma would already be in the kitchen, humming an old Hokkien tune.
+<br><br><span class="ln">5</span>But today, something was different. The kitchen was dark and silent. Maya found Ah Ma sitting in the living room, staring at an old photograph. It showed a young couple standing outside a shophouse — Ah Ma and Ah Gong, decades ago, before Maya was even born.
+<br><br><span class="ln">9</span>"Ah Ma?" Maya said softly.
+<br><br><span class="ln">10</span>Her grandmother looked up, and Maya saw that <span class="kw">her eyes were two tired lanterns, flickering but refusing to go out</span>. "Today is your Ah Gong's birthday," she said quietly. "He would have been eighty."
+<br><br><span class="ln">13</span>Maya sat beside her and took the photograph. The man in the picture had kind eyes and a wide grin. She had never met him — he passed away before she was born — but Ah Ma had told her a thousand stories. How he would cycle to the market at dawn to buy the freshest fish. How he sang terribly but always sang anyway.
+<br><br><span class="ln">18</span>"Do you miss him?" Maya asked.
+<br><br><span class="ln">19</span>"Every single day," Ah Ma said. Then she <span class="kw">straightened her back and lifted her chin</span>. "But he would scold me if he saw me sitting here feeling sorry for myself. <span class="kw">He always said that the best way to remember someone is to keep living the way they taught you to.</span>"
+<br><br><span class="ln">23</span>She stood up, smoothed her blouse, and walked to the kitchen. "Come, girl. <span class="kw">We have a pandan cake to bake.</span>"
+<br><br><span class="ln">25</span>Maya followed, and soon the flat was filled with the <span class="kw">warm, green-gold scent of pandan and coconut</span>. As <span class="kw">they</span> worked side by side, Ah Ma began humming again — the same old Hokkien tune. And this time, Maya hummed along.`,
+  questions: [
+    {
+      num: "Q1 — Figurative Language", marks: 2,
+      text: 'What does the phrase <strong>"her eyes were two tired lanterns, flickering but refusing to go out"</strong> (Line 10) tell us about Ah Ma?',
+      ref: "你的错题 M017：比喻题只写了一个词 anxious，丢了 2 分",
+      hint: "2 分题 = 2 层。(1) 比喻含义：tired lanterns flickering = ？ (2) 这说明 Ah Ma 的情感和精神状态是怎样的？",
+      placeholder: "P: Ah Ma felt...\nE: The text describes her eyes as...\nX: This suggests...",
+      check(n) {
+        const hasMetaphor = /lantern|flicker|tired|dim|fad|weak|weary|glow|light/.test(n);
+        const hasFeeling = /sad|grief|sorrow|miss|strong|resilient|determin|persist|refus.*give|not give up|carry on|endur/.test(n);
+        const long = n.split(' ').length >= 10;
+        if (hasMetaphor && hasFeeling && long) return {r:'correct',fb:'<strong>✓ Excellent!</strong> 你同时解释了比喻含义和深层情感。<br><strong>Model:</strong> Ah Ma\'s eyes are compared to "tired lanterns" that are "flickering but refusing to go out" (E). This suggests she is weary and sad from years of missing Ah Gong — like a lantern running low on oil (metaphor meaning). Yet the fact that the lanterns "refuse to go out" shows she is also resilient and determined to carry on despite her grief (P+X).'};
+        if (hasMetaphor || hasFeeling) return {r:'partial',fb:'<strong>△ 部分正确。</strong> 2 分需要两层：(1) "tired lanterns flickering" = 她疲惫悲伤（像快熄灭的灯笼）(2) "refusing to go out" = 但她坚强不放弃。'+(long?'':'答案再写长一些。')};
+        return {r:'wrong',fb:'<strong>✗ 两层含义：</strong>(1) "tired lanterns" = 疲惫的灯笼 = 她因多年思念而憔悴悲伤 (2) "flickering but refusing to go out" = 虽然灯火微弱但不肯熄灭 = 她虽然悲伤但坚强不放弃。用 PEE 框架重写！'};
+      }
+    },
+    {
+      num: "Q2", marks: 2,
+      text: 'How did Ah Ma\'s mood change from the beginning to the end of the passage? Use evidence to support your answer.',
+      ref: "你的错题 M021：Before/After 对比回答不准确",
+      hint: "对比题：(1) 开头她的状态是什么？引用证据。(2) 结尾呢？也引用证据。说明是什么导致了这个变化。",
+      placeholder: "At the beginning, Ah Ma felt...\nBy the end, she...\nThis change happened because...",
+      check(n) {
+        const hasBefore = /sad|quiet|still|star|silent|dark|griev|miss|photograph|melanchol|lonely/.test(n);
+        const hasAfter = /hum|bake|cake|kitchen|cheer|better|bright|pandan|stand up|positive|liv/.test(n);
+        const long = n.split(' ').length >= 12;
+        if (hasBefore && hasAfter && long) return {r:'correct',fb:'<strong>✓ Well done!</strong> 对比清晰，证据充分。<br><strong>Model:</strong> At the beginning, Ah Ma was sad and withdrawn — the kitchen was "dark and silent", and she was staring at an old photograph of Ah Gong (E). By the end, her mood had shifted to one of warmth and purpose. She stood up, went to the kitchen, and invited Maya to bake, saying "We have a pandan cake to bake" (E). This change happened because she remembered Ah Gong\'s advice: "the best way to remember someone is to keep living the way they taught you to." She chose to honour his memory through action rather than sadness (X).'};
+        if (hasBefore || hasAfter) return {r:'partial',fb:'<strong>△ 你只写了一半。</strong>对比题要两边都写：(1) 开头：sad, silent, staring at photograph (2) 结尾：baking, humming, active。还要解释为什么变化（Ah Gong 的话启发了她）。'};
+        return {r:'wrong',fb:'<strong>✗ 对比：</strong>开头 — kitchen "dark and silent"，她独自看老照片（sad/grieving）。结尾 — 她站起来去厨房烘焙，开始哼歌（positive/determined）。变化原因：她想起 Ah Gong 说"remember someone by keep living"。'};
+      }
+    },
+    {
+      num: "Q3 — Phrase ID", marks: 1, phraseLen: 4,
+      text: 'From Lines 19–22, pick out a <strong>four-word phrase</strong> that shows Ah Ma regained her composure and strength.',
+      ref: "你的错题 M008：Phrase ID 没按词数要求",
+      hint: "composure = 镇定、恢复精神。在 Lines 19-22 中找一个身体动作的描述，数清楚 4 个词。",
+      placeholder: "写出 4 个词的短语",
+      check(n) {
+        if (/straightened her back and/.test(n) || /her back and lifted/.test(n) || /back and lifted her/.test(n)) return {r:'correct',fb:'<strong>✓ 找对了！</strong>"straightened her back and lifted" 或类似的 4 词短语表达了她振作起来、重新站稳。不过最精确的答案是 "straightened her back and" + "lifted her chin" 两个动作。'};
+        if (/lifted her chin/.test(n)) return {r:'partial',fb:'<strong>△ "lifted her chin" 只有 3 个词</strong>，题目要 4 个词。试试包含更多词：如 "and lifted her chin"。'};
+        if (/straighten|lifted|chin|back/.test(n)) return {r:'partial',fb:'<strong>△ 方向对了</strong>，但要写出恰好 4 个词的完整短语。"straightened her back and" 或 "and lifted her chin" 都不太完美。最佳答案：这道题确实比较难截——可以写 "straightened her back and" (4词)。'};
+        return {r:'wrong',fb:'<strong>✗ 正确答案区域：</strong>"straightened her back and lifted her chin" — 这表示她重新振作。4 词可以截 "straightened her back and" 或 "and lifted her chin"。关键是表达 regained composure 的身体动作。'};
+      }
+    },
+    {
+      num: "Q4 — Pronoun Reference", marks: 1,
+      text: 'What does <strong>"they"</strong> (Line 25) refer to?',
+      ref: "你的错题 M011：把 they 指向了 compliments 而不是人",
+      hint: "they 只能指代人！回到前文看谁在一起做事。",
+      placeholder: "'they' refers to...",
+      check(n) {
+        if (/(maya.*ah ma|ah ma.*maya|grandmother.*maya|maya.*grandmother|girl.*grandmother|grandmother.*girl)/.test(n)) return {r:'correct',fb:'<strong>✓ Correct!</strong> "they" = Maya and Ah Ma. 她们在厨房里一起做蛋糕。记住：they 只能指代人！'};
+        if (/maya|ah ma|grandmother/.test(n)) return {r:'partial',fb:'<strong>△ 要写完整</strong>——"they" 指代两个人：Maya and Ah Ma。不能只写一个人。'};
+        return {r:'wrong',fb:'<strong>✗</strong> "they" = Maya and Ah Ma (Maya 和阿嫲)。前文说 Maya followed，然后 "they worked side by side"。they 只能指人！'};
+      }
+    },
+    {
+      num: "Q5 — Inferential", marks: 2,
+      text: 'What does Ah Ma mean when she says <strong>"We have a pandan cake to bake"</strong> (Line 23)? What does this reveal about her character?',
+      ref: "你的错题 M023(Q10)：只写了情感没解释话语含义",
+      hint: "2 分：(1) 这句话表面上在说什么？(2) 更深层的意思是什么？联系 Ah Gong 说的话——"keep living the way they taught you to"。",
+      placeholder: "P: Ah Ma means that...\nE: Earlier, she recalled Ah Gong's words...\nX: This reveals that she is...",
+      check(n) {
+        const hasMeaning = /bake|cook|keep going|carry on|move on|routine|normal|action|do something|live|not.*sit|positive/.test(n);
+        const hasCharacter = /strong|resilient|determin|practical|brave|optimist|love|honour|remember|courag|positive|character|not give up|refuse.*give up/.test(n);
+        const long = n.split(' ').length >= 10;
+        if (hasMeaning && hasCharacter && long) return {r:'correct',fb:'<strong>✓ Perfect!</strong> 两层都答到了。<br><strong>Model:</strong> On the surface, Ah Ma is suggesting they bake a pandan cake — continuing her Saturday routine with Maya (meaning). On a deeper level, she is choosing to honour Ah Gong\'s memory through action rather than sitting in sadness. Earlier she recalled his words: "the best way to remember someone is to keep living the way they taught you to" (E). This reveals she is a resilient and strong-willed person who faces grief with determination and love rather than self-pity (character).'};
+        if (hasMeaning || hasCharacter) return {r:'partial',fb:'<strong>△ 答到一层了。</strong>2 分需要两层：(1) 话语含义：她选择用行动（烘焙蛋糕）代替悲伤 (2) 性格特征：resilient（坚韧）, strong-willed（意志坚强）, 用行动纪念而非沉浸悲伤。'};
+        return {r:'wrong',fb:'<strong>✗ 两层：</strong>(1) 表面意思是去烘焙蛋糕，更深层是她选择用行动（继续生活）来纪念 Ah Gong，而不是坐着伤心。(2) 这反映她是一个坚强、务实、不轻易被击垮的人。'};
+      }
+    }
+  ]
+},
+{
+  title: "Day 2: True/False 反驳技巧",
+  focus: "学会直接反驳题目关键词，用原文证据支撑 True/False 判断",
+  skills: ["True/False","关键词反驳","curtly 等词汇"],
+  framework: {
+    title: "True/False 答题三步法",
+    steps: [
+      {cls:"fw-p",icon:"1",html:"<strong>判断 True 或 False</strong> — 对比题目说法和原文事实"},
+      {cls:"fw-e",icon:"2",html:"<strong>直接反驳关键词</strong> — 题目说 \"patient\"？找原文证据说她 NOT patient<br><em>不要描述别的事情，要针对题目的措辞来反驳</em>"},
+      {cls:"fw-x",icon:"3",html:"<strong>引用证据 + 解释</strong> — 引号引原文 + 用自己的话解释为什么这证明 True/False"}
+    ]
+  },
+  passage: `<span class="ln">1</span>Mr Lim had been the school's discipline master for fifteen years. Students would <span class="kw">scatter like startled birds</span> whenever they heard his heavy footsteps echoing down the corridor. He never smiled, never joked, and his voice could silence an entire canteen with a single word.
+<br><br><span class="ln">5</span>"That man has no heart," Darren whispered to his best friend, Wei Jie, as Mr Lim marched past their classroom.
+<br><br><span class="ln">7</span>But everything changed on the day of the school carnival. Darren had been put in charge of the balloon-sculpting booth, and by lunchtime, things had gone horribly wrong. A sudden gust of wind had blown half his balloons into a drain. His pump had broken. And only three students had visited his booth all morning. <span class="kw">He sat on the stool behind the empty table, his head in his hands.</span>
+<br><br><span class="ln">12</span>A shadow fell over him. Darren looked up and <span class="kw">his heart nearly stopped</span> — Mr Lim was standing right there, arms folded.
+<br><br><span class="ln">14</span>"What happened here?" Mr Lim asked. His voice was not angry, though — it was <span class="kw">surprisingly gentle</span>.
+<br><br><span class="ln">16</span>Darren explained, expecting a lecture. Instead, Mr Lim <span class="kw">rolled up his sleeves</span>, picked up the remaining balloons, and — to Darren's absolute amazement — began twisting them into a lopsided dog.
+<br><br><span class="ln">19</span>"My daughter taught me this," he said, with what might have been the <span class="kw">faintest trace of a smile</span>. "She's seven. She's better at it than I am."
+<br><br><span class="ln">21</span>Within an hour, a queue had formed. Students couldn't believe their eyes — Mr Lim, the strictest teacher in school, was making balloon animals. Some were terrible. Some were <span class="kw">unidentifiable</span>. But somehow, <span class="kw">they</span> only made people laugh harder.
+<br><br><span class="ln">25</span>At the end of the day, Darren's booth had raised the most money of all. As Mr Lim walked away, Darren called out, "Thank you, sir."
+<br><br><span class="ln">27</span>Mr Lim paused, turned slightly, and gave a <span class="kw">brief nod</span> — nothing more. But Darren noticed something he had never seen before: <span class="kw">the corners of Mr Lim's eyes crinkled, just for a moment.</span>`,
+  questions: [
+    {
+      num: "Q1 — True/False", marks: 1,
+      text: 'True or False: <strong>"Mr Lim scolded Darren for the mess at his booth."</strong> Give a reason.',
+      ref: "你的错题 M018：理由没有直接反驳题目说法",
+      hint: "题目说 \"scolded\"（责骂）。找原文证据说他 did NOT scold。他的语气是怎样的？他做了什么？",
+      placeholder: "True / False — Reason: ...",
+      check(n) {
+        const hasFalse = /false/.test(n);
+        const hasEvidence = /gentle|not angry|roll.*sleeve|help|balloon|did not scold|instead|made|twist/.test(n);
+        if (hasFalse && hasEvidence) return {r:'correct',fb:'<strong>✓ Well done!</strong> 判断正确且反驳有力。<br><strong>Model:</strong> False. Mr Lim did not scold Darren. His voice was described as "surprisingly gentle", and instead of lecturing him, he "rolled up his sleeves" and began helping Darren by making balloon animals. This is the opposite of scolding.'};
+        if (hasFalse) return {r:'partial',fb:'<strong>△ 判断对了</strong>，但理由需要直接反驳 "scolded"。引用 "surprisingly gentle" 和他帮忙做气球动物的行为来证明他没有责骂。'};
+        return {r:'wrong',fb:'<strong>✗ False.</strong> 原文说 Mr Lim 的声音 "surprisingly gentle"，而且他没有 lecture，而是 "rolled up his sleeves" 帮忙做气球。这直接反驳了 "scolded"。'};
+      }
+    },
+    {
+      num: "Q2 — True/False", marks: 1,
+      text: 'True or False: <strong>"The students enjoyed Mr Lim\'s balloon animals because they were well-made."</strong> Give a reason.',
+      ref: "你的错题 M019：不理解 curtly 导致 True/False 全错",
+      hint: "题目说 \"well-made\"（做得好）。原文怎么描述那些气球动物的？它们做得好吗？学生们笑是因为做得好还是别的原因？",
+      placeholder: "True / False — Reason: ...",
+      check(n) {
+        const hasFalse = /false/.test(n);
+        const hasEvidence = /terrible|lopsided|unidentif|bad|not.*well|poorly|laugh|funny|amusing|humour|ridiculous|silly/.test(n);
+        if (hasFalse && hasEvidence) return {r:'correct',fb:'<strong>✓ Excellent!</strong> 你精准地反驳了 "well-made"。<br><strong>Model:</strong> False. The balloon animals were not well-made at all. They were described as "lopsided", "terrible", and some were "unidentifiable". The students enjoyed them not because they were well-made, but because it was funny and surprising to see the strict discipline master making silly balloon animals.'};
+        if (hasFalse) return {r:'partial',fb:'<strong>△ 判断对了</strong>，但要引用原文反驳 "well-made"：气球动物是 "terrible"、"lopsided"（歪歪扭扭）、"unidentifiable"（认不出来是什么）。'};
+        return {r:'wrong',fb:'<strong>✗ False.</strong> 原文说气球 "lopsided"（歪的）, "terrible", "unidentifiable"。学生笑不是因为做得好，是因为看到严厉的 Mr Lim 做出这么搞笑的东西而觉得有趣。'};
+      }
+    },
+    {
+      num: "Q3 — Figurative Language", marks: 2,
+      text: 'What does the phrase <strong>"scatter like startled birds"</strong> (Line 2) tell us about how students reacted to Mr Lim?',
+      hint: "2 分：(1) 解释比喻含义 — startled birds 做什么动作？(2) 这说明学生对 Mr Lim 的感受是什么？",
+      placeholder: "P: The students felt...\nE: The simile compares...\nX: This suggests...",
+      check(n) {
+        const hasSim = /bird|scatter|fly|ran|rush|flee|move.*quick|startled|frighten|run.*away|dispers/.test(n);
+        const hasFeel = /scar|afraid|fear|terrif|intimidat|dread|fright|nervous|anxious/.test(n);
+        const long = n.split(' ').length >= 10;
+        if (hasSim && hasFeel && long) return {r:'correct',fb:'<strong>✓ Great!</strong><br><strong>Model:</strong> The simile "scatter like startled birds" suggests the students were deeply afraid of Mr Lim (P). Just as birds fly away in panic when startled by a loud noise, the students would quickly flee and disperse when they heard Mr Lim\'s footsteps (E). This tells us he was so intimidating that his mere presence caused fear and panic among the students (X).'};
+        if (hasSim || hasFeel) return {r:'partial',fb:'<strong>△ 方向对了。</strong>2 分 = (1) 比喻含义：startled birds scatter = 受惊的鸟四散飞走 = 学生们迅速跑开 (2) 情感：他们非常害怕 Mr Lim（scared/afraid/intimidated）。'};
+        return {r:'wrong',fb:'<strong>✗</strong> "scatter like startled birds" = 像受惊的鸟一样四散。(1) 含义：学生们一听到他的脚步声就像鸟一样迅速逃散 (2) 情感：他们非常害怕他（scared/intimidated），因为他从不笑、声音严厉。'};
+      }
+    },
+    {
+      num: "Q4 — Pronoun Reference", marks: 1,
+      text: 'What does <strong>"they"</strong> (Line 22) refer to?',
+      ref: "你的错题 M011：把 they 指向了事物而不是人",
+      hint: "回到原文看：\"Some were terrible. Some were unidentifiable. But somehow, they only made people laugh harder.\" — they 指的是什么在让人笑？是人还是物？",
+      placeholder: "'they' refers to...",
+      check(n) {
+        if (/balloon|animal|sculpture|creation|shape/.test(n)) return {r:'correct',fb:'<strong>✓ Correct!</strong> 这里 "they" 指的是 the balloon animals / balloon sculptures。注意：这次 they 指代的是<strong>物品</strong>（气球动物），不是人！因为前面说 "Some were terrible. Some were unidentifiable" — some 和 they 都指气球作品。这是 they 少数指代物品的情况（前文用 some 指代它们，建立了"它们"的概念）。'};
+        if (/student|people|crowd|mr lim/.test(n)) return {r:'wrong',fb:'<strong>✗ 这次 they 不是指人！</strong>回看上下文："Some were terrible. Some were unidentifiable. But somehow, they only made people laugh harder." — "Some" 指的是那些气球动物，所以 they = the balloon animals。它们虽然做得差，但反而让大家笑得更开心。这是一个有趣的例外：they 有时也能指物品，取决于前文！'};
+        return {r:'wrong',fb:'<strong>✗</strong> "they" = the balloon animals（气球动物）。前文说 "Some were terrible. Some were unidentifiable. But somehow, they only made people laugh harder." — some/they 都是指那些歪歪扭扭的气球作品。'};
+      }
+    },
+    {
+      num: "Q5 — Inferential", marks: 2,
+      text: 'What does the ending (Lines 25–27) reveal about Mr Lim\'s personality that the students had not seen before?',
+      hint: "他回应 Darren 的方式是什么？(brief nod, eyes crinkled) 这和他之前给人的印象(never smiled, no heart)有什么不同？",
+      placeholder: "P: The ending reveals that Mr Lim...\nE: ...\nX: ...",
+      check(n) {
+        const hasReveal = /kind|warm|car|heart|soft|gentle|human|emotion|compassion|lov|tender|feeling/.test(n);
+        const hasEvidence = /nod|crinkl|eye|smile|thank|brief|corner|moment/.test(n);
+        const long = n.split(' ').length >= 10;
+        if (hasReveal && hasEvidence && long) return {r:'correct',fb:'<strong>✓ Outstanding!</strong><br><strong>Model:</strong> The ending reveals that beneath Mr Lim\'s stern exterior, he is actually kind and warm-hearted (P). When Darren thanked him, he gave a "brief nod" and "the corners of his eyes crinkled, just for a moment" (E). This subtle near-smile shows he does care about students but is not comfortable showing it openly. The contrast between his "no heart" reputation and this small, genuine moment of warmth suggests his strictness is not cruelty — he simply expresses care differently (X).'};
+        if (hasReveal || hasEvidence) return {r:'partial',fb:'<strong>△ 方向对了。</strong>2 分需要：(1) 揭示了什么：他其实是 kind/warm-hearted（表面严厉内心温暖）(2) 证据："eyes crinkled" = 快要笑了但忍住了。对比前面 "never smiled, no heart" — 他不是没有感情，只是不擅长表达。'};
+        return {r:'wrong',fb:'<strong>✗</strong> 结尾揭示：(1) Mr Lim 其实内心温暖（kind/warm），不是 "no heart" (2) "eyes crinkled" = 他差点笑了（但只是一瞬间），说明他有感情但不习惯表露。对比开头的 "never smiled" — 他的严厉只是外表。'};
+      }
+    }
+  ]
+},
+{
+  title: "Day 3: Phrase ID 与词数",
+  focus: "严格按要求词数提取短语，先确认角色、再确认行数范围",
+  skills: ["Phrase ID","词数控制","角色辨别"],
+  passage: `<span class="ln">1</span>The day of the annual Sports Day had finally arrived. Twelve-year-old Priya stood at the edge of the running track, her heart hammering in her chest. She had trained for months for the 200-metre sprint — waking at five every morning to run laps around the neighbourhood park while the sky was still grey.
+<br><br><span class="ln">5</span>Her mother, who had taken time off work to watch, sat in the front row of the spectator stand. She gave Priya a thumbs-up and mouthed, "You can do it." Beside her, Priya's younger brother, Arjun, was <span class="kw">bouncing in his seat like a rubber ball</span>, waving a hand-drawn poster that read "GO PRIYA!!!" in bright orange marker.
+<br><br><span class="ln">10</span>The starter raised his pistol. Priya crouched into position, her fingertips pressing into the rough surface of the track. <span class="kw">The world shrank to a narrow tunnel</span> — just her, the lane, and the finish line in the distance.
+<br><br><span class="ln">13</span>BANG!
+<br><br><span class="ln">14</span>She exploded forward. For the first hundred metres, she was in third place. Then second. The crowd was a blur of colour and noise, but she could hear one voice cutting through it all — Arjun, screaming her name so loudly that <span class="kw">his face had turned the colour of a tomato</span>.
+<br><br><span class="ln">18</span>Ten metres to go. Her legs burned. Her lungs screamed. The girl beside her was half a stride ahead. Priya <span class="kw">gritted her teeth and dug deep</span>, finding strength she didn't know she had.
+<br><br><span class="ln">21</span>She crossed the line. Second place.
+<br><br><span class="ln">22</span>For a moment, <span class="kw">disappointment washed over her like cold water</span>. She had wanted gold so badly. But then Arjun came barrelling across the field, nearly tripping over his own feet, and <span class="kw">threw his arms around her waist</span>. "You were AMAZING!" he shouted. "Second in the WHOLE SCHOOL!"
+<br><br><span class="ln">26</span>Her mother arrived a moment later, eyes glistening. She didn't say a word — she just <span class="kw">pulled Priya close and held her tight</span>.
+<br><br><span class="ln">28</span>Priya looked down at the silver medal in her hand. <span class="kw">It</span> caught the afternoon sun and glinted. Maybe second place wasn't so bad after all.`,
+  questions: [
+    {
+      num: "Q1 — Phrase ID", marks: 1, phraseLen: 5,
+      text: 'From Lines 5–8, pick out a <strong>five-word phrase</strong> that shows Arjun was extremely excited.',
+      ref: "你的错题 M008：选了错误角色的短语且没数词数",
+      hint: "题目问的是 Arjun（弟弟）的兴奋，不是 Priya 或妈妈。在 Lines 5-8 找描述 Arjun 的动作。数清楚 5 个词！",
+      placeholder: "写出 5 个词的短语",
+      check(n) {
+        if (/bouncing in his seat like/.test(n)) return {r:'correct',fb:'<strong>✓ Perfect!</strong> "bouncing in his seat like" — 正好 5 个词，描述了 Arjun 兴奋得在座位上蹦跳。注意："bouncing in his seat like a rubber ball" 有 7 个词，截 5 个词就对了。'};
+        if (/bouncing in his seat like a rubber ball/.test(n)) return {r:'partial',fb:'<strong>△ 方向对了！</strong>但 "bouncing in his seat like a rubber ball" 有 <strong>7 个词</strong>，题目要 5 个。截取 "bouncing in his seat like"（5 词）。一定数清楚！'};
+        if (/bouncing|rubber ball|seat/.test(n)) return {r:'partial',fb:'<strong>△ 找对了区域</strong>，但词数不对。正确答案："bouncing in his seat like"（5 个词）。'};
+        return {r:'wrong',fb:'<strong>✗ 正确答案：</strong>"bouncing in his seat like"（5 个词）。注意审题：(1) 是 Arjun 的兴奋 (2) 在 Lines 5-8 范围内 (3) 恰好 5 个词。'};
+      }
+    },
+    {
+      num: "Q2 — Phrase ID", marks: 1, phraseLen: 5,
+      text: 'From Lines 18–20, pick out a <strong>five-word phrase</strong> that shows Priya was determined not to give up.',
+      hint: "determination = 不放弃。在 Lines 18-20 找表达她坚持的动作。",
+      placeholder: "写出 5 个词的短语",
+      check(n) {
+        if (/gritted her teeth and dug/.test(n)) return {r:'correct',fb:'<strong>✓ Excellent!</strong> "gritted her teeth and dug" — 正好 5 个词。gritted her teeth = 咬紧牙关，dug deep = 深挖（拼尽全力），表达了她的坚持和决心。'};
+        if (/gritted her teeth/.test(n) || /dug deep/.test(n)) return {r:'partial',fb:'<strong>△ 找对了区域</strong>，但词数不对。完整的 5 词短语："gritted her teeth and dug"。'};
+        return {r:'wrong',fb:'<strong>✗ 正确答案：</strong>"gritted her teeth and dug"（5 个词）。gritted her teeth = 咬紧牙关，dug deep = 拼尽全力。这表达了她在最后关头不放弃的决心。'};
+      }
+    },
+    {
+      num: "Q3 — Figurative Language", marks: 2,
+      text: 'What does the phrase <strong>"disappointment washed over her like cold water"</strong> (Line 22) tell us about how Priya felt?',
+      hint: "2 分 = (1) cold water 这个比喻给人什么感觉？(2) 这说明 Priya 的失望程度如何？",
+      placeholder: "P: Priya felt...\nE: The simile compares...\nX: This suggests...",
+      check(n) {
+        const hasSim = /cold|water|wash|sudden|shock|drench|splash|overwhelm|wave|flood|chill|shiver/.test(n);
+        const hasFeel = /disappoint|sad|upset|devastat|crushed|let.*down|unhappy|heart|gutted|lost/.test(n);
+        const long = n.split(' ').length >= 10;
+        if (hasSim && hasFeel && long) return {r:'correct',fb:'<strong>✓ Well done!</strong><br><strong>Model:</strong> Priya felt a sudden and overwhelming sense of disappointment (P). The simile "washed over her like cold water" compares her feeling to being suddenly drenched in cold water (E). Just as cold water is shocking and unpleasant when it hits you, her disappointment was intense, sudden, and impossible to ignore — it hit her all at once the moment she realised she had not won gold (X).'};
+        if (hasSim || hasFeel) return {r:'partial',fb:'<strong>△ 部分正确。</strong>2 分需要：(1) cold water 的比喻含义 = 突然、刺骨、全身被淋透 = 失望感一下子涌上来 (2) 说明 disappointment 的程度：intense/sudden/overwhelming（猛烈的、突如其来的）。'};
+        return {r:'wrong',fb:'<strong>✗</strong> "washed over her like cold water" = 像冷水泼过来。(1) 比喻含义：冷水泼身 = 突然、刺骨、无法忽略 (2) 说明她的失望是瞬间涌上来的，很强烈，因为她本来非常想拿金牌。'};
+      }
+    },
+    {
+      num: "Q4 — Pronoun Reference", marks: 1,
+      text: 'What does <strong>"It"</strong> (Line 28) refer to?',
+      hint: "'It caught the afternoon sun' — It 指代前面最近的名词。Priya 手里拿着什么？",
+      placeholder: "'It' refers to...",
+      check(n) {
+        if (/silver medal|medal/.test(n)) return {r:'correct',fb:'<strong>✓ Correct!</strong> "It" = the silver medal。前一句说 "the silver medal in her hand"，下一句 "It caught the afternoon sun" — It 指代最近的名词 silver medal。'};
+        return {r:'wrong',fb:'<strong>✗</strong> "It" = the silver medal（银牌）。前一句 "looked down at the silver medal in her hand"，紧接着 "It caught the afternoon sun" — It 指代手中的银牌。'};
+      }
+    },
+    {
+      num: "Q5 — Inferential", marks: 2,
+      text: 'How do you think Priya\'s feelings changed from Line 22 to Line 28? Use evidence to support your answer.',
+      ref: "你的错题 M021：Before/After 回答不够准确",
+      hint: "对比：Line 22 她的感受 vs Line 28 她的感受。是什么让她改变了？",
+      placeholder: "At first, Priya felt... (evidence)\nBy Line 28, she felt... (evidence)\nThis change was caused by...",
+      check(n) {
+        const hasBefore = /disappoint|sad|upset|cold water|wash|bad|crushed|lost|second/.test(n);
+        const hasAfter = /accept|okay|not.*bad|better|appreciat|grateful|happy|positive|proud|silver|content|peace/.test(n);
+        const hasCause = /arjun|brother|mother|family|hug|amazing|held|arm|medal|sun|glint/.test(n);
+        const long = n.split(' ').length >= 12;
+        if (hasBefore && hasAfter && (hasCause || long)) return {r:'correct',fb:'<strong>✓ Excellent!</strong><br><strong>Model:</strong> In Line 22, Priya was overwhelmed with disappointment — "disappointment washed over her like cold water" because she had wanted gold (E). But by Line 28, she had accepted her achievement — "Maybe second place wasn\'t so bad after all" (E). This change was caused by her family\'s loving response: Arjun ran to hug her shouting "You were AMAZING!" and her mother silently "pulled her close and held her tight" (E). Their pride and unconditional support helped her see that the effort and love mattered more than the medal\'s colour (X).'};
+        if ((hasBefore && hasAfter) || (hasBefore && hasCause) || (hasAfter && hasCause)) return {r:'partial',fb:'<strong>△ 接近了。</strong>完整答案需要三个部分：(1) 开始：disappointed (2) 结束：accepted/positive (3) 变化原因：弟弟和妈妈的拥抱和鼓励让她意识到家人的爱比金牌重要。'};
+        return {r:'wrong',fb:'<strong>✗ 对比：</strong>(1) Line 22: "disappointment washed over her like cold water" = 失望 (2) Line 28: "Maybe second place wasn\'t so bad after all" = 接受和释然。(3) 原因：Arjun 冲过来拥抱她说 "You were AMAZING"，妈妈默默抱紧她——家人的爱让她释怀了。'};
+      }
+    }
+  ]
+},
+{
+  title: "Day 4: Pronoun Reference 专项",
+  focus: "系统训练追溯代词指代——they/he/she 指人，it/this/that 指物",
+  skills: ["Pronoun Reference","Word Reference","追溯法"],
+  passage: `<span class="ln">1</span>When twelve-year-old Jun Wei arrived at school on Monday morning, he noticed a new boy sitting alone at the back of the classroom. The boy had dark curly hair and was reading a thick book with a cover entirely in a language Jun Wei didn't recognise.
+<br><br><span class="ln">5</span>"That's Rajan," whispered his classmate, Hui Ling. "He just moved here from India. <span class="kw">He</span> doesn't speak much English yet."
+<br><br><span class="ln">7</span>Jun Wei watched as Mrs Chua, their form teacher, introduced Rajan to the class. Rajan stood, gave a small wave, and said "Hello" in a voice so quiet <span class="kw">it</span> was almost swallowed by the hum of the ceiling fan. A few students giggled. Rajan's cheeks flushed red, and he sat down quickly, <span class="kw">gripping the edges of his book like a shield</span>.
+<br><br><span class="ln">12</span>At recess, Jun Wei found Rajan sitting alone again, this time on a bench near the basketball court. He was staring at his food — a stack of chapatis and a small container of curry — as though deciding whether to eat <span class="kw">it</span> or hide it.
+<br><br><span class="ln">15</span>"Hey," said Jun Wei, sitting down next to him. He pointed at the chapatis. "Those look good. My mum makes roti prata — it's kind of similar."
+<br><br><span class="ln">17</span>Rajan looked up, surprised. "You... know prata?"
+<br><br><span class="ln">18</span>"Of course! <span class="kw">This</span> is Singapore. We have everything." Jun Wei grinned. He pulled out his own lunch box and held up a piece of lor mai gai. "Want to trade?"
+<br><br><span class="ln">21</span>Rajan hesitated, then smiled — the first real smile Jun Wei had seen from him. <span class="kw">They</span> swapped food, and for the rest of recess, Jun Wei taught Rajan three important Singlish words: "can" (meaning yes), "shiok" (meaning awesome), and "lah" (meaning... well, everything).
+<br><br><span class="ln">25</span>As the bell rang, Rajan said, "Thank you, Jun Wei. <span class="kw">This</span> is the first time I feel... not so alone."
+<br><br><span class="ln">27</span>Jun Wei punched him lightly on the shoulder. "Tomorrow, I'll teach you 'walao'. <span class="kw">That</span> one's important."`,
+  questions: [
+    {
+      num: "Q1 — Pronoun Reference", marks: 1,
+      text: 'What does <strong>"He"</strong> (Line 5) refer to?',
+      hint: "He 指代人。Hui Ling 在说谁？",
+      placeholder: "'He' refers to...",
+      check(n) {
+        if (/rajan/.test(n)) return {r:'correct',fb:'<strong>✓ Correct!</strong> "He" = Rajan. Hui Ling 在介绍那个新来的男生 Rajan，说 "He doesn\'t speak much English yet"。'};
+        if (/jun wei|new boy/.test(n)) return {r:'wrong',fb:'<strong>✗ 不是 Jun Wei。</strong>Hui Ling 在介绍新同学，说 "That\'s Rajan. He doesn\'t speak much English yet." — He = Rajan。'};
+        return {r:'wrong',fb:'<strong>✗</strong> "He" = Rajan。前面 Hui Ling 说 "That\'s Rajan"，然后 "He doesn\'t speak much English" — He 指代 Rajan。'};
+      }
+    },
+    {
+      num: "Q2 — Pronoun Reference", marks: 1,
+      text: 'What does <strong>"it"</strong> (Line 8) refer to?',
+      ref: "你的错题 M010：把 it 指代为状态描述而非具体名词",
+      hint: "'it was almost swallowed by the hum of the ceiling fan' — 什么东西差点被风扇声淹没？",
+      placeholder: "'it' refers to...",
+      check(n) {
+        if (/voice|hello|greeting/.test(n)) return {r:'correct',fb:'<strong>✓ Correct!</strong> "it" = Rajan\'s voice (or his "Hello"). 他说 Hello 的声音太小了，差点被风扇声淹没。'};
+        if (/sound|word/.test(n)) return {r:'partial',fb:'<strong>△ 接近了</strong>，更准确地说 "it" = his voice（他的声音）或者 his greeting "Hello"。'};
+        return {r:'wrong',fb:'<strong>✗</strong> "it" = his voice / his "Hello"。原文说他 "said Hello in a voice so quiet it was almost swallowed by the hum" — it 指代那个微弱的声音。'};
+      }
+    },
+    {
+      num: "Q3 — Pronoun Reference", marks: 1,
+      text: 'What does <strong>"it"</strong> (Line 13) refer to?',
+      hint: "Rajan 在看他的食物，'deciding whether to eat it or hide it' — it 指什么？",
+      placeholder: "'it' refers to...",
+      check(n) {
+        if (/food|lunch|chapati|curry|meal/.test(n)) return {r:'correct',fb:'<strong>✓ Correct!</strong> "it" = his food (the chapatis and curry). 他在犹豫要不要吃自己带的食物——可能担心同学会觉得奇怪。'};
+        return {r:'wrong',fb:'<strong>✗</strong> "it" = his food (chapatis and curry)。前文说 "staring at his food"，后面 "eat it or hide it" — it 指代那些食物。'};
+      }
+    },
+    {
+      num: "Q4 — Word Reference", marks: 1,
+      text: 'What does <strong>"This"</strong> (Line 25) refer to?',
+      hint: "Rajan 说 'This is the first time I feel not so alone' — This 指代什么经历？",
+      placeholder: "'This' refers to...",
+      check(n) {
+        if (/lunch|recess|eat|swap|trade|talk|convers|sit.*together|jun wei.*talk|friend|time.*together|moment|experience/.test(n)) return {r:'correct',fb:'<strong>✓ Correct!</strong> "This" = this experience of having lunch together with Jun Wei / this moment of connection. Rajan 指的是和 Jun Wei 一起吃饭、交换食物、学 Singlish 的这段经历——让他第一次感到不孤独。'};
+        return {r:'wrong',fb:'<strong>✗</strong> "This" = 和 Jun Wei 一起吃午餐、交换食物、聊天的这段经历。Rajan 说 "This is the first time I feel not so alone" — This 指代他们一起度过的这段时光。'};
+      }
+    },
+    {
+      num: "Q5 — Figurative Language", marks: 2,
+      text: 'What does the phrase <strong>"gripping the edges of his book like a shield"</strong> (Line 9) tell us about how Rajan was feeling?',
+      hint: "2 分：(1) 比喻含义 — shield 是什么？人在什么时候需要 shield？ (2) 这说明 Rajan 当时的情感状态。",
+      placeholder: "P: Rajan felt...\nE: The simile...\nX: This suggests...",
+      check(n) {
+        const hasSim = /shield|protect|barrier|defen|hide|cover|safe|security|comfort/.test(n);
+        const hasFeel = /scar|nervous|anxious|insecure|vulnerab|shy|uncomfortable|embarrass|self.conscious|afraid|overwhelm|exposed|alone|isolat/.test(n);
+        const long = n.split(' ').length >= 10;
+        if (hasSim && hasFeel && long) return {r:'correct',fb:'<strong>✓ Excellent!</strong><br><strong>Model:</strong> Rajan felt extremely nervous and vulnerable (P). The simile "gripping his book like a shield" compares the book to a protective shield used in battle (E). Just as a soldier uses a shield to protect himself from danger, Rajan was clinging to his book as a source of comfort and security. This suggests he felt exposed and insecure in the new environment, and the book was his way of creating a barrier between himself and the unfamiliar classroom (X).'};
+        if (hasSim || hasFeel) return {r:'partial',fb:'<strong>△ 答到一层了。</strong>2 分：(1) shield = 盾牌 = 保护自己的工具 → 他把书当作保护自己的屏障 (2) 说明他 nervous/insecure/vulnerable — 在陌生环境中需要"保护"自己。'};
+        return {r:'wrong',fb:'<strong>✗</strong> "like a shield" = 像盾牌一样。(1) 含义：盾牌用来保护自己不受伤害，Rajan 紧握书本就像抓着保护伞 (2) 情感：他非常紧张不安（nervous/insecure/vulnerable），在新学校感到暴露和脆弱，需要用书本作为安全感的来源。'};
+      }
+    }
+  ]
+},
+{
+  title: "Day 5: 比喻性语言专项",
+  focus: "训练解读 metaphor、simile、personification，按分值分配答案要素",
+  skills: ["Metaphor","Simile","Personification","分值分配"],
+  passage: `<span class="ln">1</span>The storm came without warning. One moment, Mei and her father were hiking along the trail at MacRitchie Reservoir, watching long-tailed macaques chase each other through the canopy. The next, <span class="kw">the sky pulled a grey curtain across the sun</span>, and the first drops of rain hammered down like tiny fists.
+<br><br><span class="ln">5</span>"We need to find shelter!" her father shouted above the rising wind. <span class="kw">The trees groaned and swayed, their branches clawing at the darkening sky</span>.
+<br><br><span class="ln">7</span>They ran. The trail, so dry minutes ago, had become <span class="kw">a river of red-brown mud</span> that sucked at their shoes with every step. Mei slipped, and for one terrible second, <span class="kw">the ground disappeared beneath her</span>. Then her father's hand caught her arm, pulling her upright.
+<br><br><span class="ln">11</span>"I've got you," he said. His voice was calm, steady — <span class="kw">an anchor in the chaos</span>.
+<br><br><span class="ln">13</span>They found a wooden shelter near the treetop walk and ducked inside. The rain hammered the tin roof so loudly that they had to shout to be heard. Mei's clothes were soaked, and <span class="kw">the cold wrapped itself around her like an unwelcome blanket</span>.
+<br><br><span class="ln">16</span>Her father pulled off his jacket and draped it over her shoulders. It was drenched too, but somehow, it still felt warm. He sat beside her, and for a long time they just watched the rain turn the world into a watercolour painting — all blurred greens and greys, with the boardwalk disappearing into mist.
+<br><br><span class="ln">20</span>"Dad," Mei said, her teeth chattering, "are you scared?"
+<br><br><span class="ln">21</span>He was quiet for a moment. Then he said, "A little. But storms don't last. <span class="kw">They</span> shout and scream, and then <span class="kw">they</span> run out of breath. Just like your brother when he throws a tantrum."
+<br><br><span class="ln">24</span>Mei laughed. It was a small, shaky laugh, but <span class="kw">it</span> loosened the knot in her chest.
+<br><br><span class="ln">26</span>Twenty minutes later, the rain stopped. The sun reappeared, painting the wet leaves gold. As they stepped back onto the trail, Mei noticed something: a rainbow, stretching from one side of the reservoir to the other, <span class="kw">as if the sky were apologising for its outburst</span>.`,
+  questions: [
+    {
+      num: "Q1 — Figurative Language", marks: 2,
+      text: 'What does the phrase <strong>"the sky pulled a grey curtain across the sun"</strong> (Line 2) tell us about what happened?',
+      hint: "2 分：(1) curtain = ？被拉上窗帘意味着什么？(2) 这用拟人的方式描述了什么自然现象？",
+      placeholder: "P: ...\nE: ...\nX: ...",
+      check(n) {
+        const hasMeaning = /cloud|block|cover|dark|hide|overcast|disappear|obscur/.test(n);
+        const hasTechnique = /personif|curtain|pull|human|as if|act.*like|metaphor|sky.*person/.test(n);
+        const long = n.split(' ').length >= 8;
+        if (hasMeaning && hasTechnique && long) return {r:'correct',fb:'<strong>✓ Excellent!</strong><br><strong>Model:</strong> The phrase uses personification to describe how the sky suddenly became dark and overcast (P). A "grey curtain" represents thick, dark clouds that blocked out the sun, just as pulling a curtain across a window blocks out light (E). By saying the sky "pulled" the curtain, the author makes the sky seem like a person deliberately shutting out the light, which conveys how sudden and dramatic the change in weather was (X).'};
+        if (hasMeaning || hasTechnique) return {r:'partial',fb:'<strong>△ 答到一层。</strong>(1) grey curtain = 灰色乌云遮住了太阳 (2) "pulled" 是拟人——把天空比作一个人在拉窗帘，说明天气变化非常突然和剧烈。两层都要写！'};
+        return {r:'wrong',fb:'<strong>✗</strong> (1) "grey curtain" = 灰色的窗帘 = 厚厚的乌云，遮住了太阳 (2) "pulled" 是拟人（personification）：天空像一个人一样拉上窗帘，表示天气突然、急剧变暗。'};
+      }
+    },
+    {
+      num: "Q2 — Figurative Language", marks: 1,
+      text: 'What does <strong>"an anchor in the chaos"</strong> (Line 11) suggest about Mei\'s father?',
+      hint: "anchor = 锚。船在暴风雨中锚有什么作用？",
+      placeholder: "This suggests that Mei's father was...",
+      check(n) {
+        if (/(stable|steady|calm|reliable|secure|support|ground|reassur|strong|safe|comfort|firm|rock)/.test(n)) return {r:'correct',fb:'<strong>✓ Correct!</strong> "An anchor in the chaos" means Mei\'s father was a source of stability and calm amidst the frightening storm. Just as an anchor keeps a ship from drifting in rough seas, his calm and steady voice kept Mei grounded and reassured during the chaos.'};
+        return {r:'wrong',fb:'<strong>✗</strong> anchor = 锚，在暴风雨中让船稳定不漂走。父亲的镇定声音就像锚一样，在混乱中给 Mei 安全感和稳定感（stable/calm/reassuring）。'};
+      }
+    },
+    {
+      num: "Q3 — Personification", marks: 2,
+      text: 'In Lines 21–22, the father says storms <strong>"shout and scream, and then they run out of breath"</strong>. What does this personification mean, and why does he compare storms to Mei\'s brother?',
+      ref: "你的错题 M017：比喻解读不完整",
+      hint: "2 分：(1) storms 被赋予了人的什么行为？这意味着什么？(2) 为什么比作弟弟发脾气？这对 Mei 有什么作用？",
+      placeholder: "The personification means...\nHe compares storms to Mei's brother because...",
+      check(n) {
+        const hasMeaning = /loud|intense|power|strong|noise|violent|fierce|pass|end|stop|temporary|not last|calm down|die down|finish|over/.test(n);
+        const hasWhy = /funny|humour|laugh|relax|less scar|comfort|calm|reassur|familiar|brother|tantrum|light|ease|tension|joke/.test(n);
+        const long = n.split(' ').length >= 10;
+        if (hasMeaning && hasWhy && long) return {r:'correct',fb:'<strong>✓ Outstanding!</strong><br><strong>Model:</strong> The personification gives the storm human qualities — "shout and scream" describes the loud, violent wind and thunder, while "run out of breath" means the storm will eventually lose its energy and stop (meaning). He compares storms to Mei\'s brother\'s tantrums because both are loud and intense but temporary — they seem frightening in the moment but always end. By using this humorous comparison, the father makes the scary storm feel less threatening and more familiar, which helps calm Mei\'s fear (why).'};
+        if (hasMeaning || hasWhy) return {r:'partial',fb:'<strong>△ 部分正确。</strong>需要两层：(1) 拟人含义："shout and scream" = 暴风雨的声势很猛，"run out of breath" = 但终会平息 (2) 比作弟弟发脾气：让暴风雨显得不那么可怕、更像日常生活中的事，用幽默缓解了 Mei 的恐惧。'};
+        return {r:'wrong',fb:'<strong>✗ 两层：</strong>(1) "shout and scream" = 暴风雨很猛烈，"run out of breath" = 但最终会停下来（temporary） (2) 比作弟弟：弟弟发脾气也是又叫又闹但很快就好了，用幽默让 Mei 不那么害怕。'};
+      }
+    },
+    {
+      num: "Q4 — Pronoun Reference", marks: 1,
+      text: 'What does <strong>"it"</strong> (Line 24) refer to?',
+      hint: "'it loosened the knot in her chest' — 什么东西让她胸口的结松开了？",
+      placeholder: "'it' refers to...",
+      check(n) {
+        if (/laugh|laughter/.test(n)) return {r:'correct',fb:'<strong>✓ Correct!</strong> "it" = her laugh / the laughter。前面说 "Mei laughed. It was a small, shaky laugh, but it loosened the knot in her chest" — it 指代那个笑声。笑声虽然微弱，但缓解了她的紧张。'};
+        if (/joke|father|dad|word|storm|brother/.test(n)) return {r:'wrong',fb:'<strong>✗ 不是父亲的话或笑话。</strong>"Mei laughed. It was a small, shaky laugh, but it loosened the knot" — "It" 直接指代前一句的 laugh（她的笑声）。'};
+        return {r:'wrong',fb:'<strong>✗</strong> "it" = Mei\'s laugh / the laughter。"Mei laughed. It was a small, shaky laugh, but it loosened the knot in her chest" — it 指代她的笑。'};
+      }
+    },
+    {
+      num: "Q5 — Inferential", marks: 2,
+      text: 'What does the final sentence suggest — <strong>"as if the sky were apologising for its outburst"</strong> (Line 27)?',
+      hint: "2 分：(1) outburst = ？sky apologising = ？(2) 这个拟人的结尾给整个故事什么样的感觉？",
+      placeholder: "The phrase suggests...\nThis ending creates a feeling of...",
+      check(n) {
+        const hasMeaning = /rainbow|storm.*over|sorry|regret|peace|calm|beauty|gentle|makeup|apolog|compensat|make up/.test(n);
+        const hasTone = /hope|relief|optimis|positive|new beginning|worth|reward|end.*well|bright|resolution|peace|comfort/.test(n);
+        const long = n.split(' ').length >= 8;
+        if (hasMeaning && hasTone && long) return {r:'correct',fb:'<strong>✓ Beautiful answer!</strong><br><strong>Model:</strong> The phrase uses personification, comparing the rainbow to the sky "apologising" for the storm (its "outburst") — as if the sky felt bad about the rain and was offering the rainbow as a peace offering (meaning). This ending creates a feeling of hope and relief, suggesting that after every difficult experience (the storm), something beautiful can emerge (the rainbow). It also mirrors the father\'s earlier message that storms don\'t last — the beauty of the rainbow proves him right (tone/theme).'};
+        if (hasMeaning || hasTone) return {r:'partial',fb:'<strong>△ 方向对了。</strong>需要两层：(1) "outburst" = 暴风雨，天空在 "道歉" = 彩虹是暴风雨后的补偿/和平 (2) 整体感觉：hope/relief（希望/释然），呼应了父亲说的 "storms don\'t last"——困难过后总会有美好。'};
+        return {r:'wrong',fb:'<strong>✗</strong> (1) "outburst" = 暴风雨（像人发脾气），天空 "apologising" = 用彩虹来"道歉"/弥补 (2) 结尾给人 hope/relief（希望和释然）的感觉，暗示困难是暂时的，之后总会有美好的东西出现。'};
+      }
+    }
+  ]
+},
+{
+  title: "Day 6: 人物分析与对比",
+  focus: "训练 Before/After 对比、角色特征分析、精准情感词选择",
+  skills: ["Before/After","Character Traits","情感词汇"],
+  passage: `<span class="ln">1</span>For as long as Aiden could remember, he had hated piano lessons. Every Wednesday at four o'clock, while his friends played football at the void deck, he would trudge to Mrs Ong's flat on the tenth floor and spend an hour stumbling through scales and sonatas. <span class="kw">The piano was a prison, and each lesson was a sentence he had to serve.</span>
+<br><br><span class="ln">5</span>"You have talent, Aiden," Mrs Ong would say, peering at him over her thick glasses. "You just need to <span class="kw">find the music inside yourself</span>, not just play the notes."
+<br><br><span class="ln">7</span>He never understood what she meant.
+<br><br><span class="ln">8</span>Then one day, Mrs Ong didn't answer the door. A neighbour told him she had been taken to the hospital — <span class="kw">her heart, they said</span>. The lessons stopped. At first, Aiden felt nothing but relief. No more Wednesday prison. No more scales.
+<br><br><span class="ln">12</span>But as the weeks passed, something strange happened. He found himself sitting at the school's music room piano during recess, just pressing keys. Not practising — just... exploring. He played the melody of a song his mother used to hum when he was small. The notes came slowly, clumsily, but <span class="kw">they carried something that scales never did</span> — memory, warmth, a feeling he couldn't name.
+<br><br><span class="ln">17</span>One afternoon, he visited Mrs Ong at the hospital. She looked smaller than he remembered, <span class="kw">as though the bed were slowly swallowing her</span>. But her eyes lit up when she saw him.
+<br><br><span class="ln">20</span>"I've been playing," Aiden said quietly. "Not your songs. My own."
+<br><br><span class="ln">21</span>Mrs Ong smiled — a slow, tired smile. <span class="kw">"That's what I've been waiting to hear."</span>
+<br><br><span class="ln">23</span>He didn't fully understand her then. But years later, as a young man sitting at a grand piano on a stage, about to perform a piece he had composed himself, <span class="kw">he finally heard what she had been trying to tell him all along</span>.`,
+  questions: [
+    {
+      num: "Q1 — Figurative Language", marks: 2,
+      text: 'What does the phrase <strong>"The piano was a prison, and each lesson was a sentence he had to serve"</strong> (Lines 3–4) tell us about Aiden\'s feelings towards piano lessons?',
+      hint: "2 分：(1) prison 和 sentence 在这个比喻里各表示什么？ (2) 这说明 Aiden 对弹琴的感受。",
+      placeholder: "P: Aiden felt...\nE: The metaphor compares...\nX: This suggests...",
+      check(n) {
+        const hasMetaphor = /prison|sentence|trap|confin|lock|stuck|forc|punish|no.*choice|no.*freedom/.test(n);
+        const hasFeel = /hat|dread|resent|miserable|suffer|unwilling|reluctan|bore|frustrat|negative|dislik|detest/.test(n);
+        const long = n.split(' ').length >= 10;
+        if (hasMetaphor && hasFeel && long) return {r:'correct',fb:'<strong>✓ Excellent!</strong><br><strong>Model:</strong> Aiden deeply resented his piano lessons (P). The metaphor compares the piano to a "prison" — a place you are trapped in against your will — and each lesson to a "sentence" — a punishment you must endure (E). This suggests Aiden saw piano practice as something he was forced to do, like a prisoner serving time. He felt trapped, bored, and miserable, with no enjoyment or choice in the matter (X).'};
+        if (hasMetaphor || hasFeel) return {r:'partial',fb:'<strong>△ 部分正确。</strong>2 分：(1) prison = 监狱（被困住）, sentence = 刑期（必须忍受的惩罚）→ 弹琴像坐牢 (2) 说明他非常讨厌弹琴（hated/resented/dreaded），觉得被迫、没有自由。'};
+        return {r:'wrong',fb:'<strong>✗</strong> prison = 监狱（被困住、没自由），sentence = 刑期（被迫忍受的时间）。(1) 弹琴就像坐牢——他是被迫的 (2) 他非常讨厌弹琴，每次上课都像受刑。'};
+      }
+    },
+    {
+      num: "Q2 — Before/After", marks: 2,
+      text: 'How did Aiden\'s attitude towards the piano change from the beginning to the end of the passage? Use evidence.',
+      ref: "你的错题 M021：Before/After 对比不准确",
+      hint: "开头他怎么看弹琴？(Lines 1-4) 结尾呢？(Lines 12-16, 23) 是什么导致了这个变化？",
+      placeholder: "At the beginning, Aiden saw piano as...\nBy the end, he...\nThis change was caused by...",
+      check(n) {
+        const hasBefore = /prison|hat|dread|forc|reluctan|bore|trudge|stumbl|unwilling|dislik|resent/.test(n);
+        const hasAfter = /love|enjoy|passion|compos|own|meaning|connect|appreciat|embrac|discover|creat|perform|stage|express/.test(n);
+        const long = n.split(' ').length >= 12;
+        if (hasBefore && hasAfter && long) return {r:'correct',fb:'<strong>✓ Outstanding!</strong><br><strong>Model:</strong> At the beginning, Aiden hated piano — he saw it as a "prison" and each lesson as a "sentence to serve", trudging to lessons while his friends played football (before). By the end, he had discovered a genuine love for music. He began exploring the piano on his own during recess, playing his mother\'s song and eventually composing his own pieces. Years later, he was performing his own compositions on stage (after). This change was caused by Mrs Ong\'s illness — when forced practice stopped, he was free to discover music on his own terms, finally understanding Mrs Ong\'s advice to "find the music inside yourself" (cause).'};
+        if (hasBefore || hasAfter) return {r:'partial',fb:'<strong>△ 只写了一面。</strong>对比需要：(1) Before: hated piano, "prison", forced (2) After: loves music, plays by choice, composes own pieces, performs on stage (3) 变化原因：Mrs Ong 生病后他自己开始探索弹琴，发现了音乐的真正意义。'};
+        return {r:'wrong',fb:'<strong>✗</strong> Before: "piano was a prison", hated lessons, forced to go. After: plays on his own during recess, composes own music, performs on stage years later. Cause: Mrs Ong 生病让被迫的课停了，他反而自发地去弹琴，终于理解了 "find the music inside yourself"。'};
+      }
+    },
+    {
+      num: "Q3 — Figurative Language", marks: 1,
+      text: 'What does <strong>"as though the bed were slowly swallowing her"</strong> (Line 18) suggest about Mrs Ong\'s condition?',
+      hint: "swallowing = 吞噬。一个人被床 \"吞掉\" 是什么画面？",
+      placeholder: "This suggests that Mrs Ong...",
+      check(n) {
+        if (/(frail|weak|small|thin|ill|sick|fading|shrink|disappear|fragile|deteriorat|serious|worse|dying|wither|diminish)/.test(n)) return {r:'correct',fb:'<strong>✓ Correct!</strong> "The bed were slowly swallowing her" suggests Mrs Ong looked very frail and small — her body had become so thin and weak from illness that she seemed to be disappearing into the bed, as if the bed were engulfing her. It paints a picture of someone whose condition is serious and deteriorating.'};
+        return {r:'wrong',fb:'<strong>✗</strong> "bed swallowing her" = 床在慢慢吞噬她 = 她的身体变得很虚弱瘦小（frail/weak/thin），几乎要消失在床里——说明她的病情很严重（seriously ill/deteriorating）。'};
+      }
+    },
+    {
+      num: "Q4 — Inferential", marks: 2,
+      text: 'What did Mrs Ong mean when she said <strong>"That\'s what I\'ve been waiting to hear"</strong> (Line 21)?',
+      ref: "你的错题 M023：只写了情感没解释话语含义",
+      hint: "她一直希望 Aiden 怎样？(回看 Line 5-6 她说的话) Aiden 现在做到了什么让她满意了？",
+      placeholder: "Mrs Ong meant that...\nThis connects to her earlier advice...",
+      check(n) {
+        const hasMeaning = /own|himself|inside|personal|genuine|heart|soul|music inside|not just notes|creat|compos|feel|express|discover/.test(n);
+        const hasLink = /earlier|before|line 5|find the music|not just.*notes|talent|advice|always.*want|hope|wait/.test(n);
+        const long = n.split(' ').length >= 10;
+        if (hasMeaning && hasLink && long) return {r:'correct',fb:'<strong>✓ Perfect!</strong><br><strong>Model:</strong> Mrs Ong was delighted to hear that Aiden was playing his own music, not just practising assigned pieces (meaning). This connects to her earlier advice: "find the music inside yourself, not just play the notes" (Line 5). She had always wanted Aiden to discover a personal connection with music — to play from his heart rather than just going through the motions. When he said "Not your songs. My own," she knew he had finally found that inner motivation she had been trying to nurture all along (link to earlier advice).'};
+        if (hasMeaning || hasLink) return {r:'partial',fb:'<strong>△ 方向对了。</strong>需要两层：(1) 她高兴的是 Aiden 现在弹的是自己的音乐、发自内心的音乐 (2) 联系 Line 5 她的建议："find the music inside yourself" — 他终于做到了，不再只是弹别人的曲子。'};
+        return {r:'wrong',fb:'<strong>✗</strong> (1) 她说 "That\'s what I\'ve been waiting to hear" = 她一直在等 Aiden 说"我在弹自己的音乐"。(2) 联系 Line 5 她的建议 "find the music inside yourself"——他终于从被迫弹琴变成了自发创作，找到了音乐的真正意义。'};
+      }
+    },
+    {
+      num: "Q5 — Inferential", marks: 2,
+      text: 'What did Aiden finally understand in the last line — <strong>"he finally heard what she had been trying to tell him all along"</strong> (Line 23)?',
+      hint: "结合全文：Mrs Ong 一直在教他什么？他最终在舞台上明白了什么？",
+      placeholder: "Aiden finally understood that...",
+      check(n) {
+        const hasUnderstand = /music.*inside|not just.*note|feel|express|heart|soul|passion|own|personal|love|joy|meaning|purpose|connect/.test(n);
+        const long = n.split(' ').length >= 8;
+        if (hasUnderstand && long) return {r:'correct',fb:'<strong>✓ Excellent!</strong><br><strong>Model:</strong> Aiden finally understood what Mrs Ong meant by "find the music inside yourself." True music is not about perfectly playing scales and assigned pieces — it is about expressing genuine emotion, telling your own story, and connecting with something personal and meaningful. Standing on stage performing his own composition, he realised that music was never meant to be a prison; it was a way to share what words could not. Mrs Ong had been trying to help him find his voice all along.'};
+        if (/music|play|note|passion|love|express/.test(n)) return {r:'partial',fb:'<strong>△ 方向对。</strong>他明白了 "find the music inside yourself" = 真正的音乐不是机械地弹音符，而是用音乐表达自己内心的感受和故事。当他在舞台上演奏自己创作的曲子时，他终于理解了 Mrs Ong 多年的苦心。'};
+        return {r:'wrong',fb:'<strong>✗</strong> 他明白了 "find the music inside yourself" 的真正含义——音乐不是被迫弹的音符（not just play the notes），而是发自内心的表达。当他在舞台上演奏自己创作的曲子时，他终于听懂了 Mrs Ong 一直想说的话。'};
+      }
+    }
+  ]
+},
+{
+  title: "Day 7: 综合实战 · 模拟考试",
+  focus: "混合所有题型：PEE、True/False、Phrase ID、Pronoun Reference、Figurative Language",
+  skills: ["综合","PEE","True/False","Phrase ID","Pronoun Ref","Figurative Lang"],
+  passage: `<span class="ln">1</span>The letter arrived on a Tuesday. It was addressed to "Miss Nurul binte Ismail, Age 12, Blk 305 #08-42" and stamped with the crest of the National Youth Orchestra. Nurul's hands trembled as she tore it open.
+<br><br><span class="ln">4</span>"Dear Miss Nurul," it began. "We are pleased to inform you that you have been selected for the Singapore Youth Orchestra training programme. Auditions will take place on 15 September."
+<br><br><span class="ln">7</span>She read <span class="kw">it</span> three times. Then she screamed so loudly that her father came running from the kitchen, still holding a spatula.
+<br><br><span class="ln">9</span>"I got in, Ayah! I got in!" She was <span class="kw">a sparkler on Hari Raya, fizzing and crackling with uncontainable joy</span>.
+<br><br><span class="ln">11</span>But by that evening, the sparkler had gone out. Nurul sat on her bed, staring at the audition requirements: a solo piece of Grade 8 standard, performed from memory. She was only at Grade 6. The audition was in eight weeks. <span class="kw">The mountain she had to climb had just doubled in height.</span>
+<br><br><span class="ln">15</span>"I can't do it," she whispered to her violin, which lay beside her <span class="kw">like a sleeping companion, patient and waiting</span>.
+<br><br><span class="ln">17</span>The next morning, she told her father. He listened carefully, then said, "Do you remember when you were seven, and you wanted to learn to ride a bicycle? You fell seventeen times in one afternoon. Your knees were a mess of plasters." He paused. <span class="kw">"But on the eighteenth try, you rode all the way to the playground and back."</span>
+<br><br><span class="ln">22</span>The weeks that followed were brutal. Nurul practised three hours every day — before school, during recess, and after dinner. <span class="kw">Her fingers ached, her back screamed, and there were nights when she wanted to shove the violin under her bed and never look at it again.</span> But each morning, she picked <span class="kw">it</span> up again.
+<br><br><span class="ln">26</span>On the day of the audition, Nurul stood backstage, listening to the other candidates. <span class="kw">They</span> sounded impossibly good. Her palms were slick with sweat, and her heart was <span class="kw">a drum beaten by a frantic hand</span>.
+<br><br><span class="ln">29</span>Then she heard her father's voice in her head: <em>"The eighteenth try."</em>
+<br><br><span class="ln">30</span>She walked onto the stage, raised her violin, and began to play. The notes filled the hall — <span class="kw">not perfect, but alive</span>.`,
+  questions: [
+    {
+      num: "Q1 — Figurative Language", marks: 2,
+      text: 'What does the phrase <strong>"a sparkler on Hari Raya, fizzing and crackling with uncontainable joy"</strong> (Line 9) tell us about how Nurul felt?',
+      hint: "2 分 = (1) sparkler 是什么？fizzing and crackling 是什么状态？(2) 这说明她的 joy 是怎样的？",
+      placeholder: "P: Nurul felt...\nE: The simile...\nX: This suggests...",
+      check(n) {
+        const hasSim = /sparkler|fizz|crackl|firework|burst|explod|light|bright|spark|energy|radiat/.test(n);
+        const hasFeel = /joy|happy|excit|thrill|ecstat|elat|delight|overjoyed|euphori|exhilarat|ecstatic|overwhelm.*happy/.test(n);
+        const long = n.split(' ').length >= 10;
+        if (hasSim && hasFeel && long) return {r:'correct',fb:'<strong>✓ Brilliant!</strong><br><strong>Model:</strong> Nurul was overwhelmed with joy and excitement (P). The simile compares her to "a sparkler on Hari Raya, fizzing and crackling" — a sparkler is a small firework that burns brightly and energetically, shooting out sparks in every direction (E). Just as a sparkler cannot contain its light and energy, Nurul could not contain her happiness at being accepted into the orchestra. The phrase "uncontainable joy" reinforces that her excitement was bursting out of her — hence she "screamed so loudly" that her father came running (X).'};
+        if (hasSim || hasFeel) return {r:'partial',fb:'<strong>△</strong> 2 分：(1) sparkler = 仙女棒/烟花，fizzing and crackling = 不停冒火花、劈啪作响 = 能量爆发 (2) 她的喜悦像烟花一样无法控制（uncontainable），兴奋得大叫，她爸爸拿着锅铲跑过来。'};
+        return {r:'wrong',fb:'<strong>✗</strong> sparkler = 仙女棒（Hari Raya 时玩的小烟花），fizzing and crackling = 不停冒火花。(1) 含义：能量在爆发、无法控制 (2) 她高兴得像烟花一样绽放——"uncontainable joy"，兴奋到尖叫。'};
+      }
+    },
+    {
+      num: "Q2 — True/False", marks: 1,
+      text: 'True or False: <strong>"Nurul found the preparation for the audition easy and enjoyable."</strong> Give a reason.',
+      hint: "题目说 easy 和 enjoyable。原文怎么描述她的准备过程？",
+      placeholder: "True / False — Reason: ...",
+      check(n) {
+        const hasFalse = /false/.test(n);
+        const hasEvidence = /brutal|ach|scream|shove|hurt|pain|three hour|difficult|hard|tough|exhaust|want.*quit|never look|under.*bed/.test(n);
+        if (hasFalse && hasEvidence) return {r:'correct',fb:'<strong>✓ Excellent!</strong><br><strong>Model:</strong> False. The preparation was neither easy nor enjoyable. The text describes the weeks as "brutal", and Nurul practised three hours every day. "Her fingers ached, her back screamed, and there were nights when she wanted to shove the violin under her bed and never look at it again." This is the opposite of easy and enjoyable.'};
+        if (hasFalse) return {r:'partial',fb:'<strong>△ 判断对了</strong>，但理由要更具体。引用："brutal"（残酷的），"fingers ached, back screamed"，甚至想把小提琴塞到床底永远不看。'};
+        return {r:'wrong',fb:'<strong>✗ False.</strong> 准备过程被描述为 "brutal"，她每天练 3 小时，"fingers ached, back screamed"，有好几个晚上想把琴塞到床底——完全不是 easy and enjoyable。'};
+      }
+    },
+    {
+      num: "Q3 — Phrase ID", marks: 1, phraseLen: 3,
+      text: 'From Lines 26–28, pick out a <strong>three-word phrase</strong> that shows Nurul was nervous before the audition.',
+      hint: "nervous 的身体表现。在 Lines 26-28 找 3 个词的短语。",
+      placeholder: "写出 3 个词的短语",
+      check(n) {
+        if (/slick with sweat/.test(n)) return {r:'correct',fb:'<strong>✓ Perfect!</strong> "slick with sweat"（3 个词）= 手心全是汗，说明她非常紧张。'};
+        if (/frantic hand|beaten by|impossibly good/.test(n)) return {r:'partial',fb:'<strong>△</strong> 这些也表达了紧张，但 "slick with sweat"（3 词）是最直接表达 nervous 的身体反应。'};
+        return {r:'wrong',fb:'<strong>✗ 正确答案：</strong>"slick with sweat"（3 个词）= 手心满是汗 = 非常紧张。注意在 Lines 26-28 中找描述 nervous 的身体反应。'};
+      }
+    },
+    {
+      num: "Q4 — Pronoun Reference", marks: 1,
+      text: 'What does <strong>"it"</strong> (Line 24) refer to?',
+      hint: "\"each morning, she picked it up again\" — 她每天早上拿起什么？",
+      placeholder: "'it' refers to...",
+      check(n) {
+        if (/violin/.test(n)) return {r:'correct',fb:'<strong>✓ Correct!</strong> "it" = the violin。前文说她想把小提琴塞到床底，but "each morning, she picked it up again" — it = 小提琴。'};
+        return {r:'wrong',fb:'<strong>✗</strong> "it" = the violin（小提琴）。前面说她想 "shove the violin under her bed"，但每天早上还是把 it（小提琴）拿起来继续练。'};
+      }
+    },
+    {
+      num: "Q5 — Inferential", marks: 2,
+      text: 'Why does the passage end with <strong>"not perfect, but alive"</strong> (Line 30)? What does this phrase suggest about Nurul\'s performance and her journey?',
+      hint: "2 分：(1) \"not perfect\" 和 \"alive\" 各意味着什么？(2) 联系全文——这和她的成长故事有什么关系？",
+      placeholder: "\"Not perfect\" means...\n\"Alive\" suggests...\nThis connects to her journey because...",
+      check(n) {
+        const hasMeaning = /not.*perfect.*but|mistake|flaw|imperfect|not flawless|technic/.test(n) || /alive|emotion|feeling|passion|heart|soul|genuine|authentic|real|personal|connect|express/.test(n);
+        const hasJourney = /journey|struggle|grow|overcome|effort|hard work|persever|grade 6|grade 8|practice|bicycle|eighteenth|transform|change|develop|learn/.test(n);
+        const long = n.split(' ').length >= 10;
+        if (hasMeaning && hasJourney && long) return {r:'correct',fb:'<strong>✓ Outstanding! 完美的收尾！</strong><br><strong>Model:</strong> "Not perfect" acknowledges that Nurul\'s performance had technical flaws — she was, after all, playing a Grade 8 piece when she was only at Grade 6 (meaning). But "alive" suggests the music carried genuine emotion, passion, and heart — it was not a mechanical recitation of notes, but something authentic and moving (meaning). This connects to her entire journey: from the terrifying letter, through weeks of brutal practice, her father\'s story about the eighteenth bicycle try, and the nights she wanted to give up. The music was "alive" because it carried all of that struggle and determination within it. The ending suggests that sincerity and effort matter more than perfection (journey/theme).'};
+        if (hasMeaning || hasJourney) return {r:'partial',fb:'<strong>△ 方向对了。</strong>两层：(1) "not perfect" = 技术上有瑕疵（毕竟是 Grade 6 水平弹 Grade 8 的曲子），"alive" = 但充满了真实的情感和生命力 (2) 联系全文：经历了这么多挣扎和坚持，她的音乐不是机械的音符，而是承载了她所有努力和成长的真实表达。主题：真诚和努力比完美更重要。'};
+        return {r:'wrong',fb:'<strong>✗</strong> (1) "not perfect" = 技术上不完美（Grade 6 弹 Grade 8）。"alive" = 但音乐有生命力、充满情感 (2) 呼应全文主题：经历了挣扎、想放弃、父亲的鼓励——她的音乐虽不完美但是真实的、有灵魂的。真诚 > 完美。'};
+      }
+    }
+  ]
+}
+];
+
+// ======================== RENDER ========================
+const MAX_RETRIES = 3;
+const state = { day: 0, unlocked: [true], levels: [] };
+for (let i = 1; i < DAYS.length; i++) state.unlocked.push(false);
+DAYS.forEach(d => state.levels.push({done:0, correct:0, answered:{}, attempts:{}, scores:{}}));
+
+function render() {
+  // Week bar
+  const wb = document.getElementById('weekBar');
+  wb.innerHTML = DAYS.map((_,i) => `<div class="week-seg${state.levels[i].done===DAYS[i].questions.length?' done':i===state.day?' current':''}"></div>`).join('');
+  // Tabs
+  const tabs = document.getElementById('dayTabs');
+  tabs.innerHTML = DAYS.map((d,i) => {
+    const cls = i===state.day ? 'active' : !state.unlocked[i] ? 'locked' : state.levels[i].done===DAYS[i].questions.length ? 'done' : '';
+    return `<div class="day-tab ${cls}" onclick="goDay(${i})">${i+1}</div>`;
+  }).join('');
+  // Content
+  const container = document.getElementById('dayContainer');
+  container.innerHTML = '';
+  DAYS.forEach((d,di) => {
+    const div = document.createElement('div');
+    div.className = 'day' + (di===state.day ? ' active' : '');
+    div.id = 'day'+di;
+    let html = `<div class="day-header"><h2>${d.title}</h2><div class="day-focus">${d.focus}</div><div class="day-skills">${d.skills.map(s=>`<span class="skill-tag">${s}</span>`).join('')}</div></div>`;
+    if (d.framework) {
+      html += `<div class="framework"><h3>${d.framework.title}</h3>${d.framework.steps.map(s=>`<div class="fw-step ${s.cls}"><div class="fw-icon">${s.icon}</div><div>${s.html}</div></div>`).join('')}</div>`;
+    }
+    html += `<div class="pbar"><div class="pfill" id="prog${di}" style="width:${Math.round(state.levels[di].done/d.questions.length*100)}%"></div></div>`;
+    html += `<div class="passage"><div class="passage-title">Read the passage carefully:</div>${d.passage}</div>`;
+    d.questions.forEach((q,qi) => {
+      const qid = `${di}_${qi}`;
+      const st = state.levels[di].answered[qi] ? (state.levels[di].scores[qi]>=1?'st-correct':state.levels[di].scores[qi]>0?'st-partial':'st-wrong') : '';
+      html += `<div class="qcard ${st}" id="qc${qid}">`;
+      html += `<div class="qhead"><span class="qnum">${q.num}</span><span class="qmarks">${q.marks} mark${q.marks>1?'s':''}</span></div>`;
+      html += `<div class="qtext">${q.text}</div>`;
+      if (q.ref) html += `<div class="error-ref">📌 ${q.ref}</div>`;
+      html += `<textarea id="a${qid}" placeholder="${q.placeholder||''}" ${state.levels[di].answered[qi]?'disabled':''}></textarea>`;
+      html += `<div class="btnrow">`;
+      html += `<button class="btn btn-go" id="go${qid}" onclick="doCheck(${di},${qi})" ${state.levels[di].answered[qi]?'disabled':''}>Check</button>`;
+      if (q.hint) html += `<button class="btn btn-hint" onclick="toggleH('h${qid}')">Hint</button>`;
+      html += `<button class="btn btn-retry" id="re${qid}" onclick="doRetry(${di},${qi})">Try Again</button>`;
+      if (q.phraseLen) html += `<span class="wcount">Words: <span class="wc" id="wc${qid}">0</span> / ${q.phraseLen}</span>`;
+      html += `<span class="att" id="at${qid}"></span>`;
+      html += `</div>`;
+      if (q.hint) html += `<div class="hint" id="h${qid}">${q.hint}</div>`;
+      html += `<div class="fb" id="f${qid}"></div>`;
+      html += `</div>`;
+    });
+    // Summary
+    html += `<div class="summary" id="sum${di}"><h3>Day ${di+1} Complete!</h3><div class="bscore" id="sc${di}">0/${d.questions.length}</div><div class="detail" id="det${di}"></div>`;
+    if (di < DAYS.length-1) html += `<button class="nbtn" id="nb${di}" disabled onclick="unlockDay(${di+1})">进入 Day ${di+2} →</button>`;
+    else html += `<div id="finalMsg" style="margin-top:12px;text-align:left;font-size:15px"></div>`;
+    html += `<button class="rbtn" onclick="resetDay(${di})">重做 Day ${di+1}</button></div>`;
+    div.innerHTML = html;
+    container.appendChild(div);
+  });
+  // Bind word counters
+  DAYS.forEach((d,di) => d.questions.forEach((q,qi) => {
+    if (q.phraseLen) {
+      const ta = document.getElementById(`a${di}_${qi}`);
+      if (ta) ta.oninput = () => {
+        const wc = ta.value.trim().split(/\s+/).filter(w=>w).length;
+        const el = document.getElementById(`wc${di}_${qi}`);
+        el.textContent = wc;
+        el.style.color = wc===q.phraseLen?'var(--green)':wc>q.phraseLen?'var(--red)':'var(--accent)';
+      };
+    }
+  }));
+}
+
+function goDay(n) {
+  if (!state.unlocked[n]) return;
+  state.day = n;
+  document.querySelectorAll('.day').forEach((el,i) => el.classList.toggle('active', i===n));
+  document.querySelectorAll('.day-tab').forEach((el,i) => {
+    el.classList.toggle('active', i===n);
+    el.classList.toggle('locked', !state.unlocked[i]);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function unlockDay(n) {
+  state.unlocked[n] = true;
+  goDay(n);
+  render();
+}
+
+function toggleH(id) { document.getElementById(id).classList.toggle('show'); }
+
+function doCheck(di, qi) {
+  if (state.levels[di].answered[qi]) return;
+  const ta = document.getElementById(`a${di}_${qi}`);
+  const ans = ta.value.trim();
+  if (!ans) return;
+  const n = ans.toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+  const q = DAYS[di].questions[qi];
+  const res = q.check(n);
+  const fid = `f${di}_${qi}`;
+  // Show feedback
+  const fb = document.getElementById(fid);
+  fb.className = 'fb ' + res.r;
+  fb.innerHTML = res.fb;
+  fb.scrollIntoView({behavior:'smooth',block:'nearest'});
+  // Track attempts
+  if (!state.levels[di].attempts[qi]) state.levels[di].attempts[qi] = 0;
+  state.levels[di].attempts[qi]++;
+  const att = state.levels[di].attempts[qi];
+  if (res.r === 'correct') {
+    state.levels[di].answered[qi] = true;
+    state.levels[di].scores[qi] = 1;
+    state.levels[di].correct += 1;
+    ta.disabled = true;
+    document.getElementById(`go${di}_${qi}`).disabled = true;
+    document.getElementById(`qc${di}_${qi}`).className = 'qcard st-correct';
+  } else if (att >= MAX_RETRIES) {
+    state.levels[di].answered[qi] = true;
+    state.levels[di].scores[qi] = res.r==='partial' ? 0.5 : 0;
+    state.levels[di].correct += state.levels[di].scores[qi];
+    ta.disabled = true;
+    document.getElementById(`go${di}_${qi}`).disabled = true;
+    document.getElementById(`qc${di}_${qi}`).className = 'qcard '+(res.r==='partial'?'st-partial':'st-wrong');
+  } else {
+    document.getElementById(`re${di}_${qi}`).style.display = 'inline-block';
+    document.getElementById(`at${di}_${qi}`).textContent = `(Attempt ${att}/${MAX_RETRIES})`;
+    document.getElementById(`qc${di}_${qi}`).className = 'qcard '+(res.r==='partial'?'st-partial':'st-wrong');
+    return; // Don't count as done yet
+  }
+  state.levels[di].done = Object.keys(state.levels[di].answered).filter(k=>state.levels[di].answered[k]).length;
+  updateProg(di);
+}
+
+function doRetry(di, qi) {
+  const ta = document.getElementById(`a${di}_${qi}`);
+  ta.disabled = false; ta.value = ''; ta.focus();
+  document.getElementById(`go${di}_${qi}`).disabled = false;
+  document.getElementById(`re${di}_${qi}`).style.display = 'none';
+  document.getElementById(`f${di}_${qi}`).className = 'fb';
+  document.getElementById(`qc${di}_${qi}`).className = 'qcard';
+}
+
+function updateProg(di) {
+  const s = state.levels[di];
+  const total = DAYS[di].questions.length;
+  document.getElementById(`prog${di}`).style.width = Math.round(s.done/total*100)+'%';
+  // Update week bar
+  document.querySelectorAll('.week-seg')[di].className = 'week-seg'+(s.done===total?' done':di===state.day?' current':'');
+  if (s.done === total) {
+    const sum = document.getElementById(`sum${di}`);
+    sum.style.display = 'block';
+    const score = Math.round(s.correct*10)/10;
+    document.getElementById(`sc${di}`).textContent = score+'/'+total;
+    const det = document.getElementById(`det${di}`);
+    if (score >= total*0.8) det.textContent = '太棒了！这一天的技巧已经掌握。';
+    else if (score >= total*0.5) det.textContent = '还不错，建议重做答错的题巩固一下。';
+    else det.textContent = '需要多练习。点击下方重做这一天的练习。';
+    const nb = document.getElementById(`nb${di}`);
+    if (nb) nb.disabled = score < total*0.4;
+    // Day tab done state
+    document.querySelectorAll('.day-tab')[di].classList.add('done');
+    // Final day summary
+    if (di === DAYS.length-1) {
+      const allCorrect = state.levels.reduce((a,l)=>a+l.correct,0);
+      const allTotal = DAYS.reduce((a,d)=>a+d.questions.length,0);
+      const pct = Math.round(allCorrect/allTotal*100);
+      let msg = '';
+      if (pct >= 80) msg = '<strong>恭喜完成 7 天训练！</strong>你已经掌握了 OE 阅读理解的核心答题技巧。继续在考试中坚持用 PEE 框架，Phrase ID 一定数词数，pronoun reference 先判断指人还是物。';
+      else if (pct >= 60) msg = '<strong>7 天训练完成！</strong>大部分技巧已经掌握。建议回去重做 Day 1-2 的弱项题目巩固 PEE 和 True/False 技巧。';
+      else msg = '<strong>7 天训练完成。</strong>建议从 Day 1 重新开始，先确保 PEE 框架完全掌握再往后走。每天练一篇，不要急。';
+      document.getElementById('finalMsg').innerHTML = `<p>${msg}</p><p style="margin-top:8px;color:var(--text2)">总分：${Math.round(allCorrect*10)/10} / ${allTotal} (${pct}%)</p>`;
+    }
+    sum.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+}
+
+function resetDay(di) {
+  state.levels[di] = {done:0, correct:0, answered:{}, attempts:{}, scores:{}};
+  render();
+  goDay(di);
+}
+
+render();
+</script>
+</body>
+</html>

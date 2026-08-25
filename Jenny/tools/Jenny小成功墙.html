@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jenny 小成功墙 🌟</title>
+<style>
+:root{
+  --bg:#fdf5f8;--card:#fff8fa;--border:#e8d0d8;--text:#2c1820;--text2:#8a6e78;
+  --accent:#b83280;--accent-bg:#fce7f3;--green:#1a8a5c;--green-bg:#e5f5ec;
+  --gold:#d4a017;--gold-bg:#fdf6e3;--orange:#d4790e;--orange-bg:#fdf0dc;
+  --blue:#2563eb;--blue-bg:#dbeafe;--red:#e74c3c;
+  --radius:14px;--shadow:0 2px 10px rgba(0,0,0,.06)
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c161a;--card:#262022;--border:#3e3236;--text:#e8dce0;--text2:#a08890;
+  --accent:#f472b6;--accent-bg:#2e1a28;--green-bg:#1a2e22;--gold-bg:#2e2a18;
+  --orange-bg:#2e2618;--blue-bg:#1a2a4a
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;background:var(--bg);color:var(--text);padding:20px;max-width:700px;margin:0 auto;font-size:16px;line-height:1.6}
+
+h1{font-size:26px;text-align:center;margin-bottom:4px}
+.subtitle{text-align:center;color:var(--text2);font-size:14px;margin-bottom:24px}
+
+.streak-bar{background:var(--gold-bg);border:2px solid var(--gold);border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:20px}
+.streak-bar .fire{font-size:40px}
+.streak-bar .streak-num{font-size:48px;font-weight:800;color:var(--gold);line-height:1}
+.streak-bar .streak-label{font-size:14px;color:var(--text2);margin-top:4px}
+.streak-bar .best{font-size:12px;color:var(--gold);margin-top:4px}
+.week-dots{display:flex;justify-content:center;gap:6px;margin-top:12px}
+.week-dots .dot{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text2);background:var(--card)}
+.week-dots .dot.done{background:var(--accent);border-color:var(--accent);color:#fff;font-size:16px}
+.week-dots .dot.today{border-color:var(--gold);border-width:3px}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.stat{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center}
+.stat .num{font-size:28px;font-weight:700;color:var(--accent)}
+.stat .lbl{font-size:12px;color:var(--text2);margin-top:2px}
+
+.add-box{background:var(--accent-bg);border:2px dashed var(--accent);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.add-box h3{font-size:16px;color:var(--accent);margin-bottom:12px}
+.add-row{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.cat-btn{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);cursor:pointer;font-size:13px;transition:.2s}
+.cat-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.cat-btn:hover{border-color:var(--accent)}
+.add-input{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;background:var(--bg);color:var(--text);margin-bottom:10px}
+.add-input:focus{outline:none;border-color:var(--accent)}
+.add-btn{width:100%;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.add-btn:hover{opacity:.9}
+.quick-wins{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.qw{padding:6px 12px;border-radius:16px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:13px;transition:.2s}
+.qw:hover{background:var(--accent-bg);border-color:var(--accent)}
+
+.timeline{margin-bottom:20px}
+.tl-date{font-size:13px;font-weight:700;color:var(--text2);margin:16px 0 8px;padding-left:4px}
+.win-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;box-shadow:var(--shadow);animation:slideIn .3s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.win-card .win-icon{font-size:24px;flex-shrink:0;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px}
+.win-card .win-body{flex:1}
+.win-card .win-text{font-size:15px;font-weight:600}
+.win-card .win-cat{font-size:11px;color:var(--text2);margin-top:2px}
+.win-card .win-del{color:var(--text2);cursor:pointer;font-size:18px;opacity:.4;padding:4px}
+.win-card .win-del:hover{opacity:1;color:var(--red)}
+
+.badges{margin-bottom:20px}
+.badges h3{font-size:16px;margin-bottom:12px}
+.badge-grid{display:flex;gap:10px;flex-wrap:wrap}
+.badge{width:70px;text-align:center;padding:10px 4px;border-radius:12px;background:var(--card);border:1.5px solid var(--border)}
+.badge.earned{border-color:var(--gold);background:var(--gold-bg)}
+.badge .b-icon{font-size:28px}
+.badge .b-name{font-size:10px;color:var(--text2);margin-top:4px;line-height:1.2}
+.badge.earned .b-name{color:var(--gold);font-weight:700}
+.badge:not(.earned){opacity:.35}
+
+.encourage{background:var(--accent-bg);border:1.5px solid #e8a0c0;border-radius:var(--radius);padding:16px;text-align:center;margin-bottom:20px;font-size:15px;color:#8a2060}
+@media(prefers-color-scheme:dark){.encourage{background:#2e1a28;border-color:#5a2a48;color:#f0a0d0}}
+
+.empty{text-align:center;padding:40px;color:var(--text2);font-size:15px}
+.empty .big{font-size:48px;margin-bottom:10px}
+</style>
+</head>
+<body>
+
+<h1>🌟 Jenny 小成功墙</h1>
+<p class="subtitle">每一步进步都值得庆祝！</p>
+
+<div class="encourage" id="encourageBox"></div>
+
+<div class="streak-bar">
+  <div class="fire" id="streakIcon">🔥</div>
+  <div class="streak-num" id="streakNum">0</div>
+  <div class="streak-label">天连续学习</div>
+  <div class="best" id="bestStreak"></div>
+  <div class="week-dots" id="weekDots"></div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="num" id="totalWins">0</div><div class="lbl">总成就</div></div>
+  <div class="stat"><div class="num" id="weekWins">0</div><div class="lbl">本周</div></div>
+  <div class="stat"><div class="num" id="monthWins">0</div><div class="lbl">本月</div></div>
+</div>
+
+<div class="badges">
+  <h3>🏅 成就徽章</h3>
+  <div class="badge-grid" id="badgeGrid"></div>
+</div>
+
+<div class="add-box">
+  <h3>🎉 记录今天的小成功</h3>
+  <div class="add-row" id="catBtns"></div>
+  <div class="quick-wins" id="quickWins"></div>
+  <input class="add-input" id="winInput" placeholder="写下你今天的小成功..." />
+  <button class="add-btn" onclick="addWin()">记录这个小成功！ 🌟</button>
+</div>
+
+<div class="timeline" id="timeline"></div>
+
+<script>
+const CATS = [
+  {id:'english',label:'📘 英语',icon:'📘',bg:'var(--blue-bg)'},
+  {id:'chinese',label:'📕 华文',icon:'📕',bg:'var(--orange-bg)'},
+  {id:'math',label:'📐 数学',icon:'📐',bg:'var(--green-bg)'},
+  {id:'reading',label:'📖 阅读',icon:'📖',bg:'var(--accent-bg)'},
+  {id:'habit',label:'💪 习惯',icon:'💪',bg:'var(--gold-bg)'},
+  {id:'other',label:'⭐ 其他',icon:'⭐',bg:'var(--card)'}
+];
+
+const QUICK = [
+  '数学练习全对了','学了新的英语单词','华文认字进步了',
+  '读完了一本故事书','帮妈妈做了家务','今天很勇敢',
+  '画了一幅漂亮的画','和朋友友好相处','自己整理了书包',
+  '早报读完了','动物王国数学通关','价值观冒险完成'
+];
+
+const BADGES = [
+  {id:'first',name:'第一步',icon:'🌱',need:1},
+  {id:'five',name:'五颗星',icon:'⭐',need:5},
+  {id:'ten',name:'超级棒',icon:'🌟',need:10},
+  {id:'streak3',name:'三日小达人',icon:'🔥',type:'streak',val:3},
+  {id:'streak7',name:'一周小勇士',icon:'💎',type:'streak',val:7},
+  {id:'twenty',name:'了不起',icon:'🏆',need:20},
+  {id:'streak14',name:'两周小英雄',icon:'👑',type:'streak',val:14},
+  {id:'fifty',name:'闪亮之星',icon:'🎖️',need:50}
+];
+
+const MSGS = [
+  '今天也是棒棒的一天！加油 Jenny！💕',
+  '每一个小成功都让你更闪亮！✨',
+  '你真的很努力，继续加油！🌸',
+  '妈妈爸爸都为你骄傲！❤️',
+  '比昨天进步一点点，就是最棒的！🌈',
+  '学习可以很开心，你做到了！😊',
+  '你是最勇敢的小朋友！🦋',
+  '今天的 Jenny 比昨天更厉害啦！🌻',
+  '每天一小步，未来一大步！🚀',
+  '你真的很了不起，继续保持！🌟'
+];
+
+let state = {wins:[],streak:0,bestStreak:0,selectedCat:'math'};
+
+function load(){try{const s=localStorage.getItem('jenny_wins');if(s)state=JSON.parse(s)}catch(e){}if(!state.wins)state.wins=[];if(!state.streak)state.streak=0;if(!state.bestStreak)state.bestStreak=0}
+function save(){try{localStorage.setItem('jenny_wins',JSON.stringify(state))}catch(e){}}
+function today(){return new Date().toISOString().slice(0,10)}
+
+function calcStreak(){
+  const dates=[...new Set(state.wins.map(w=>w.date))].sort().reverse();
+  if(!dates.length){state.streak=0;return}
+  const t=today();let streak=0;let check=new Date(t);
+  if(dates[0]===t){streak=1;check.setDate(check.getDate()-1);for(let i=1;i<dates.length;i++){if(dates[i]===check.toISOString().slice(0,10)){streak++;check.setDate(check.getDate()-1)}else break}}
+  else{const y=new Date(t);y.setDate(y.getDate()-1);if(dates[0]===y.toISOString().slice(0,10)){streak=1;check=new Date(dates[0]);check.setDate(check.getDate()-1);for(let i=1;i<dates.length;i++){if(dates[i]===check.toISOString().slice(0,10)){streak++;check.setDate(check.getDate()-1)}else break}}}
+  state.streak=streak;if(streak>state.bestStreak)state.bestStreak=streak;
+}
+
+function render(){
+  calcStreak();
+  document.getElementById('encourageBox').textContent=MSGS[Math.floor(Math.random()*MSGS.length)];
+  const s=state.streak;
+  document.getElementById('streakNum').textContent=s;
+  document.getElementById('streakIcon').textContent=s>=7?'💎':s>=3?'🔥':s>=1?'✨':'💤';
+  document.getElementById('bestStreak').textContent=state.bestStreak>0?`最佳纪录：${state.bestStreak} 天`:'';
+
+  const dayNames=['日','一','二','三','四','五','六'];const now=new Date();const dow=now.getDay();
+  let dots='';for(let i=0;i<7;i++){const d=new Date(now);d.setDate(d.getDate()-dow+i);const ds=d.toISOString().slice(0,10);const done=state.wins.some(w=>w.date===ds);const isToday=ds===today();dots+=`<div class="dot${done?' done':''}${isToday?' today':''}">${done?'✓':dayNames[i]}</div>`}
+  document.getElementById('weekDots').innerHTML=dots;
+
+  const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-7);const monthAgo=new Date();monthAgo.setDate(monthAgo.getDate()-30);
+  document.getElementById('totalWins').textContent=state.wins.length;
+  document.getElementById('weekWins').textContent=state.wins.filter(w=>new Date(w.date)>=weekAgo).length;
+  document.getElementById('monthWins').textContent=state.wins.filter(w=>new Date(w.date)>=monthAgo).length;
+
+  document.getElementById('badgeGrid').innerHTML=BADGES.map(b=>{
+    let earned=b.type==='streak'?state.bestStreak>=b.val:state.wins.length>=b.need;
+    return`<div class="badge${earned?' earned'}" title="${b.name}"><div class="b-icon">${b.icon}</div><div class="b-name">${b.name}</div></div>`}).join('');
+
+  document.getElementById('catBtns').innerHTML=CATS.map(c=>`<div class="cat-btn${state.selectedCat===c.id?' active':''}" onclick="selectCat('${c.id}')">${c.label}</div>`).join('');
+  document.getElementById('quickWins').innerHTML=QUICK.map(q=>`<div class="qw" onclick="quickAdd('${q.replace(/'/g,"\\'")}')">${q}</div>`).join('');
+
+  const tl=document.getElementById('timeline');
+  if(!state.wins.length){tl.innerHTML='<div class="empty"><div class="big">🌟</div>还没有小成功记录<br>记录你的第一个小成功吧！</div>';return}
+  const grouped={};state.wins.slice().reverse().forEach(w=>{if(!grouped[w.date])grouped[w.date]=[];grouped[w.date].push(w)});
+  let h='';for(const[date,wins]of Object.entries(grouped)){
+    h+=`<div class="tl-date">📅 ${date===today()?'今天':date} · ${wins.length} 个成功</div>`;
+    wins.forEach(w=>{const cat=CATS.find(c=>c.id===w.cat)||CATS[5];h+=`<div class="win-card"><div class="win-icon" style="background:${cat.bg}">${cat.icon}</div><div class="win-body"><div class="win-text">${esc(w.text)}</div><div class="win-cat">${cat.label}</div></div><div class="win-del" onclick="delWin('${w.id}')" title="删除">×</div></div>`})}
+  tl.innerHTML=h;save();
+}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function selectCat(id){state.selectedCat=id;render()}
+function addWin(){const input=document.getElementById('winInput');const text=input.value.trim();if(!text)return;state.wins.push({id:Date.now().toString(36),text,cat:state.selectedCat,date:today(),time:new Date().toTimeString().slice(0,5)});input.value='';save();render();celebrate()}
+function quickAdd(text){document.getElementById('winInput').value=text;addWin()}
+function delWin(id){state.wins=state.wins.filter(w=>w.id!==id);save();render()}
+function celebrate(){const colors=['#ff69b4','#ff6b6b','#48dbfb','#ff9ff3','#1dd1a1','#feca57'];for(let i=0;i<20;i++){const c=document.createElement('div');c.style.cssText=`position:fixed;width:8px;height:8px;border-radius:50%;background:${colors[i%colors.length]};top:50%;left:50%;pointer-events:none;z-index:9999;transition:all ${.5+Math.random()*.5}s ease-out;opacity:1;`;document.body.appendChild(c);requestAnimationFrame(()=>{c.style.top=(20+Math.random()*60)+'%';c.style.left=(10+Math.random()*80)+'%';c.style.opacity='0';c.style.transform=`scale(${1+Math.random()*2})`});setTimeout(()=>c.remove(),1200)}}
+load();render();
+</script>
+</body>
+</html>

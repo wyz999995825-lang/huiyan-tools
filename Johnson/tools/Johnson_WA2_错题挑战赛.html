@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Johnson WA2 考前冲刺 Round 4</title>
+<style>
+:root {
+  --bg:#f7f7f7; --card:#fff; --text:#3c3c3c; --text2:#777; --border:#e5e5e5;
+  --green:#58CC02; --green-dark:#46a302; --blue:#1CB0F6; --blue-dark:#0095d9;
+  --red:#FF4B4B; --gold:#FFC800; --purple:#A560E8; --orange:#FF9600;
+  --radius:16px;
+}
+.eye-care {
+  --bg:#f5f0e6; --card:#fffdf7; --text:#4a4237; --text2:#8a7e6e; --border:#d5cfc1;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; transition:background 0.3s,color 0.3s; }
+
+.topbar { background:var(--card); border-bottom:2px solid var(--border); padding:12px 20px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:100; }
+.topbar .back { cursor:pointer; font-size:22px; color:var(--text2); border:none; background:none; padding:4px 8px; border-radius:8px; }
+.topbar .back:hover { background:var(--border); }
+.topbar .title { font-weight:700; font-size:15px; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.topbar .hearts { color:var(--red); font-weight:700; font-size:14px; }
+.topbar .xp { color:var(--gold); font-weight:700; font-size:14px; }
+.progress-bar { height:8px; background:var(--border); border-radius:4px; overflow:hidden; flex:1; max-width:200px; }
+.progress-fill { height:100%; background:var(--green); border-radius:4px; transition:width 0.4s ease; }
+
+.home { max-width:680px; margin:0 auto; padding:24px 20px; }
+.home h1 { font-size:24px; font-weight:800; margin-bottom:4px; }
+.home .sub { color:var(--text2); font-size:13px; margin-bottom:20px; }
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:24px; }
+.stat-card { background:var(--card); border-radius:12px; padding:14px 10px; text-align:center; border:1px solid var(--border); }
+.stat-card .val { font-size:20px; font-weight:800; }
+.stat-card .lbl { font-size:11px; color:var(--text2); margin-top:2px; }
+.day-card { background:var(--card); border-radius:var(--radius); padding:16px 20px; margin-bottom:10px; cursor:pointer; border:2px solid var(--border); display:flex; align-items:center; gap:14px; transition:all 0.15s; }
+.day-card:hover { border-color:var(--blue); transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,0.06); }
+.day-card .icon { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.day-card .info { flex:1; }
+.day-card .info h3 { font-size:14px; font-weight:700; margin-bottom:2px; }
+.day-card .info p { font-size:12px; color:var(--text2); }
+.day-card .score { font-size:13px; font-weight:700; color:var(--green); }
+.day-card .score.none { color:var(--text2); font-weight:400; }
+.day-card.completed { border-color:var(--green); background:linear-gradient(135deg,#f0fdf4,var(--card)); }
+
+.day-intro { max-width:680px; margin:0 auto; padding:40px 20px; text-align:center; }
+.day-intro .icon-big { font-size:64px; margin-bottom:16px; }
+.day-intro h2 { font-size:22px; font-weight:800; margin-bottom:8px; }
+.day-intro .desc { font-size:14px; color:var(--text2); margin-bottom:20px; line-height:1.6; }
+.day-intro .objectives { background:var(--card); border-radius:var(--radius); padding:20px; border:1px solid var(--border); margin-bottom:24px; text-align:left; }
+.day-intro .objectives h4 { font-size:12px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px; }
+.day-intro .objectives li { font-size:14px; margin-bottom:6px; padding-left:4px; line-height:1.5; }
+.day-intro .start-btn { display:block; width:100%; max-width:320px; margin:0 auto; padding:14px; border-radius:12px; border:none; background:var(--green); color:white; font-size:16px; font-weight:700; cursor:pointer; }
+.day-intro .start-btn:hover { background:var(--green-dark); }
+
+.practice { max-width:680px; margin:0 auto; padding:20px; }
+.q-card { background:var(--card); border-radius:var(--radius); padding:24px; margin-bottom:16px; border:1px solid var(--border); }
+.q-label { font-size:11px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
+.q-text { font-size:15px; line-height:1.7; margin-bottom:16px; white-space:pre-line; }
+.mcq-options { display:flex; flex-direction:column; gap:8px; }
+.mcq-opt { padding:14px 18px; border-radius:12px; border:2px solid var(--border); cursor:pointer; font-size:15px; transition:all 0.15s; display:flex; align-items:center; gap:10px; }
+.mcq-opt:hover { border-color:var(--blue); background:#f0f8ff; }
+.mcq-opt.selected { border-color:var(--blue); background:#e0f0ff; }
+.mcq-opt.correct { border-color:var(--green); background:#e8f9e0; pointer-events:none; }
+.mcq-opt.wrong { border-color:var(--red); background:#ffe8e8; pointer-events:none; }
+.mcq-opt .key { width:28px; height:28px; border-radius:6px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--text2); flex-shrink:0; }
+
+.fill-group { margin-bottom:12px; }
+.fill-input { border:2px solid var(--border); border-radius:10px; padding:10px 14px; font-size:16px; width:200px; outline:none; font-family:inherit; }
+.fill-input:focus { border-color:var(--blue); }
+.fill-input.correct { border-color:var(--green); background:#e8f9e0; }
+.fill-input.wrong { border-color:var(--red); background:#ffe8e8; }
+
+.hint-btn { background:none; border:2px solid var(--gold); color:#b8860b; border-radius:10px; padding:8px 16px; font-size:13px; font-weight:700; cursor:pointer; margin-bottom:12px; }
+.hint-btn:hover { background:#fff8e0; }
+.hint-box { background:#FFFBEB; border-radius:10px; padding:14px 16px; margin-bottom:12px; border-left:4px solid var(--gold); font-size:13px; line-height:1.6; display:none; }
+.hint-box.show { display:block; }
+
+.check-btn { width:100%; padding:14px; border-radius:12px; border:none; font-size:16px; font-weight:700; cursor:pointer; transition:all 0.15s; }
+.check-btn.primary { background:var(--green); color:white; }
+.check-btn.primary:hover { background:var(--green-dark); }
+.check-btn.next { background:var(--blue); color:white; }
+.check-btn.next:hover { background:var(--blue-dark); }
+.check-btn:disabled { background:#ddd; color:#999; cursor:not-allowed; }
+
+.feedback-box { border-radius:12px; padding:16px 20px; margin:12px 0; font-size:14px; line-height:1.6; }
+.feedback-box.correct { background:#e8f9e0; border:1px solid #b8e6a0; }
+.feedback-box.wrong { background:#ffe8e8; border:1px solid #ffb0b0; }
+.feedback-box h4 { margin-bottom:6px; font-size:15px; }
+.feedback-box .explain { font-size:13px; color:#555; white-space:pre-line; margin-top:8px; }
+
+.results { max-width:680px; margin:0 auto; padding:40px 20px; text-align:center; }
+.results .emoji { font-size:64px; margin-bottom:16px; }
+.results h2 { font-size:24px; font-weight:800; margin-bottom:8px; }
+.results .pct { font-size:48px; font-weight:800; margin:16px 0; }
+.results .detail { font-size:14px; color:var(--text2); margin-bottom:24px; }
+.results .btn-row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.results .btn { padding:12px 24px; border-radius:12px; border:2px solid var(--border); font-size:15px; font-weight:700; cursor:pointer; background:var(--card); }
+.results .btn.primary { background:var(--green); color:white; border-color:var(--green); }
+
+.errbook { max-width:680px; margin:0 auto; padding:24px 20px; }
+.errbook h2 { font-size:20px; font-weight:800; margin-bottom:16px; }
+.err-item { background:var(--card); border-radius:var(--radius); padding:16px 20px; margin-bottom:12px; border:1px solid var(--border); }
+.err-item .eq { font-size:14px; white-space:pre-line; line-height:1.6; margin-bottom:8px; }
+.err-item .ea { font-size:13px; color:var(--green-dark); }
+
+.toggle-row { position:fixed; top:16px; right:16px; z-index:150; display:flex; gap:8px; }
+.toggle-btn { width:40px; height:40px; border-radius:50%; border:2px solid var(--border); background:var(--card); cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+
+.kbd { display:inline-block; background:var(--bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:11px; color:var(--text2); font-weight:600; margin-left:6px; }
+@media (max-width:767px) { .kbd { display:none; } .stats-row { grid-template-columns:repeat(2,1fr); } }
+
+canvas#confetti { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999; }
+.export-btn { display:block; width:100%; max-width:300px; margin:20px auto 0; padding:12px; border-radius:12px; border:2px solid var(--purple); background:var(--card); color:var(--purple); font-size:14px; font-weight:700; cursor:pointer; text-align:center; }
+.export-btn:hover { background:#f3e8ff; }
+.toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:12px 24px; border-radius:12px; font-size:14px; font-weight:600; z-index:999; opacity:0; transition:opacity 0.3s; pointer-events:none; }
+.toast.show { opacity:1; }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="toast" id="toast"></div>
+<div class="toggle-row">
+  <button class="toggle-btn" id="soundBtn" onclick="toggleSound()" title="Sound">&#128264;</button>
+  <button class="toggle-btn" id="eyeBtn" onclick="toggleEye()" title="Eye-care mode">&#128065;</button>
+</div>
+<div id="app"></div>
+
+<script>
+// ═══════════════ QUESTION DATA ═══════════════
+var Q={
+math:[
+{id:"m1",weak:"of-confusion",q:"A shop had 480 cupcakes. 1/4 of them were vanilla. 2/3 of the remainder were strawberry. How many strawberry cupcakes were there?",opts:["240","160","320","120"],ans:0,hints:["First find how many are NOT vanilla: 480 − 480÷4 = 360","Then find 2/3 of the remainder (360): 360 × 2/3 = 240"],explain:"Vanilla = 1/4 × 480 = 120. Remainder = 480 − 120 = 360. Strawberry = 2/3 × 360 = 240."},
+{id:"m2",weak:"of-confusion",q:"Mrs Tan bought 600 beads. 1/3 of them were red. 3/4 of the remainder were blue. How many blue beads did she buy?",opts:["300","150","400","200"],ans:0,hints:["Remainder after red = 600 − 600÷3 = 400","Blue = 3/4 of 400 = 300"],explain:"Red = 1/3 × 600 = 200. Remainder = 400. Blue = 3/4 × 400 = 300."},
+{id:"m3",weak:"of-confusion",q:"A library had 540 books. 2/9 of them were fiction. 1/2 of the remainder were science books. How many science books were there?",opts:["210","270","300","120"],ans:0,hints:["Find the remainder after fiction: 540 − 2/9 × 540 = 420","Then take 1/2 of the remainder: 420 ÷ 2 = 210"],explain:"Fiction = 2/9 × 540 = 120. Remainder = 540 − 120 = 420. Science = 1/2 × 420 = 210."},
+{id:"m4",weak:"of-confusion",q:"Rajan collected 360 stamps. 1/4 of them were from Singapore. 2/3 of the remainder were from Malaysia. How many stamps were from Malaysia?",opts:["180","240","90","120"],ans:0,hints:["Find the remainder first: 360 − 1/4 × 360 = 270","Malaysia = 2/3 × 270 = 180. Don't confuse 2/3 of the remainder with 2/3 of the total!"],explain:"Singapore = 1/4 × 360 = 90. Remainder = 360 − 90 = 270. Malaysia = 2/3 × 270 = 180."},
+{id:"m5",weak:"of-confusion",q:"Wei Ling had 420 stickers. She gave 1/7 of them to her sister. She then gave 2/3 of the remainder to her friend. How many stickers did her friend receive?",opts:["280","240","180","140"],ans:1,hints:["First find the remainder: 420 − 1/7 × 420 = 360","Friend received 2/3 × 360 = 240"],explain:"Sister = 1/7 × 420 = 60. Remainder = 420 − 60 = 360. Friend = 2/3 × 360 = 240."},
+{id:"m6",weak:"of-confusion",q:"A hawker centre sold 800 plates of food in a day. 3/8 of them were chicken rice. 1/4 of the remainder were laksa. How many plates of laksa were sold?",opts:["200","100","125","250"],ans:2,hints:["Remainder after chicken rice = 800 − 3/8 × 800 = 500","Laksa = 1/4 × 500 = 125"],explain:"Chicken rice = 3/8 × 800 = 300. Remainder = 800 − 300 = 500. Laksa = 1/4 × 500 = 125."},
+{id:"m7",weak:"of-confusion",q:"Mr Lim had 720 markers. He packed 1/6 of them into Box A. He packed 3/5 of the remainder into Box B. How many markers were in Box B?",opts:["432","360","288","120"],ans:1,hints:["Remainder after Box A = 720 − 120 = 600","Box B = 3/5 × 600 = 360"],explain:"Box A = 1/6 × 720 = 120. Remainder = 720 − 120 = 600. Box B = 3/5 × 600 = 360."},
+{id:"m8",weak:"of-confusion",q:"A school had 900 pupils. 2/5 of them joined the Art Club. 1/3 of the remainder joined the Science Club. How many pupils joined neither club?",opts:["360","540","180","240"],ans:0,hints:["After Art Club, remainder = 900 − 360 = 540","Science Club = 1/3 × 540 = 180. Neither = 540 − 180 = 360"],explain:"Art Club = 2/5 × 900 = 360. Remainder = 540. Science Club = 1/3 × 540 = 180. Neither = 540 − 180 = 360."},
+{id:"m9",weak:"of-confusion",q:"Mei Hua had 480 hair clips. She gave 1/8 of them to Siti. She gave 3/4 of the remainder to Priya. How many hair clips did Priya receive?",opts:["315"],ans:0,fillin:true,hints:["Remainder after Siti = 480 − 60 = 420","Priya = 3/4 × 420 = 315"],explain:"Siti = 1/8 × 480 = 60. Remainder = 480 − 60 = 420. Priya = 3/4 × 420 = 315."},
+{id:"m10",weak:"of-confusion",q:"A fruit seller had 560 mangoes. He sold 3/7 of them in the morning. He sold 1/2 of the remainder in the afternoon. How many mangoes were left?",opts:["160"],ans:0,fillin:true,hints:["Morning sales = 3/7 × 560 = 240. Remainder = 320","Afternoon sales = 1/2 × 320 = 160. Left = 320 − 160 = 160"],explain:"Morning = 3/7 × 560 = 240. Remainder = 320. Afternoon = 1/2 × 320 = 160. Left = 320 − 160 = 160."},
+{id:"m11",weak:"of-confusion",q:"Ahmad had 630 marbles. He gave 2/7 of them to Ali. He gave 1/3 of the remainder to Bala. How many marbles did Ahmad have left?",opts:["300"],ans:0,fillin:true,hints:["Ali got 2/7 × 630 = 180. Remainder = 450","Bala got 1/3 × 450 = 150. Left = 450 − 150 = 300"],explain:"Ali = 2/7 × 630 = 180. Remainder = 450. Bala = 1/3 × 450 = 150. Left = 450 − 150 = 300."},
+{id:"m12",weak:"of-confusion",q:"A toy shop had 840 soft toys. 1/4 of them were bears. 2/3 of the remainder were rabbits. The rest were dogs. How many dogs were there?",opts:["210"],ans:0,fillin:true,hints:["Bears = 1/4 × 840 = 210. Remainder = 630","Rabbits = 2/3 × 630 = 420. Dogs = 630 − 420 = 210"],explain:"Bears = 210. Remainder = 630. Rabbits = 2/3 × 630 = 420. Dogs = 630 − 420 = 210."},
+{id:"m13",weak:"of-confusion",q:"Samy had 960 building blocks. He used 1/6 of them for a house model. He used 3/4 of the remainder for a bridge model. How many blocks did he use in total?",opts:["760"],ans:0,fillin:true,hints:["House = 1/6 × 960 = 160. Remainder = 800","Bridge = 3/4 × 800 = 600. Total used = 160 + 600 = 760"],explain:"House = 160. Remainder = 800. Bridge = 3/4 × 800 = 600. Total = 160 + 600 = 760."},
+{id:"m14",weak:"of-confusion",q:"There were 500 passengers at an MRT station. 1/5 of them boarded the first train. 3/4 of the remainder boarded the second train. How many passengers were still waiting?",opts:["100"],ans:0,fillin:true,hints:["First train = 1/5 × 500 = 100. Remainder = 400","Second train = 3/4 × 400 = 300. Still waiting = 400 − 300 = 100"],explain:"First train = 100. Remainder = 400. Second train = 300. Still waiting = 400 − 300 = 100."},
+{id:"m15",weak:"fraction-parts",q:"Which of the following fractions is the largest?",opts:["3/5","7/12","5/8","2/3"],ans:3,hints:["Convert all fractions to the same denominator to compare","LCD of 5, 12, 8, 3 is 120. Convert: 72/120, 70/120, 75/120, 80/120"],explain:"3/5 = 72/120, 7/12 = 70/120, 5/8 = 75/120, 2/3 = 80/120. The largest is 2/3."},
+{id:"m16",weak:"fraction-parts",q:"What is 2/3 + 3/8?",opts:["25/24","5/11","17/24","1/2"],ans:0,hints:["Find the LCD of 3 and 8, which is 24","2/3 = 16/24, 3/8 = 9/24. Add: 16/24 + 9/24 = 25/24"],explain:"LCD = 24. 2/3 = 16/24. 3/8 = 9/24. 16/24 + 9/24 = 25/24 = 1 1/24."},
+{id:"m17",weak:"fraction-parts",q:"What is 5/6 − 1/4?",opts:["7/12","4/2","2/3","1/3"],ans:0,hints:["Find the LCD of 6 and 4, which is 12","5/6 = 10/12, 1/4 = 3/12. Subtract: 10/12 − 3/12 = 7/12"],explain:"LCD = 12. 5/6 = 10/12. 1/4 = 3/12. 10/12 − 3/12 = 7/12."},
+{id:"m18",weak:"fraction-parts",q:"There are 48 sweets. 3/8 of them are strawberry-flavoured. How many sweets are strawberry-flavoured?",opts:["18","16","24","12"],ans:0,hints:["Find 3/8 of 48","48 ÷ 8 = 6, then 6 × 3 = 18"],explain:"3/8 × 48 = 18 strawberry sweets."},
+{id:"m19",weak:"fraction-parts",q:"Express 3 2/5 as an improper fraction.",opts:["17/5","15/5","13/5","7/5"],ans:0,hints:["Multiply the whole number by the denominator and add the numerator","3 × 5 + 2 = 17, so it is 17/5"],explain:"3 2/5 = (3 × 5 + 2)/5 = 17/5."},
+{id:"m20",weak:"fraction-parts",q:"What is 4 1/3 − 1 5/6?",opts:["2 1/2","2 1/6","3 1/6","1 5/6"],ans:0,hints:["Convert to improper fractions: 13/3 − 11/6","LCD = 6: 26/6 − 11/6 = 15/6 = 2 3/6 = 2 1/2"],explain:"4 1/3 = 13/3 = 26/6. 1 5/6 = 11/6. 26/6 − 11/6 = 15/6 = 2 1/2."},
+{id:"m21",weak:"fraction-parts",q:"Arrange these fractions from smallest to largest: 1/2, 2/5, 3/4. Which is in the middle?",opts:["1/2","2/5","3/4","They are equal"],ans:0,hints:["Convert to LCD of 20: 10/20, 8/20, 15/20","Smallest to largest: 2/5, 1/2, 3/4. The middle one is 1/2"],explain:"2/5 = 8/20, 1/2 = 10/20, 3/4 = 15/20. Order: 2/5, 1/2, 3/4. Middle = 1/2."},
+{id:"m22",weak:"fraction-parts",q:"Jenny had 2/3 m of ribbon. She used 1/4 m. How much ribbon did she have left?",opts:["5/12 m","1/2 m","3/7 m","1/4 m"],ans:0,hints:["Find 2/3 − 1/4 using LCD of 12","8/12 − 3/12 = 5/12"],explain:"2/3 − 1/4 = 8/12 − 3/12 = 5/12 m of ribbon left."},
+{id:"m23",weak:"fraction-parts",q:"What is 3/7 + 2/3? Give your answer as a fraction in its simplest form.",opts:["23/21"],ans:0,fillin:true,fillinText:true,hints:["LCD of 7 and 3 is 21","3/7 = 9/21, 2/3 = 14/21. Sum = 23/21"],explain:"3/7 = 9/21, 2/3 = 14/21. 9/21 + 14/21 = 23/21 = 1 2/21."},
+{id:"m24",weak:"fraction-parts",q:"There are 72 pupils in Primary 5. 5/8 of them wear spectacles. How many pupils wear spectacles?",opts:["45"],ans:0,fillin:true,hints:["Find 5/8 of 72","72 ÷ 8 = 9, then 9 × 5 = 45"],explain:"5/8 × 72 = 45 pupils."},
+{id:"m25",weak:"fraction-parts",q:"What is 7/9 − 1/3? Give your answer as a fraction.",opts:["4/9"],ans:0,fillin:true,fillinText:true,hints:["Convert 1/3 to ninths: 1/3 = 3/9","7/9 − 3/9 = 4/9"],explain:"1/3 = 3/9. 7/9 − 3/9 = 4/9."},
+{id:"m26",weak:"fraction-parts",q:"A tank was 1/3 full. After pouring in 16 more litres, it became 5/6 full. What is the full capacity of the tank in litres?",opts:["32"],ans:0,fillin:true,hints:["The 16 litres filled 5/6 − 1/3 = 5/6 − 2/6 = 3/6 = 1/2 of the tank","If 1/2 of the tank = 16 litres, full tank = 32 litres"],explain:"5/6 − 1/3 = 5/6 − 2/6 = 3/6 = 1/2. 1/2 of tank = 16 litres. Full capacity = 32 litres."},
+{id:"m27",weak:"fraction-parts",q:"Express 47/6 as a mixed number. What is the whole number part?",opts:["7"],ans:0,fillin:true,hints:["Divide 47 by 6","47 ÷ 6 = 7 remainder 5, so 47/6 = 7 5/6"],explain:"47 ÷ 6 = 7 R 5. So 47/6 = 7 5/6. The whole number part is 7."},
+{id:"m28",weak:"fraction-parts",q:"Harith ate 1/4 of a pizza. His sister ate 1/3 of the same pizza. What fraction of the pizza was eaten altogether? Give your answer as a fraction.",opts:["7/12"],ans:0,fillin:true,fillinText:true,hints:["Add 1/4 + 1/3 using LCD of 12","3/12 + 4/12 = 7/12"],explain:"1/4 + 1/3 = 3/12 + 4/12 = 7/12 of the pizza."},
+{id:"m29",weak:"strategy",q:"A rectangular garden measures 12 m by 8 m. A square pond of side 3 m is built in the garden. What is the remaining area of the garden?",opts:["87 m²","96 m²","78 m²","69 m²"],ans:0,hints:["Area of garden = 12 × 8 = 96 m²","Area of pond = 3 × 3 = 9 m². Remaining = 96 − 9 = 87 m²"],explain:"Garden = 12 × 8 = 96 m². Pond = 3 × 3 = 9 m². Remaining = 96 − 9 = 87 m²."},
+{id:"m30",weak:"strategy",q:"A cuboid tank measures 10 cm by 8 cm by 6 cm. What is its volume?",opts:["480 cm³","240 cm³","380 cm³","540 cm³"],ans:0,hints:["Volume of cuboid = length × width × height","10 × 8 × 6 = 480 cm³"],explain:"Volume = 10 × 8 × 6 = 480 cm³."},
+{id:"m31",weak:"strategy",q:"What is the next number in the pattern: 5, 11, 23, 47, ___?",opts:["95","94","93","96"],ans:0,hints:["Look at the rule: each number is doubled then add 1","5 × 2 + 1 = 11, 11 × 2 + 1 = 23, 23 × 2 + 1 = 47, 47 × 2 + 1 = 95"],explain:"Pattern: × 2 + 1. 47 × 2 + 1 = 95."},
+{id:"m32",weak:"strategy",q:"An L-shaped figure is made from two rectangles. Rectangle A is 10 cm by 4 cm. Rectangle B is 6 cm by 3 cm. What is the total area of the figure?",opts:["58 cm²","52 cm²","48 cm²","40 cm²"],ans:0,hints:["Find the area of each rectangle separately","A = 10 × 4 = 40, B = 6 × 3 = 18, Total = 40 + 18 = 58"],explain:"A = 40 cm², B = 18 cm². Total = 40 + 18 = 58 cm²."},
+{id:"m33",weak:"strategy",q:"A cube has a side length of 7 cm. What is its volume?",opts:["343 cm³","294 cm³","49 cm³","147 cm³"],ans:0,hints:["Volume of a cube = side × side × side","7 × 7 × 7 = 343"],explain:"Volume = 7 × 7 × 7 = 343 cm³."},
+{id:"m34",weak:"strategy",q:"Auntie Lim sells curry puffs at a hawker centre. She sells 35 curry puffs each hour. She works from 10 a.m. to 2 p.m. If each curry puff costs $2, how much money does she collect?",opts:["$280","$140","$210","$350"],ans:0,hints:["Number of hours = 2 p.m. − 10 a.m. = 4 hours","Total puffs = 35 × 4 = 140. Money = 140 × $2 = $280"],explain:"4 hours × 35 = 140 puffs. 140 × $2 = $280."},
+{id:"m35",weak:"strategy",q:"A rectangular cardboard is 20 cm long and 14 cm wide. A square of side 4 cm is cut from each corner. What is the remaining area in cm²?",opts:["216"],ans:0,fillin:true,hints:["Original area = 20 × 14 = 280 cm²","4 squares cut out = 4 × (4 × 4) = 64 cm². Remaining = 280 − 64 = 216 cm²"],explain:"Original = 280 cm². Cut out = 4 × 16 = 64 cm². Remaining = 280 − 64 = 216 cm²."},
+{id:"m36",weak:"strategy",q:"A container is 15 cm long, 10 cm wide and 12 cm tall. It is half-filled with water. What is the volume of water in cm³?",opts:["900"],ans:0,fillin:true,hints:["Full volume = 15 × 10 × 12 = 1800 cm³","Half-filled = 1800 ÷ 2 = 900 cm³"],explain:"Volume = 15 × 10 × 12 = 1800 cm³. Half = 900 cm³."},
+{id:"m37",weak:"strategy",q:"Look at the pattern: 2, 6, 18, 54, ___. What is the next number?",opts:["162"],ans:0,fillin:true,hints:["Find the rule: each number is multiplied by 3","54 × 3 = 162"],explain:"Pattern: × 3. 2, 6, 18, 54, 162."},
+{id:"m38",weak:"strategy",q:"Uncle Tan drives at 60 km per hour. He drives for 3 hours in the morning and 2 hours in the afternoon. How many km does he drive in total?",opts:["300"],ans:0,fillin:true,hints:["Total hours = 3 + 2 = 5 hours","Distance = 60 × 5 = 300 km"],explain:"Total time = 5 hours. Distance = 60 × 5 = 300 km."},
+{id:"m39",weak:"strategy",q:"A square piece of land has a perimeter of 100 m. What is its area in m²?",opts:["625"],ans:0,fillin:true,hints:["Side = perimeter ÷ 4 = 100 ÷ 4 = 25 m","Area = 25 × 25 = 625 m²"],explain:"Side = 100 ÷ 4 = 25 m. Area = 25 × 25 = 625 m²."},
+{id:"m40",weak:"strategy",q:"A class of 40 pupils collected a total of 520 cans for a recycling drive. If each pupil collected the same number of cans, how many cans did each pupil collect?",opts:["13"],ans:0,fillin:true,hints:["Divide total cans by number of pupils","520 ÷ 40 = 13"],explain:"520 ÷ 40 = 13 cans per pupil."}
+],
+eng:[
+// e1-e6: Spelling fill-in text
+{id:"e1",weak:"spelling",fillin:true,fillinText:true,q:"Fill in the correct spelling:\nWe must protect the ________ by reducing waste and pollution.\n(Hint: the natural world around us, starts with 'e')",opts:["environment"],ans:0,hints:["💡 This word has 11 letters and contains 'iron' in the middle.","🔑 en-vi-ron-ment — remember the 'n' before 'ment'."],explain:"The correct spelling is 'environment'. A common mistake is writing 'enviroment' — remember there is an 'n' before the 'm'."},
+{id:"e2",weak:"spelling",fillin:true,fillinText:true,q:"Fill in the correct spelling:\nThe hotel only had one ________ left for our family.\n(Hint: a place to stay or a room, starts with 'a')",opts:["accommodation"],ans:0,hints:["💡 This word has double 'c' and double 'm'.","🔑 ac-com-mo-da-tion — two c's and two m's."],explain:"The correct spelling is 'accommodation'. Many students forget to double both the 'c' and the 'm'."},
+{id:"e3",weak:"spelling",fillin:true,fillinText:true,q:"Fill in the correct spelling:\nThe ________ outside dropped to 20 degrees last night.\n(Hint: how hot or cold something is, starts with 't')",opts:["temperature"],ans:0,hints:["💡 This word has 11 letters and contains 'pera' in the middle.","🔑 tem-per-a-ture — do not skip the second 'e'."],explain:"The correct spelling is 'temperature'. A common error is writing 'temprature' — remember the 'e' after 'p'."},
+{id:"e4",weak:"spelling",fillin:true,fillinText:true,q:"Fill in the correct spelling:\nPlease keep your books ________ from your stationery.\n(Hint: means apart or not together, starts with 's')",opts:["separate"],ans:0,hints:["💡 There is an 'a' in the middle, not an 'e'.","🔑 sep-a-rate — think 'there is A RAT in separate'."],explain:"The correct spelling is 'separate'. Many people wrongly spell it as 'seperate'. Remember: there is 'a rat' in separate."},
+{id:"e5",weak:"spelling",fillin:true,fillinText:true,q:"Fill in the correct spelling:\nI will ________ finish my homework before dinner.\n(Hint: means certainly or without doubt, starts with 'd')",opts:["definitely"],ans:0,hints:["💡 This word contains 'finite' inside it.","🔑 de-fi-nite-ly — remember 'finite' not 'finate'."],explain:"The correct spelling is 'definitely'. A common mistake is 'definately'. Remember the word 'finite' is inside it."},
+{id:"e6",weak:"spelling",fillin:true,fillinText:true,q:"Fill in the correct spelling:\nThe ________ of the school building took two years.\n(Hint: means keeping something in good condition, starts with 'm')",opts:["maintenance"],ans:0,hints:["💡 This word ends in '-enance' not '-ainance'.","🔑 main-te-nance — remember the 'te' in the middle."],explain:"The correct spelling is 'maintenance'. Students often write 'maintainance'. Note that although the verb is 'maintain', the noun drops the second 'i'."},
+
+// e7-e10: Grammar MCQ
+{id:"e7",weak:"grammar",q:"Choose the sentence with correct subject-verb agreement:",opts:["The bouquet of roses smell wonderful.","The bouquet of roses smells wonderful.","The bouquet of roses are smelling wonderful.","The bouquet of roses were smelling wonderful."],ans:1,hints:["💡 Find the main subject — is it 'bouquet' or 'roses'?","🔑 'Bouquet' is singular, so the verb must be singular too."],explain:"The subject is 'bouquet' (singular), not 'roses'. Therefore, the singular verb 'smells' is correct. The phrase 'of roses' is a prepositional phrase and does not change the subject."},
+{id:"e8",weak:"grammar",q:"Which sentence uses the correct tense?",opts:["She has went to the market yesterday.","She went to the market yesterday.","She has gone to the market yesterday.","She go to the market yesterday."],ans:1,hints:["💡 'Yesterday' tells us this happened in the past — which simple tense fits?","🔑 Simple past tense is used with specific past time markers like 'yesterday'."],explain:"'Yesterday' requires the simple past tense. 'Went' is the simple past of 'go'. 'Has went' is grammatically wrong, and 'has gone' (present perfect) should not be used with 'yesterday'."},
+{id:"e9",weak:"grammar",q:"Choose the sentence with the correct use of articles:",opts:["He is a honest boy who always tells truth.","He is an honest boy who always tells the truth.","He is the honest boy who always tells a truth.","He is honest boy who always tells truth."],ans:1,hints:["💡 The 'h' in 'honest' is silent — which article goes before a vowel sound?","🔑 Use 'an' before silent 'h', and 'the truth' is a specific concept."],explain:"'Honest' starts with a silent 'h', so we use 'an' (not 'a'). We say 'the truth' because it refers to truth in general as a known concept."},
+{id:"e10",weak:"grammar",q:"Which sentence is grammatically correct?",opts:["Neither the teacher nor the students was ready.","Neither the teacher nor the students were ready.","Neither the teacher nor the students are being ready.","Neither the teacher nor the students is ready."],ans:1,hints:["💡 With 'neither...nor', the verb agrees with the noun closest to it.","🔑 'Students' is plural and it is nearest to the verb, so use 'were'."],explain:"In 'neither...nor' constructions, the verb agrees with the subject closest to it. Since 'students' (plural) is closer to the verb, we use the plural verb 'were'."},
+
+// e11-e16: Grammar fill-in text
+{id:"e11",weak:"grammar",fillin:true,fillinText:true,q:"Correct the underlined error. Type the correct word:\nEveryone in the class __have__ finished their work.\n(Type the correct form of the underlined word)",opts:["has"],ans:0,hints:["💡 'Everyone' is treated as a singular pronoun.","🔑 Singular subjects need singular verbs — 'has' not 'have'."],explain:"'Everyone' is an indefinite pronoun that is always treated as singular. Therefore, the correct verb form is 'has', not 'have'."},
+{id:"e12",weak:"grammar",fillin:true,fillinText:true,q:"Correct the underlined error. Type the correct word:\nThe children __is__ playing in the garden right now.\n(Type the correct form of the underlined word)",opts:["are"],ans:0,hints:["💡 'Children' is a plural noun — what verb form matches?","🔑 Plural subjects take 'are', not 'is'."],explain:"'Children' is a plural noun and requires the plural verb 'are'. The sentence should read: 'The children are playing in the garden right now.'"},
+{id:"e13",weak:"grammar",fillin:true,fillinText:true,q:"Correct the underlined error. Type the correct word:\nShe __drink__ a glass of milk every morning.\n(Type the correct form of the underlined word)",opts:["drinks"],ans:0,hints:["💡 'She' is third person singular — what ending does the verb need?","🔑 Third person singular present tense verbs end in '-s'."],explain:"For third person singular subjects (he, she, it) in the simple present tense, we add '-s' to the verb. The correct form is 'drinks'."},
+{id:"e14",weak:"grammar",fillin:true,fillinText:true,q:"Correct the underlined error. Type the correct word:\nI have __ate__ my lunch already.\n(Type the correct form of the underlined word)",opts:["eaten"],ans:0,hints:["💡 After 'have', we need the past participle form.","🔑 The past participle of 'eat' is 'eaten', not 'ate'."],explain:"After 'have' (present perfect tense), we use the past participle. The past participle of 'eat' is 'eaten'. 'Ate' is the simple past tense form."},
+{id:"e15",weak:"grammar",fillin:true,fillinText:true,q:"Correct the underlined error. Type the correct word:\nHe ran quick to catch the bus.\nThe word 'quick' is underlined. Type the correct word.",opts:["quickly"],ans:0,hints:["💡 We need a word that describes HOW he ran — what type of word is that?","🔑 Use an adverb (ending in '-ly') to describe a verb."],explain:"'Ran' is a verb, and we need an adverb to describe it. 'Quick' is an adjective. The correct adverb form is 'quickly'."},
+{id:"e16",weak:"grammar",fillin:true,fillinText:true,q:"Correct the underlined error. Type the correct word:\nMy brother and I __goes__ to the same school.\n(Type the correct form of the underlined word)",opts:["go"],ans:0,hints:["💡 'My brother and I' is a compound subject — is it singular or plural?","🔑 Two people joined by 'and' make a plural subject, so drop the '-es'."],explain:"'My brother and I' is a compound subject (plural). Plural subjects take the base form of the verb without '-s' or '-es'. The correct form is 'go'."},
+
+// e17-e24: Synthesis MCQ
+{id:"e17",weak:"synthesis",q:"Combine using 'Although':\nThe exam was difficult. All the students passed.\n\nChoose the correct combined sentence:",opts:["Although the exam was difficult, all the students passed.","Although all the students passed, the exam was difficult.","The exam was difficult although all the students passed.","Although the exam was difficult but all the students passed."],ans:0,hints:["💡 'Although' introduces the contrasting or surprising part — which clause is unexpected?","🔑 Never use 'but' together with 'although' — that is a common error."],explain:"'Although' introduces a concession (the difficulty), followed by the surprising result (everyone passed). We do not use 'but' with 'although' as they serve the same purpose."},
+{id:"e18",weak:"synthesis",q:"Combine using 'so...that':\nThe music was very loud. We could not hear each other.\n\nChoose the correct combined sentence:",opts:["The music was so loud that we could not hear each other.","The music was so loud so that we could not hear each other.","So the music was loud that we could not hear each other.","The music so loud that we could not hear each other."],ans:0,hints:["💡 The pattern is: subject + was + so + adjective + that + result.","🔑 'So' comes directly before the adjective, and 'that' introduces the consequence."],explain:"The structure 'so...that' is used to show cause and effect. The correct pattern is: 'so + adjective + that + result clause'. We remove 'very' and replace it with 'so'."},
+{id:"e19",weak:"synthesis",q:"Combine using 'too...to':\nThe water was very hot. We could not swim in it.\n\nChoose the correct combined sentence:",opts:["The water was too hot to swim in.","The water was too hot to swim.","The water was too hot that we could not swim in it.","The water was too hot for swim in it."],ans:0,hints:["💡 'Too...to' replaces 'very...could not'. What preposition is needed at the end?","🔑 We swim IN water — keep the preposition 'in' at the end."],explain:"'Too...to' means 'excessively...and therefore unable to'. The sentence keeps the preposition 'in' because you swim 'in' water. The correct answer is 'too hot to swim in'."},
+{id:"e20",weak:"synthesis",q:"Combine using 'not only...but also':\nShe is talented. She is hardworking.\n\nChoose the correct combined sentence:",opts:["She is not only talented but also hardworking.","She is not only talented but hardworking also.","Not only she is talented but also hardworking.","She not only is talented but also is hardworking."],ans:0,hints:["💡 'Not only' and 'but also' should come before parallel structures.","🔑 Both words after the connectors should be adjectives in the same position."],explain:"'Not only...but also' links two equal items. Here both are adjectives describing 'she'. The correct structure keeps them parallel: 'not only talented but also hardworking'."},
+{id:"e21",weak:"synthesis",q:"Rewrite in the passive voice:\nThe gardener waters the plants every morning.\n\nChoose the correct passive form:",opts:["The plants are watered by the gardener every morning.","The plants is watered by the gardener every morning.","The plants were watered by the gardener every morning.","The plants are being watered by the gardener every morning."],ans:0,hints:["💡 The object 'plants' becomes the subject. What form of 'to be' matches plural present tense?","🔑 Plural present tense uses 'are' + past participle."],explain:"In passive voice, the object becomes the subject. 'Plants' is plural, and the tense is simple present, so we use 'are + watered'. The doer is introduced by 'by'."},
+{id:"e22",weak:"synthesis",q:"Combine using 'unless':\nYou must study hard. Otherwise, you will fail the test.\n\nChoose the correct combined sentence:",opts:["Unless you study hard, you will fail the test.","Unless you will study hard, you will fail the test.","Unless you study hard, you will not fail the test.","You will fail the test unless you do not study hard."],ans:0,hints:["💡 'Unless' means 'if...not'. Do not add another negative.","🔑 After 'unless', use the simple present tense, not 'will'."],explain:"'Unless' means 'if not'. So 'unless you study hard' = 'if you do not study hard'. We use simple present after 'unless', not future tense. There should be no double negative."},
+{id:"e23",weak:"synthesis",q:"Combine using 'who':\nMr Tan is our Science teacher. He won the Best Teacher Award.\n\nChoose the correct combined sentence:",opts:["Mr Tan, who is our Science teacher, won the Best Teacher Award.","Mr Tan who is our Science teacher, won the Best Teacher Award.","Mr Tan, who is our Science teacher won the Best Teacher Award.","Mr Tan whom is our Science teacher, won the Best Teacher Award."],ans:0,hints:["💡 'Who' replaces the subject 'He'. Where should the commas go?","🔑 The 'who' clause gives extra information and needs commas on BOTH sides."],explain:"'Who' is used for people and replaces the subject. The clause 'who is our Science teacher' is extra information (non-defining), so it needs commas on both sides."},
+{id:"e24",weak:"synthesis",q:"Combine using 'in order to':\nShe woke up early. She wanted to catch the first bus.\n\nChoose the correct combined sentence:",opts:["She woke up early in order to catch the first bus.","She woke up early in order to catching the first bus.","She woke up early in order to she caught the first bus.","In order to catch the first bus, she woke up early in the morning."],ans:0,hints:["💡 'In order to' is followed by the base form of a verb (infinitive).","🔑 'In order to' + base verb shows purpose — why she did something."],explain:"'In order to' expresses purpose and is followed by the base form of the verb (infinitive). The correct structure is 'in order to catch', not 'in order to catching'."},
+
+// e25-e30: Cloze MCQ
+{id:"e25",weak:"cloze",q:"Fill in the blank with the most suitable word:\n\nThe old man walked slowly across the road, ________ on his wooden walking stick for support.",opts:["leaning","lying","sitting","pushing"],ans:0,hints:["💡 What do you do when you rest your weight on something for support?","🔑 You 'lean on' a stick — it means to rest against it."],explain:"'Leaning' means resting one's weight on something for support. You lean on a walking stick when you need help walking. The other options do not fit the context."},
+{id:"e26",weak:"cloze",q:"Fill in the blank with the most suitable word:\n\nThe students were ________ to hear that the school trip had been cancelled due to the heavy rain.",opts:["disappointed","delighted","relieved","excited"],ans:0,hints:["💡 How would you feel if a fun trip was cancelled?","🔑 'Disappointed' means feeling sad because something expected did not happen."],explain:"'Disappointed' means feeling let down when something hoped for does not happen. Students would feel sad if a school trip was cancelled. 'Delighted' and 'excited' show happiness, which does not fit."},
+{id:"e27",weak:"cloze",q:"Fill in the blank with the most suitable word:\n\nDespite the ________ weather, the determined hikers continued their journey up the mountain.",opts:["harsh","gentle","pleasant","calm"],ans:0,hints:["💡 'Despite' signals contrast — the weather must be bad if they continued anyway.","🔑 'Harsh' means severe or unpleasantly rough."],explain:"'Despite' signals a contrast — the weather was bad, yet they continued. 'Harsh' means severe or tough, which fits. 'Gentle', 'pleasant', and 'calm' describe good weather, which would not create a contrast."},
+{id:"e28",weak:"cloze",q:"Fill in the blank with the most suitable word:\n\nThe clever detective managed to ________ the mystery that had puzzled everyone for months.",opts:["solve","create","ignore","repeat"],ans:0,hints:["💡 What does a detective do with a mystery?","🔑 Detectives 'solve' mysteries — they find the answer."],explain:"Detectives 'solve' mysteries. This means they find the answer or explanation. 'Create' means to make something new, 'ignore' means to pay no attention, and 'repeat' means to do again — none fit the context."},
+{id:"e29",weak:"cloze",q:"Fill in the blank with the most suitable word:\n\nThe kind-hearted woman ________ food and clothes to the families affected by the flood.",opts:["donated","sold","threw","borrowed"],ans:0,hints:["💡 A 'kind-hearted' person would give things freely to those in need.","🔑 'Donated' means to give something for free to help others."],explain:"'Donated' means to give something freely to help others, which matches 'kind-hearted'. 'Sold' means exchanging for money, 'threw' is careless, and 'borrowed' means taking temporarily."},
+{id:"e30",weak:"cloze",q:"Fill in the blank with the most suitable word:\n\nThe teacher ________ the class to remain calm during the fire drill and walk in a single file.",opts:["instructed","begged","forced","tricked"],ans:0,hints:["💡 A teacher gives clear directions — what formal word describes this?","🔑 'Instructed' means to give an order or direction in a formal way."],explain:"'Instructed' means to direct or command someone formally, which is what a teacher does. 'Begged' is too desperate, 'forced' is too aggressive, and 'tricked' means to deceive."},
+
+// e31-e36: Cloze fill-in text
+{id:"e31",weak:"cloze",fillin:true,fillinText:true,q:"Fill in the blank with ONE suitable word:\n\nThe boy was so tired ________ he fell asleep on the bus.\n(Type one word)",opts:["that"],ans:0,hints:["💡 This word completes the 'so...___' pattern to show a result.","🔑 'So tired THAT he fell asleep' — the missing word links cause and effect."],explain:"The pattern 'so...that' is used to show a result. 'He was so tired THAT he fell asleep.' The word 'that' connects the cause (tiredness) to the effect (falling asleep)."},
+{id:"e32",weak:"cloze",fillin:true,fillinText:true,q:"Fill in the blank with ONE suitable word:\n\nShe looked ________ the window and saw the beautiful sunset.\n(Type one word — a preposition)",opts:["through"],ans:0,hints:["💡 You see things on the other side of a window by looking ___ it.","🔑 'Through' means from one side to the other — you look THROUGH glass."],explain:"'Through' is the correct preposition. You look 'through' a window because you see from one side of the glass to the other."},
+{id:"e33",weak:"cloze",fillin:true,fillinText:true,q:"Fill in the blank with ONE suitable word:\n\nThe cat hid ________ the sofa because it was afraid of the thunder.\n(Type one word — a preposition)",opts:["behind"],ans:0,hints:["💡 Where would a scared cat go — in front of or at the back of something?","🔑 'Behind' means at the back of — a hiding spot out of sight."],explain:"'Behind' means at the back of something. A scared cat would hide behind the sofa to be out of sight. Other possible answers like 'under' could also work, but 'behind' is the most natural choice for hiding."},
+{id:"e34",weak:"cloze",fillin:true,fillinText:true,q:"Fill in the blank with ONE suitable word:\n\nJohn ran as fast as he ________ to catch the departing train.\n(Type one word)",opts:["could"],ans:0,hints:["💡 'As fast as he ___' — what word shows maximum ability?","🔑 'Could' means was able to — 'as fast as he COULD'."],explain:"'Could' is the past tense of 'can' and shows ability. 'As fast as he could' means at his maximum speed. This is a fixed expression in English."},
+{id:"e35",weak:"cloze",fillin:true,fillinText:true,q:"Fill in the blank with ONE suitable word:\n\nThe flowers in the garden need to be watered every day, ________ they will wilt.\n(Type one word — a conjunction)",opts:["otherwise"],ans:0,hints:["💡 What word means 'if not' or 'or else'?","🔑 'Otherwise' means if this is not done, then the bad result follows."],explain:"'Otherwise' means 'if not' or 'or else'. If the flowers are not watered, the consequence is that they will wilt. 'Otherwise' connects the condition to the negative result."},
+{id:"e36",weak:"cloze",fillin:true,fillinText:true,q:"Fill in the blank with ONE suitable word:\n\nThe movie was so boring that many people left the cinema ________ it ended.\n(Type one word)",opts:["before"],ans:0,hints:["💡 Did the people leave after the movie finished or while it was still playing?","🔑 'Before' means earlier than — they did not wait for the ending."],explain:"'Before' means earlier than a point in time. The movie was so boring that people left before it ended — they did not stay until the finish."},
+
+// e37-e40: Synthesis MCQ (more patterns)
+{id:"e37",weak:"synthesis",q:"Rewrite using 'as soon as':\nThe bell rang. The students rushed out of the classroom immediately.\n\nChoose the correct combined sentence:",opts:["As soon as the bell rang, the students rushed out of the classroom.","As soon as the students rushed out, the bell rang.","The bell rang as soon as the students rushed out of the classroom.","As soon as the bell rang, the students are rushing out of the classroom."],ans:0,hints:["💡 'As soon as' means immediately after — which event happened first?","🔑 The bell rang FIRST, then the students rushed out."],explain:"'As soon as' means 'immediately after'. The bell rang first, so it goes in the 'as soon as' clause. The tenses must remain in the past."},
+{id:"e38",weak:"synthesis",q:"Combine using 'so as not to':\nShe whispered softly. She did not want to wake the baby.\n\nChoose the correct combined sentence:",opts:["She whispered softly so as not to wake the baby.","She whispered softly so as to not wake the baby.","She whispered softly so as not to waking the baby.","She whispered softly so as not to woke the baby."],ans:0,hints:["💡 'So as not to' is followed by the base form of the verb.","🔑 The structure is: so as not to + base verb (wake, not waking or woke)."],explain:"'So as not to' expresses a negative purpose — the reason for doing something is to avoid a result. It is followed by the base form of the verb: 'so as not to wake'."},
+{id:"e39",weak:"synthesis",q:"Rewrite using 'which':\nThe book is on the table. It belongs to Sarah.\n\nChoose the correct combined sentence:",opts:["The book which is on the table belongs to Sarah.","The book which belongs to Sarah is on the table.","The book, which is on the table, belongs to Sarah.","The book is on the table which belongs to Sarah."],ans:2,hints:["💡 'Which' replaces 'It' and adds extra info — does it need commas?","🔑 The 'which' clause adds non-essential info about the book's location, so use commas."],explain:"'Which' introduces a non-defining relative clause that adds extra information. Since 'which is on the table' is additional information (not essential to identify the book), it needs commas on both sides."},
+{id:"e40",weak:"synthesis",q:"Combine using 'If':\nYou do not leave now. You will miss the train.\n\nChoose the correct combined sentence:",opts:["If you do not leave now, you will miss the train.","If you will not leave now, you will miss the train.","If you do not leave now, you would miss the train.","If you did not leave now, you will miss the train."],ans:0,hints:["💡 This is a real possibility (first conditional) — present tense in the 'if' clause.","🔑 First conditional: If + present simple, will + base verb."],explain:"This is a first conditional sentence (real possibility). The structure is: If + present simple ('do not leave'), will + base verb ('will miss'). Do not use 'will' in the 'if' clause."},
+],
+sci:[
+{id:"s1",weak:"water-cycle",q:"During a hot afternoon in Singapore, Mei Lin noticed that the wet clothes she hung outside her HDB flat dried faster than on a rainy day. Which process causes the water in the clothes to disappear into the air?",opts:["Condensation","Evaporation","Precipitation","Freezing"],ans:1,hints:["Think about what happens to liquid water when it gains heat energy.","This process changes water from liquid to water vapour without boiling."],explain:"Evaporation is the process where liquid water changes to water vapour when it gains heat energy from the sun."},
+{id:"s2",weak:"water-cycle",q:"Ah Kow placed a cold glass of iced Milo on the table at a hawker centre. After a few minutes, he noticed water droplets forming on the outside of the glass. What caused the water droplets to form?",opts:["Water leaked through the glass.","Water vapour in the air condensed on the cold surface of the glass.","The ice inside the glass pushed water out.","The glass absorbed water from the table."],ans:1,hints:["Think about what happens when warm air meets a cold surface.","This is the opposite process of evaporation."],explain:"The cold surface of the glass cooled the water vapour in the surrounding warm air. When water vapour loses heat energy, it condenses back into liquid water."},
+{id:"s3",weak:"water-cycle",q:"Which of the following correctly describes the role of the Sun in the water cycle?",opts:["The Sun causes water vapour to condense into clouds.","The Sun provides heat energy for evaporation of water from oceans and rivers.","The Sun pulls water up from the ground into the sky.","The Sun cools the air so that rain can fall."],ans:1,hints:["The Sun is a source of energy. What kind of energy does it provide?","Think about what must happen to liquid water before it can rise into the atmosphere."],explain:"The Sun provides heat energy that causes water in oceans, rivers, lakes to evaporate, changing liquid water into water vapour which rises into the atmosphere."},
+{id:"s4",weak:"water-cycle",q:"During the monsoon season in Singapore, dark clouds form and heavy rain falls. Which process occurs when water vapour high up in the sky forms clouds?",opts:["Evaporation","Boiling","Condensation","Collection"],ans:2,hints:["The air high up in the sky is much cooler than near the ground.","When water vapour cools down, it changes state. What does it become?"],explain:"When water vapour rises high into the atmosphere, it meets cooler air and loses heat energy, causing it to condense into tiny water droplets which form clouds."},
+{id:"s5",weak:"water-cycle",q:"After a heavy rainstorm, Rajan noticed that rainwater flowed along the drains and eventually reached the canal near his school. Which part of the water cycle does this represent?",opts:["Evaporation","Condensation","Precipitation","Collection"],ans:3,hints:["Think about what happens to rainwater after it falls to the ground.","This is the stage where water gathers in rivers, lakes and reservoirs."],explain:"Collection is the stage where water that has fallen as precipitation gathers in bodies of water such as rivers, lakes, oceans, canals and reservoirs."},
+{id:"s6",weak:"water-cycle",q:"Which of the following is the correct sequence of processes in the water cycle?",opts:["Condensation → Evaporation → Precipitation → Collection","Evaporation → Condensation → Precipitation → Collection","Precipitation → Collection → Condensation → Evaporation","Collection → Precipitation → Evaporation → Condensation"],ans:1,hints:["Think about what happens first — water must change to vapour before it can form clouds.","After clouds form, what happens next before water gathers again?"],explain:"The water cycle: Evaporation → Condensation → Precipitation → Collection. The cycle then repeats."},
+{id:"s7",weak:"water-cycle",q:"Siti boiled water in a kettle and noticed a white mist near the spout. She held a cold metal plate near the mist and saw water droplets forming on it. Which two processes did she observe?",opts:["Evaporation and freezing","Boiling and condensation","Melting and evaporation","Condensation and precipitation"],ans:1,hints:["Boiling changes liquid water into water vapour (steam). What is the white mist?","What happens when the steam meets the cold metal plate?"],explain:"Boiling occurred inside the kettle. When the hot water vapour met the cold metal plate, it lost heat energy and condensed back into liquid water droplets."},
+{id:"s8",weak:"water-cycle",q:"Fill in the blank: The process by which liquid water changes into water vapour when heated is called ___.",opts:["evaporation"],ans:0,fillin:true,fillinText:true,hints:["This process happens at the surface of a liquid, even below boiling point.","It starts with the letter 'e' and is how puddles disappear on a sunny day."],explain:"Evaporation is the process where liquid water gains heat energy and changes into water vapour."},
+{id:"s9",weak:"water-cycle",q:"Fill in the blank: When water vapour in the air cools down and changes back into tiny water droplets, the process is called ___.",opts:["condensation"],ans:0,fillin:true,fillinText:true,hints:["This process is the reverse of evaporation.","It starts with the letter 'c' and is how clouds are formed."],explain:"Condensation is the process where water vapour loses heat energy and changes from a gas back into liquid water."},
+{id:"s10",weak:"water-cycle",q:"Fill in the blank: When water falls from clouds to the ground as rain, this process is called ___.",opts:["precipitation"],ans:0,fillin:true,fillinText:true,hints:["This is the stage of the water cycle where water returns to the Earth's surface.","It starts with the letter 'p' and includes rain, snow, sleet and hail."],explain:"Precipitation is the process where water falls from clouds to the Earth's surface as rain, snow, sleet or hail."},
+{id:"s11",weak:"matter-states",q:"Aisha placed some ice cubes in a bowl and left it on the kitchen table. After 30 minutes, she found only water in the bowl. What happened to the ice cubes?",opts:["They evaporated into water vapour.","They melted from solid to liquid because they gained heat from the surroundings.","They condensed into liquid water.","They froze into a different shape."],ans:1,hints:["Ice is solid water. The kitchen is warmer than the freezer.","When a solid gains heat energy, it can change to a liquid."],explain:"The ice cubes melted because they gained heat energy from the warmer surroundings. Melting changes a solid into a liquid."},
+{id:"s12",weak:"matter-states",q:"Which of the following correctly describes the arrangement of particles in a gas?",opts:["Particles are packed closely together in a fixed pattern and vibrate in their positions.","Particles are close together but can slide over one another.","Particles are very far apart, move freely and quickly in all directions.","Particles are arranged in neat rows and cannot move at all."],ans:2,hints:["Think about why gas can fill up any container completely.","Gas particles have the most energy compared to solid and liquid particles."],explain:"In a gas, particles are very far apart and move freely and quickly in all directions. This is why gases have no fixed shape and no fixed volume."},
+{id:"s13",weak:"matter-states",q:"Wei Jie poured orange juice from a bottle into a cup. The juice changed shape but its volume stayed the same. What state of matter is orange juice?",opts:["Solid","Liquid","Gas","It cannot be determined."],ans:1,hints:["Think about the two key properties: shape and volume.","Which state of matter has no fixed shape but has a fixed volume?"],explain:"Orange juice is a liquid. Liquids have no fixed shape but have a fixed volume."},
+{id:"s14",weak:"matter-states",q:"A block of butter left near the stove becomes soft and starts to melt. Which statement correctly explains this?",opts:["The butter lost heat energy and changed from liquid to solid.","The butter gained heat energy and changed from solid to liquid.","The butter gained heat energy and changed from liquid to gas.","The butter lost heat energy and changed from gas to liquid."],ans:1,hints:["The area near the stove is warm. What happens when a solid gains heat?","Melting involves a change from which state to which state?"],explain:"The butter gained heat energy from the warm surroundings, causing it to change from solid to liquid (melting)."},
+{id:"s15",weak:"matter-states",q:"Priya filled a balloon with air and tied it. When she squeezed the balloon, it changed shape but did not pop. What does this tell us about the air inside?",opts:["Air is a solid because it keeps its shape.","Air is a liquid because it flows.","Air is a gas that can be compressed because its particles are far apart.","Air has no particles inside."],ans:2,hints:["When you squeeze the balloon, you are pushing the air particles closer together.","Which state of matter has particles that are very far apart?"],explain:"Air is a gas. Gas particles are far apart with empty space between them, so when squeezed, the particles can be pushed closer together (compressed)."},
+{id:"s16",weak:"matter-states",q:"Mrs Tan boiled water in a pot and saw bubbles rising to the surface. What are the bubbles made of?",opts:["Air trapped under the water","Oxygen gas from the water","Water vapour formed when water reaches boiling point","Carbon dioxide released from the water"],ans:2,hints:["What happens to water when it is heated to 100°C?","Boiling changes liquid water into what?"],explain:"When water reaches its boiling point (100°C), it rapidly changes from liquid to gas (water vapour). The bubbles rising during boiling are made of water vapour."},
+{id:"s17",weak:"matter-states",q:"Zhi Hao placed a tray of water in the freezer. After a few hours, the water became ice. What happened to the water particles?",opts:["The particles moved faster and spread further apart.","The particles slowed down and arranged themselves in a fixed pattern.","The particles disappeared and new particles were created.","The particles became smaller and lighter."],ans:1,hints:["Freezing involves losing heat energy. What happens to particles when they lose energy?","Think about how particles in a solid are arranged."],explain:"When water freezes, the particles lose heat energy, slow down, and settle into fixed positions in a regular pattern, forming a solid (ice)."},
+{id:"s18",weak:"matter-states",q:"Fill in the blank: The process where a liquid changes into a solid when it loses heat energy is called ___.",opts:["freezing"],ans:0,fillin:true,fillinText:true,hints:["This is the opposite of melting.","It starts with the letter 'f' and is how water becomes ice."],explain:"Freezing is the process where a liquid loses heat energy and changes into a solid."},
+{id:"s19",weak:"matter-states",q:"Fill in the blank: A solid has a fixed shape and a fixed ___.",opts:["volume"],ans:0,fillin:true,fillinText:true,hints:["This word describes the amount of space something takes up.","Solids do not change in the amount of space they occupy."],explain:"A solid has a fixed shape and a fixed volume — it keeps its shape and takes up the same amount of space."},
+{id:"s20",weak:"matter-states",q:"Fill in the blank: The process of a liquid changing into a gas when heated to its boiling point is called ___.",opts:["boiling"],ans:0,fillin:true,fillinText:true,hints:["This process happens throughout the liquid, not just at the surface.","It starts with the letter 'b' and happens at 100°C for water."],explain:"Boiling is the process where a liquid is heated to its boiling point and changes rapidly into a gas throughout the liquid."},
+{id:"s21",weak:"heat-transfer",q:"Nurul stirred a pot of hot curry with a metal spoon. After a while, the handle became very hot. How did heat travel from the curry to her hand?",opts:["Convection — hot curry moved up the spoon.","Radiation — heat radiated through the spoon.","Conduction — heat was transferred from particle to particle along the metal spoon.","Evaporation — heat escaped as steam through the spoon."],ans:2,hints:["The heat travelled through a solid (the metal spoon).","In this method, particles pass energy to neighbouring particles."],explain:"Heat was transferred by conduction along the metal spoon. In conduction, heat energy is passed from one particle to the next through a solid material. Metals are good conductors of heat."},
+{id:"s22",weak:"heat-transfer",q:"Why do many cooking pots have metal bodies but plastic handles?",opts:["Plastic handles are cheaper to make.","Metal bodies conduct heat well for cooking, while plastic handles are insulators that prevent burns.","Plastic handles make the pot lighter.","Metal cannot be shaped into handles."],ans:1,hints:["Think about why you would want heat to travel easily through one part but not the other.","A material that does not allow heat to pass through easily is called an insulator."],explain:"Metal is a good conductor for efficient cooking. Plastic is a poor conductor (insulator) that prevents heat from reaching the handle and burning the cook's hand."},
+{id:"s23",weak:"heat-transfer",q:"Kai Ming noticed that the metal slide at the playground felt much hotter than the wooden bench nearby on a sunny day. Why?",opts:["Metal absorbs more heat from the sun than wood.","Metal is a better conductor of heat, so it transfers heat to his hand faster.","Metal is darker in colour than wood.","Metal is heavier, so it stores more heat."],ans:1,hints:["Both the slide and bench are in the same sunlight.","A good conductor transfers heat quickly to your skin, making it feel hotter."],explain:"Metal transfers heat to the hand much faster than wood because metal is a much better conductor. Wood is a poor conductor (insulator) and transfers heat slowly."},
+{id:"s24",weak:"heat-transfer",q:"When Ling Ling boiled water, the water at the bottom heated up first, but soon all the water became hot. Which heat transfer method is mainly responsible?",opts:["Conduction — heat passed through the water particle by particle.","Convection — hot water rose and cool water sank, creating a circular flow.","Radiation — heat radiated from the bottom to the top.","Evaporation — steam heated the upper part."],ans:1,hints:["Water is a liquid. When heated, particles become lighter and rise.","This method involves the movement of the heated fluid itself."],explain:"Convection: heated water expands, becomes less dense and rises. Cooler water sinks to take its place, creating a convection current that heats all the water."},
+{id:"s25",weak:"heat-transfer",q:"Ahmad could feel the warmth of the sun on his face even though the sun is millions of kilometres away. How does heat from the sun reach him?",opts:["Conduction — heat travels through the air.","Convection — hot air rises from the sun to Earth.","Radiation — heat travels in waves through space without needing any material.","Evaporation — the sun heats up water which carries heat to Earth."],ans:2,hints:["There is no air in outer space between the sun and Earth.","This method does not need any medium (material) to travel through."],explain:"Heat from the sun reaches Earth by radiation — heat travels as waves (infrared radiation) that can travel through empty space without needing any material."},
+{id:"s26",weak:"heat-transfer",q:"Mrs Lee wrapped her baby's milk bottle with a thick towel to keep it warm. The towel is an example of a:",opts:["Conductor — it allows heat to flow through quickly.","Insulator — it slows down the loss of heat from the bottle.","Radiator — it reflects heat back into the bottle.","Convector — it creates convection currents around the bottle."],ans:1,hints:["The towel helps keep the milk warm by preventing heat from escaping.","Cloth and fabric trap air, which is also a poor conductor of heat."],explain:"The towel is an insulator — it slows down the transfer of heat from the warm bottle to the cooler surroundings, keeping the milk warm longer."},
+{id:"s27",weak:"heat-transfer",q:"Why does a metal railing feel cold to the touch on a cool morning, even though it is at the same temperature as the surrounding air?",opts:["Metal creates cold.","Metal is at a lower temperature than the air.","Metal conducts heat away from your hand quickly, making it feel cold.","Metal absorbs cold from the air."],ans:2,hints:["Your hand is warmer than the railing. Heat flows from hot to cold.","The metal feels cold because of how fast it takes heat away from your body."],explain:"Metal conducts heat away from your warm hand very quickly, making it feel cold. A wooden railing at the same temperature would feel less cold because wood conducts heat slowly."},
+{id:"s28",weak:"heat-transfer",q:"Fill in the blank: The method of heat transfer where heat travels through a solid from particle to particle is called ___.",opts:["conduction"],ans:0,fillin:true,fillinText:true,hints:["This is the main way heat travels through solids like metal spoons.","It starts with 'con' and involves particles vibrating and passing energy to neighbours."],explain:"Conduction is the method of heat transfer where heat energy is passed from one particle to the next through a material, especially solids."},
+{id:"s29",weak:"heat-transfer",q:"Fill in the blank: Materials that do not allow heat to pass through them easily are called ___.",opts:["insulators"],ans:0,fillin:true,fillinText:true,hints:["These materials are the opposite of conductors.","Wood, plastic and cloth are examples. The word starts with 'i'."],explain:"Insulators are materials that do not allow heat to pass through them easily. Examples include wood, plastic, cloth, rubber and air."},
+{id:"s30",weak:"heat-transfer",q:"Fill in the blank: The method of heat transfer that does not require any medium and can travel through a vacuum is called ___.",opts:["radiation"],ans:0,fillin:true,fillinText:true,hints:["This is how heat from the sun reaches Earth through empty space.","It starts with the letter 'r' and involves heat travelling as waves."],explain:"Radiation is the method of heat transfer that can travel through a vacuum (empty space) as infrared waves."},
+{id:"s31",weak:"heat-effects",q:"A hawker uncle noticed his metal pot lid was stuck. He ran it under hot tap water and was then able to open it. Why?",opts:["The hot water melted the lid.","The hot water made the metal lid expand slightly, loosening it.","The hot water made the pot contract.","The hot water dissolved the food sealing the lid."],ans:1,hints:["Think about what happens to metals when they are heated.","Metals get slightly bigger (expand) when heated."],explain:"When the metal lid was heated, it expanded (became slightly larger), loosening its fit and making it easier to open. Most solids expand when heated."},
+{id:"s32",weak:"heat-effects",q:"Why are small gaps left between sections of railway tracks?",opts:["To save money on metal.","To allow rainwater to drain away.","To allow the metal tracks to expand in hot weather without bending.","To make it easier for workers to replace sections."],ans:2,hints:["Singapore is very hot. What happens to metals when temperature increases?","Without gaps, expanding tracks would push against each other and buckle."],explain:"Expansion gaps allow metal tracks to expand in hot weather. Without gaps, the tracks would push against each other, buckle and become dangerous."},
+{id:"s33",weak:"heat-effects",q:"A liquid-in-glass thermometer works because:",opts:["The glass tube changes colour when heated.","The liquid inside expands when heated and rises up the narrow tube.","The air pressure inside pushes the liquid up.","The glass expands more than the liquid."],ans:1,hints:["Think about what happens to the liquid when temperature increases.","The liquid expands and has nowhere to go except up the narrow tube."],explain:"Liquids expand when heated. In the narrow tube, even a small expansion causes the liquid to rise noticeably, allowing us to read the temperature."},
+{id:"s34",weak:"heat-effects",q:"Jun Wei left an inflated balloon in an air-conditioned room. When he brought it outside into the hot sun, the balloon became slightly bigger. Why?",opts:["More air entered from outside.","The rubber stretched by itself.","The air inside expanded when it gained heat, pushing the balloon walls outward.","Sunlight made the balloon lighter."],ans:2,hints:["Think about what happens to gas particles when they gain heat energy.","When gas particles move faster, they push harder against the walls."],explain:"The air inside gained heat energy. The gas particles moved faster and pushed harder against the balloon walls, causing it to expand."},
+{id:"s35",weak:"heat-effects",q:"A bimetallic strip bends when heated. Why does this happen?",opts:["One metal melts faster than the other.","The two metals expand by different amounts, causing the strip to curve.","Heat makes one metal heavier.","The two metals repel each other when heated."],ans:1,hints:["Different metals expand at different rates when heated.","The metal that expands more becomes longer, forcing the strip to curve."],explain:"The two different metals have different rates of thermal expansion. The metal that expands more forces the strip to curve toward the side that expands less."},
+{id:"s36",weak:"heat-effects",q:"Xiao Hua poured hot water into a thick glass cup and it cracked. Why?",opts:["Hot water dissolved part of the glass.","The inner surface expanded quickly while the outer surface did not, creating stress.","The water pressure was too high.","The glass contracted when heated."],ans:1,hints:["Glass is a poor conductor. The inside gets hot but the outside stays cool.","Uneven expansion creates stress in the glass."],explain:"The inner surface heated up and expanded quickly, but the outer surface remained cool. This uneven expansion created stress, causing the glass to crack."},
+{id:"s37",weak:"heat-effects",q:"On a very cold day, telephone wires appear tighter between poles than on a warm day. Why?",opts:["Wind pulls the wires tighter.","The poles move closer together.","The metal wires contract in cold weather, becoming shorter and tighter.","The wires absorb moisture and shrink."],ans:2,hints:["What happens to solids when they lose heat energy?","Contraction is the opposite of expansion."],explain:"In cold weather, metal wires lose heat energy and contract (become shorter). Since the poles stay the same distance apart, the shorter wires become tighter."},
+{id:"s38",weak:"heat-effects",q:"Fill in the blank: When a solid is heated, it increases in size slightly. This is called ___.",opts:["expansion"],ans:0,fillin:true,fillinText:true,hints:["This is the opposite of contraction.","It starts with the letter 'e' and means to get bigger."],explain:"Expansion is the increase in size of a material when heated. Particles vibrate more vigorously and push each other further apart."},
+{id:"s39",weak:"heat-effects",q:"Fill in the blank: When a material is cooled, it decreases in size. This process is called ___.",opts:["contraction"],ans:0,fillin:true,fillinText:true,hints:["This is the opposite of expansion.","It starts with the letter 'c' and means to get smaller."],explain:"Contraction is the decrease in size of a material when cooled. Particles slow down and move closer together."},
+{id:"s40",weak:"heat-effects",q:"Fill in the blank: Among solids, liquids and gases, the state of matter that expands the most when heated is ___.",opts:["gas"],ans:0,fillin:true,fillinText:true,hints:["Think about which state has particles furthest apart.","These particles have the most space to spread out further."],explain:"Gases expand the most when heated because their particles are already far apart and can spread out much more."}
+],
+sprint:[
+{id:"x1",weak:"of-confusion",q:"Johnson had 60 stickers. He gave 1/3 of them to Alex. He then gave 1/4 of the REMAINDER to Ben. How many stickers did Ben receive?",opts:["15","10","5","20"],ans:1,hints:["💡 First find the remainder after giving to Alex: 60 - 1/3 of 60 = 60 - 20 = 40","🔑 Then find 1/4 of the REMAINDER (40), not 1/4 of the original 60!"],explain:"1/3 of 60 = 20 given to Alex. Remainder = 60 - 20 = 40. 1/4 of 40 = 10 given to Ben."},
+{id:"x2",weak:"of-confusion",q:"A baker made 80 muffins. He sold 3/8 of them in the morning. He then sold 2/5 of the REMAINDER in the afternoon. How many muffins were left at the end of the day?",opts:["20","30","50","10"],ans:1,hints:["💡 Morning: 3/8 of 80 = 30 sold. Remainder = 80 - 30 = 50","🔑 Afternoon: 2/5 of the REMAINDER (50) = 20 sold. Left = 50 - 20 = 30"],explain:"Morning sold: 3/8 x 80 = 30. Remainder = 50. Afternoon sold: 2/5 x 50 = 20. Left = 50 - 20 = 30."},
+{id:"x3",weak:"of-confusion",q:"There were 120 books on a shelf. Sarah took 1/4 of them. Tom then took 2/3 of the REMAINDER. How many books did Tom take?",opts:["40","80","60","30"],ans:2,hints:["💡 Sarah took 1/4 of 120 = 30. Remainder = 120 - 30 = 90","🔑 Tom took 2/3 of the REMAINDER (90), not 2/3 of 120!"],explain:"Sarah took: 1/4 x 120 = 30. Remainder = 90. Tom took: 2/3 x 90 = 60."},
+{id:"x4",weak:"of-confusion",q:"Mrs Tan had $200. She spent 2/5 of it on groceries. She then spent 1/3 of the REMAINDER on transport. How much did she spend on transport?",opts:["$40","$24","$66","$80"],ans:0,hints:["💡 Groceries: 2/5 of $200 = $80. Remainder = $200 - $80 = $120","🔑 Transport: 1/3 of REMAINDER ($120) = $40. Not 1/3 of $200!"],explain:"Groceries: 2/5 x $200 = $80. Remainder = $120. Transport: 1/3 x $120 = $40."},
+{id:"x5",weak:"of-confusion",q:"A tank contained 150 litres of water. 1/5 of it was used on Monday. 1/4 of the REMAINDER was used on Tuesday. How many litres were used on Tuesday?",opts:["37.5","30","7.5","45"],ans:1,hints:["💡 Monday: 1/5 of 150 = 30 used. Remainder = 150 - 30 = 120","🔑 Tuesday: 1/4 of REMAINDER (120) = 30 litres. Not 1/4 of 150!"],explain:"Monday: 1/5 x 150 = 30. Remainder = 120. Tuesday: 1/4 x 120 = 30 litres."},
+{id:"x6",weak:"synthesis",q:"Choose the correct sentence: 'The boy was very tired. He could not finish the race.'\nCombine using 'so...that':",opts:["The boy was so tired that he could not finish the race.","The boy was so tired so that he could not finish the race.","So tired was the boy that he could not finish the race.","The boy so tired that he could not finish the race."],ans:0,hints:["💡 Pattern: Subject + was + so + adjective + that + result clause","🔑 'so...that' shows cause and effect. 'so' comes before the adjective, 'that' introduces the result."],explain:"The correct pattern is: Subject + be + so + adjective + that + clause. Answer: The boy was so tired that he could not finish the race."},
+{id:"x7",weak:"synthesis",q:"Rewrite in passive voice: 'The chef prepared the special dish for the guests.'",opts:["The special dish was prepared by the chef for the guests.","The special dish is prepared by the chef for the guests.","The guests were prepared the special dish by the chef.","The special dish was being prepared by the chef for the guests."],ans:0,hints:["💡 Passive voice: Object becomes subject + was/were + past participle + by + agent","🔑 Original is past tense ('prepared'), so passive uses 'was prepared'."],explain:"Passive: The special dish (object becomes subject) + was prepared (past participle) + by the chef (agent) + for the guests."},
+{id:"x8",weak:"synthesis",q:"Rewrite using 'Although': 'It was raining heavily. The children continued playing outside.'",opts:["Although it was raining heavily, the children continued playing outside.","Although the children continued playing outside, it was raining heavily.","The children although it was raining heavily continued playing outside.","It was raining heavily although the children continued playing outside."],ans:0,hints:["💡 'Although' introduces a concession — the unexpected contrast. It goes with the condition, not the result.","🔑 'Although + surprising condition, main action happened anyway.'"],explain:"'Although' introduces the contrasting condition (heavy rain), followed by a comma, then the unexpected result (children kept playing)."},
+{id:"x9",weak:"cloze",q:"The forest fire spread quickly because the weather had been extremely ________ for weeks and all the plants had dried up.",opts:["dry","hot","cold","wet"],ans:0,hints:["💡 The clue is 'plants had dried up' — what weather condition causes this?","🔑 The sentence connects the blank to 'dried up' as the reason the fire spread easily."],explain:"'Dry' weather causes plants to dry up, making them fuel for forest fires. 'Hot' is a distractor — the key context clue is 'dried up' which directly relates to dryness."},
+{id:"x10",weak:"cloze",q:"Despite his ________ efforts to fix the leaking pipe, water continued to drip from the ceiling throughout the night.",opts:["desperate","lazy","careless","successful"],ans:0,hints:["💡 'Despite' signals contrast — his efforts didn't work. But what kind of effort would you still expect to succeed?","🔑 'Desperate' shows he tried very hard, contrasting with the failure ('water continued to drip')."],explain:"'Despite' requires a word that contrasts with the failure. 'Desperate' efforts (trying very hard) contrasts with the pipe still leaking. 'Lazy' or 'careless' would not create a contrast with failure."},
+{id:"x11",weak:"water-cycle",q:"Which process in the water cycle involves water changing from a gas to a liquid when it rises high into the atmosphere?",opts:["Condensation","Evaporation","Precipitation","Transpiration"],ans:0,hints:["💡 Gas to liquid = the reverse of evaporation. What is this process called?","🔑 When water vapour rises and cools, it forms tiny water droplets (clouds). This is condensation."],explain:"Condensation is the process where water vapour (gas) cools and changes into liquid water droplets, forming clouds in the atmosphere."},
+{id:"x12",weak:"water-cycle",q:"What is the KEY difference between evaporation and boiling?",opts:["Evaporation occurs only at the surface; boiling occurs throughout the liquid","Evaporation needs higher temperature than boiling","Boiling only occurs at the surface of a liquid","Evaporation and boiling are the same process"],ans:0,hints:["💡 Think about WHERE in the liquid each process happens.","🔑 Evaporation is a surface process at any temperature. Boiling happens throughout the liquid at a specific temperature (100°C for water)."],explain:"Evaporation occurs only at the surface of a liquid and can happen at any temperature. Boiling occurs throughout the entire liquid but only at the boiling point (100°C for water at normal pressure)."},
+{id:"x13",weak:"matter-states",q:"Which statement correctly describes the arrangement of particles in a SOLID?",opts:["Particles are closely packed in a fixed, regular pattern and vibrate in position","Particles are closely packed but can slide past each other","Particles are far apart and move freely in all directions","Particles are arranged randomly but stay close together"],ans:0,hints:["💡 Solids have a definite shape — what must be true about their particles?","🔑 Fixed shape = particles in fixed positions. They can vibrate but cannot move around."],explain:"In a solid, particles are closely packed in a fixed, regular arrangement. They vibrate about their fixed positions but do not move from place to place, giving solids a definite shape."},
+{id:"x14",weak:"matter-states",q:"When ice melts into water, what happens to the particles?",opts:["They gain energy and move from fixed positions to sliding over each other","They lose energy and move closer together","They gain energy and fly far apart from each other","They stay in exactly the same arrangement but vibrate faster"],ans:0,hints:["💡 Melting = solid to liquid. Do particles gain or lose energy?","🔑 In a liquid, particles can slide past each other (not fixed like solid, not far apart like gas)."],explain:"When ice melts, particles gain heat energy. They overcome the forces holding them in fixed positions and begin to slide over each other, becoming a liquid. They do NOT fly apart (that would be gas)."},
+{id:"x15",weak:"water-cycle",q:"Water droplets form on the outside of a cold glass of water on a hot day. This is an example of:",opts:["Condensation","Evaporation","Melting","Freezing"],ans:0,hints:["💡 Where did the water on the outside come from? Not from inside the glass!","🔑 Water vapour in the warm air touches the cold glass surface and changes from gas to liquid."],explain:"Water vapour in the warm surrounding air comes into contact with the cold glass surface. The cold surface cools the water vapour below its dew point, causing it to condense (change from gas to liquid) on the outside of the glass."},
+{id:"x16",weak:"water-cycle",q:"Which of the following does NOT speed up evaporation?",opts:["Increasing humidity of surrounding air","Increasing temperature of the liquid","Increasing wind speed over the liquid","Increasing surface area of the liquid"],ans:0,hints:["💡 Think about what makes it HARDER for water to escape into the air.","🔑 If the air already has lots of water vapour (high humidity), it's harder for more water to evaporate into it."],explain:"High humidity means the air already contains a lot of water vapour, making it harder for more liquid water to evaporate. Temperature, wind, and surface area all SPEED UP evaporation."},
+{id:"x17",weak:"matter-states",q:"During boiling, the temperature of water stays at 100°C even though heat is still being supplied. Why?",opts:["The heat energy is used to overcome forces between particles, not to raise temperature","The thermometer is broken at 100°C","Heat escapes to the surroundings at the same rate","Water cannot absorb more heat energy above 100°C"],ans:0,hints:["💡 The energy is going somewhere — if not into temperature, then what?","🔑 Energy is needed to break the bonds/forces between liquid particles to turn them into gas particles."],explain:"During boiling, the heat energy supplied is used entirely to overcome the attractive forces between water particles (changing them from liquid to gas), not to increase the kinetic energy of particles. So temperature remains constant."},
+{id:"x18",weak:"water-cycle",q:"In the water cycle, what provides the main source of energy that drives evaporation from oceans and lakes?",opts:["The Sun","The Moon","Wind","Earth's core"],ans:0,hints:["💡 What is the biggest source of heat energy on Earth's surface?","🔑 The Sun heats the surface of water bodies, giving water particles enough energy to escape as vapour."],explain:"The Sun is the primary energy source driving the water cycle. Solar energy heats water in oceans, lakes, and rivers, providing particles with enough energy to evaporate and enter the atmosphere."},
+{id:"x19",weak:"heat-transfer",q:"A metal spoon and a wooden spoon are both placed in a cup of hot water. After 2 minutes, the metal spoon feels much hotter. Why?",opts:["Metal is a better conductor of heat than wood","Metal absorbs more heat from the water","Wood does not allow any heat to pass through","Metal has a higher temperature than wood"],ans:0,hints:["💡 Both spoons are in the same hot water — think about how quickly heat travels through each material.","🔑 Conductors allow heat to travel through them quickly. Insulators slow heat transfer down."],explain:"Metal is a good conductor of heat, so heat from the hot water travels quickly through the metal spoon to your hand. Wood is a poor conductor (insulator), so heat travels much more slowly through the wooden spoon."},
+{id:"x20",weak:"heat-transfer",q:"On a cold morning, a metal railing and a wooden bench are both at the same temperature (20°C). Why does the metal railing feel colder than the wooden bench when you touch them?",opts:["Metal conducts heat away from your hand faster than wood","Metal is actually at a lower temperature than wood","Your hand is confused by the shiny surface","Metal absorbs cold from the air better"],ans:0,hints:["💡 Both are the same temperature! So the difference must be about how fast heat LEAVES your hand.","🔑 Metal conducts heat away from your warm hand quickly, making your hand lose heat fast = feels cold."],explain:"Both are at 20°C, but metal is a better conductor than wood. When you touch metal, it conducts heat away from your warm hand (37°C) much faster than wood does. The rapid heat loss from your hand makes the metal FEEL colder, even though both objects are the same temperature."},
+{id:"x21",weak:"fraction-parts",q:"Kelly spent 3/7 of her money and had $120 left. How much money did she have at first?",opts:["$280","$210","$180","$360"],ans:1,hints:["💡 If she spent 3/7, how many parts are LEFT?","🔑 She has 4/7 left. 4 units = $120. 1 unit = $30. Total = 7 × $30 = $210."],explain:"Spent 3/7, so 4/7 left = $120. 1 unit = $120 ÷ 4 = $30. Original = 7 × $30 = $210."},
+{id:"x22",weak:"fraction-parts",q:"2/9 of the pupils in a school are in Primary 5. There are 54 pupils in Primary 5. How many pupils are there in the school altogether?",opts:["108","243","216","162"],ans:1,hints:["💡 2/9 of the school = 54 pupils. Find the value of 1 unit first.","🔑 2 units = 54. 1 unit = 27. Total = 9 × 27 = 243."],explain:"2 units = 54, so 1 unit = 27. Whole school = 9 × 27 = 243 pupils."},
+{id:"x23",weak:"fraction-parts",q:"A rope is 180 cm long. It is cut into 4 equal pieces. What is the length of 3 such pieces? (in cm)",opts:["135","45","120","90"],ans:0,hints:["💡 Find the length of 1 piece first: 180 ÷ 4.","🔑 1 piece = 45 cm. 3 pieces = 3 × 45 = 135 cm."],explain:"1 piece = 180 ÷ 4 = 45 cm. 3 pieces = 3 × 45 = 135 cm."},
+{id:"x24",weak:"fraction-parts",q:"4/5 of a number is 60. What is 3/4 of the same number?",opts:["56.25","75","45","80"],ans:0,hints:["💡 Step 1: Find the whole number. 4 units = 60, so 1 unit = 15, whole = 75.","🔑 Step 2: Find 3/4 of 75. 75 ÷ 4 = 18.75. 3 × 18.75 = 56.25."],explain:"4 units = 60, 1 unit = 15, whole = 5 × 15 = 75. Then 3/4 of 75: 75 ÷ 4 = 18.75, × 3 = 56.25."},
+{id:"x25",weak:"fraction-parts",q:"Mrs Lee bought some eggs. She used 5/12 of them to bake cakes and had 42 eggs left. How many eggs did she buy?",opts:["72","60","84","96"],ans:0,hints:["💡 If she used 5/12, she has 7/12 left. 7/12 = 42 eggs.","🔑 7 units = 42. 1 unit = 6. Total = 12 × 6 = 72 eggs."],explain:"Used 5/12, so 7/12 left = 42. 1 unit = 42 ÷ 7 = 6. Total = 12 × 6 = 72 eggs."},
+{id:"x26",weak:"spelling",q:"Choose the correct spelling:\nThe teacher asked us to bring the ________ supplies for art class.",opts:["neccessary","necessary","necesary","neccesary"],ans:1,hints:["💡 One 'c', double 's': ne-CES-sa-ry.","🔑 Remember: 1 Collar, 2 Socks → 1 c, 2 s's."],explain:"'Necessary' — one 'c' and double 's'. Mnemonic: 1 collar, 2 socks."},
+{id:"x27",weak:"spelling",q:"Choose the correct spelling:\nThe school will be having a special ________ next Friday.",opts:["ocassion","occassion","occasion","ocasion"],ans:2,hints:["💡 Double 'c', single 's': oc-CA-sion.","🔑 2 c's but only 1 s: oc-ca-sion."],explain:"'Occasion' — double 'c', single 's'. Common mistake is doubling the 's' instead."},
+{id:"x28",weak:"spelling",q:"Choose the correct spelling:\nWe visited an old ________ during our school trip.",opts:["cemetary","cematery","cemetery","cemetry"],ans:2,hints:["💡 It has three 'e's: c-E-m-E-t-E-ry.","🔑 Remember: three e's in a row separated by consonants."],explain:"'Cemetery' — c-e-m-e-t-e-r-y. All three vowels are 'e'."},
+{id:"x29",weak:"spelling",q:"Choose the correct spelling:\nShe showed great ________ by finishing the marathon despite the heat.",opts:["perseverence","perseverance","persaverance","perserverance"],ans:1,hints:["💡 The ending is '-ance' not '-ence'.","🔑 per-se-VER-ance. The root is 'severe' + per- and -ance."],explain:"'Perseverance' ends in '-ance'. The middle part comes from 'severe'."},
+{id:"x30",weak:"spelling",q:"Choose the correct spelling:\nThe ________ of the new playground made everyone happy.",opts:["developement","development","devlopment","devellopment"],ans:1,hints:["💡 'Develop' does NOT add an extra 'e' before '-ment'.","🔑 develop + ment = development. No extra letter in between!"],explain:"'Development' — develop + -ment directly. No extra 'e' in the middle."},
+{id:"x31",weak:"water-cycle",q:"When you breathe out on a cold day, you can see a white mist. This happens because:",opts:["Water vapour in your breath condenses in the cold air","Your breath contains smoke particles","Cold air turns into water","The air outside is evaporating"],ans:0,hints:["💡 Your warm breath contains water vapour. What happens when warm water vapour meets cold air?","🔑 The cold air cools the water vapour below its dew point → condensation → visible mist."],explain:"Your warm breath contains water vapour. When it meets the cold surrounding air, the vapour cools rapidly and condenses into tiny water droplets, forming the visible mist."},
+{id:"x32",weak:"water-cycle",q:"Which of these is the correct ORDER of processes in the water cycle?",opts:["Condensation → Evaporation → Precipitation","Evaporation → Condensation → Precipitation","Precipitation → Condensation → Evaporation","Evaporation → Precipitation → Condensation"],ans:1,hints:["💡 First water must go UP (become gas), then form clouds, then fall down.","🔑 Evaporation (liquid→gas) → Condensation (gas→liquid droplets/clouds) → Precipitation (water falls)."],explain:"Water evaporates from surfaces (liquid → gas), rises and condenses into clouds (gas → liquid droplets), then falls as precipitation (rain/snow). The correct order is Evaporation → Condensation → Precipitation."},
+{id:"x33",weak:"water-cycle",q:"Why does a puddle of water disappear on a hot, windy day but stays for a long time on a cool, still day?",opts:["The wind blows the water away to another place","Heat and wind both speed up evaporation","The ground absorbs all the water on hot days","Cool air freezes the puddle so it stays longer"],ans:1,hints:["💡 What two factors affect how fast water evaporates?","🔑 Higher temperature gives water particles more energy to escape. Wind blows away humid air above the surface, allowing more evaporation."],explain:"Both high temperature and wind speed up evaporation. Heat gives water molecules more kinetic energy to escape as vapour, and wind removes the humid air layer above the puddle, allowing more molecules to escape."},
+{id:"x34",weak:"water-cycle",q:"Transpiration is part of the water cycle. What is transpiration?",opts:["Rain falling from clouds onto land","Water flowing from rivers into the ocean","Loss of water vapour from plant leaves through stomata","Underground water rising to the surface"],ans:2,hints:["💡 'Trans-' relates to plants. Think about what plants release through their leaves.","🔑 Stomata are tiny pores on leaves. Water evaporates out through them = transpiration."],explain:"Transpiration is the process where water is absorbed by plant roots, travels up through the plant, and evaporates as water vapour from tiny pores (stomata) on the leaves into the atmosphere."},
+{id:"x35",weak:"water-cycle",q:"A student covers a beaker of hot water with a cold glass plate. After a few minutes, water droplets appear on the underside of the plate. What caused this?",opts:["Water leaked through the glass plate","Water vapour from the hot water condensed on the cold plate surface","The glass plate melted and formed droplets","The cold plate attracted water from the air around it"],ans:1,hints:["💡 Hot water produces water vapour (steam). What happens when that vapour touches a cold surface?","🔑 Gas meets cold surface → cools down → changes back to liquid = condensation."],explain:"Water vapour (gas) rising from the hot water touches the cold glass plate. The cold surface cools the vapour, causing it to condense (change from gas to liquid) and form water droplets on the underside of the plate."},
+{id:"x36",weak:"matter-states",q:"Which statement about LIQUIDS is correct?",opts:["Particles are far apart and move freely in all directions","Particles are closely packed and vibrate in fixed positions","Particles are close together but can slide over each other","Particles are arranged in a fixed, regular pattern"],ans:2,hints:["💡 Liquids have a definite volume but take the shape of their container. What does this tell you about the particles?","🔑 Close together (definite volume) but can move around (no fixed shape) = slide over each other."],explain:"In a liquid, particles are close together (giving definite volume) but are NOT in fixed positions — they can slide and move past each other, which is why liquids flow and take the shape of their container."},
+{id:"x37",weak:"matter-states",q:"A student observes that ice cubes left on a table slowly become water, and later the water disappears. What are the TWO changes of state in order?",opts:["Condensation then evaporation","Melting then evaporation","Evaporation then condensation","Boiling then condensation"],ans:1,hints:["💡 Ice (solid) → water (liquid) → disappears (gas). Name each change.","🔑 Solid to liquid = melting. Liquid to gas = evaporation."],explain:"Ice cubes melt (solid → liquid) on the table, then the water evaporates (liquid → gas) into the air. The two changes are melting followed by evaporation."},
+{id:"x38",weak:"matter-states",q:"Why does a gas fill the entire container it is placed in?",opts:["Gas particles are very heavy and sink to fill the space","Gas particles are far apart and move quickly in all directions","Gas particles are attracted to the walls of the container","Gas particles are arranged in a regular pattern that expands"],ans:1,hints:["💡 Think about the arrangement and movement of gas particles compared to solids and liquids.","🔑 Gas particles have lots of energy, are far apart, and move randomly in all directions — filling every corner."],explain:"Gas particles are far apart with weak attractive forces between them. They have high kinetic energy and move randomly in all directions, spreading out to fill the entire volume of any container they are placed in."},
+{id:"x39",weak:"matter-states",q:"Naphthalene mothballs become smaller over time without melting. This change of state is called:",opts:["Evaporation","Condensation","Sublimation","Boiling"],ans:2,hints:["💡 The mothball goes from solid directly to gas, skipping the liquid stage. What is this called?","🔑 Solid → Gas directly (without becoming liquid first) = sublimation."],explain:"Sublimation is the change of state from solid directly to gas without passing through the liquid state. Naphthalene mothballs sublimate — the solid slowly turns into gas, making the mothball smaller over time."},
+{id:"x40",weak:"matter-states",q:"A sealed plastic bottle is crushed when taken from a warm room to a freezer. Why?",opts:["The plastic becomes weaker in cold temperatures","The air particles inside slow down and move closer, reducing pressure inside the bottle","The freezer pushes the bottle from the outside","Cold air is heavier and crushes the bottle"],ans:1,hints:["💡 What happens to gas particles when they are cooled? Do they move faster or slower?","🔑 Cooled particles → less energy → move slower → hit walls less hard → lower pressure inside → outside air pressure crushes the bottle."],explain:"When cooled, the air particles inside the bottle lose kinetic energy and move slower. They collide with the bottle walls less frequently and with less force, reducing the internal pressure. The higher outside air pressure then crushes the bottle inward."},
+{id:"x41",weak:"fraction-parts",fillin:true,q:"A farmer has some chickens and ducks. 3/8 of the birds are ducks. There are 50 more chickens than ducks. How many birds are there altogether?",opts:["200"],ans:0,hints:["💡 If 3/8 are ducks, then 5/8 are chickens. Difference = 5/8 - 3/8 = 2/8 of total.","🔑 2 units = 50. 1 unit = 25. Total = 8 × 25 = 200."],explain:"Ducks = 3/8, Chickens = 5/8. Difference = 5 units - 3 units = 2 units = 50. 1 unit = 25. Total birds = 8 × 25 = 200."},
+{id:"x42",weak:"fraction-parts",fillin:true,q:"Ryan had some marbles. He gave 2/5 of them to Tom and 1/3 of the remainder to Sam. He then had 60 marbles left. How many marbles did Ryan have at first?",opts:["150"],ans:0,hints:["💡 After giving 2/5 to Tom, 3/5 remain. Sam gets 1/3 of the remainder, so 2/3 of remainder is left.","🔑 Left = 2/3 × 3/5 of original = 2/5 of original = 60. Original = 60 ÷ 2 × 5 = 150."],explain:"Tom: 2/5 of original. Remainder = 3/5. Sam: 1/3 of remainder = 1/3 × 3/5 = 1/5. Left = remainder - Sam = 3/5 - 1/5 = 2/5 = 60 marbles. Original = 60 ÷ 2 × 5 = 150."},
+{id:"x43",weak:"fraction-parts",fillin:true,q:"A tank is 3/4 full of water. After pouring out 30 litres, it becomes 1/2 full. What is the full capacity of the tank in litres?",opts:["120"],ans:0,hints:["💡 The difference between 3/4 full and 1/2 full is the 30 litres poured out.","🔑 3/4 - 1/2 = 1/4 of the tank = 30 litres. Full capacity = 30 × 4 = 120 litres."],explain:"3/4 - 1/2 = 3/4 - 2/4 = 1/4 of tank capacity. 1/4 of capacity = 30 litres. Full capacity = 30 × 4 = 120 litres."},
+{id:"x44",weak:"strategy",fillin:true,q:"A triangle has a base of 16 cm and a height of 9 cm. What is its area in cm²?",opts:["72"],ans:0,hints:["💡 Area of triangle = 1/2 × base × height.","🔑 1/2 × 16 × 9 = 72 cm²."],explain:"Area of triangle = 1/2 × base × height = 1/2 × 16 × 9 = 72 cm²."},
+{id:"x45",weak:"strategy",fillin:true,q:"A rectangular tank measures 40 cm by 25 cm by 30 cm. It is filled with water to a height of 20 cm. What is the volume of water in the tank in cm³?",opts:["20000"],ans:0,hints:["💡 Volume = length × width × height of water (not full height!).","🔑 40 × 25 × 20 = 20000 cm³."],explain:"Volume of water = 40 × 25 × 20 = 20,000 cm³. Note: we use 20 cm (water height), not 30 cm (tank height)."},
+{id:"x46",weak:"strategy",fillin:true,q:"A cube has a volume of 125 cm³. What is the length of one edge of the cube in cm?",opts:["5"],ans:0,hints:["💡 Volume of cube = edge × edge × edge. What number cubed gives 125?","🔑 5 × 5 × 5 = 125. So edge = 5 cm."],explain:"Volume of cube = edge³. Since 5³ = 5 × 5 × 5 = 125, the edge length is 5 cm."},
+{id:"x47",weak:"spelling",fillin:true,fillinText:true,q:"Fill in the correct spelling:\nThe students showed great ________ when they completed the difficult project without giving up.\n(Hint: starts with 'p', means never giving up)",opts:["perseverance"],ans:0,hints:["💡 per-se-VER-ance. The ending is '-ance' not '-ence'.","🔑 Think of 'severe' in the middle: per-SEVERE-ance."],explain:"'Perseverance' means continued effort despite difficulties. Remember: per-se-ver-ance (ending in -ance)."},
+{id:"x48",weak:"spelling",fillin:true,fillinText:true,q:"Fill in the correct spelling:\nWe need to buy all the ________ ingredients before we start baking.\n(Hint: means 'needed/required', has 1 'c' and 2 's')",opts:["necessary"],ans:0,hints:["💡 ne-CES-sa-ry. One 'c', double 's'.","🔑 Memory trick: a shirt has 1 Collar and 2 Sleeves = 1c, 2s."],explain:"'Necessary' — one 'c' and double 's'. Mnemonic: 1 collar (c), 2 sleeves (ss)."},
+{id:"x49",weak:"spelling",fillin:true,fillinText:true,q:"Fill in the correct spelling:\nThe school is planning a special ________ for National Day.\n(Hint: a special event, has 2 'c' and 1 's')",opts:["occasion"],ans:0,hints:["💡 oc-CA-sion. Double 'c' but only one 's'.","🔑 2 c's, 1 s. Don't double the 's'!"],explain:"'Occasion' — double 'c', single 's'. The common mistake is writing 'occassion' (double s)."},
+{id:"x50",weak:"synthesis",q:"Combine using 'not only...but also':\n'The food was delicious. The service was excellent.'",opts:["Not only was the food delicious, but the service was also excellent.","Not only the food was delicious, but also the service was excellent.","The food was not only delicious but also the service was excellent.","Not only was the food delicious but also excellent service."],ans:0,hints:["💡 'Not only' at the start causes inversion: Not only + was + subject + adjective.","🔑 Pattern: Not only was [first thing], but [second thing] was also [adjective]."],explain:"When 'Not only' starts a sentence, inversion occurs (was comes before subject). 'But also' introduces the second positive point."},
+{id:"x51",weak:"synthesis",q:"Rewrite using 'too...to':\n'The box was very heavy. The boy could not carry it.'",opts:["The box was too heavy for the boy to carry.","The box was too heavy for the boy to carry it.","The boy was too heavy to carry the box.","The box was too heavy that the boy could not carry."],ans:0,hints:["💡 'too + adjective + for someone + to + verb'. No need to repeat 'it' at the end.","🔑 The box was too heavy for the boy to carry. (Drop 'it' — it's understood.)"],explain:"'Too...to' pattern: Subject + was + too + adjective + for + person + to + verb. We drop 'it' at the end because it's redundant (the box is already the subject)."},
+{id:"x52",weak:"cloze",fillin:true,fillinText:true,q:"Fill in ONE word:\nThe students were ________ to hear that the school trip had been cancelled due to the heavy rain.\n(Hint: feeling unhappy/let down)",opts:["disappointed"],ans:0,hints:["💡 They expected the trip but it was cancelled — how would they feel?","🔑 Dis-ap-POINT-ed: feeling let down when something expected doesn't happen."],explain:"'Disappointed' — feeling unhappy because something hoped for didn't happen. The cancellation of an expected trip causes disappointment."},
+{id:"x53",weak:"water-cycle",fillin:true,fillinText:true,q:"Name the process: Water vapour in the air changes into tiny water droplets when it cools. This process is called ________.",opts:["condensation"],ans:0,hints:["💡 Gas → liquid. This is the reverse of evaporation.","🔑 Con-den-SA-tion. Water vapour condenses into droplets."],explain:"Condensation is the process where water vapour (gas) cools and changes into liquid water droplets. This forms clouds in the sky and dew on surfaces."},
+{id:"x54",weak:"water-cycle",fillin:true,fillinText:true,q:"Name the process: Water from plant leaves escapes into the air as water vapour through tiny pores. This is called ________.",opts:["transpiration"],ans:0,hints:["💡 This is how plants release water — through stomata on their leaves.","🔑 Trans-pir-A-tion. 'Trans' = through, from plants."],explain:"Transpiration is the loss of water vapour from plant leaves through stomata (tiny pores). It is part of the water cycle."},
+{id:"x55",weak:"matter-states",fillin:true,fillinText:true,q:"Name the process: A solid changes directly into a gas without first becoming a liquid. This is called ________.",opts:["sublimation"],ans:0,hints:["💡 Solid → Gas directly, skipping liquid. Like mothballs getting smaller.","🔑 Sub-lim-A-tion. Example: dry ice (solid CO₂) turning into gas."],explain:"Sublimation is the process where a solid changes directly into a gas without passing through the liquid state. Examples: mothballs, dry ice."},
+{id:"x56",weak:"water-cycle",q:"A student notices that clothes dry faster on a windy day than on a still day. Which explanation is correct?",opts:["Wind carries away the water vapour near the clothes, allowing more water to evaporate","Wind heats up the clothes","Wind turns water directly into ice","Wind pushes water back into the clothes"],ans:0,hints:["💡 What does wind do to the layer of humid air near the wet clothes?","🔑 Wind removes saturated air → more room for water molecules to escape → faster evaporation."],explain:"Wind blows away the layer of water vapour (humid air) that forms above the wet clothes. This allows more water molecules to escape from the surface of the clothes into the drier air, speeding up evaporation."},
+{id:"x57",weak:"matter-states",q:"Which row correctly shows the properties of the three states of matter?",opts:["Solid: fixed shape, fixed volume | Liquid: no fixed shape, fixed volume | Gas: no fixed shape, no fixed volume","Solid: no fixed shape, fixed volume | Liquid: fixed shape, no fixed volume | Gas: no fixed shape, fixed volume","Solid: fixed shape, no fixed volume | Liquid: no fixed shape, fixed volume | Gas: fixed shape, no fixed volume","Solid: fixed shape, fixed volume | Liquid: fixed shape, fixed volume | Gas: no fixed shape, fixed volume"],ans:0,hints:["💡 Solids keep their shape and volume. Liquids keep volume but flow into container shape. Gases fill everything.","🔑 Only solids have BOTH fixed shape AND fixed volume. Gases have NEITHER."],explain:"Solid = fixed shape + fixed volume (particles locked in place). Liquid = no fixed shape + fixed volume (particles slide). Gas = no fixed shape + no fixed volume (particles fly everywhere)."},
+{id:"x58",weak:"matter-states",q:"Why can you smell perfume from across the room even though no one sprayed it near you?",opts:["Perfume particles in the gas state move freely and spread out in all directions (diffusion)","The air pushes perfume towards you","Perfume is magnetic and attracts your nose","Perfume changes from liquid to solid in the air"],ans:0,hints:["💡 The perfume evaporates into gas particles. What do gas particles do?","🔑 Gas particles move randomly in all directions and spread out — this is called diffusion."],explain:"Perfume evaporates into gas particles which have high kinetic energy and move randomly in all directions. They spread from an area of high concentration to low concentration (diffusion), eventually reaching your nose across the room."},
+{id:"x59",weak:"heat-transfer",q:"A Thermos flask keeps hot drinks hot and cold drinks cold. How does it reduce heat loss by conduction?",opts:["It uses a vacuum between the inner and outer walls — no particles means no conduction","It is painted in dark colours to absorb heat","It uses metal walls which are good conductors","The lid is made of glass to reflect heat"],ans:0,hints:["💡 Conduction needs particles touching each other to transfer heat. What has NO particles?","🔑 A vacuum = empty space = no particles = heat cannot conduct through it."],explain:"Conduction requires particles to be in contact to transfer heat energy. The vacuum (empty space) between the double walls of a Thermos flask contains no particles, so heat cannot be conducted across the gap."},
+{id:"x60",weak:"heat-transfer",q:"On a sunny day, a car parked in the sun gets extremely hot inside even with all windows closed. How does the heat get INSIDE the car?",opts:["By radiation — heat from the sun travels through the glass as infrared waves","By conduction — heat travels through the air outside into the car","By convection — hot air rises and enters through gaps","By evaporation — the sun evaporates water into the car"],ans:0,hints:["💡 The sun's heat travels through space and glass. What type of heat transfer doesn't need particles?","🔑 Radiation can travel through glass and empty space. It's how the sun heats Earth."],explain:"The sun's heat reaches the car by radiation (infrared waves), which can travel through glass. Once inside, the heat is trapped because glass blocks infrared from escaping back out, making the car interior very hot."}
+]
+};
+
+var PLAN=[
+  {day:1,title:"Day 1 · Math: 分数of陷阱+份数",icon:"🔢",cclass:"c-math",qs:["m1","m2","m3","m4","m5","m6","m7","m8","m9","m10","m13","m14","m15","m16","m17","m18","m19","m20","m21","m22"],desc:"分数of谁+份数单位推理·20题",
+   objectives:["Distinguish 'of total' vs 'of remainder'","Find unit fractions from given information","Solve multi-step fraction word problems","Apply unitary method for fraction-parts"]},
+  {day:2,title:"Day 2 · English: Editing+Synthesis+Cloze",icon:"📝",cclass:"c-eng",qs:["e1","e2","e3","e4","e5","e6","e13","e14","e15","e16","e17","e18","e25","e26","e27","e28","e33","e34","e35","e36"],desc:"拼写+动词+合并句子+完形填空·20题",
+   objectives:["Spell commonly misspelled words correctly","Use correct irregular past participles","Combine sentences using although/so/who/not only","Fill in context-appropriate words"]},
+  {day:3,title:"Day 3 · Science: 水循环+物质状态",icon:"🔬",cclass:"c-sci",qs:["s1","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","s12","s13","s14","s15","s16","s17","s18","s19","s20"],desc:"蒸发凝结降水+三态变化·20题",
+   objectives:["Explain each stage of the water cycle","Describe particle arrangement in solids/liquids/gases","Identify changes of state and energy changes","Apply concepts to real-world observations"]},
+  {day:4,title:"Day 4 · Math: 分数推理+面积体积",icon:"📐",cclass:"c-math",qs:["m11","m12","m23","m24","m25","m26","m27","m28","m29","m30","m31","m32","m33","m34","m35","m36","m37","m38","m39","m40"],desc:"分数应用+三角形面积+体积计算·20题",
+   objectives:["Apply fraction reasoning to word problems","Calculate area of triangles","Solve volume and capacity problems","Find patterns in number sequences"]},
+  {day:5,title:"Day 5 · English: Editing+Synthesis+Cloze",icon:"✏️",cclass:"c-eng",qs:["e7","e8","e9","e10","e11","e12","e19","e20","e21","e22","e23","e24","e29","e30","e31","e32","e37","e38","e39","e40"],desc:"拼写+动词+被动语态+间接引语·20题",
+   objectives:["Handle tricky spelling patterns","Master all irregular verb forms","Convert active to passive voice","Change direct to indirect speech"]},
+  {day:6,title:"Day 6 · Science: 热传导+热效应",icon:"🌡️",cclass:"c-sci",qs:["s21","s22","s23","s24","s25","s26","s27","s28","s29","s30","s31","s32","s33","s34","s35","s36","s37","s38","s39","s40"],desc:"传导对流辐射+膨胀收缩·20题",
+   objectives:["Distinguish conduction, convection, and radiation","Explain why conductors and insulators are used","Describe expansion and contraction of materials","Apply heat concepts to everyday situations"]},
+  {day:7,title:"Day 7 · 三科综合冲刺",icon:"🎯",cclass:"c-mix",qs:["m5","m15","m25","m35","e3","e15","e27","e30","e35","e39","s2","s5","s12","s17","s22","s26","s33","s36","s38","s40"],desc:"Math+Eng+Sci终极混合·20题",
+   objectives:["Apply fraction concepts under exam conditions","Recall grammar and synthesis rules quickly","Answer science questions with full reasoning","Build exam stamina across all three subjects"]},
+  {day:8,title:"Day 8 · 🔥 弱点冲刺",icon:"🔥",cclass:"c-mix",qs:["x1","x2","x3","x4","x5","x6","x7","x8","x9","x10","x11","x12","x13","x14","x15","x16","x17","x18","x19","x20"],desc:"科学+英文+数学弱点专攻·20题",
+   objectives:["Master 'of remainder' fraction problems","Apply synthesis patterns: so...that, passive, although","Use context clues for cloze passages","Explain water cycle, states of matter, and heat transfer"]},
+  {day:9,title:"Day 9 · 🎯 四大弱点专攻",icon:"🎯",cclass:"c-mix",qs:["x21","x22","x23","x24","x25","x26","x27","x28","x29","x30","x31","x32","x33","x34","x35","x36","x37","x38","x39","x40"],desc:"分数份数+拼写+水循环+物质状态·20题",
+   objectives:["Find the whole from a given fraction part","Spell tricky words with double letters correctly","Explain condensation, evaporation and transpiration","Describe particle behaviour in solids, liquids and gases"]},
+  {day:10,title:"Day 10 · 📝 考试模拟（混合题型）",icon:"📝",cclass:"c-mix",qs:["x41","x42","x43","x44","x45","x46","x47","x48","x49","x50","x51","x52","x53","x54","x55","x56","x57","x58","x59","x60"],desc:"填空+MCQ混合·模拟考试格式·20题",
+   objectives:["Solve fraction SAQ showing working (Math Paper 2 format)","Calculate area and volume (Math exam topics)","Spell key words from memory (English Editing format)","Name scientific processes (Science structured Q format)"]}
+];
+
+var STORAGE_KEY = 'j-wa2-r4';
+var state;
+function loadState() {
+  try { state = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e) { state = null; }
+  if (!state) state = { errBook:[], hearts:5, xp:0, streak:0, dayScores:{}, soundOn:true, eyeCare:false, qLog:{}, errRedo:{} };
+  if (!state.qLog) state.qLog = {};
+  if (!state.errRedo) state.errRedo = {};
+  // 数据迁移：统一旧weak标签名
+  var _tagMap = {'sci-water-cycle':'water-cycle','sci-states-of-matter':'matter-states','sci-heat-transfer':'heat-transfer','eng-synthesis':'synthesis','eng-cloze':'cloze','math-of-remainder':'of-confusion'};
+  var _migrated = false;
+  for(var _k in state.qLog) { var _w = state.qLog[_k].weak; if(_tagMap[_w]) { state.qLog[_k].weak = _tagMap[_w]; _migrated = true; } }
+  if(_migrated) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){} }
+  // 回填：如果有dayScores但qLog为空，从errBook+PLAN重建记录
+  if (Object.keys(state.qLog).length === 0 && Object.keys(state.dayScores).length > 0) {
+    var allQs = Q.math.concat(Q.eng).concat(Q.sci).concat(Q.sprint||[]);
+    var qMap = {};
+    for(var a=0;a<allQs.length;a++) qMap[allQs[a].id] = allQs[a];
+    var errIds = {};
+    for(var e=0;e<state.errBook.length;e++) errIds[state.errBook[e].id] = true;
+    for(var p=0;p<PLAN.length;p++){
+      var dKey = 'd'+PLAN[p].day;
+      if(!state.dayScores[dKey]) continue;
+      var qs = PLAN[p].qs;
+      for(var qi=0;qi<qs.length;qi++){
+        var qid = qs[qi];
+        var qData = qMap[qid];
+        var wasWrong = !!errIds[qid];
+        state.qLog[qid] = {ok:!wasWrong, attempts:wasWrong?3:1, day:PLAN[p].day, weak:qData?qData.weak:'unknown', ts:0};
+      }
+    }
+    saveState();
+  }
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+loadState();
+
+// ═══════════════ SOUND ═══════════════
+var audioCtx;
+function getAudioCtx() { if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
+function playTone(freq, dur, type) {
+  if(!state.soundOn) return;
+  try {
+    var ctx = getAudioCtx(); var o = ctx.createOscillator(); var g = ctx.createGain();
+    o.type = type||'sine'; o.frequency.value = freq; g.gain.value = 0.12;
+    o.connect(g); g.connect(ctx.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur); o.stop(ctx.currentTime+dur);
+  } catch(e){}
+}
+function sfxCorrect() { playTone(523,0.1,'sine'); setTimeout(function(){playTone(659,0.1,'sine');},100); setTimeout(function(){playTone(784,0.15,'sine');},200); }
+function sfxWrong() { playTone(400,0.1,'sawtooth'); setTimeout(function(){playTone(300,0.15,'sawtooth');},120); }
+function sfxClick() { playTone(800,0.05,'sine'); }
+function sfxFanfare() { var f=[523,659,784,1047]; for(var i=0;i<f.length;i++){(function(idx){setTimeout(function(){playTone(f[idx],0.2,'sine');},idx*150);})(i);} }
+function toggleSound() { state.soundOn = !state.soundOn; saveState(); updateToggles(); }
+function toggleEye() { state.eyeCare = !state.eyeCare; saveState(); updateToggles(); }
+function updateToggles() {
+  document.getElementById('soundBtn').innerHTML = state.soundOn ? '&#128264;' : '&#128263;';
+  document.getElementById('eyeBtn').innerHTML = state.eyeCare ? '&#128274;' : '&#128065;';
+  document.body.classList.toggle('eye-care', state.eyeCare);
+}
+updateToggles();
+
+// ═══════════════ CONFETTI ═══════════════
+function fireConfetti() {
+  var canvas = document.getElementById('confetti');
+  var ctx2 = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  var particles = [];
+  var colors = ['#58CC02','#1CB0F6','#FFC800','#FF4B4B','#A560E8','#FF9600'];
+  for(var i=0;i<150;i++) {
+    particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height-canvas.height,vx:(Math.random()-0.5)*8,vy:Math.random()*4+2,color:colors[Math.floor(Math.random()*colors.length)],size:Math.random()*8+4,rot:Math.random()*360});
+  }
+  var frames=0;
+  function animate() {
+    ctx2.clearRect(0,0,canvas.width,canvas.height);
+    for(var j=0;j<particles.length;j++){
+      var p=particles[j];
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.1; p.rot+=3;
+      ctx2.save(); ctx2.translate(p.x,p.y); ctx2.rotate(p.rot*Math.PI/180);
+      ctx2.fillStyle=p.color; ctx2.fillRect(-p.size/2,-p.size/2,p.size,p.size);
+      ctx2.restore();
+    }
+    frames++;
+    if(frames<120) requestAnimationFrame(animate);
+    else ctx2.clearRect(0,0,canvas.width,canvas.height);
+  }
+  animate();
+}
+
+// ═══════════════ HELPERS ═══════════════
+function getQ(id) {
+  var all = Q.math.concat(Q.eng).concat(Q.sci).concat(Q.sprint||[]);
+  for(var i=0;i<all.length;i++) if(all[i].id===id) return all[i];
+  return null;
+}
+
+// ═══════════════ VIEWS ═══════════════
+var app = document.getElementById('app');
+var curDay = null, curQs = [], curIdx = 0, curCorrect = 0, curAttempts = 0, curHintIdx = 0, answered = false, selectedOpt = -1;
+
+function showHome() {
+  curDay = null; curQs = [];
+  var doneCount = 0, totalCorrect = 0, totalAttempted = 0;
+  for(var i=0;i<PLAN.length;i++){
+    var sc = state.dayScores['d'+PLAN[i].day];
+    if(sc) { doneCount++; totalCorrect += sc.correct; totalAttempted += sc.total; }
+  }
+  var accuracy = totalAttempted > 0 ? Math.round(totalCorrect/totalAttempted*100) : 0;
+
+  var html = '<div class="home">';
+  html += '<h1>Johnson WA2 考前冲刺 R3</h1>';
+  html += '<p class="sub">7-Day Plan · 120+20 Questions · Math + English + Science</p>';
+
+  html += '<div class="stats-row">';
+  html += '<div class="stat-card"><div class="val">'+doneCount+'/7</div><div class="lbl">Days Done</div></div>';
+  html += '<div class="stat-card"><div class="val">'+accuracy+'%</div><div class="lbl">Accuracy</div></div>';
+  html += '<div class="stat-card"><div class="val">'+totalCorrect+'</div><div class="lbl">Correct</div></div>';
+  html += '<div class="stat-card"><div class="val">'+state.xp+'</div><div class="lbl">XP</div></div>';
+  html += '</div>';
+
+  for(var d=0;d<PLAN.length;d++){
+    var day=PLAN[d];
+    var sc = state.dayScores['d'+day.day];
+    var done = !!sc;
+    html += '<div class="day-card'+(done?' completed':'')+'" onclick="showDayIntro('+day.day+')">';
+    html += '<div class="icon" style="background:'+(done?'#e8f9e0':'#f0f0f0')+'">'+day.icon+'</div>';
+    html += '<div class="info"><h3>'+day.title+'</h3><p>'+day.desc+'</p></div>';
+    if(sc) html += '<div class="score">'+sc.pct+'%</div>';
+    else html += '<div class="score none">Start</div>';
+    html += '</div>';
+  }
+
+  if(state.errBook.length > 0) {
+    html += '<div class="day-card" onclick="showErrBook()" style="margin-top:16px;border-color:var(--red)">';
+    html += '<div class="icon" style="background:#ffe8e8">❌</div>';
+    html += '<div class="info"><h3>错题本 ('+state.errBook.length+')</h3><p>Review and redo wrong answers</p></div>';
+    html += '<div class="score none">→</div></div>';
+  }
+
+  html += '<button class="export-btn" onclick="exportReport()">📋 导出学习报告 (复制给Claude分析)</button>';
+  html += '</div>';
+  app.innerHTML = html;
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+
+function exportReport() {
+  var lines = [];
+  lines.push('=== Johnson WA2 R3 学习报告 ===');
+  lines.push('导出时间: ' + new Date().toLocaleString());
+  lines.push('');
+
+  // Day scores
+  lines.push('--- 每日成绩 ---');
+  for(var i=0;i<PLAN.length;i++){
+    var d = PLAN[i];
+    var sc = state.dayScores['d'+d.day];
+    if(sc) lines.push('Day '+d.day+' ('+d.title+'): '+sc.correct+'/'+sc.total+' = '+sc.pct+'%');
+    else lines.push('Day '+d.day+' ('+d.title+'): 未完成');
+  }
+  lines.push('');
+
+  // Error book redo
+  if(state.errRedo && state.errRedo.total) {
+    lines.push('--- 错题本重做 ---');
+    lines.push('结果: '+state.errRedo.correct+'/'+state.errRedo.total+' = '+state.errRedo.pct+'%');
+    lines.push('');
+  }
+
+  // Per-question detail by weakness
+  lines.push('--- 按弱点分类详情 ---');
+  var byWeak = {};
+  var keys = Object.keys(state.qLog);
+  for(var k=0;k<keys.length;k++){
+    var entry = state.qLog[keys[k]];
+    var w = entry.weak || 'unknown';
+    if(!byWeak[w]) byWeak[w] = {right:[], wrong:[]};
+    if(entry.ok) byWeak[w].right.push(keys[k]+'('+entry.attempts+'次)');
+    else byWeak[w].wrong.push(keys[k]+'('+entry.attempts+'次)');
+  }
+  var weakKeys = Object.keys(byWeak);
+  for(var w=0;w<weakKeys.length;w++){
+    var wk = weakKeys[w];
+    var data = byWeak[wk];
+    var total2 = data.right.length + data.wrong.length;
+    var pct2 = total2>0 ? Math.round(data.right.length/total2*100) : 0;
+    lines.push(wk+': '+data.right.length+'/'+total2+' ('+pct2+'%)');
+    if(data.wrong.length>0) lines.push('  错: '+data.wrong.join(', '));
+  }
+  lines.push('');
+
+  // Current error book
+  lines.push('--- 当前错题本 ('+state.errBook.length+'题) ---');
+  for(var e=0;e<state.errBook.length;e++){
+    lines.push(state.errBook[e].id+': '+state.errBook[e].q.split('\n')[0].substring(0,60));
+  }
+  lines.push('');
+
+  // Raw state for deep analysis
+  lines.push('--- RAW DATA ---');
+  lines.push(JSON.stringify({dayScores:state.dayScores, errRedo:state.errRedo, qLog:state.qLog, errBookIds:state.errBook.map(function(e){return e.id;}), xp:state.xp}));
+
+  var report = lines.join('\n');
+  try {
+    navigator.clipboard.writeText(report).then(function(){
+      showToast('已复制! 粘贴给Claude即可分析');
+    });
+  } catch(e) {
+    // Fallback for older browsers
+    var ta = document.createElement('textarea');
+    ta.value = report;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('已复制! 粘贴给Claude即可分析');
+  }
+}
+
+function showDayIntro(dayNum) {
+  sfxClick();
+  var d = PLAN[dayNum-1];
+  var html = '<div class="topbar"><button class="back" onclick="showHome()">←</button><span class="title">'+d.title+'</span></div>';
+  html += '<div class="day-intro">';
+  html += '<div class="icon-big">'+d.icon+'</div>';
+  html += '<h2>'+d.title+'</h2>';
+  html += '<p class="desc">'+d.desc+'</p>';
+  html += '<div class="objectives"><h4>Learning Objectives</h4><ul>';
+  var objs = d.objectives||[];
+  for(var i=0;i<objs.length;i++){ html += '<li>'+objs[i]+'</li>'; }
+  html += '</ul></div>';
+  html += '<button class="start-btn" onclick="startDay('+dayNum+')">Start Practice <span class="kbd">Enter</span></button>';
+  html += '</div>';
+  app.innerHTML = html;
+  curDay = dayNum;
+}
+
+function startDay(dayNum) {
+  sfxClick();
+  curDay = dayNum;
+  var d = PLAN[dayNum-1];
+  curQs = d.qs.slice();
+  curIdx = 0; curCorrect = 0; curAttempts = 0;
+  state.hearts = 5;
+  showQuestion();
+}
+
+function showQuestion() {
+  if(curIdx >= curQs.length) { showResults(); return; }
+  var qData = getQ(curQs[curIdx]);
+  if(!qData) { curIdx++; showQuestion(); return; }
+  answered = false; selectedOpt = -1; curHintIdx = 0; curAttempts = 0;
+
+  var pct = Math.round((curIdx/curQs.length)*100);
+  var html = '<div class="topbar">';
+  html += '<button class="back" onclick="confirmExit()">←</button>';
+  html += '<span class="title">Q'+(curIdx+1)+'/'+curQs.length+'</span>';
+  html += '<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
+  html += '<span class="hearts">❤️ '+state.hearts+'</span>';
+  html += '<span class="xp">⭐ '+state.xp+'</span>';
+  html += '</div>';
+
+  html += '<div class="practice">';
+  html += '<div class="q-card">';
+  html += '<div class="q-label">'+qData.weak+' · '+qData.id+'</div>';
+  html += '<div class="q-text">'+qData.q.replace(/\n/g,'<br>')+'</div>';
+
+  if(qData.fillin) {
+    var _ph = qData.fillinText ? 'Type the word...' : 'Type your answer (number)...';
+    html += '<div class="fill-group"><input type="text" class="fill-input" id="fillInput" placeholder="'+_ph+'" autocomplete="off"></div>';
+  } else {
+    html += '<div class="mcq-options">';
+    var keys = ['A','B','C','D'];
+    for(var i=0;i<qData.opts.length;i++){
+      html += '<div class="mcq-opt" id="opt'+i+'" onclick="selectOpt('+i+')">';
+      html += '<span class="key">'+keys[i]+'</span>';
+      html += '<span>'+qData.opts[i]+'</span></div>';
+    }
+    html += '</div>';
+  }
+  html += '</div>';
+
+  html += '<div id="hintArea">';
+  for(var h=0;h<qData.hints.length;h++){
+    html += '<div class="hint-box" id="hint'+h+'">'+qData.hints[h]+'</div>';
+  }
+  html += '</div>';
+
+  html += '<div id="feedbackArea"></div>';
+  html += '<button class="check-btn primary" id="checkBtn" onclick="checkAnswer()" disabled>Check Answer <span class="kbd">Enter</span></button>';
+  html += '</div>';
+  app.innerHTML = html;
+
+  if(qData.fillin) {
+    var inp = document.getElementById('fillInput');
+    inp.addEventListener('input', function(){ document.getElementById('checkBtn').disabled = !inp.value.trim(); });
+    inp.focus();
+  }
+}
+
+function selectOpt(i) {
+  if(answered) return;
+  sfxClick();
+  selectedOpt = i;
+  var opts = document.querySelectorAll('.mcq-opt');
+  for(var j=0;j<opts.length;j++) opts[j].classList.remove('selected');
+  document.getElementById('opt'+i).classList.add('selected');
+  document.getElementById('checkBtn').disabled = false;
+}
+
+function checkAnswer() {
+  var qData = getQ(curQs[curIdx]);
+  if(!qData || answered) return;
+  curAttempts++;
+  var isCorrect = false;
+
+  if(qData.fillin) {
+    var userAns = document.getElementById('fillInput').value.trim();
+    var correctAns = qData.opts[qData.ans];
+    if(qData.fillinText) {
+      isCorrect = (userAns.toLowerCase() === correctAns.toLowerCase());
+    } else {
+      isCorrect = (userAns.replace(/[^0-9.]/g,'') === correctAns.replace(/[^0-9.]/g,''));
+    }
+    var inp = document.getElementById('fillInput');
+    inp.classList.add(isCorrect ? 'correct' : 'wrong');
+  } else {
+    isCorrect = (selectedOpt === qData.ans);
+    if(isCorrect) document.getElementById('opt'+selectedOpt).classList.add('correct');
+    else {
+      document.getElementById('opt'+selectedOpt).classList.add('wrong');
+    }
+  }
+
+  var canRetry = (!isCorrect && curAttempts < 3 && curHintIdx < qData.hints.length);
+
+  if(isCorrect) {
+    answered = true;
+    sfxCorrect();
+    state.xp += 10;
+    curCorrect++;
+    state.qLog[qData.id] = {ok:true, attempts:curAttempts, day:curDay, weak:qData.weak, ts:Date.now()};
+    showFeedback(true, qData);
+    showNextBtn();
+  } else if(canRetry) {
+    document.getElementById('hint'+curHintIdx).classList.add('show');
+    curHintIdx++;
+    sfxWrong();
+    state.hearts = Math.max(0, state.hearts-1);
+    document.getElementById('checkBtn').disabled = true;
+    if(!qData.fillin) {
+      selectedOpt = -1;
+      setTimeout(function(){
+        var os = document.querySelectorAll('.mcq-opt');
+        for(var k=0;k<os.length;k++) os[k].classList.remove('selected','wrong','correct');
+      }, 600);
+    } else {
+      setTimeout(function(){
+        var inp2 = document.getElementById('fillInput');
+        if(inp2){inp2.classList.remove('wrong'); inp2.value=''; inp2.focus();}
+      },600);
+    }
+    showFeedback(false, qData, true);
+  } else {
+    answered = true;
+    sfxWrong();
+    state.hearts = Math.max(0, state.hearts-1);
+    state.qLog[qData.id] = {ok:false, attempts:curAttempts, day:curDay, weak:qData.weak, ts:Date.now()};
+    if(!qData.fillin) document.getElementById('opt'+qData.ans).classList.add('correct');
+    var found=false;
+    for(var e=0;e<state.errBook.length;e++){if(state.errBook[e].id===qData.id){found=true;break;}}
+    if(!found) {
+      state.errBook.push({id:qData.id, q:qData.q, correctAns:qData.opts[qData.ans], explain:qData.explain});
+    }
+    showFeedback(false, qData, false);
+    showNextBtn();
+  }
+  saveState();
+}
+
+function showFeedback(correct, qData, canRetry) {
+  var area = document.getElementById('feedbackArea');
+  if(correct) {
+    area.innerHTML = '<div class="feedback-box correct"><h4>✅ Correct!</h4><div class="explain">'+qData.explain.replace(/\n/g,'<br>')+'</div></div>';
+  } else if(canRetry) {
+    area.innerHTML = '<div class="feedback-box wrong"><h4>❌ Not quite — try again!</h4></div>';
+  } else {
+    area.innerHTML = '<div class="feedback-box wrong"><h4>❌ Incorrect</h4><p>Correct answer: <b>'+qData.opts[qData.ans]+'</b></p><div class="explain">'+qData.explain.replace(/\n/g,'<br>')+'</div></div>';
+  }
+}
+
+function showNextBtn() {
+  document.getElementById('checkBtn').outerHTML = '<button class="check-btn next" onclick="nextQuestion()">Continue <span class="kbd">Enter</span></button>';
+}
+
+function nextQuestion() {
+  sfxClick();
+  curIdx++;
+  showQuestion();
+}
+
+function confirmExit() {
+  if(confirm('Exit this practice? Progress on this day will be lost.')) showHome();
+}
+
+function showResults() {
+  var total = curQs.length;
+  var pct = total>0 ? Math.round(curCorrect/total*100) : 0;
+  var emoji = pct>=90?'🌟':pct>=70?'🎉':pct>=50?'👍':'💪';
+
+  if(curDay>0) state.dayScores['d'+curDay] = {correct:curCorrect, total:total, pct:pct};
+  if(curDay===0) state.errRedo = {correct:curCorrect, total:total, pct:pct, ts:Date.now()};
+  saveState();
+
+  if(pct >= 70) { sfxFanfare(); setTimeout(fireConfetti, 300); }
+
+  var html = '<div class="results">';
+  html += '<div class="emoji">'+emoji+'</div>';
+  html += '<h2>'+(pct>=90?'Outstanding!':pct>=70?'Well Done!':pct>=50?'Good Effort!':'Keep Practicing!')+'</h2>';
+  html += '<div class="pct" style="color:'+(pct>=70?'var(--green)':'var(--red)')+'">'+pct+'%</div>';
+  html += '<div class="detail">'+curCorrect+' / '+total+' correct</div>';
+  html += '<div class="btn-row">';
+  if(curDay>0) html += '<button class="btn" onclick="startDay('+curDay+')">Retry</button>';
+  html += '<button class="btn primary" onclick="showHome()">Home</button>';
+  html += '</div></div>';
+  app.innerHTML = html;
+}
+
+function showErrBook() {
+  sfxClick();
+  var html = '<div class="topbar"><button class="back" onclick="showHome()">←</button><span class="title">错题本 ('+state.errBook.length+')</span></div>';
+  html += '<div class="errbook">';
+  html += '<h2>错题本</h2>';
+  if(state.errBook.length === 0) {
+    html += '<p style="color:var(--text2);margin-top:20px">No wrong answers yet!</p>';
+  } else {
+    html += '<button class="check-btn primary" style="margin-bottom:16px;max-width:300px" onclick="redoErrBook()">Redo All Wrong Questions</button>';
+    for(var i=0;i<state.errBook.length;i++){
+      var item=state.errBook[i];
+      html += '<div class="err-item">';
+      html += '<div class="eq">'+item.q.replace(/\n/g,'<br>')+'</div>';
+      html += '<div class="ea">✅ '+item.correctAns+'</div>';
+      html += '</div>';
+    }
+  }
+  html += '</div>';
+  app.innerHTML = html;
+}
+
+function redoErrBook() {
+  sfxClick();
+  curDay = 0;
+  curQs = [];
+  for(var i=0;i<state.errBook.length;i++) curQs.push(state.errBook[i].id);
+  curIdx = 0; curCorrect = 0; curAttempts = 0;
+  state.hearts = 5;
+  showQuestion();
+}
+
+// ═══════════════ KEYBOARD SHORTCUTS ═══════════════
+document.addEventListener('keydown', function(e) {
+  if(e.key === 'Escape') { if(curDay !== null && curQs.length) confirmExit(); }
+  if(e.key === 'Enter') {
+    e.preventDefault();
+    var checkBtn = document.querySelector('.check-btn');
+    if(checkBtn && !checkBtn.disabled) { checkBtn.click(); return; }
+    var startBtn = document.querySelector('.start-btn');
+    if(startBtn) { startBtn.click(); return; }
+  }
+  if(!answered && curQs.length && curIdx < curQs.length) {
+    var qData = getQ(curQs[curIdx]);
+    if(qData && !qData.fillin) {
+      if(e.key >= '1' && e.key <= '4') selectOpt(parseInt(e.key)-1);
+    }
+  }
+});
+
+// ═══════════════ INIT ═══════════════
+showHome();
+</script>
+</body>
+</html>

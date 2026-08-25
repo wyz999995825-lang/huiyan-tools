@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RFPD Math Trainer — Eavan</title>
+<style>
+:root {
+  --green: #58CC02;
+  --green-dark: #46a302;
+  --blue: #1CB0F6;
+  --blue-dark: #0095d9;
+  --red: #FF4B4B;
+  --amber: #FFC800;
+  --purple: #A560E8;
+  --orange: #FF9600;
+  --bg: #F7F7F7;
+  --card: #FFFFFF;
+  --text: #3C3C3C;
+  --text2: #777;
+  --border: #E5E5E5;
+  --radius: 16px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── Top Bar ── */
+.topbar { background: var(--card); border-bottom: 2px solid var(--border); padding: 12px 20px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 100; }
+.topbar .back { cursor: pointer; font-size: 22px; color: var(--text2); border: none; background: none; padding: 4px 8px; border-radius: 8px; }
+.topbar .back:hover { background: #eee; }
+.topbar .title { font-weight: 700; font-size: 16px; flex: 1; }
+.topbar .counter { font-size: 14px; color: var(--text2); font-weight: 600; }
+.progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; flex: 1; max-width: 300px; }
+.progress-fill { height: 100%; background: var(--green); border-radius: 4px; transition: width 0.4s ease; }
+
+/* ── Home Screen ── */
+.home { max-width: 680px; margin: 0 auto; padding: 24px 20px; }
+.home h1 { font-size: 26px; font-weight: 800; margin-bottom: 4px; }
+.home .sub { color: var(--text2); font-size: 14px; margin-bottom: 20px; }
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 24px; }
+.stat-card { background: var(--card); border-radius: 12px; padding: 14px; text-align: center; border: 1px solid var(--border); }
+.stat-card .val { font-size: 22px; font-weight: 800; }
+.stat-card .lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.day-group { margin-bottom: 8px; }
+.day-group-label { font-size: 13px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 0 4px; }
+.day-card { background: var(--card); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 8px; cursor: pointer; border: 2px solid var(--border); display: flex; align-items: center; gap: 14px; transition: all 0.15s; }
+.day-card:hover { border-color: var(--blue); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.day-card .icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.day-card .info { flex: 1; }
+.day-card .info h3 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.day-card .info p { font-size: 12px; color: var(--text2); }
+.day-card .score { font-size: 14px; font-weight: 700; color: var(--green); }
+.day-card .score.none { color: var(--text2); font-weight: 400; }
+.day-card.completed { border-color: var(--green); background: #f0fdf4; }
+.day-card.completed .icon { opacity: 0.8; }
+
+/* ── Practice Screen ── */
+.practice { max-width: 680px; margin: 0 auto; padding: 20px; }
+.q-card { background: var(--card); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; border: 1px solid var(--border); }
+.q-label { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.q-text { font-size: 16px; line-height: 1.6; margin-bottom: 16px; }
+.q-text b { color: var(--blue-dark); }
+
+/* Scaffold steps */
+.scaffold { background: #F0F7FF; border-radius: 12px; padding: 16px; margin-bottom: 16px; border-left: 4px solid var(--blue); }
+.scaffold h4 { font-size: 13px; font-weight: 700; color: var(--blue-dark); margin-bottom: 8px; }
+.scaffold .step { font-size: 13px; color: #555; margin-bottom: 6px; padding-left: 8px; line-height: 1.5; }
+.scaffold .step b { color: var(--text); }
+.scaffold .step .blank { display: inline-block; min-width: 60px; border-bottom: 2px dashed var(--blue); margin: 0 2px; text-align: center; color: var(--blue-dark); font-weight: 700; }
+
+/* MCQ Options */
+.mcq-options { display: flex; flex-direction: column; gap: 8px; }
+.mcq-opt { padding: 14px 18px; border-radius: 12px; border: 2px solid var(--border); cursor: pointer; font-size: 15px; transition: all 0.15s; display: flex; align-items: center; gap: 10px; }
+.mcq-opt:hover { border-color: var(--blue); background: #f0f8ff; }
+.mcq-opt.selected { border-color: var(--blue); background: #e0f0ff; }
+.mcq-opt.correct { border-color: var(--green); background: #e8f9e0; }
+.mcq-opt.wrong { border-color: var(--red); background: #ffe8e8; }
+.mcq-opt .key { width: 28px; height: 28px; border-radius: 6px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--text2); flex-shrink: 0; }
+
+/* Fill-in */
+.fill-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.fill-group label { font-size: 14px; font-weight: 600; }
+.fill-input { border: 2px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 16px; width: 160px; outline: none; font-family: inherit; }
+.fill-input:focus { border-color: var(--blue); }
+.fill-input.correct { border-color: var(--green); background: #e8f9e0; }
+.fill-input.wrong { border-color: var(--red); background: #ffe8e8; }
+.fill-unit { font-size: 14px; color: var(--text2); }
+
+/* Multi-step fill */
+.steps-fill { display: flex; flex-direction: column; gap: 10px; }
+.step-row { display: flex; align-items: center; gap: 10px; font-size: 14px; flex-wrap: wrap; }
+.step-row .step-label { font-weight: 600; min-width: 90px; color: var(--text2); font-size: 13px; }
+
+/* Hint system */
+.hint-btn { background: none; border: 2px solid var(--amber); color: #b8860b; border-radius: 10px; padding: 8px 16px; font-size: 13px; font-weight: 700; cursor: pointer; margin-bottom: 12px; }
+.hint-btn:hover { background: #fff8e0; }
+.hint-box { background: #FFFBEB; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; border-left: 4px solid var(--amber); font-size: 13px; line-height: 1.6; display: none; }
+.hint-box.show { display: block; }
+
+/* Check button */
+.check-btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+.check-btn.primary { background: var(--green); color: white; }
+.check-btn.primary:hover { background: var(--green-dark); }
+.check-btn.next { background: var(--blue); color: white; }
+.check-btn.next:hover { background: var(--blue-dark); }
+.check-btn:disabled { background: #ddd; color: #999; cursor: not-allowed; }
+
+/* Feedback */
+.feedback-box { border-radius: 12px; padding: 16px 20px; margin: 12px 0; font-size: 14px; line-height: 1.6; }
+.feedback-box.correct { background: #e8f9e0; border: 1px solid #b8e6a0; }
+.feedback-box.wrong { background: #ffe8e8; border: 1px solid #ffb0b0; }
+.feedback-box h4 { margin-bottom: 6px; font-size: 15px; }
+.feedback-box .explain { font-size: 13px; color: #555; margin-top: 8px; }
+
+/* Results screen */
+.results { max-width: 680px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+.results .emoji { font-size: 64px; margin-bottom: 16px; }
+.results h2 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+.results .pct { font-size: 48px; font-weight: 800; margin: 16px 0; }
+.results .detail { font-size: 14px; color: var(--text2); margin-bottom: 24px; }
+.results .btn-row { display: flex; gap: 12px; justify-content: center; }
+.results .btn { padding: 12px 24px; border-radius: 12px; border: 2px solid var(--border); font-size: 15px; font-weight: 700; cursor: pointer; background: var(--card); }
+.results .btn.primary { background: var(--green); color: white; border-color: var(--green); }
+
+/* Sound toggle */
+.sound-toggle { position: fixed; top: 16px; right: 16px; z-index: 150; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ddd; background: #fff; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+/* Keyboard hints */
+.kbd { display: inline-block; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 11px; color: var(--text2); font-weight: 600; margin-left: 6px; }
+@media (max-width: 767px) { .kbd { display: none; } }
+
+/* Day intro */
+.day-intro { max-width: 680px; margin: 0 auto; padding: 40px 20px; }
+.day-intro .icon-big { font-size: 64px; text-align: center; margin-bottom: 16px; }
+.day-intro h2 { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 8px; }
+.day-intro .desc { font-size: 14px; color: var(--text2); text-align: center; margin-bottom: 20px; line-height: 1.6; }
+.day-intro .objectives { background: var(--card); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
+.day-intro .objectives h4 { font-size: 13px; font-weight: 700; color: var(--text2); text-transform: uppercase; margin-bottom: 10px; }
+.day-intro .objectives li { font-size: 14px; margin-bottom: 6px; padding-left: 4px; line-height: 1.5; }
+.day-intro .start-btn { display: block; width: 100%; max-width: 320px; margin: 0 auto; padding: 14px; border-radius: 12px; border: none; background: var(--green); color: white; font-size: 16px; font-weight: 700; cursor: pointer; }
+.day-intro .start-btn:hover { background: var(--green-dark); }
+
+/* Timer bar */
+.timer-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 13px; color: var(--text2); }
+.timer-bar .clock { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+<div class="sound-toggle" id="soundToggle" onclick="toggleSound()"></div>
+
+<script>
+// ============================================================
+// DATA: 7 days of questions
+// ============================================================
+
+const DAYS = [
+  {
+    day: 1, label: 'Day 1', title: 'Percentage Phrasing',
+    icon: '🎯', color: '#FFC800',
+    desc: 'Master the difference between "X% more than", "X% less than", and "X% of". These small words change the entire calculation.',
+    objectives: ['Distinguish "more than" vs "less than" vs "of"', 'Avoid the classic PSLE phrasing trap', 'Build confidence with quick wins'],
+    questions: [
+      { id:'d1q1', type:'mcq', text:'Tom spent <b>$40</b> in January. In February, he spent <b>25% less</b> than in January. How much did he spend in February?',
+        options:['$50','$30','$10','$15'], answer:1,
+        explain:'25% less than $40 = $40 - (25% of $40) = $40 - $10 = <b>$30</b>. "Less" means subtract, not add.' },
+      { id:'d1q2', type:'mcq', text:'A shirt costs <b>$60</b>. During a sale, the price was reduced by <b>30%</b>. What is the sale price?',
+        options:['$78','$42','$18','$48'], answer:1,
+        explain:'Reduced by 30% = $60 - (30% of $60) = $60 - $18 = <b>$42</b>.' },
+      { id:'d1q3', type:'mcq', text:'Mary scored <b>80 marks</b> in Test 1. In Test 2, she scored <b>15% more</b> than in Test 1. What was her Test 2 score?',
+        options:['$65','$92','$95','$68'], answer:1,
+        explain:'15% more than 80 = 80 + (15% of 80) = 80 + 12 = <b>92</b>. "More" means add.' },
+      { id:'d1q4', type:'mcq', text:'A shop had <b>200 apples</b>. It sold <b>40% of</b> them. How many apples were sold?',
+        options:['$120','$80','$160','$240'], answer:1,
+        explain:'40% of 200 = 0.4 x 200 = <b>80</b>. "Of" means multiply.' },
+      { id:'d1q5', type:'mcq', text:'Mr Tan earns <b>$3,000</b> per month. His salary increased by <b>20%</b>. What is his new salary?',
+        options:['$2,400','$3,600','$3,200','$3,060'], answer:1,
+        explain:'Increased by 20% = $3000 + (20% of $3000) = $3000 + $600 = <b>$3,600</b>.' },
+      { id:'d1q6', type:'fillin', text:'A bag costs <b>$120</b>. After a <b>35% discount</b>, the sale price is $___.',
+        answer:'78', accept:['78','$78','78.00'], unit:'',
+        explain:'35% of $120 = $42. Sale price = $120 - $42 = <b>$78</b>.' },
+      { id:'d1q7', type:'fillin', text:'There are <b>500 students</b> in a school. <b>60%</b> are girls. The number of boys is ___.',
+        answer:'200', accept:['200'],
+        explain:'Girls = 60% of 500 = 300. Boys = 500 - 300 = <b>200</b>.' },
+      { id:'d1q8', type:'fillin', text:'Ali saved <b>$80</b> in March. In April, he saved <b>25% more</b> than in March. He saved $___  in April.',
+        answer:'100', accept:['100','$100','100.00'],
+        explain:'25% more than $80 = $80 + $20 = <b>$100</b>.' },
+      { id:'d1q9', type:'fillin', text:'A factory produced <b>400 toys</b> in Week 1. In Week 2, production <b>decreased by 15%</b>. Week 2 production was ___ toys.',
+        answer:'340', accept:['340'],
+        explain:'15% of 400 = 60. Decreased: 400 - 60 = <b>340</b>.' },
+      { id:'d1q10', type:'fillin', text:'A jacket costs <b>$90</b>. The price was increased by <b>30%</b>, then decreased by <b>30%</b>. The final price is $___.',
+        answer:'81.90', accept:['81.90','81.9','$81.90'],
+        explain:'After 30% increase: $90 x 1.3 = $117. After 30% decrease: $117 x 0.7 = <b>$81.90</b>. Note: increase then decrease by same % does NOT return to original!' },
+    ]
+  },
+  {
+    day: 2, label: 'Day 2', title: 'Weighted Average + Spot the Error',
+    icon: '🔍', color: '#A560E8',
+    desc: 'Learn to compute averages from grouped data correctly, then practise catching careless errors before they cost marks.',
+    objectives: ['Compute weighted average from frequency tables', 'Understand: average = total sum / total count', 'Spot transcription errors in worked solutions'],
+    questions: [
+      { id:'d2q1', type:'mcq', text:'A survey shows: <b>10 families</b> have 0 pets, <b>25 families</b> have 1 pet, <b>15 families</b> have 2 pets, <b>5 families</b> have 3 pets. What is the average number of pets per family?',
+        options:['1.5','1.27','1.09','6'], answer:1,
+        explain:'Total pets = 0(10) + 1(25) + 2(15) + 3(5) = 0 + 25 + 30 + 15 = 70. Total families = 10+25+15+5 = 55. Average = 70/55 ≈ <b>1.27</b> (not 70/4 = 17.5!)' },
+      { id:'d2q2', type:'fillin', text:'<b>12 students</b> scored 60, <b>20 students</b> scored 75, and <b>8 students</b> scored 90. The average score is ___. (1 d.p.)',
+        answer:'73.5', accept:['73.5'],
+        explain:'Total = 12(60) + 20(75) + 8(90) = 720 + 1500 + 720 = 2940. Count = 12+20+8 = 40. Average = 2940/40 = <b>73.5</b>.' },
+      { id:'d2q3', type:'mcq', text:'<b>Bar graph:</b> 0 TVs: 15 families, 1 TV: 35 families, 2 TVs: 30 families, 3 TVs: 20 families. What is the average number of TVs per family?',
+        options:['1.55','1.5','2','25'], answer:0,
+        explain:'Total TVs = 0(15)+1(35)+2(30)+3(20) = 0+35+60+60 = 155. Total families = 15+35+30+20 = 100. Average = 155/100 = <b>1.55</b>. Common mistake: dividing by 4 (categories) gives 38.75 — wrong!' },
+      { id:'d2q4', type:'fillin', text:'In a class, <b>5 students</b> read 0 books, <b>12 students</b> read 2 books, <b>8 students</b> read 5 books. Average books per student = ___ (1 d.p.)',
+        answer:'2.56', accept:['2.56','2.6'],
+        explain:'Total books = 0(5) + 2(12) + 5(8) = 0+24+40 = 64. Students = 5+12+8 = 25. Average = 64/25 = <b>2.56</b>.' },
+      { id:'d2q5', type:'mcq', text:'<b>Spot the error:</b> "Plant height: Week 1 = 14 cm, Week 3 = 56 cm. Increase = 56-14 = 42 cm. % increase = 42/14 = 3. Answer: <b>3%</b>." What is wrong?',
+        options:['The subtraction is wrong','The division is wrong','42/14 = 3 means 300%, not 3%','There is no error'], answer:2,
+        explain:'42/14 = 3 = 300%. The student forgot to multiply by 100% when writing the final answer. <b>Always check: does your final answer match your working?</b>' },
+      { id:'d2q6', type:'mcq', text:'<b>Spot the error:</b> "Day 1: sold 30 phones. Day 2: sold 25. Day 3: sold 25. Day 4: sold 10. Day 5: sold 5. Most phones sold on <b>Day 3</b>." What is wrong?',
+        options:['Day 2 should be 30','Day 1 sold 30 which is the most, not Day 3','The total is wrong','Day 5 should be 10'], answer:1,
+        explain:'Day 1 sold 30 (the most), but the student wrote Day 3 (only 25). <b>Always re-read your answer — does it match what you computed?</b>' },
+      { id:'d2q7', type:'mcq', text:'<b>Spot the error:</b> "Monthly allowance = $48. Jan: spent $30, saved rest. Feb: spent 30% less than Jan. Feb spending = 30 + 9 = $39." What is wrong?',
+        options:['30% of 30 is not 9','30% LESS means subtract, not add: 30-9 = $21','The monthly allowance should be $66','Savings should be $18'], answer:1,
+        explain:'"30% less" = 30 - (30% of 30) = 30 - 9 = <b>$21</b>, not 30 + 9 = $39. The word "less" means subtract!' },
+    ]
+  },
+  {
+    day: 3, label: 'Day 3', title: 'Rate Problems: Tanks & Taps',
+    icon: '🚰', color: '#1CB0F6',
+    desc: 'Learn the framework for solving rate problems involving taps filling tanks, pipes draining water, and heights equalising.',
+    objectives: ['Set up rate = amount / time', 'Use rate differences to find unknowns', 'Solve "when do heights become equal" problems'],
+    questions: [
+      { id:'d3q1', type:'scaffold', text:'Tap A fills a bucket in <b>40 minutes</b>. Tap B fills the same bucket in <b>60 minutes</b>. The faster tap pours <b>20 ml/min more</b> than the slower tap. What is the capacity of the bucket?',
+        steps: [
+          {label:'Rate of Tap A', prompt:'1/__ bucket per min', answer:'40', accept:['40']},
+          {label:'Rate of Tap B', prompt:'1/__ bucket per min', answer:'60', accept:['60']},
+          {label:'Rate difference', prompt:'1/40 - 1/60 = __/120 bucket per min', answer:'1', accept:['1']},
+          {label:'Capacity', prompt:'If 1/120 bucket = 20 ml, bucket = 20 x __ = ___ ml', answer:'2400', accept:['2400']},
+        ],
+        finalAnswer:'2400', finalUnit:'ml',
+        explain:'Rate difference = 1/40 - 1/60 = 3/120 - 2/120 = 1/120. This equals 20 ml/min. So bucket = 20 x 120 = <b>2400 ml</b>.',
+        hint:'Think of rates as fractions of the bucket filled per minute. The DIFFERENCE in rates equals the extra ml/min.'
+      },
+      { id:'d3q2', type:'scaffold', text:'Tap A fills a tank in <b>50 minutes</b>. Tap B fills the same tank in <b>80 minutes</b>. The faster tap pours <b>30 ml/min more</b> than the slower tap. Find the capacity of the tank.',
+        steps: [
+          {label:'Rate difference', prompt:'1/50 - 1/80 = (80-50)/(50x80) = __/4000', answer:'30', accept:['30']},
+          {label:'Capacity', prompt:'If 30/4000 tank = 30 ml/min, then tank = 30 x 4000/30 = ___ ml', answer:'4000', accept:['4000']},
+        ],
+        finalAnswer:'4000', finalUnit:'ml',
+        explain:'1/50 - 1/80 = 80/4000 - 50/4000 = 30/4000 = 3/400. So 3/400 of tank = 30 ml. Tank = 30 x 400/3 = <b>4000 ml</b>.',
+        hint:'This is exactly like Eavan\'s RS P2 Q8! Rate difference as a fraction = ml difference per minute.'
+      },
+      { id:'d3q3', type:'scaffold', text:'Tank A (48 cm x 20 cm base) has water at height <b>12 cm</b>. Tank B (60 cm x 10 cm base) is empty. Both taps pour <b>2400 ml/min total</b> (1200 ml each). After how many minutes will the water height be the same?',
+        steps: [
+          {label:'Rise rate in A', prompt:'1200 / (48 x 20) = ___ cm/min', answer:'1.25', accept:['1.25']},
+          {label:'Rise rate in B', prompt:'1200 / (60 x 10) = ___ cm/min', answer:'2', accept:['2']},
+          {label:'Equation', prompt:'A starts at 12. 12 + 1.25t = 2t. So 0.75t = 12. t = ___', answer:'16', accept:['16']},
+        ],
+        finalAnswer:'16', finalUnit:'minutes',
+        explain:'A rises at 1200/960 = 1.25 cm/min from 12 cm. B rises at 1200/600 = 2 cm/min from 0. Equal when 12 + 1.25t = 2t → 0.75t = 12 → t = <b>16 min</b>.',
+        hint:'This is Eavan\'s AT P2 Q13b! Convert ml/min to cm/min using base area, then set the two heights equal.'
+      },
+      { id:'d3q4', type:'fillin', text:'Tap P fills a pool in <b>30 minutes</b>. Tap Q fills the same pool in <b>45 minutes</b>. The faster tap delivers <b>10 litres/min more</b>. What is the pool capacity in litres?',
+        answer:'900', accept:['900'],
+        explain:'Rate diff = 1/30 - 1/45 = 3/90 - 2/90 = 1/90. If 1/90 pool = 10 L/min, pool = 10 x 90 = <b>900 litres</b>.',
+        hint:'Same framework: find the fraction difference in rates, set it equal to the ml/L difference.' },
+      { id:'d3q5', type:'fillin', text:'Container X (30 cm x 20 cm base) has water at <b>15 cm</b>. Container Y (20 cm x 15 cm base) is empty. Water flows into both at <b>600 ml/min each</b>. After how many minutes will the heights be equal?',
+        answer:'15', accept:['15'],
+        explain:'Rise in X = 600 ÷ (30×20) = 600 ÷ 600 = 1 cm/min. Rise in Y = 600 ÷ (20×15) = 600 ÷ 300 = 2 cm/min. Height X = 15 + t. Height Y = 2t. Set equal: 15 + t = 2t → t = <b>15 min</b>.',
+        hint:'Convert ml/min to cm/min for each container. Set heights equal and solve for t.' },
+    ]
+  },
+  {
+    day: 4, label: 'Day 4', title: 'Ratio + Percentage Bridge',
+    icon: '🔗', color: '#FF9600',
+    desc: 'Practise problems that mix ratios with percentages — the type where conditions change partway through.',
+    objectives: ['Convert between ratio units and percentages', 'Set up equations when a ratio shifts after adding/removing', 'Handle "X% remaining" conditions'],
+    questions: [
+      { id:'d4q1', type:'scaffold', text:'Kai read part of a book. The ratio of pages read to unread was <b>6 : 5</b>. After reading another <b>195 pages</b>, he still had <b>10%</b> of the book unread. How many pages were in the book?',
+        steps: [
+          {label:'Total units', prompt:'Read : Unread = 6 : 5, Total = __ units', answer:'11', accept:['11']},
+          {label:'After reading 195', prompt:'Unread = 5u - 195. This = 10% of total = 11u x 0.1 = __u', answer:'1.1', accept:['1.1']},
+          {label:'Solve for u', prompt:'5u - 195 = 1.1u → 3.9u = 195 → u = __', answer:'50', accept:['50']},
+          {label:'Total pages', prompt:'11 x 50 = ___', answer:'550', accept:['550']},
+        ],
+        finalAnswer:'550', finalUnit:'pages',
+        explain:'This is Eavan\'s AT P2 Q9! Key: 10% remaining = 1.1 units (not whole units). 5u - 195 = 1.1u → 3.9u = 195 → u = 50. Total = 550.',
+        hint:'The tricky part: "10% of the book" = 10% of 11 units = 1.1 units. This gives a decimal number of units — that is OK!'
+      },
+      { id:'d4q2', type:'fillin', text:'The ratio of boys to girls in a club was <b>3 : 2</b>. After <b>18 boys</b> left, boys were <b>1/3</b> of the remaining members. How many girls are in the club?',
+        answer:'18', accept:['18'],
+        explain:'Boys = 3u, girls = 2u. After 18 leave: boys = 3u − 18. Boys = 1/3 of remaining: (3u−18)/(5u−18) = 1/3. Cross multiply: 9u − 54 = 5u − 18. 4u = 36. u = 9. Girls = 2(9) = <b>18</b>. Check: boys were 27, left 9. Total 27. 9/27 = 1/3 ✓',
+        hint:'Set up the ratio with units. After boys leave, use the fraction to write an equation. Girls count does not change.' },
+      { id:'d4q3', type:'fillin', text:'A tank is <b>5/8 full</b>. After pouring out <b>45 litres</b>, it is <b>25% full</b>. What is the full capacity of the tank?',
+        answer:'120', accept:['120'],
+        explain:'5/8 - 25% = 5/8 - 2/8 = 3/8 of the tank = 45 litres. Full tank = 45 x 8/3 = <b>120 litres</b>.',
+        hint:'Convert 25% to a fraction with the same denominator as 5/8. The difference in fractions = the litres poured out.' },
+      { id:'d4q4', type:'fillin', text:'The ratio of red to blue beads was <b>5 : 3</b>. After adding <b>16 red beads</b>, <b>75%</b> of all beads were red. How many blue beads are there?',
+        answer:'12', accept:['12'],
+        explain:'Blue = 3u (unchanged). After adding 16 red: total = 8u + 16. Blue = 25% of total: 3u/(8u+16) = 1/4. Cross multiply: 12u = 8u + 16. 4u = 16. u = 4. Blue = 3(4) = <b>12</b>.',
+        hint:'Blue beads don\'t change. Set up: blue / new total = (100% − 75%) and solve.' },
+      { id:'d4q5', type:'fillin', text:'The ratio of Alice\'s money to Ben\'s money was <b>5 : 3</b>. After Alice spent <b>$40</b>, she had the <b>same amount</b> as Ben. How much did Ben have?',
+        answer:'60', accept:['60','$60'],
+        explain:'Alice = 5u, Ben = 3u. After spending $40: 5u − 40 = 3u. 2u = 40. u = 20. Ben = 3(20) = <b>$60</b>. Check: Alice had $100, spent $40 → $60 = Ben ✓',
+        hint:'Alice\'s money changes, Ben\'s stays the same. Set up: 5u − amount spent = 3u, then solve for u.' },
+      { id:'d4q6', type:'fillin', text:'The ratio of men to women at a party was <b>3 : 5</b>. After <b>12 men</b> arrived, the ratio became <b>3 : 4</b>. How many women were at the party?',
+        answer:'80', accept:['80'],
+        explain:'Women = 5u (unchanged). After 12 men arrive: men = 3u + 12. New ratio: (3u+12)/5u = 3/4. Cross multiply: 12u + 48 = 15u. 3u = 48. u = 16. Women = 5(16) = <b>80</b>.',
+        hint:'Women count doesn\'t change. Set up the new ratio equation and solve for u.' },
+    ]
+  },
+  {
+    day: 5, label: 'Day 5', title: 'Two-Group Fraction Problems',
+    icon: '👥', color: '#A560E8',
+    desc: 'Master problems where two groups have different fraction conditions and you need to connect them through a shared constraint.',
+    objectives: ['Set up separate unit models for two groups', 'Connect groups through a shared total or difference', 'Solve using simultaneous conditions'],
+    questions: [
+      { id:'d5q1', type:'scaffold', text:'There were <b>16 more</b> students in Team A than Team B. <b>1/4</b> of Team A and <b>3/7</b> of Team B were girls. The number of boys was <b>twice</b> the number of girls. How many boys were there?',
+        steps: [
+          {label:'Team A structure', prompt:'Girls = 1/4, Boys = 3/4. Total A = 4u. A boys = __u', answer:'3', accept:['3','3u']},
+          {label:'Team B structure', prompt:'Girls = 3/7, Boys = 4/7. Total B = 7v. B boys = __v', answer:'4', accept:['4','4v']},
+          {label:'Difference', prompt:'A - B = 16: 4u - 7v = ___', answer:'16', accept:['16']},
+          {label:'Boys = 2 x Girls', prompt:'Total boys = 3u + 4v. Total girls = u + 3v. So 3u + 4v = 2(u + 3v). Simplify: u = __v', answer:'2', accept:['2','2v']},
+          {label:'Solve', prompt:'Substitute u = 2v into 4u - 7v = 16: 8v - 7v = 16. v = __', answer:'16', accept:['16']},
+          {label:'Total boys', prompt:'u = 32. Boys = 3(32) + 4(16) = 96 + 64 = ___', answer:'160', accept:['160']},
+        ],
+        finalAnswer:'160', finalUnit:'boys',
+        explain:'This is Eavan\'s AT P2 Q17! Key: model each team separately (4u and 7v), then use TWO equations to solve: difference = 16 and boys = 2 x girls.',
+        hint:'Use different letters for the two teams (u for A, v for B). You need TWO equations because you have TWO unknowns.'
+      },
+      { id:'d5q2', type:'fillin', text:'School A has <b>20 more</b> students than School B. <b>1/3</b> of School A and <b>2/5</b> of School B are in the choir. The total choir members from both schools is <b>36</b>. How many students are in School A?',
+        answer:'60', accept:['60'],
+        explain:'A = 3u, B = 5v. Difference: 3u − 5v = 20. Choir: u + 2v = 36. From second: u = 36 − 2v. Substitute: 3(36−2v) − 5v = 20. 108 − 6v − 5v = 20. 11v = 88. v = 8. u = 20. A = 3(20) = <b>60</b>. B = 5(8) = 40. Check: 60 − 40 = 20 ✓ Choir: 20 + 16 = 36 ✓',
+        hint:'Let A = 3u, B = 5v. Set up two equations: one for the difference, one for total choir. Solve simultaneously.' },
+      { id:'d5q3', type:'fillin', text:'Box A has <b>16 more</b> marbles than Box B. <b>3/8</b> of Box A and <b>1/3</b> of Box B are blue. The total blue marbles is <b>23</b>. How many marbles are in Box B?',
+        answer:'24', accept:['24'],
+        explain:'A = 8u, B = 3v. Blue: 3u + v = 23. Diff: 8u − 3v = 16. From first: v = 23 − 3u. Substitute: 8u − 3(23−3u) = 16. 8u − 69 + 9u = 16. 17u = 85. u = 5. A = 40. v = 23 − 15 = 8. B = 3(8) = <b>24</b>. Check: 40 − 24 = 16 ✓ Blue: 15 + 8 = 23 ✓',
+        hint:'Use different unit sizes for each box. Two equations: difference in marbles and total blue.' },
+      { id:'d5q4', type:'fillin', text:'Farm A has <b>40 more</b> animals than Farm B. <b>2/5</b> of Farm A and <b>1/4</b> of Farm B are cows. There are <b>29 cows</b> in total. How many animals does Farm A have?',
+        answer:'60', accept:['60'],
+        explain:'A = 5u, B = 4v. Cows: 2u + v = 29. Diff: 5u − 4v = 40. From first: v = 29 − 2u. Substitute: 5u − 4(29−2u) = 40. 5u − 116 + 8u = 40. 13u = 156. u = 12. A = 5(12) = <b>60</b>. v = 29 − 24 = 5. B = 4(5) = 20. Check: 60 − 20 = 40 ✓ Cows: 24 + 5 = 29 ✓',
+        hint:'Let A = 5u, B = 4v. Two equations: cows total and animal difference. Solve for u and v.' },
+    ]
+  },
+  {
+    day: 6, label: 'Day 6', title: 'Mixed Practice',
+    icon: '🎲', color: '#58CC02',
+    desc: 'All four problem types mixed together — no labels telling you which type. Just like in the real exam!',
+    objectives: ['Identify the problem type from context clues', 'Apply the right framework without prompting', 'Build speed and confidence'],
+    questions: [
+      { id:'d6q1', type:'fillin', text:'A shop sold <b>35% of its shoes</b> on Monday. On Tuesday, it sold <b>40% of the remaining shoes</b>. If <b>78 pairs</b> were left after Tuesday, how many pairs did the shop have at first?',
+        answer:'200', accept:['200'],
+        explain:'After Monday: 65% left. After Tuesday: 60% of 65% = 39% left. 39% of total = 78. Total = 78/0.39 = <b>200 pairs</b>.',
+        hint:'Work backwards: Tuesday sold 40% of remaining, so 60% of remaining was left.' },
+      { id:'d6q2', type:'fillin', text:'Tap X fills a pool in <b>20 minutes</b>. Tap Y fills the same pool in <b>30 minutes</b>. Tap X delivers <b>15 litres/min more</b> than Tap Y. What is the pool capacity?',
+        answer:'900', accept:['900'],
+        explain:'Rate diff = 1/20 - 1/30 = 3/60 - 2/60 = 1/60. 1/60 pool = 15 L/min. Pool = 15 x 60 = <b>900 litres</b>.',
+        hint:'Rate framework: find the fraction difference, set it equal to the litre difference.' },
+      { id:'d6q3', type:'fillin', text:'A class survey: <b>8 students</b> scored 50, <b>15 students</b> scored 70, <b>12 students</b> scored 85, <b>5 students</b> scored 95. What is the average score? (1 d.p.)',
+        answer:'72.6', accept:['72.6','72.63'],
+        explain:'Total = 8(50)+15(70)+12(85)+5(95) = 400+1050+1020+475 = 2945. Students = 40. Average = 2945/40 = <b>72.625 ≈ 72.6</b>.',
+        hint:'Weighted average: multiply each score by its frequency, sum, then divide by total count.' },
+      { id:'d6q4', type:'fillin', text:'The ratio of Adam\'s stickers to Ben\'s stickers was <b>7 : 4</b>. After Adam gave <b>36 stickers</b> to Ben, they had the same number. How many stickers did they have altogether?',
+        answer:'264', accept:['264'],
+        explain:'After giving: Adam = 7u − 36, Ben = 4u + 36. Equal: 7u − 36 = 4u + 36. 3u = 72. u = 24. Total = 11(24) = <b>264</b>.',
+        hint:'After giving away stickers, both have equal amounts. Set 7u - 36 = 4u + 36.' },
+      { id:'d6q5', type:'fillin', text:'Club X has <b>12 more</b> members than Club Y. <b>1/3</b> of Club X and <b>3/5</b> of Club Y wear glasses. The total wearing glasses is <b>32</b>. How many members does Club Y have?',
+        answer:'30', accept:['30'],
+        explain:'X = 3u, Y = 5v. Glasses: u + 3v = 32. Diff: 3u − 5v = 12. From first: u = 32 − 3v. Substitute: 3(32−3v) − 5v = 12. 96 − 9v − 5v = 12. 14v = 84. v = 6. Y = 5(6) = <b>30</b>. u = 14. X = 42. Check: 42 − 30 = 12 ✓ Glasses: 14 + 18 = 32 ✓',
+        hint:'Different unit sizes for each club. Set up two equations and solve.' },
+      { id:'d6q6', type:'fillin', text:'A bottle was <b>3/4 full</b>. After drinking <b>300 ml</b>, it was <b>15% full</b>. What is the full capacity of the bottle?',
+        answer:'500', accept:['500'],
+        explain:'3/4 - 15% = 75% - 15% = 60% of bottle = 300 ml. Bottle = 300 / 0.6 = <b>500 ml</b>.',
+        hint:'Convert both to percentages. The difference = the amount drunk.' },
+    ]
+  },
+  {
+    day: 7, label: 'Day 7', title: 'Timed Challenge',
+    icon: '⏱️', color: '#FF4B4B',
+    desc: 'Final test — 8 mixed questions in 30 minutes. No hints, no scaffolds. Let\'s see how much you\'ve improved!',
+    objectives: ['Complete under time pressure', 'Apply all frameworks independently', 'Compare with Day 1 accuracy'],
+    timed: true, timeLimit: 30,
+    questions: [
+      { id:'d7q1', type:'fillin', text:'A dress costs <b>$150</b>. Its price was first <b>increased by 20%</b>, then <b>decreased by 20%</b>. What is the final price?',
+        answer:'144', accept:['144','$144'],
+        explain:'After increase: $150 x 1.2 = $180. After decrease: $180 x 0.8 = <b>$144</b>.' },
+      { id:'d7q2', type:'fillin', text:'Survey: <b>6 families</b> own 0 cars, <b>18 families</b> own 1 car, <b>14 families</b> own 2 cars, <b>2 families</b> own 3 cars. Average cars per family? (1 d.p.)',
+        answer:'1.3', accept:['1.3','1.30'],
+        explain:'Total cars = 0+18+28+6 = 52. Families = 40. Average = 52/40 = <b>1.3</b>.' },
+      { id:'d7q3', type:'fillin', text:'Tap M fills a basin in <b>24 minutes</b>. Tap N fills it in <b>40 minutes</b>. Tap M delivers <b>40 ml/min more</b>. What is the basin capacity in ml?',
+        answer:'2400', accept:['2400'],
+        explain:'1/24 - 1/40 = 5/120 - 3/120 = 2/120 = 1/60. 1/60 basin = 40 ml. Basin = 40 x 60 = <b>2400 ml</b>.' },
+      { id:'d7q4', type:'fillin', text:'The ratio of Mei\'s beads to Ning\'s beads was <b>5 : 3</b>. After Mei gave <b>24 beads</b> to Ning, the ratio became <b>1 : 1</b>. How many beads did Mei have at first?',
+        answer:'120', accept:['120'],
+        explain:'5u - 24 = 3u + 24. 2u = 48. u = 24. Mei had 5(24) = <b>120</b>.' },
+      { id:'d7q5', type:'fillin', text:'A tank was <b>3/4 full</b>. After using <b>35 litres</b>, it was <b>40% full</b>. What is the tank\'s full capacity?',
+        answer:'100', accept:['100'],
+        explain:'3/4 - 40% = 75% - 40% = 35% = 35 litres. Full = 35/0.35 = <b>100 litres</b>.' },
+      { id:'d7q6', type:'fillin', text:'Group P has <b>18 more</b> people than Group Q. <b>1/4</b> of P and <b>2/3</b> of Q volunteer. Total volunteers = <b>32</b>. How many people in Group Q?',
+        answer:'30', accept:['30'],
+        explain:'P = 4u, Q = 3v. Volunteers: u + 2v = 32. Diff: 4u − 3v = 18. From first: u = 32 − 2v. Substitute: 4(32−2v) − 3v = 18. 128 − 8v − 3v = 18. 11v = 110. v = 10. Q = 3(10) = <b>30</b>. Check: P = 48. 48 − 30 = 18 ✓ Vol: 12 + 20 = 32 ✓',
+        hint:'Different unit sizes for P and Q. Set up two equations and solve simultaneously.' },
+      { id:'d7q7', type:'fillin', text:'Ali saved <b>$60</b> in January. In February he saved <b>25% more</b> than January. In March he saved <b>20% less</b> than February. How much did he save in March?',
+        answer:'60', accept:['60','$60'],
+        explain:'Feb = $60 x 1.25 = $75. March = $75 x 0.8 = <b>$60</b>.' },
+      { id:'d7q8', type:'fillin', text:'Container A (50 cm x 20 cm base) has water at <b>18 cm</b>. Container B (25 cm x 16 cm base) is empty. Both receive <b>1000 ml/min</b>. After how many minutes will the heights be equal?',
+        answer:'12', accept:['12'],
+        explain:'Rise A = 1000 ÷ (50×20) = 1 cm/min. Rise B = 1000 ÷ (25×16) = 2.5 cm/min. Height A = 18 + t. Height B = 2.5t. Set equal: 18 + t = 2.5t. 1.5t = 18. t = <b>12 min</b>.',
+        hint:'Convert ml/min to cm/min rise for each container, then set heights equal.' },
+    ]
+  },
+];
+
+// Fix some questions with cleaner numbers
+// Day 4 Q5: Alice:Ben = 5:3, Alice spent $40, had same as Ben
+DAYS[3].questions[4] = {
+  id:'d4q5', type:'fillin',
+  text:'The ratio of Alice\'s money to Ben\'s money was <b>5 : 3</b>. After Alice spent <b>$40</b>, she had the <b>same amount</b> as Ben. How much did Ben have?',
+  answer:'60', accept:['60','$60'],
+  explain:'Alice = 5u, Ben = 3u. After spending: 5u - 40 = 3u. 2u = 40. u = 20. Ben = 3(20) = <b>$60</b>.',
+  hint:'After spending, Alice = Ben. Set up: 5u - 40 = 3u.'
+};
+
+// Day 4 Q2: cleaner version
+DAYS[3].questions[1] = {
+  id:'d4q2', type:'fillin',
+  text:'The ratio of boys to girls in a club was <b>4 : 3</b>. After <b>10 boys</b> left, the ratio became <b>2 : 3</b>. How many girls are in the club?',
+  answer:'15', accept:['15'],
+  explain:'Girls = 3u (unchanged). Before: boys = 4u. After: (4u-10)/3u = 2/3. Cross: 12u - 30 = 6u. 6u = 30. u = 5. Girls = 3(5) = <b>15</b>.',
+  hint:'Girls don\'t change. Set up the new ratio with boys reduced by 10.'
+};
+
+// Day 3 Q5: fix dimensions for clean answer
+DAYS[2].questions[4] = {
+  id:'d3q5', type:'fillin',
+  text:'Container P (50 cm x 20 cm base) has water at height <b>18 cm</b>. Container Q (25 cm x 16 cm base) is empty. Both taps pour <b>1000 ml/min</b>. After how many minutes will the heights be equal?',
+  answer:'12', accept:['12'],
+  explain:'Rise in P = 1000/(50x20) = 1 cm/min. Rise in Q = 1000/(25x16) = 2.5 cm/min. Equal: 18 + t = 2.5t → 1.5t = 18 → t = <b>12 min</b>.',
+  hint:'Convert flow rate to rise rate using base area. Set starting height + rise = other rise, solve for t.'
+};
+
+// Day 5 Q2: clean override
+DAYS[4].questions[1] = {
+  id:'d5q2', type:'fillin',
+  text:'School A has <b>18 more</b> students than School B. <b>1/4</b> of A and <b>1/5</b> of B are in the choir. Total choir members = <b>18</b>. How many students in School B?',
+  answer:'30', accept:['30'],
+  explain:'A=4u, B=5v. Choir: u+v=18. Diff: 4u-5v=18. From first: u=18-v. Sub: 4(18-v)-5v=18. 72-4v-5v=18. 9v=54. v=6. B=5(6)=<b>30</b>.',
+  hint:'Let A = 4u, B = 5v. Two equations: choir total and student difference.'
+};
+
+// Day 5 Q3: fix clean numbers
+DAYS[4].questions[2] = {
+  id:'d5q3', type:'fillin',
+  text:'Box A has <b>16 more</b> marbles than Box B. <b>3/8</b> of A and <b>1/3</b> of B are blue. Total blue = <b>23</b>. How many marbles in Box B?',
+  answer:'24', accept:['24'],
+  explain:'A=8u, B=3v. Blue: 3u+v=23. Diff: 8u-3v=16. v=23-3u. 8u-3(23-3u)=16. 8u-69+9u=16. 17u=85. u=5. A=40. v=23-15=8. B=3(8)=<b>24</b>.',
+  hint:'A = 8u (denominator 8), B = 3v (denominator 3). Two equations: blue total and marble difference.'
+};
+
+// Day 5 Q4: clean override
+DAYS[4].questions[3] = {
+  id:'d5q4', type:'fillin',
+  text:'Farm A has <b>12 more</b> animals than Farm B. <b>2/5</b> of A and <b>1/4</b> of B are cows. Total cows = <b>23</b>. How many animals does Farm A have?',
+  answer:'40', accept:['40'],
+  explain:'A=5u, B=4v. Cows: 2u+v=23. Diff: 5u-4v=12. v=23-2u. 5u-4(23-2u)=12 → 5u-92+8u=12 → 13u=104 → u=8. A=5(8)=<b>40</b>.',
+  hint:'Let A = 5u, B = 4v. Two equations: cows total and animal difference.'
+};
+
+// Day 6 Q5: fix clean numbers
+DAYS[5].questions[4] = {
+  id:'d6q5', type:'fillin',
+  text:'Club X has <b>18 more</b> members than Club Y. <b>1/4</b> of X and <b>2/3</b> of Y volunteer. Total volunteers = <b>32</b>. How many members in Club Y?',
+  answer:'30', accept:['30'],
+  explain:'X=4u, Y=3v. Vol: u+2v=32. Diff: 4u-3v=18. u=32-2v. 4(32-2v)-3v=18. 128-8v-3v=18. 11v=110. v=10. Y=3(10)=<b>30</b>.',
+  hint:'Let X = 4u, Y = 3v. Two equations: volunteer total and member difference.'
+};
+
+// Day 7 Q6: fix
+DAYS[6].questions[5] = {
+  id:'d7q6', type:'fillin',
+  text:'Group P has <b>18 more</b> people than Group Q. <b>1/4</b> of P and <b>2/3</b> of Q volunteer. Total volunteers = <b>32</b>. How many people in Group Q?',
+  answer:'30', accept:['30'],
+  explain:'P=4u, Q=3v. u+2v=32, 4u-3v=18. u=32-2v. 128-8v-3v=18. 11v=110. v=10. Q=<b>30</b>.'
+};
+
+// Day 7 Q8: fix dimensions
+DAYS[6].questions[7] = {
+  id:'d7q8', type:'fillin',
+  text:'Container A (50 cm x 20 cm base) has water at <b>18 cm</b>. Container B (25 cm x 16 cm base) is empty. Both receive <b>1000 ml/min</b>. After how many minutes will heights be equal?',
+  answer:'12', accept:['12'],
+  explain:'Rise A = 1000/1000 = 1 cm/min. Rise B = 1000/400 = 2.5 cm/min. 18 + t = 2.5t → 1.5t = 18 → t = <b>12 min</b>.'
+};
+
+// ============================================================
+// STATE
+// ============================================================
+const STATE = {
+  scores: {},    // { day: { correct, total, pct } }
+  current: null, // { day, qIndex, answers, startTime }
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('rfpd-trainer-state');
+    if (s) Object.assign(STATE, JSON.parse(s));
+  } catch(e) {}
+}
+function saveState() {
+  try { localStorage.setItem('rfpd-trainer-state', JSON.stringify(STATE)); } catch(e) {}
+}
+
+// ============================================================
+// SOUND EFFECTS
+// ============================================================
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let _audioCtx, _soundOn = true;
+
+function getAudio() { if(!_audioCtx) _audioCtx = new AudioCtx(); return _audioCtx; }
+
+function playTone(freq, duration, type='sine', vol=0.25) {
+  if (!_soundOn) return;
+  try {
+    const ctx = getAudio();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type; osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(vol, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + duration);
+  } catch(e) {}
+}
+
+function sfxCorrect() {
+  playTone(523.25, 0.12); setTimeout(()=>playTone(659.25, 0.18, 'sine', 0.3), 80);
+  setTimeout(()=>playTone(783.99, 0.25), 160);
+}
+function sfxWrong() { playTone(311, 0.15, 'square', 0.12); setTimeout(()=>playTone(233, 0.25, 'square', 0.1), 100); }
+function sfxClick() { playTone(800, 0.04, 'sine', 0.1); }
+function sfxComplete() {
+  [523.25, 659.25, 783.99, 1046.5].forEach((f,i) => setTimeout(()=>playTone(f, 0.2), i*120));
+}
+
+function toggleSound() {
+  _soundOn = !_soundOn;
+  document.getElementById('soundToggle').textContent = _soundOn ? '🔊' : '🔇';
+}
+
+// ============================================================
+// CONFETTI
+// ============================================================
+function launchConfetti(dur=3000) {
+  const c = document.createElement('canvas');
+  c.style.cssText = 'position:fixed;inset:0;z-index:999;pointer-events:none';
+  c.width = window.innerWidth; c.height = window.innerHeight;
+  document.body.appendChild(c);
+  const ctx = c.getContext('2d');
+  const colors = ['#58CC02','#1CB0F6','#FFC800','#FF4B4B','#A560E8','#FF9600'];
+  const ps = [];
+  for(let i=0;i<100;i++) ps.push({
+    x:Math.random()*c.width, y:-20-Math.random()*c.height*0.5,
+    w:6+Math.random()*6, h:4+Math.random()*4,
+    color:colors[Math.floor(Math.random()*colors.length)],
+    vx:(Math.random()-0.5)*4, vy:2+Math.random()*4,
+    rot:Math.random()*Math.PI*2, rs:(Math.random()-0.5)*0.2,
+    g:0.05+Math.random()*0.05, op:1
+  });
+  const t0 = Date.now();
+  (function draw(){
+    const el = Date.now()-t0;
+    ctx.clearRect(0,0,c.width,c.height);
+    ps.forEach(p=>{
+      p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.rot+=p.rs;
+      if(el>dur-800) p.op=Math.max(0,p.op-0.02);
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.globalAlpha=p.op; ctx.fillStyle=p.color;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+    });
+    if(el<dur) requestAnimationFrame(draw); else c.remove();
+  })();
+}
+
+// ============================================================
+// RENDERING
+// ============================================================
+const app = document.getElementById('app');
+
+function showHome() {
+  STATE.current = null;
+  const totalCorrect = Object.values(STATE.scores).reduce((s,d)=>s+d.correct,0);
+  const totalQ = Object.values(STATE.scores).reduce((s,d)=>s+d.total,0);
+  const daysComplete = Object.keys(STATE.scores).length;
+  const streak = daysComplete; // simplified
+
+  let html = `<div class="home">
+    <h1>RFPD Math Trainer</h1>
+    <p class="sub">7-day targeted practice based on your error analysis</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="val" style="color:var(--green)">${daysComplete}/7</div><div class="lbl">Days done</div></div>
+      <div class="stat-card"><div class="val">${totalQ > 0 ? Math.round(totalCorrect/totalQ*100) + '%' : '—'}</div><div class="lbl">Accuracy</div></div>
+      <div class="stat-card"><div class="val">${totalCorrect}</div><div class="lbl">Correct</div></div>
+      <div class="stat-card"><div class="val">${totalQ}</div><div class="lbl">Attempted</div></div>
+    </div>`;
+
+  DAYS.forEach((d, i) => {
+    const sc = STATE.scores[d.day];
+    const done = !!sc;
+    const scoreText = done ? `${sc.correct}/${sc.total}` : 'Not started';
+    html += `<div class="day-card ${done?'completed':''}" onclick="showDayIntro(${i})">
+      <div class="icon" style="background:${d.color}22">${d.icon}</div>
+      <div class="info"><h3>${d.label}: ${d.title}</h3><p>${d.questions.length} questions${d.timed?' · Timed 30 min':''}</p></div>
+      <div class="score ${done?'':'none'}">${scoreText}</div>
+    </div>`;
+  });
+
+  html += '</div>';
+  app.innerHTML = html;
+}
+
+function showDayIntro(dayIdx) {
+  const d = DAYS[dayIdx];
+  let objList = d.objectives.map(o => `<li>${o}</li>`).join('');
+  app.innerHTML = `<div class="day-intro">
+    <div class="icon-big">${d.icon}</div>
+    <h2>${d.label}: ${d.title}</h2>
+    <p class="desc">${d.desc}</p>
+    <div class="objectives"><h4>Today's objectives</h4><ul>${objList}</ul></div>
+    <button class="start-btn" onclick="startDay(${dayIdx})">Start Practice</button>
+    <p style="text-align:center;margin-top:12px"><a href="#" onclick="showHome();return false" style="color:var(--text2);font-size:13px">Back to home</a></p>
+  </div>`;
+}
+
+function startDay(dayIdx) {
+  const d = DAYS[dayIdx];
+  STATE.current = {
+    dayIdx, day: d.day, qIndex: 0,
+    answers: new Array(d.questions.length).fill(null),
+    correct: new Array(d.questions.length).fill(null),
+    startTime: Date.now(),
+    hintUsed: new Array(d.questions.length).fill(false),
+    scaffoldAnswers: {},
+  };
+  saveState();
+  showQuestion();
+}
+
+function showQuestion() {
+  const cur = STATE.current;
+  if (!cur) return showHome();
+  const d = DAYS[cur.dayIdx];
+  const q = d.questions[cur.qIndex];
+  const qNum = cur.qIndex + 1;
+  const total = d.questions.length;
+  const pct = Math.round((qNum - 1) / total * 100);
+  const answered = cur.correct[cur.qIndex] !== null;
+
+  let topbar = `<div class="topbar">
+    <button class="back" onclick="confirmExit()">✕</button>
+    <div class="title">${d.label}</div>
+    <div class="counter">${qNum}/${total}</div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+  </div>`;
+
+  let body = `<div class="practice"><div class="q-card">
+    <div class="q-label">${d.title} · Question ${qNum}</div>
+    <div class="q-text">${q.text}</div>`;
+
+  // Hint button (not for timed day 7, not for scaffold, not after answered)
+  if (q.hint && !d.timed && q.type !== 'scaffold' && !answered) {
+    body += `<button class="hint-btn" onclick="showHint()" id="hintBtn">💡 Show hint</button>
+    <div class="hint-box" id="hintBox">${q.hint}</div>`;
+  }
+
+  // Question type rendering
+  if (q.type === 'mcq') {
+    body += '<div class="mcq-options">';
+    const keys = ['A','B','C','D'];
+    q.options.forEach((opt, i) => {
+      let cls = '';
+      if (answered) {
+        if (i === q.answer) cls = 'correct';
+        else if (cur.answers[cur.qIndex] === i) cls = 'wrong';
+      } else if (cur.answers[cur.qIndex] === i) {
+        cls = 'selected';
+      }
+      body += `<div class="mcq-opt ${cls}" onclick="selectMCQ(${i})" id="opt${i}">
+        <span class="key">${keys[i]}</span> ${opt}
+        <span class="kbd">${i+1}</span>
+      </div>`;
+    });
+    body += '</div>';
+  } else if (q.type === 'fillin') {
+    const val = cur.answers[cur.qIndex] || '';
+    let inputCls = '';
+    if (answered) inputCls = cur.correct[cur.qIndex] ? 'correct' : 'wrong';
+    body += `<div class="fill-group">
+      <label>Answer:</label>
+      <input type="text" class="fill-input ${inputCls}" id="fillInput" value="${val}"
+        ${answered ? 'disabled' : ''} onkeydown="if(event.key==='Enter')checkAnswer()" placeholder="Type your answer">
+      ${q.unit ? `<span class="fill-unit">${q.unit}</span>` : ''}
+    </div>`;
+  } else if (q.type === 'scaffold') {
+    if (q.hint && !answered) {
+      body += `<button class="hint-btn" onclick="showHint()" id="hintBtn">💡 Show hint</button>
+      <div class="hint-box" id="hintBox">${q.hint}</div>`;
+    }
+    body += `<div class="scaffold"><h4>Step-by-step framework</h4>`;
+    const sa = cur.scaffoldAnswers[cur.qIndex] || {};
+    q.steps.forEach((step, i) => {
+      const stepVal = sa[i] || '';
+      const stepDone = answered;
+      let stepCls = '';
+      if (stepDone) {
+        const isRight = step.accept.some(a => stepVal.trim().toLowerCase() === a.toLowerCase());
+        stepCls = isRight ? 'correct' : 'wrong';
+      }
+      body += `<div class="step"><b>${step.label}:</b> ${step.prompt.replace('___', `<input type="text" class="fill-input ${stepCls}" style="width:80px;display:inline;padding:4px 8px;font-size:14px" id="scaffold${i}" value="${stepVal}" ${stepDone?'disabled':''}>`)}
+      </div>`;
+    });
+    body += '</div>';
+    // Final answer
+    const finalVal = cur.answers[cur.qIndex] || '';
+    let finalCls = '';
+    if (answered) finalCls = cur.correct[cur.qIndex] ? 'correct' : 'wrong';
+    body += `<div class="fill-group">
+      <label>Final answer:</label>
+      <input type="text" class="fill-input ${finalCls}" id="fillInput" value="${finalVal}"
+        ${answered ? 'disabled' : ''} onkeydown="if(event.key==='Enter')checkAnswer()" placeholder="Type your answer">
+      ${q.finalUnit ? `<span class="fill-unit">${q.finalUnit}</span>` : ''}
+    </div>`;
+  }
+
+  // Feedback
+  if (answered) {
+    const isCorrect = cur.correct[cur.qIndex];
+    body += `<div class="feedback-box ${isCorrect ? 'correct' : 'wrong'}">
+      <h4>${isCorrect ? '✓ Correct!' : '✗ Not quite'}</h4>
+      <div class="explain">${q.explain}</div>
+    </div>`;
+  }
+
+  body += '</div>'; // close q-card
+
+  // Button
+  if (!answered) {
+    body += `<button class="check-btn primary" onclick="checkAnswer()" id="checkBtn">Check <span class="kbd">Enter</span></button>`;
+  } else if (cur.qIndex < total - 1) {
+    body += `<button class="check-btn next" onclick="nextQuestion()" id="nextBtn">Continue <span class="kbd">Enter</span></button>`;
+  } else {
+    body += `<button class="check-btn next" onclick="showResults()" id="nextBtn">See Results <span class="kbd">Enter</span></button>`;
+  }
+
+  body += '</div>'; // close practice
+
+  app.innerHTML = topbar + body;
+
+  // Focus input
+  if (!answered) {
+    const inp = document.getElementById('fillInput');
+    if (inp) setTimeout(() => inp.focus(), 100);
+  }
+}
+
+function selectMCQ(idx) {
+  if (STATE.current.correct[STATE.current.qIndex] !== null) return;
+  sfxClick();
+  STATE.current.answers[STATE.current.qIndex] = idx;
+  showQuestion();
+}
+
+function showHint() {
+  const box = document.getElementById('hintBox');
+  if (box) { box.classList.add('show'); STATE.current.hintUsed[STATE.current.qIndex] = true; }
+  const btn = document.getElementById('hintBtn');
+  if (btn) btn.style.display = 'none';
+}
+
+function checkAnswer() {
+  const cur = STATE.current;
+  if (cur.correct[cur.qIndex] !== null) return;
+  const d = DAYS[cur.dayIdx];
+  const q = d.questions[cur.qIndex];
+
+  let isCorrect = false;
+
+  if (q.type === 'mcq') {
+    if (cur.answers[cur.qIndex] === null) return;
+    isCorrect = cur.answers[cur.qIndex] === q.answer;
+  } else if (q.type === 'fillin') {
+    const inp = document.getElementById('fillInput');
+    const val = inp ? inp.value.trim() : '';
+    if (!val) return;
+    cur.answers[cur.qIndex] = val;
+    const accept = q.accept || [q.answer];
+    isCorrect = accept.some(a => val.toLowerCase().replace(/[$,\s]/g, '') === a.toLowerCase().replace(/[$,\s]/g, ''));
+  } else if (q.type === 'scaffold') {
+    // Save scaffold answers
+    const sa = {};
+    q.steps.forEach((step, i) => {
+      const inp = document.getElementById(`scaffold${i}`);
+      sa[i] = inp ? inp.value.trim() : '';
+    });
+    cur.scaffoldAnswers[cur.qIndex] = sa;
+
+    const inp = document.getElementById('fillInput');
+    const val = inp ? inp.value.trim() : '';
+    if (!val) return;
+    cur.answers[cur.qIndex] = val;
+    const accept = q.accept || [q.finalAnswer];
+    isCorrect = accept.some(a => val.toLowerCase().replace(/[$,\s]/g, '') === a.toLowerCase().replace(/[$,\s]/g, ''));
+  }
+
+  cur.correct[cur.qIndex] = isCorrect;
+  saveState();
+
+  if (isCorrect) sfxCorrect(); else sfxWrong();
+  showQuestion();
+}
+
+function nextQuestion() {
+  STATE.current.qIndex++;
+  saveState();
+  showQuestion();
+}
+
+function showResults() {
+  const cur = STATE.current;
+  const d = DAYS[cur.dayIdx];
+  const correct = cur.correct.filter(c => c === true).length;
+  const total = d.questions.length;
+  const pct = Math.round(correct / total * 100);
+
+  STATE.scores[d.day] = { correct, total, pct };
+  STATE.current = null;
+  saveState();
+
+  const emoji = pct >= 90 ? '🏆' : pct >= 70 ? '⭐' : pct >= 50 ? '💪' : '📚';
+  if (pct >= 70) { sfxComplete(); setTimeout(() => launchConfetti(4000), 300); }
+
+  app.innerHTML = `<div class="results">
+    <div class="emoji">${emoji}</div>
+    <h2>${d.label} Complete!</h2>
+    <div class="pct" style="color:${pct>=70?'var(--green)':pct>=50?'var(--amber)':'var(--red)'}">${pct}%</div>
+    <div class="detail">${correct} out of ${total} correct</div>
+    <div class="btn-row">
+      <button class="btn" onclick="startDay(${cur.dayIdx})">Retry</button>
+      <button class="btn primary" onclick="showHome()">Home</button>
+    </div>
+  </div>`;
+}
+
+function confirmExit() {
+  if (STATE.current && confirm('Exit practice? Your progress on this day will be lost.')) {
+    STATE.current = null;
+    showHome();
+  } else if (!STATE.current) {
+    showHome();
+  }
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (!STATE.current) return;
+  const cur = STATE.current;
+  const answered = cur.correct[cur.qIndex] !== null;
+  const q = DAYS[cur.dayIdx].questions[cur.qIndex];
+
+  if (e.key === 'Escape') { confirmExit(); return; }
+
+  if (e.key === 'Enter') {
+    if (!answered) checkAnswer();
+    else if (cur.qIndex < DAYS[cur.dayIdx].questions.length - 1) nextQuestion();
+    else showResults();
+    return;
+  }
+
+  if (!answered && q.type === 'mcq') {
+    const n = parseInt(e.key);
+    if (n >= 1 && n <= q.options.length) selectMCQ(n - 1);
+  }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+loadState();
+showHome();
+document.getElementById('soundToggle').textContent = '🔊';
+</script>
+
+</body>
+</html>

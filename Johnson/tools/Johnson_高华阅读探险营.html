@@ -1,0 +1,2753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>🐾 高华阅读探险营 · Johnson</title>
+<style>
+/* ============ THEME: 护眼浅蓝 ============ */
+:root{
+  --bg:#eaf3fa; --bg2:#f2f8fd; --card:#ffffff;
+  --primary:#4a90c2; --primary-dark:#2e6da4;
+  --green:#3aa876; --green-pale:#e3f4ec;
+  --warm:#f0a94b; --warm-pale:#fdf1e0;
+  --orange-soft:#fbeedd; --orange-text:#b0742a;
+  --text:#2b3a46; --muted:#6b8299;
+  --line:#d7e6f2;
+  --radius:18px;
+  --shadow:0 4px 14px rgba(74,144,194,.12);
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+  background:linear-gradient(180deg,var(--bg2),var(--bg));
+  color:var(--text);
+  font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:17px; line-height:1.7;
+  min-height:100vh;
+}
+button{font-family:inherit; cursor:pointer;}
+#app{max-width:680px;margin:0 auto;padding:0 14px 60px;}
+
+/* ============ TOP BAR ============ */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(242,248,253,.92);backdrop-filter:blur(8px);
+  display:flex;align-items:center;gap:10px;
+  padding:10px 4px;border-bottom:1px solid var(--line);
+  margin:0 -14px 12px;padding-left:16px;padding-right:16px;
+}
+.topbar .stat{
+  display:flex;align-items:center;gap:5px;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:999px;padding:6px 13px;font-weight:700;font-size:15px;
+  box-shadow:var(--shadow);min-height:44px;
+}
+.stat .num{color:var(--primary-dark);}
+.stat.warm .num{color:var(--warm);}
+.spacer{flex:1;}
+.toolbox-btn{
+  position:relative;background:var(--card);border:1px solid var(--line);
+  border-radius:999px;min-width:48px;min-height:44px;font-size:20px;
+  box-shadow:var(--shadow);
+}
+.toolbox-btn .badge{
+  position:absolute;top:-6px;right:-6px;background:var(--warm);color:#fff;
+  font-size:12px;font-weight:800;border-radius:999px;min-width:20px;height:20px;
+  display:flex;align-items:center;justify-content:center;padding:0 5px;
+}
+
+/* ============ HOME ============ */
+.hero{text-align:center;margin:6px 0 4px;}
+.hero h1{font-size:24px;margin:6px 0 2px;color:var(--primary-dark);}
+.hero .sub{color:var(--muted);font-size:15px;margin:0;}
+.mascot-row{
+  display:flex;align-items:flex-start;gap:10px;
+  margin:14px 0 6px;
+}
+.mascot{font-size:44px;line-height:1;flex-shrink:0;animation:bob 2.6s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.bubble{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  border-top-left-radius:4px;padding:10px 15px;box-shadow:var(--shadow);
+  font-size:15.5px;flex:1;
+}
+
+/* adventure path */
+.path{position:relative;margin:22px 0 10px;padding:8px 0;}
+.path-line{
+  position:absolute;left:50%;top:0;bottom:0;width:6px;transform:translateX(-50%);
+  background:repeating-linear-gradient(180deg,var(--line) 0 14px,transparent 14px 26px);
+  border-radius:3px;
+}
+.node-row{position:relative;display:flex;margin:16px 0;min-height:92px;align-items:center;}
+.node-row.left{justify-content:flex-start;padding-left:6%;}
+.node-row.right{justify-content:flex-end;padding-right:6%;}
+.node{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  background:none;border:none;padding:4px;min-width:96px;
+}
+.node .circle{
+  width:74px;height:74px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-weight:800;font-size:15px;color:#fff;
+  box-shadow:0 5px 0 rgba(0,0,0,.10), var(--shadow);
+  transition:transform .15s;position:relative;
+}
+.node:active .circle{transform:scale(.94);}
+.node.locked .circle{background:#c3d2df;color:#7d93a6;box-shadow:0 5px 0 rgba(0,0,0,.06);}
+.node.current .circle{background:linear-gradient(160deg,var(--primary),var(--primary-dark));}
+.node.current .circle::after{
+  content:"";position:absolute;inset:-8px;border-radius:50%;
+  border:3px solid var(--primary);opacity:.6;animation:pulse 1.6s ease-out infinite;
+}
+@keyframes pulse{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.18);opacity:0}}
+.node.done .circle{background:linear-gradient(160deg,#53bb8c,var(--green));}
+.node .emoji{font-size:20px;line-height:1;}
+.node .dnum{font-size:13px;line-height:1.2;}
+.node .stars{font-size:13px;letter-spacing:1px;height:16px;color:var(--warm);}
+.node .ntitle{
+  font-size:13px;color:var(--muted);max-width:150px;text-align:center;line-height:1.35;
+}
+.node.current .ntitle{color:var(--primary-dark);font-weight:700;}
+
+/* skill thermometer */
+.panel{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:16px 18px;margin:18px 0;
+}
+.panel h3{margin:0 0 10px;font-size:17px;color:var(--primary-dark);}
+.skill-row{display:flex;align-items:center;gap:10px;margin:9px 0;}
+.skill-name{width:110px;font-size:14.5px;flex-shrink:0;}
+.skill-bar{flex:1;height:12px;background:var(--bg);border-radius:999px;overflow:hidden;}
+.skill-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#7db8de,var(--primary));transition:width .6s;}
+.skill-pct{width:52px;text-align:right;font-size:13px;color:var(--muted);flex-shrink:0;}
+.footer-note{text-align:center;color:var(--muted);font-size:13.5px;margin-top:22px;}
+
+/* ============ LESSON ============ */
+.lesson-top{display:flex;align-items:center;gap:10px;margin:8px 0 14px;}
+.back-btn{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  min-width:44px;min-height:44px;font-size:18px;color:var(--muted);box-shadow:var(--shadow);
+}
+.progress-wrap{flex:1;height:14px;background:#d9e8f4;border-radius:999px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#66d19e,var(--green));border-radius:999px;transition:width .45s;}
+.kicker{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.type-badge{
+  background:var(--primary);color:#fff;font-size:13.5px;font-weight:700;
+  border-radius:999px;padding:3px 12px;
+}
+.type-badge.build{background:#8a6fc8;}
+.type-badge.write{background:var(--warm);}
+.kicker .count{color:var(--muted);font-size:14px;font-weight:700;}
+.ribbon{
+  background:linear-gradient(90deg,var(--warm-pale),#fff8ec);
+  border:1.5px dashed var(--warm);border-radius:14px;
+  padding:10px 15px;margin:12px 0;font-size:16px;
+}
+.ribbon b{color:var(--orange-text);}
+.passage{
+  background:var(--card);border-left:5px solid var(--primary);
+  border-radius:12px;padding:13px 16px;margin:10px 0 14px;
+  font-size:17px;line-height:1.9;box-shadow:var(--shadow);
+}
+.qtext{font-size:18.5px;font-weight:700;margin:12px 0 14px;line-height:1.75;}
+
+/* mcq options */
+.opt{
+  display:block;width:100%;text-align:left;
+  background:var(--card);border:2px solid var(--line);border-radius:16px;
+  padding:13px 16px;margin:10px 0;font-size:16.5px;line-height:1.65;color:var(--text);
+  min-height:52px;box-shadow:var(--shadow);transition:transform .1s,border-color .15s,background .2s;
+}
+.opt:active{transform:scale(.985);}
+.opt.sel-correct{border-color:var(--green);background:var(--green-pale);}
+.opt.sel-wrong{border-color:var(--warm);background:var(--orange-soft);opacity:.85;}
+.opt.reveal-correct{border-color:var(--green);background:var(--green-pale);}
+.opt:disabled{cursor:default;}
+.opt .letter{
+  display:inline-flex;width:26px;height:26px;border-radius:50%;
+  background:var(--bg);color:var(--primary-dark);font-weight:800;font-size:14px;
+  align-items:center;justify-content:center;margin-right:9px;vertical-align:-6px;
+}
+
+/* build */
+.assembly{
+  min-height:64px;background:var(--card);border:2px dashed var(--primary);
+  border-radius:16px;padding:10px;margin:10px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+}
+.assembly .placeholder{color:var(--muted);font-size:14.5px;padding:6px 8px;}
+.chunk-pool{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;}
+.chunk{
+  background:var(--card);border:2px solid var(--line);border-radius:14px;
+  padding:10px 15px;font-size:16.5px;min-height:46px;box-shadow:var(--shadow);
+  color:var(--text);transition:transform .1s;
+}
+.chunk:active{transform:scale(.95);}
+.chunk.in-zone{border-color:var(--primary);background:#eef6fc;}
+.chunk.ghost{visibility:hidden;}
+.shake{animation:shake .45s;}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+/* write */
+.field-cards{display:flex;flex-direction:column;gap:8px;margin:12px 0;}
+.field-card{
+  background:var(--card);border:2px solid var(--line);border-radius:14px;
+  padding:9px 14px;font-size:15.5px;display:flex;align-items:center;gap:9px;
+  transition:border-color .25s,background .25s;
+}
+.field-card .mark{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  background:var(--bg);display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--muted);font-weight:800;
+}
+.field-card.pass{border-color:var(--green);background:var(--green-pale);}
+.field-card.pass .mark{background:var(--green);color:#fff;animation:pop .35s;}
+@keyframes pop{0%{transform:scale(.3)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+.chips-label{font-size:14px;color:var(--muted);margin:12px 0 6px;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+.chip{
+  background:#eef6fc;border:1.5px solid #bcd9ee;color:var(--primary-dark);
+  border-radius:999px;padding:8px 15px;font-size:15.5px;font-weight:600;min-height:40px;
+  transition:transform .1s;
+}
+.chip:active{transform:scale(.92);}
+textarea.answer{
+  width:100%;min-height:120px;border:2px solid var(--line);border-radius:16px;
+  padding:13px 15px;font-size:17px;line-height:1.85;font-family:inherit;color:var(--text);
+  background:var(--card);resize:vertical;box-shadow:var(--shadow);
+}
+textarea.answer:focus{outline:none;border-color:var(--primary);}
+
+/* action buttons */
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;}
+.btn{
+  border:none;border-radius:16px;padding:13px 22px;font-size:16.5px;font-weight:700;
+  min-height:50px;transition:transform .1s,opacity .2s;
+}
+.btn:active{transform:scale(.96);}
+.btn.primary{background:linear-gradient(160deg,var(--primary),var(--primary-dark));color:#fff;box-shadow:0 4px 0 #24587f;}
+.btn.green{background:linear-gradient(160deg,#53bb8c,var(--green));color:#fff;box-shadow:0 4px 0 #2b8a5e;}
+.btn.ghost{background:var(--card);border:2px solid var(--line);color:var(--primary-dark);}
+.btn.warm{background:var(--warm-pale);border:2px solid var(--warm);color:var(--orange-text);}
+.btn:disabled{opacity:.45;cursor:default;}
+
+/* feedback banners */
+.banner{
+  border-radius:16px;padding:13px 17px;margin:14px 0;font-size:16px;line-height:1.7;
+  animation:slideup .3s;
+}
+@keyframes slideup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.banner.good{background:var(--green-pale);border:2px solid var(--green);color:#1f6b4a;}
+.banner.soft{background:var(--orange-soft);border:2px solid var(--warm);color:var(--orange-text);}
+.banner.info{background:#eef6fc;border:2px solid #bcd9ee;color:var(--primary-dark);}
+.banner .btitle{font-weight:800;font-size:17px;display:block;margin-bottom:3px;}
+.hint-box,.model-box{
+  border-radius:14px;padding:11px 15px;margin:10px 0;font-size:15.5px;animation:slideup .3s;
+}
+.hint-box{background:var(--warm-pale);border:1.5px dashed var(--warm);}
+.model-box{background:#eef6fc;border:1.5px solid #bcd9ee;}
+.model-box b{color:var(--primary-dark);}
+
+/* intro & complete screens */
+.center-card{
+  background:var(--card);border:1px solid var(--line);border-radius:22px;
+  box-shadow:var(--shadow);padding:26px 22px;text-align:center;margin:24px 0;
+}
+.center-card .big-emoji{font-size:64px;line-height:1.1;}
+.center-card h2{color:var(--primary-dark);margin:10px 0 4px;font-size:22px;}
+.center-card .sub{color:var(--muted);font-size:15.5px;margin:0 0 8px;}
+.star-line{font-size:38px;letter-spacing:6px;margin:8px 0;}
+.star-line .on{color:var(--warm);}
+.star-line .off{color:#d8e4ee;}
+.reward-line{font-size:17px;margin:6px 0;}
+.reward-line b{color:var(--primary-dark);}
+
+/* xp float + confetti */
+.xp-float{
+  position:fixed;left:50%;top:38%;transform:translateX(-50%);
+  font-size:26px;font-weight:800;color:var(--warm);z-index:200;pointer-events:none;
+  animation:xpfloat 1.2s ease-out forwards;text-shadow:0 2px 6px rgba(255,255,255,.9);
+}
+@keyframes xpfloat{0%{opacity:0;transform:translate(-50%,10px)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-70px)}}
+.confetti-piece{
+  position:fixed;top:-14px;z-index:190;pointer-events:none;border-radius:3px;
+  animation:cfall linear forwards;
+}
+@keyframes cfall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1}
+  85%{opacity:1}
+  100%{transform:translateY(105vh) rotate(560deg);opacity:0}
+}
+
+/* repair box */
+.mistake-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:15px 17px;margin:12px 0;
+}
+.mistake-card.fixed{border-color:var(--green);background:var(--green-pale);}
+.mistake-card .mq{font-weight:700;font-size:16px;margin-bottom:5px;}
+.mistake-card .mrow{font-size:14.5px;color:var(--muted);margin:3px 0;line-height:1.6;}
+.mistake-card .mrow b{color:var(--text);}
+.fixed-tag{color:var(--green);font-weight:800;font-size:14.5px;}
+.empty-box{text-align:center;color:var(--muted);padding:30px 10px;font-size:16px;}
+
+@media (max-width:768px){
+  #app{padding:0 10px 50px;}
+  .node .circle{width:66px;height:66px;}
+  .skill-name{width:96px;font-size:13.5px;}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+"use strict";
+/* ================================================================
+   DATA — 14 days of Higher Chinese reading practice (embedded)
+   ================================================================ */
+const DAYS=[
+ {
+  "id": 1,
+  "week": 1,
+  "title": "动作后面藏着什么心情？",
+  "subtitle": "从动作线索推出准确情绪",
+  "skill": "短语解释",
+  "rule": "人物＋准确感受＋因为＋语境证据",
+  "scaffold": "full",
+  "items": [
+   {
+    "id": "d01-r01",
+    "type": "mcq",
+    "minutes": 2,
+    "topic": "阅读理解｜短语解释",
+    "errorType": "方法 / 迁移",
+    "passage": "宠物医生叫到饼干的名字时，Bruce 双手紧紧攥着牵引绳，一直盯着诊室门。",
+    "prompt": "“双手紧紧攥着牵引绳”说明什么？",
+    "options": [
+     "Bruce 很生气，因为医生让他在门外等了太久。",
+     "Bruce 很紧张，因为他担心饼干接受检查。",
+     "Bruce 很兴奋，因为他想看饼干表演。",
+     "Bruce 很难过，因为他舍不得离开医院。"
+    ],
+    "correct": 1,
+    "feedback": [
+     "文中没有责怪医生的证据。",
+     "答对了。",
+     "这是看诊，不是表演。",
+     "他担心的是检查，不是离开医院。"
+    ],
+    "hint": "先圈出“紧紧”，再问：他此刻最担心什么？",
+    "why": "动作的力度反映紧张；诊室这个情境说明他担心饼干。",
+    "model": "这说明 Bruce 十分紧张，因为他担心饼干接受检查。"
+   },
+   {
+    "id": "d01-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜短语解释",
+    "errorType": "概念 / 方法",
+    "passage": "饼干把尾巴夹在两腿间，停在门口不肯往前走。",
+    "prompt": "这个动作最能表现饼干怎样的状态？",
+    "options": [
+     "十分疲倦，只想赶快找个地方躺下休息。",
+     "故意淘气，不愿听话。",
+     "感到害怕，不敢进入陌生诊室。",
+     "十分兴奋，急着认识医生。"
+    ],
+    "correct": 2,
+    "feedback": [
+     "疲倦通常会趴下，不会“夹着尾巴”退缩。",
+     "没有故意捣蛋的证据。",
+     "答对了。",
+     "兴奋的动作会向前，不会退后。"
+    ],
+    "hint": "如果是兴奋，它的动作会向前还是向后？",
+    "why": "“夹着尾巴＋不肯前进”是害怕退缩的表现。",
+    "model": "饼干感到害怕，不敢进入陌生的诊室。"
+   },
+   {
+    "id": "d01-b01",
+    "type": "build",
+    "minutes": 4,
+    "topic": "阅读理解｜短语解释",
+    "errorType": "方法",
+    "prompt": "依次点击答案块，搭出完整解释。",
+    "chunks": [
+     "他担心饼干的检查结果",
+     "因为",
+     "Bruce 十分紧张"
+    ],
+    "correctOrder": [
+     "Bruce 十分紧张",
+     "因为",
+     "他担心饼干的检查结果"
+    ],
+    "hint": "解释题要先说“是什么感受”，再说“为什么”。",
+    "why": "先给动作一个准确的情绪标签，再用语境解释原因。",
+    "model": "Bruce 十分紧张，因为他担心饼干的检查结果。"
+   },
+   {
+    "id": "d01-p01",
+    "type": "write",
+    "minutes": 6,
+    "topic": "阅读理解｜短语解释",
+    "errorType": "方法 / 迁移",
+    "passage": "饼干进入诊室后，Bruce 不停地朝门内张望。",
+    "prompt": "请解释“不停地朝门内张望”。",
+    "fields": [
+     {
+      "label": "准确感受：焦急",
+      "keywords": [
+       "焦急",
+       "着急"
+      ]
+     },
+     {
+      "label": "原因：等待／担心饼干",
+      "keywords": [
+       "等待",
+       "担心",
+       "饼干"
+      ]
+     },
+     {
+      "label": "答案是一句完整解释",
+      "keywords": [
+       "因为",
+       "说明"
+      ]
+     }
+    ],
+    "hint": "先写“这说明 Bruce 十分……”，再接“因为……”。",
+    "why": "只复述“看门内”没有完成推断，必须写出焦急和原因。",
+    "model": "这说明 Bruce 十分焦急，因为他正在等待饼干的检查结果。"
+   }
+  ]
+ },
+ {
+  "id": 2,
+  "week": 1,
+  "title": "短语解释不能只写原因",
+  "subtitle": "状态和语境缺一不可",
+  "skill": "短语解释",
+  "rule": "是什么状态＋为什么会这样",
+  "scaffold": "full",
+  "items": [
+   {
+    "id": "d02-r01",
+    "type": "mcq",
+    "minutes": 2,
+    "topic": "阅读理解｜短语解释",
+    "errorType": "方法",
+    "passage": "大雨中，Bruce 沿着小路呼喊饼干的名字，脚步越来越快。",
+    "prompt": "“脚步越来越快”说明什么？",
+    "options": [
+     "他越来越焦急，希望尽快找到走失的饼干。",
+     "他越来越兴奋，想赶快找到饼干后在雨中赛跑。",
+     "他越来越生气，准备责骂饼干。",
+     "他越来越疲倦，希望赶快回家。"
+    ],
+    "correct": 0,
+    "feedback": [
+     "答对了。",
+     "走失和大雨不是赛跑情境。",
+     "没有责骂饼干的证据。",
+     "他加快脚步是为了寻找，不是回家。"
+    ],
+    "hint": "把“大雨＋走失＋寻找”连起来想。",
+    "why": "动作变快来自寻找走失宠物时的焦急。",
+    "model": "Bruce 越来越焦急，希望尽快找到走失的饼干。"
+   },
+   {
+    "id": "d02-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念",
+    "passage": "看见饼干安然无恙，Bruce 的眼圈红了起来。",
+    "prompt": "此时他最可能有什么感受？",
+    "options": [
+     "十分委屈，因为没有人愿意陪他一起寻找饼干。",
+     "愤怒，因为饼干没有听话。",
+     "疲倦，因为走了很久。",
+     "激动，因为走失的饼干平安找到了。"
+    ],
+    "correct": 3,
+    "feedback": [
+     "文中没有抱怨别人。",
+     "“安然无恙”带来的是释然与激动。",
+     "疲倦不是“眼圈红”的核心原因。",
+     "答对了。"
+    ],
+    "hint": "“安然无恙”是关键证据。",
+    "why": "失而复得、确认平安后，人物会激动。",
+    "model": "Bruce 十分激动，因为走失的饼干终于平安找到了。"
+   },
+   {
+    "id": "d02-b01",
+    "type": "build",
+    "minutes": 4,
+    "topic": "阅读理解｜短语解释",
+    "errorType": "方法",
+    "prompt": "搭出对“眼圈红了起来”的完整解释。",
+    "chunks": [
+     "终于平安找到了",
+     "Bruce 十分激动",
+     "因为走失的饼干"
+    ],
+    "correctOrder": [
+     "Bruce 十分激动",
+     "因为走失的饼干",
+     "终于平安找到了"
+    ],
+    "hint": "先写感受，再放原因。",
+    "why": "答案必须同时符合动作、上下文和人物身份。",
+    "model": "Bruce 十分激动，因为走失的饼干终于平安找到了。"
+   },
+   {
+    "id": "d02-p01",
+    "type": "write",
+    "minutes": 6,
+    "topic": "阅读理解｜短语解释",
+    "errorType": "方法 / 概念",
+    "passage": "确定饼干没有受伤后，Bruce 长长地舒了一口气。",
+    "prompt": "请解释“长长地舒了一口气”。",
+    "fields": [
+     {
+      "label": "状态：如释重负／放松",
+      "keywords": [
+       "如释重负",
+       "放松",
+       "松了一口气"
+      ]
+     },
+     {
+      "label": "原因：饼干平安没有受伤",
+      "keywords": [
+       "平安",
+       "没有受伤",
+       "无事"
+      ]
+     },
+     {
+      "label": "因果连接完整",
+      "keywords": [
+       "因为",
+       "知道",
+       "确定"
+      ]
+     }
+    ],
+    "hint": "这是担忧解除后的心情。",
+    "why": "只写“饼干没受伤”仍缺少人物的状态。",
+    "model": "这说明 Bruce 如释重负，因为他终于知道饼干平安无事。"
+   }
+  ]
+ },
+ {
+  "id": 3,
+  "week": 1,
+  "title": "别只写“开心、难过”",
+  "subtitle": "学会选准情绪词",
+  "skill": "人物感受",
+  "rule": "线索 → 准确情绪词 → 原因",
+  "scaffold": "full",
+  "items": [
+   {
+    "id": "d03-r01",
+    "type": "mcq",
+    "minutes": 2,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念",
+    "passage": "林爷爷用颤抖的手写感谢卡，感谢 Bruce 带饼干来陪伴他。Bruce 接过卡片，心里暖暖的。",
+    "prompt": "“心里暖暖的”最准确的感受是：",
+    "options": [
+     "得意",
+     "疑惑",
+     "感动",
+     "害怕"
+    ],
+    "correct": 2,
+    "feedback": [
+     "不是表现自己有多厉害。",
+     "他明白感谢卡的意思。",
+     "答对了。",
+     "没有危险或退缩的线索。"
+    ],
+    "hint": "别人真诚感谢你时，你心里会有什么感觉？",
+    "why": "人物受到真诚感谢和陪伴价值的触动，因此是感动。",
+    "model": "Bruce 十分感动。"
+   },
+   {
+    "id": "d03-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念",
+    "passage": "饼干从门缝钻出去后不见了，Bruce 沿街奔跑，一遍遍呼喊它。",
+    "prompt": "Bruce 的感受是：",
+    "options": [
+     "欣慰",
+     "焦急",
+     "不舍",
+     "愧疚"
+    ],
+    "correct": 1,
+    "feedback": [
+     "结果还没出现，不能欣慰。",
+     "答对了。",
+     "这里不是分别。",
+     "文中没有写他做错事。"
+    ],
+    "hint": "重要的事还没有结果时，是什么心情？",
+    "why": "奔跑和反复呼喊表现急着找到它，因此是焦急。",
+    "model": "Bruce 十分焦急，因为饼干不见了。"
+   },
+   {
+    "id": "d03-b01",
+    "type": "build",
+    "minutes": 4,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念 / 方法",
+    "prompt": "搭出“感动”的完整原因链。",
+    "chunks": [
+     "让他体会到陪伴能带来温暖",
+     "Bruce 很感动",
+     "因为爷爷真诚地感谢他"
+    ],
+    "correctOrder": [
+     "Bruce 很感动",
+     "因为爷爷真诚地感谢他",
+     "让他体会到陪伴能带来温暖"
+    ],
+    "hint": "感受后面先放直接证据，再放这件事的意义。",
+    "why": "“感动”不是普通开心，它来自一件事带来的价值与触动。",
+    "model": "Bruce 很感动，因为爷爷真诚地感谢他，让他体会到陪伴能带来温暖。"
+   },
+   {
+    "id": "d03-p01",
+    "type": "write",
+    "minutes": 6,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念 / 方法",
+    "passage": "疲倦的外公坐下后，饼干主动叼来拖鞋，又安静地趴在他脚边。外公笑着摸了摸它。Bruce 看见这一幕，心里暖暖的。",
+    "prompt": "Bruce 有什么感受？为什么？",
+    "fields": [
+     {
+      "label": "准确情绪：感动",
+      "keywords": [
+       "感动"
+      ]
+     },
+     {
+      "label": "直接证据：饼干照顾／陪伴外公",
+      "keywords": [
+       "拖鞋",
+       "陪伴",
+       "照顾",
+       "外公"
+      ]
+     },
+     {
+      "label": "意义：小关心带来温暖",
+      "keywords": [
+       "关心",
+       "温暖",
+       "快乐"
+      ]
+     }
+    ],
+    "hint": "不要停在“开心”，问问这件事为什么触动他。",
+    "why": "完整答案要从证据推进到这份陪伴的意义。",
+    "model": "Bruce 很感动，因为饼干主动照顾并陪伴疲倦的外公，让他明白小小的关心也能给人温暖。"
+   }
+  ]
+ },
+ {
+  "id": 4,
+  "week": 1,
+  "title": "15 字概括：留下主干",
+  "subtitle": "谁＋关键行动＋结果",
+  "skill": "限字概括",
+  "rule": "删背景和细节，保留人物、行动、结果",
+  "scaffold": "full",
+  "items": [
+   {
+    "id": "d04-r01",
+    "type": "mcq",
+    "minutes": 2,
+    "topic": "阅读理解｜段落大意",
+    "errorType": "方法 / 读题",
+    "passage": "老师发下服务队报名表，鼓励大家参加周末活动。Bruce 想到饼干常陪伴独居的外婆，便填下名字，报名探访独居老人。",
+    "prompt": "哪一句最适合概括这段话？",
+    "options": [
+     "老师发下服务队报名表。",
+     "Bruce 报名探访独居老人。",
+     "Bruce 想起饼干陪伴外婆。",
+     "同学讨论周末服务活动。"
+    ],
+    "correct": 1,
+    "feedback": [
+     "只有开头，没有关键行动。",
+     "答对了。",
+     "只有原因，没有结果。",
+     "这不是本段重点。"
+    ],
+    "hint": "问：主人公最后做了什么？",
+    "why": "段落中心落在 Bruce 的选择与结果。",
+    "model": "Bruce 报名探访独居老人。"
+   },
+   {
+    "id": "d04-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜段落大意",
+    "errorType": "方法",
+    "prompt": "概括上段时，哪一项不能删？",
+    "options": [
+     "老师发下一张服务队报名表格。",
+     "饼干平时常常陪伴独居的外婆。",
+     "探访活动安排在星期六的周末进行。",
+     "Bruce 报名探访老人。"
+    ],
+    "correct": 3,
+    "feedback": [
+     "这是背景。",
+     "这是促成想法的细节。",
+     "这是时间细节。",
+     "答对了。"
+    ],
+    "hint": "留下推动段落结果的关键行动。",
+    "why": "背景可删，主人公最后完成的关键行动不能删。",
+    "model": "Bruce 报名探访老人。"
+   },
+   {
+    "id": "d04-b01",
+    "type": "build",
+    "minutes": 4,
+    "topic": "阅读理解｜段落大意",
+    "errorType": "方法",
+    "prompt": "依次点击，搭出 15 字内的概括。",
+    "chunks": [
+     "独居老人",
+     "报名探访",
+     "Bruce"
+    ],
+    "correctOrder": [
+     "Bruce",
+     "报名探访",
+     "独居老人"
+    ],
+    "hint": "人物 → 关键行动 → 行动对象。",
+    "why": "这个主干保留了主人公、行动和结果对象。",
+    "model": "Bruce 报名探访独居老人。"
+   },
+   {
+    "id": "d04-p01",
+    "type": "write",
+    "minutes": 6,
+    "topic": "阅读理解｜段落大意",
+    "errorType": "方法 / 读题",
+    "passage": "饼干突然冲向小路边。Bruce 跟过去，发现一名小孩跌倒在地，马上把他扶起来，并通知老师。",
+    "prompt": "请在 15 字内概括。",
+    "maxChars": 15,
+    "fields": [
+     {
+      "label": "人物：Bruce",
+      "keywords": [
+       "Bruce",
+       "布鲁斯"
+      ]
+     },
+     {
+      "label": "行动：帮助／扶起",
+      "keywords": [
+       "帮助",
+       "扶",
+       "扶起"
+      ]
+     },
+     {
+      "label": "对象／结果：跌倒的小孩",
+      "keywords": [
+       "小孩",
+       "儿童"
+      ]
+     }
+    ],
+    "hint": "删掉“突然、马上、小路边”等细节。",
+    "why": "只写“发现”没有结果；要写他后来做了什么。",
+    "model": "Bruce 帮助跌倒的小孩。"
+   }
+  ]
+ },
+ {
+  "id": 5,
+  "week": 1,
+  "title": "“心里暖暖的”不只是开心",
+  "subtitle": "证据还要推进到意义",
+  "skill": "人物感受",
+  "rule": "准确情绪＋直接证据＋这件事的意义",
+  "scaffold": "full",
+  "items": [
+   {
+    "id": "d05-r01",
+    "type": "mcq",
+    "minutes": 2,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念",
+    "passage": "流浪狗小灰一直缩在角落。Bruce 坐在远处陪它，没有强行靠近。后来，小灰慢慢走来，把头靠在他的膝上。Bruce 心里暖暖的。",
+    "prompt": "Bruce 最准确的感受是：",
+    "options": [
+     "感动",
+     "得意",
+     "疑惑",
+     "害怕"
+    ],
+    "correct": 0,
+    "feedback": [
+     "答对了。",
+     "重点不是他比别人厉害。",
+     "他明白小灰的行为。",
+     "小灰已主动靠近，没有危险。"
+    ],
+    "hint": "小灰把信任交给了他。",
+    "why": "小灰由害怕转为信任，这份变化令他感动。",
+    "model": "Bruce 十分感动。"
+   },
+   {
+    "id": "d05-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "读题 / 方法",
+    "prompt": "哪项是产生这种感受的最直接证据？",
+    "options": [
+     "收容所里有许多等待新主人的动物。",
+     "Bruce 独自在远处安静坐了半个小时。",
+     "小灰主动走来，把头靠在他膝上。",
+     "饼干一直在收容所门外等 Bruce 回家。"
+    ],
+    "correct": 2,
+    "feedback": [
+     "这只是环境。",
+     "时间不是最关键的变化。",
+     "答对了。",
+     "这和小灰的信任无关。"
+    ],
+    "hint": "找小灰前后行为的关键变化。",
+    "why": "情绪证据要选人物看见或经历的关键变化。",
+    "model": "小灰主动走来，把头靠在 Bruce 的膝上。"
+   },
+   {
+    "id": "d05-r03",
+    "type": "mcq",
+    "minutes": 4,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "方法",
+    "prompt": "哪一句把原因写得最完整？",
+    "options": [
+     "因为 Bruce 在收容所安静坐了很久，所以他感到非常疲倦，只想早点回家休息。",
+     "因为他的耐心换来小灰的信任，让他体会到陪伴能给动物安全感。",
+     "因为小灰走出角落，他决定立刻带它回家。",
+     "因为饼干不在房间，所以他能观察小灰。"
+    ],
+    "correct": 1,
+    "feedback": [
+     "疲倦不是“暖暖的”。",
+     "答对了。",
+     "文中没有决定收养。",
+     "这不是感动的原因。"
+    ],
+    "hint": "直接证据之后，再写它带来的意义。",
+    "why": "完整原因不能只复述动作，还要写这个变化对人物有什么意义。",
+    "model": "他的耐心换来小灰的信任，让他体会到陪伴能给动物安全感。"
+   },
+   {
+    "id": "d05-p01",
+    "type": "write",
+    "minutes": 6,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念 / 方法",
+    "prompt": "用“感受＋证据＋意义”回答 Bruce 为什么心里暖暖的。",
+    "fields": [
+     {
+      "label": "感受：感动",
+      "keywords": [
+       "感动"
+      ]
+     },
+     {
+      "label": "证据：小灰主动靠近／信任",
+      "keywords": [
+       "靠近",
+       "信任",
+       "膝"
+      ]
+     },
+     {
+      "label": "意义：耐心陪伴带来安全感",
+      "keywords": [
+       "耐心",
+       "陪伴",
+       "安全感"
+      ]
+     }
+    ],
+    "hint": "把“开心”换成更准确的感受，再补意义。",
+    "why": "三个字段合起来才回答了“什么感受，为什么”。",
+    "model": "Bruce 很感动，因为原本怕人的小灰主动靠近并信任他，让他体会到耐心陪伴能给动物安全感。"
+   }
+  ]
+ },
+ {
+  "id": 6,
+  "week": 1,
+  "title": "变化原因：中间不能断桥",
+  "subtitle": "以前 → 触发 → 领悟 → 后来",
+  "skill": "变化原因",
+  "rule": "前后变化之间必须写出触发事件和新认识",
+  "scaffold": "full",
+  "items": [
+   {
+    "id": "d06-b01",
+    "type": "build",
+    "minutes": 3,
+    "topic": "阅读理解｜人物变化",
+    "errorType": "方法",
+    "passage": "饼干站在楼梯前不动。Bruce 起初不耐烦地拉牵引绳。训练员告诉他，饼干以前脚受过伤，所以仍害怕楼梯。Bruce 放松牵引绳，铺上防滑垫，安静等候。",
+    "prompt": "按因果顺序搭出变化链。",
+    "chunks": [
+     "明白饼干需要安全感和时间",
+     "训练员说明饼干曾受伤",
+     "不耐烦地拉牵引绳",
+     "耐心铺垫并等候"
+    ],
+    "correctOrder": [
+     "不耐烦地拉牵引绳",
+     "训练员说明饼干曾受伤",
+     "明白饼干需要安全感和时间",
+     "耐心铺垫并等候"
+    ],
+    "hint": "以前 → 发生什么 → 明白什么 → 后来。",
+    "why": "不能只放“以前”和“后来”，中间还要有触发和领悟。",
+    "model": "不耐烦催促 → 听了解释 → 明白需要安全感 → 耐心等候。"
+   },
+   {
+    "id": "d06-r01",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜人物变化",
+    "errorType": "读题",
+    "prompt": "Bruce 前后有什么变化？",
+    "options": [
+     "从喜欢饼干变成不愿训练它。",
+     "从一直害怕走上楼梯变成终于敢独自走上楼梯。",
+     "从不会铺垫变成学会整理房间。",
+     "从不耐烦地催促变成耐心地等待。"
+    ],
+    "correct": 3,
+    "feedback": [
+     "不是喜欢程度变化。",
+     "这是饼干的变化，不是 Bruce。",
+     "铺垫只是一个做法。",
+     "答对了。"
+    ],
+    "hint": "题目问的是 Bruce，不是饼干。",
+    "why": "比较主人公前后的行为：催促与等待。",
+    "model": "Bruce 从不耐烦地催促饼干，变成耐心地等待。"
+   },
+   {
+    "id": "d06-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜人物变化",
+    "errorType": "方法",
+    "prompt": "他发生变化的原因是什么？",
+    "options": [
+     "训练员的解释让他明白饼干因旧伤而害怕，需要安全感和时间。",
+     "因为饼干一直不肯上楼梯，他才发现继续用力催促并没有任何意义。",
+     "防滑垫很漂亮，他希望得到称赞。",
+     "他等得太累，只好停止训练。"
+    ],
+    "correct": 0,
+    "feedback": [
+     "答对了。",
+     "这只写事情，没有写他明白什么。",
+     "文中没有求表扬。",
+     "他没有放弃。"
+    ],
+    "hint": "直接事件之后，还要写他明白了什么。",
+    "why": "训练员说明是触发，理解饼干的需要才是内在原因。",
+    "model": "训练员的解释让他明白饼干因旧伤而害怕，需要安全感和时间。"
+   },
+   {
+    "id": "d06-p01",
+    "type": "write",
+    "minutes": 6,
+    "topic": "阅读理解｜人物变化",
+    "errorType": "方法 / 读题",
+    "prompt": "Bruce 为什么会从不耐烦变得有耐心？",
+    "fields": [
+     {
+      "label": "起初：不耐烦／拉牵引绳",
+      "keywords": [
+       "不耐烦",
+       "拉牵引绳",
+       "催促"
+      ]
+     },
+     {
+      "label": "触发：训练员说明旧伤",
+      "keywords": [
+       "训练员",
+       "旧伤",
+       "受伤"
+      ]
+     },
+     {
+      "label": "领悟：饼干需要安全感和时间",
+      "keywords": [
+       "安全感",
+       "时间",
+       "害怕"
+      ]
+     },
+     {
+      "label": "后来：耐心等候／铺垫",
+      "keywords": [
+       "耐心",
+       "等候",
+       "防滑垫"
+      ]
+     }
+    ],
+    "hint": "照着“前—事—悟—后”四格写。",
+    "why": "原因链要交代行为改变前后的完整逻辑。",
+    "model": "Bruce 起初不耐烦地催促饼干；听了训练员的解释后，他明白饼干因旧伤而害怕，需要安全感和时间，因此改用防滑垫并耐心等待。"
+   }
+  ]
+ },
+ {
+  "id": 7,
+  "week": 1,
+  "title": "第一周复盘：雨中的饼干",
+  "subtitle": "不看提示完成一轮综合作答",
+  "skill": "变化原因",
+  "rule": "先读题目要求，再决定答案要几个字段",
+  "scaffold": "hidden",
+  "items": [
+   {
+    "id": "d07-r01",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜短语解释",
+    "errorType": "概念 / 方法",
+    "passage": "回家路上忽然下雨。饼干被脚踏车铃声吓到，挣脱牵引绳，躲到候车亭后，浑身发抖。Bruce 冒雨找到它，用外套包住它并送到诊所。医生说它只是受惊，并无大碍。",
+    "prompt": "“浑身发抖”说明什么？",
+    "options": [
+     "饼干淋了大雨后觉得十分寒冷，只想赶快跟 Bruce 回家休息。",
+     "饼干看见主人后非常兴奋。",
+     "饼干受到铃声惊吓，躲起来时仍十分害怕。",
+     "饼干挣脱后十分得意。"
+    ],
+    "correct": 2,
+    "feedback": [
+     "“被铃声吓到”是更直接的线索。",
+     "兴奋不会躲起来。",
+     "答对了。",
+     "没有得意的表现。"
+    ],
+    "why": "动作、触发事件和语境都指向害怕。",
+    "model": "饼干受到铃声惊吓，躲起来时仍十分害怕。"
+   },
+   {
+    "id": "d07-p01",
+    "type": "write",
+    "minutes": 4,
+    "topic": "阅读理解｜段落大意",
+    "errorType": "方法 / 读题",
+    "prompt": "在 15 字内概括 Bruce 找到饼干后所做的事。",
+    "maxChars": 15,
+    "fields": [
+     {
+      "label": "人物：Bruce",
+      "keywords": [
+       "Bruce",
+       "布鲁斯"
+      ]
+     },
+     {
+      "label": "行动：找到／包住／送医",
+      "keywords": [
+       "找到",
+       "包",
+       "送",
+       "就医",
+       "诊所"
+      ]
+     },
+     {
+      "label": "对象：受惊的饼干",
+      "keywords": [
+       "饼干"
+      ]
+     }
+    ],
+    "why": "概括要保留人物、关键行动和结果。",
+    "model": "Bruce 找到并送受惊的饼干就医。"
+   },
+   {
+    "id": "d07-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念 / 方法",
+    "passage": "Bruce 看到饼干浑身发抖时，鼻子一酸。",
+    "prompt": "这表现他怎样的感受？",
+    "options": [
+     "很生气，因为饼干没有听话。",
+     "很心疼，因为饼干淋雨受惊、浑身发抖。",
+     "很得意，因为终于找到饼干。",
+     "很疑惑，因为自己完全不明白饼干为什么躲在候车亭后面。"
+    ],
+    "correct": 1,
+    "feedback": [
+     "他没有责备饼干。",
+     "答对了。",
+     "“鼻子一酸”不是得意。",
+     "原因已经很清楚。"
+    ],
+    "why": "看到在乎的对象受苦，准确感受是心疼。",
+    "model": "Bruce 很心疼，因为饼干淋雨受惊、浑身发抖。"
+   },
+   {
+    "id": "d07-p02",
+    "type": "write",
+    "minutes": 5,
+    "topic": "阅读理解｜人物变化",
+    "errorType": "方法 / 迁移",
+    "prompt": "Bruce 为什么决定以后出门前检查牵引绳扣环？",
+    "fields": [
+     {
+      "label": "经历：饼干挣脱并受惊",
+      "keywords": [
+       "挣脱",
+       "受惊",
+       "走失"
+      ]
+     },
+     {
+      "label": "领悟：安全检查很重要",
+      "keywords": [
+       "安全",
+       "检查",
+       "重要"
+      ]
+     },
+     {
+      "label": "行动：以后检查扣环",
+      "keywords": [
+       "以后",
+       "扣环",
+       "牵引绳"
+      ]
+     }
+    ],
+    "why": "原因不能只写“饼干跑走了”，还要写他学到的安全道理。",
+    "model": "因为饼干挣脱牵引绳后受了惊，Bruce 明白出门前做好安全检查才能保护它，所以决定以后先检查扣环。"
+   }
+  ]
+ },
+ {
+  "id": 8,
+  "week": 2,
+  "title": "从故事提炼普遍道理",
+  "subtitle": "不要只复述发生了什么",
+  "skill": "道理迁移",
+  "rule": "道理要能带到别的人和别的情境",
+  "scaffold": "after-attempt",
+  "items": [
+   {
+    "id": "d08-r01",
+    "type": "mcq",
+    "minutes": 2,
+    "topic": "阅读理解｜中心思想与生活迁移",
+    "errorType": "迁移 / 方法",
+    "passage": "每天散步时，饼干都会在花坛旁停下。那里有一只怕人的小狗。饼干不追它，只把玩具放在远处，安静地趴下。几天后，小狗终于走出来和它一起玩。",
+    "prompt": "这个故事最能说明什么道理？",
+    "options": [
+     "每个人只要遇到怕人的小狗，就应该立刻把它收养回家照顾。",
+     "只要送出玩具就一定能交到朋友。",
+     "遇到胆小的人应催促他赶快行动。",
+     "真正的关心需要耐心并尊重对方的节奏。"
+    ],
+    "correct": 3,
+    "feedback": [
+     "太局限在收养小狗。",
+     "玩具只是故事细节。",
+     "催促与故事做法相反。",
+     "答对了。"
+    ],
+    "hint": "道理应能用在人际相处中。",
+    "why": "“耐心＋尊重节奏”能迁移到很多不同情境。",
+    "model": "真正的关心需要耐心并尊重对方的节奏。"
+   },
+   {
+    "id": "d08-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜中心思想与生活迁移",
+    "errorType": "概念 / 迁移",
+    "prompt": "哪一句只是事件概括，不是道理？",
+    "options": [
+     "我们只要愿意尊重别人，就能慢慢建立彼此的信任关系。",
+     "饼干用几天时间和怕人的小狗成为朋友。",
+     "关心别人时，不应强迫对方。",
+     "耐心陪伴能缩短彼此的距离。"
+    ],
+    "correct": 1,
+    "feedback": [
+     "这是可迁移的道理。",
+     "答对了。",
+     "这是可迁移的道理。",
+     "这是可迁移的道理。"
+    ],
+    "hint": "事件句通常有具体人物和具体行动。",
+    "why": "具体人物“饼干”和“小狗”说明这是事件概括。",
+    "model": "饼干用几天时间和怕人的小狗成为朋友。"
+   },
+   {
+    "id": "d08-b01",
+    "type": "build",
+    "minutes": 4,
+    "topic": "阅读理解｜中心思想与生活迁移",
+    "errorType": "迁移 / 方法",
+    "prompt": "搭出一个完整而普遍的道理。",
+    "chunks": [
+     "也要尊重对方的节奏",
+     "关心别人",
+     "既要有耐心"
+    ],
+    "correctOrder": [
+     "关心别人",
+     "既要有耐心",
+     "也要尊重对方的节奏"
+    ],
+    "hint": "用“既……也……”把两层道理连起来。",
+    "why": "道理超越小狗故事，能用于一般的人际相处。",
+    "model": "关心别人既要有耐心，也要尊重对方的节奏。"
+   },
+   {
+    "id": "d08-p01",
+    "type": "write",
+    "minutes": 6,
+    "topic": "阅读理解｜中心思想与生活迁移",
+    "errorType": "迁移 / 方法",
+    "passage": "外公走路很慢。饼干每走几步就停下，回头等他，从不拉着他赶路。",
+    "prompt": "写出一个能用于其他情境的普遍道理。",
+    "fields": [
+     {
+      "label": "超越“小狗等外公”的具体事件",
+      "keywords": [
+       "我们",
+       "别人",
+       "与人",
+       "相处"
+      ]
+     },
+     {
+      "label": "包含体谅／耐心／尊重",
+      "keywords": [
+       "体谅",
+       "耐心",
+       "尊重",
+       "配合"
+      ]
+     },
+     {
+      "label": "句意完整",
+      "keywords": [
+       "应该",
+       "应当",
+       "需要",
+       "要"
+      ]
+     }
+    ],
+    "hint": "把人物名字拿掉，想想所有人都能学到什么。",
+    "why": "普遍道理应适用于不同人物和场景。",
+    "model": "与人相处时，我们应体谅对方的需要，并耐心配合对方的节奏。"
+   }
+  ]
+ },
+ {
+  "id": 9,
+  "week": 2,
+  "title": "生活例子必须看得见",
+  "subtitle": "对象＋行动＋结果",
+  "skill": "道理迁移",
+  "rule": "不要只写“我会帮助”，要让人看见怎么帮",
+  "scaffold": "after-attempt",
+  "items": [
+   {
+    "id": "d09-r01",
+    "type": "mcq",
+    "minutes": 2,
+    "topic": "阅读理解｜中心思想与生活迁移",
+    "errorType": "迁移 / 方法",
+    "prompt": "围绕“关心别人要化为具体行动”，哪一个生活例子最完整？",
+    "options": [
+     "同桌忘带彩笔时，我和他合用自己的彩笔，使他能按时完成作品。",
+     "同桌忘带彩笔时，我很同情他。",
+     "同桌忘带彩笔时，我把所有彩笔全部给他，结果自己无法完成课堂作品。",
+     "同桌忘带彩笔时，我提醒他下次别忘记。"
+    ],
+    "correct": 0,
+    "feedback": [
+     "答对了。",
+     "有感受但没有行动和结果。",
+     "行动不合适，反而制造新问题。",
+     "提醒没有解决眼前困难。"
+    ],
+    "hint": "找“帮谁、怎么帮、带来什么结果”。",
+    "why": "完整例子包含对象、合适行动和正面结果。",
+    "model": "同桌忘带彩笔时，我和他合用自己的彩笔，使他能按时完成作品。"
+   },
+   {
+    "id": "d09-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜中心思想与生活迁移",
+    "errorType": "迁移",
+    "prompt": "“在家里，我会帮助爷爷。”主要缺少什么？",
+    "options": [
+     "更深奥的道理",
+     "天气描写",
+     "具体行动和行动结果",
+     "一只和饼干相似的小狗"
+    ],
+    "correct": 2,
+    "feedback": [
+     "道理不是问题。",
+     "天气与例子无关。",
+     "答对了。",
+     "不需要小狗才能成立。"
+    ],
+    "hint": "读者能不能看见你做了什么？",
+    "why": "“帮助”太笼统，必须展开动作与结果。",
+    "model": "爷爷看不清药盒时，我帮他贴上大字标签，让他不再拿错。"
+   },
+   {
+    "id": "d09-r03",
+    "type": "mcq",
+    "minutes": 4,
+    "topic": "阅读理解｜中心思想与生活迁移",
+    "errorType": "迁移 / 方法",
+    "prompt": "哪一句最适合替换“我会关心家人”？",
+    "options": [
+     "我知道每一个家庭成员都很重要，所以平时一定要常常关心他们的需要。",
+     "我会经常想家人是否需要帮助。",
+     "家人有困难时，我会表现得很关心。",
+     "奶奶分不清药盒时，我帮她贴上标签，让她不再拿错。"
+    ],
+    "correct": 3,
+    "feedback": [
+     "只讲想法。",
+     "只讲想法。",
+     "行动仍不具体。",
+     "答对了。"
+    ],
+    "hint": "最好的例子像一小段看得见的录像。",
+    "why": "对象、行动和结果都清楚。",
+    "model": "奶奶分不清药盒时，我帮她贴上标签，让她不再拿错。"
+   },
+   {
+    "id": "d09-p01",
+    "type": "write",
+    "minutes": 6,
+    "topic": "阅读理解｜中心思想与生活迁移",
+    "errorType": "迁移 / 方法",
+    "prompt": "围绕“关心别人要化为具体行动”，写一个学校生活中的例子。",
+    "fields": [
+     {
+      "label": "对象：同学／老师／校工等",
+      "keywords": [
+       "同学",
+       "老师",
+       "校工",
+       "朋友",
+       "新同学"
+      ]
+     },
+     {
+      "label": "具体行动",
+      "keywords": [
+       "帮",
+       "陪",
+       "解释",
+       "借",
+       "邀请",
+       "提醒"
+      ]
+     },
+     {
+      "label": "正面结果",
+      "keywords": [
+       "让",
+       "使",
+       "能够",
+       "完成",
+       "感到",
+       "不再"
+      ]
+     }
+    ],
+    "hint": "写成：当谁遇到什么时，我会做什么，使他怎样。",
+    "why": "迁移题的得分点是可见的对象、行动和结果。",
+    "model": "新同学独自吃饭时，我会邀请他和我们同桌聊天，让他更快融入班级。"
+   }
+  ]
+ },
+ {
+  "id": 10,
+  "week": 2,
+  "title": "复杂段落也只抓主线",
+  "subtitle": "背景很多，主干只有一条",
+  "skill": "限字概括",
+  "rule": "谁做了什么＋主要结果",
+  "scaffold": "after-attempt",
+  "items": [
+   {
+    "id": "d10-r01",
+    "type": "mcq",
+    "minutes": 2,
+    "topic": "阅读理解｜段落大意",
+    "errorType": "方法 / 读题",
+    "passage": "公园草地上常有塑料袋和饮料罐，饼干有一次差点吞下塑料袋。Bruce 邀请同学每周清理草地，又挂上提醒牌。一个月后，草地恢复干净，来散步的人也开始主动带走垃圾。",
+    "prompt": "哪一句最适合在 15 字内概括？",
+    "options": [
+     "饼干在公园散步时差点吞下草地上的塑料袋。",
+     "Bruce 等人清垃圾使草地变干净。",
+     "同学每周清理并挂提醒牌。",
+     "散步的人开始主动带走垃圾。"
+    ],
+    "correct": 1,
+    "feedback": [
+     "这是行动原因。",
+     "答对了。",
+     "有做法但漏了主要结果。",
+     "这是后续影响，不是主人公主线。"
+    ],
+    "hint": "留下主人公、关键行动、主要结果。",
+    "why": "B 覆盖完整主线，而且没有被细节挤占字数。",
+    "model": "Bruce 等人清垃圾使草地变干净。"
+   },
+   {
+    "id": "d10-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜段落大意",
+    "errorType": "方法",
+    "prompt": "概括时，哪一项最适合删掉？",
+    "options": [
+     "Bruce 和同学",
+     "清理垃圾",
+     "每周进行一次",
+     "草地恢复干净"
+    ],
+    "correct": 2,
+    "feedback": [
+     "人物不能删。",
+     "关键行动不能删。",
+     "答对了。",
+     "主要结果不能删。"
+    ],
+    "hint": "频率是细节，人物、行动和结果是骨架。",
+    "why": "“每周”不影响事件主干。",
+    "model": "删掉“每周进行一次”。"
+   },
+   {
+    "id": "d10-r03",
+    "type": "mcq",
+    "minutes": 4,
+    "topic": "阅读理解｜短语解释",
+    "errorType": "概念 / 方法",
+    "passage": "看见饼干差点吞下塑料袋，Bruce 皱起眉头。",
+    "prompt": "“皱起眉头”表现什么？",
+    "options": [
+     "十分得意，因为饼干最先发现了草地上的塑料袋。",
+     "厌烦，因为同学不愿散步。",
+     "担忧，因为垃圾可能伤害动物。",
+     "疑惑，因为不认识饮料罐。"
+    ],
+    "correct": 2,
+    "feedback": [
+     "这不是值得得意的事。",
+     "文中没有同学拒绝。",
+     "答对了。",
+     "他知道那是垃圾。"
+    ],
+    "hint": "想想塑料袋对小狗有什么危险。",
+    "why": "危险线索指向担忧。",
+    "model": "Bruce 感到担忧，因为垃圾可能伤害动物。"
+   },
+   {
+    "id": "d10-p01",
+    "type": "write",
+    "minutes": 6,
+    "topic": "阅读理解｜段落大意",
+    "errorType": "方法 / 读题",
+    "prompt": "不用查看选项，在 15 字内重新概括共用短文。",
+    "maxChars": 15,
+    "fields": [
+     {
+      "label": "人物：Bruce 等人",
+      "keywords": [
+       "Bruce",
+       "布鲁斯",
+       "等人",
+       "同学"
+      ]
+     },
+     {
+      "label": "行动：清理垃圾",
+      "keywords": [
+       "清",
+       "垃圾"
+      ]
+     },
+     {
+      "label": "结果：草地变干净",
+      "keywords": [
+       "干净",
+       "整洁",
+       "恢复"
+      ]
+     }
+    ],
+    "hint": "先写骨架，再检查有没有超过 15 字。",
+    "why": "限字题不是删到最短，而是保住最重要的三块。",
+    "model": "Bruce 等人清垃圾使草地变干净。"
+   }
+  ]
+ },
+ {
+  "id": 11,
+  "week": 2,
+  "title": "高阶情绪词侦探",
+  "subtitle": "感激、欣慰、愧疚、不舍",
+  "skill": "人物感受",
+  "rule": "看触发关系，不凭“感觉差不多”",
+  "scaffold": "after-attempt",
+  "items": [
+   {
+    "id": "d11-r01",
+    "type": "mcq",
+    "minutes": 2,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念",
+    "passage": "邻居冒雨把走失的饼干送回来。Bruce 双手接过牵引绳，一再向邻居道谢。",
+    "prompt": "Bruce 的感受是：",
+    "options": [
+     "欣慰",
+     "愧疚",
+     "不舍",
+     "感激"
+    ],
+    "correct": 3,
+    "feedback": [
+     "欣慰来自看到进步或好结果。",
+     "他没有伤害或误会邻居。",
+     "这里没有分别。",
+     "答对了。"
+    ],
+    "hint": "别人帮助你，你一再道谢。",
+    "why": "别人给予帮助，人物想要道谢，准确词是感激。",
+    "model": "Bruce 十分感激邻居。"
+   },
+   {
+    "id": "d11-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念",
+    "passage": "经过数星期训练，饼干终于会在过马路前停下等候。Bruce 笑着摸摸它的头。",
+    "prompt": "Bruce 的感受是：",
+    "options": [
+     "欣慰",
+     "感激",
+     "焦急",
+     "不舍"
+    ],
+    "correct": 0,
+    "feedback": [
+     "答对了。",
+     "不是别人帮助他。",
+     "训练已有好结果。",
+     "没有分别。"
+    ],
+    "hint": "看到努力终于取得进步。",
+    "why": "看到努力取得好结果，准确词是欣慰。",
+    "model": "Bruce 感到十分欣慰。"
+   },
+   {
+    "id": "d11-r03",
+    "type": "mcq",
+    "minutes": 4,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念",
+    "passage": "Bruce 以为饼干打翻水碗，严厉责骂它。后来才知道，是风吹落窗帘碰倒了水碗。",
+    "prompt": "知道真相后，他的感受是：",
+    "options": [
+     "激动",
+     "欣慰",
+     "愧疚",
+     "感激"
+    ],
+    "correct": 2,
+    "feedback": [
+     "没有失而复得。",
+     "这不是好结果带来的宽慰。",
+     "答对了。",
+     "没有别人帮助。"
+    ],
+    "hint": "发现自己误会并伤害了对方。",
+    "why": "为自己的错误感到过意不去，就是愧疚。",
+    "model": "Bruce 十分愧疚，因为他误会并责骂了饼干。"
+   },
+   {
+    "id": "d11-p01",
+    "type": "write",
+    "minutes": 6,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念 / 方法",
+    "passage": "Bruce 暂养的小狗今天要去新家庭。他站在门口久久挥手，直到车子看不见。",
+    "prompt": "请写出 Bruce 的感受及原因。",
+    "fields": [
+     {
+      "label": "准确情绪：不舍",
+      "keywords": [
+       "不舍",
+       "舍不得"
+      ]
+     },
+     {
+      "label": "证据：久久挥手／目送",
+      "keywords": [
+       "久久",
+       "挥手",
+       "目送",
+       "看不见"
+      ]
+     },
+     {
+      "label": "原因：留恋相处时光但要分别",
+      "keywords": [
+       "留恋",
+       "相处",
+       "分别",
+       "离开"
+      ]
+     }
+    ],
+    "hint": "知道要分别，又留恋相处时光。",
+    "why": "情绪词要与“分别＋留恋”的触发关系吻合。",
+    "model": "Bruce 十分不舍，因为他留恋与小狗相处的时光，所以一直目送它离开。"
+   }
+  ]
+ },
+ {
+  "id": 12,
+  "week": 2,
+  "title": "完整变化原因链",
+  "subtitle": "事情发生 ≠ 原因完整",
+  "skill": "变化原因",
+  "rule": "触发事件后一定追问：人物明白了什么？",
+  "scaffold": "after-attempt",
+  "items": [
+   {
+    "id": "d12-r01",
+    "type": "mcq",
+    "minutes": 2,
+    "topic": "阅读理解｜人物变化",
+    "errorType": "读题 / 方法",
+    "passage": "第一次到收容所时，小狗小雨一看见 Bruce 便低声吼叫。Bruce 害怕地退后。义工告诉他，小雨以前常被惊吓，吼叫只是保护自己。Bruce 明白后，每天坐在远处轻声读书，不强迫它靠近。后来，小雨主动伏在他脚边。",
+    "prompt": "Bruce 前后有什么变化？",
+    "options": [
+     "从喜欢读书变成喜欢训练小狗。",
+     "从害怕躲避变成耐心陪伴小雨。",
+     "从主动靠近变成拒绝进入收容所。",
+     "从照顾小雨变成把它交给义工。"
+    ],
+    "correct": 1,
+    "feedback": [
+     "读书只是陪伴方式。",
+     "答对了。",
+     "前后次序相反。",
+     "文中没有交给义工。"
+    ],
+    "hint": "比较他第一次和后来的行为。",
+    "why": "人物的核心变化是害怕躲避到耐心陪伴。",
+    "model": "Bruce 从害怕躲避，变成耐心陪伴小雨。"
+   },
+   {
+    "id": "d12-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜人物变化",
+    "errorType": "读题",
+    "prompt": "促使他重新理解小雨的直接事件是：",
+    "options": [
+     "小雨最后主动走来并安静地伏在 Bruce 的脚边。",
+     "他每天坐在远处读书。",
+     "小雨第一次见他便吼叫。",
+     "义工说明小雨过去受过惊吓。"
+    ],
+    "correct": 3,
+    "feedback": [
+     "这是变化后的结果。",
+     "这是变化后的行动。",
+     "这是最初的情况。",
+     "答对了。"
+    ],
+    "hint": "找哪件事给了他新的信息。",
+    "why": "义工的解释是理解发生变化的直接触发。",
+    "model": "义工说明小雨过去受过惊吓。"
+   },
+   {
+    "id": "d12-r03",
+    "type": "mcq",
+    "minutes": 4,
+    "topic": "阅读理解｜人物变化",
+    "errorType": "方法",
+    "prompt": "哪一句最完整地说明变化原因？",
+    "options": [
+     "义工的解释使他明白小雨因过去受惊而自我保护，需要耐心和安全感。",
+     "因为小雨第一次吼叫的声音很大，他觉得坐在更远的地方读书就不会再受到惊吓。",
+     "义工请他每天来，所以他只好留下。",
+     "他希望借读书提高华文水平。"
+    ],
+    "correct": 0,
+    "feedback": [
+     "答对了。",
+     "只写做法，没写新的领悟。",
+     "文中没有“只好”。",
+     "这不是故事中的动机。"
+    ],
+    "hint": "完整原因＝触发＋新认识。",
+    "why": "A 同时写了义工的解释和 Bruce 的领悟。",
+    "model": "义工的解释使他明白小雨因过去受惊而自我保护，需要耐心和安全感。"
+   },
+   {
+    "id": "d12-p01",
+    "type": "write",
+    "minutes": 6,
+    "topic": "阅读理解｜人物变化",
+    "errorType": "方法 / 读题",
+    "prompt": "Bruce 为什么从害怕小雨变成耐心陪伴它？",
+    "fields": [
+     {
+      "label": "起初：害怕／退后",
+      "keywords": [
+       "害怕",
+       "退后",
+       "躲"
+      ]
+     },
+     {
+      "label": "触发：义工解释过去经历",
+      "keywords": [
+       "义工",
+       "解释",
+       "过去",
+       "惊吓"
+      ]
+     },
+     {
+      "label": "领悟：吼叫是保护，需要安全感",
+      "keywords": [
+       "保护",
+       "安全感",
+       "需要",
+       "害怕"
+      ]
+     },
+     {
+      "label": "后来：保持距离、耐心陪伴",
+      "keywords": [
+       "距离",
+       "耐心",
+       "陪伴",
+       "读书"
+      ]
+     }
+    ],
+    "hint": "按“以前—触发—领悟—后来”写四格。",
+    "why": "真正的原因不是“义工说了话”，而是这番话改变了他的理解。",
+    "model": "Bruce 起初因小雨吼叫而害怕退后；听了义工的解释后，他明白小雨只是因过去受惊而自我保护，需要安全感，因此改为保持距离并耐心陪伴它。"
+   }
+  ]
+ },
+ {
+  "id": 13,
+  "week": 2,
+  "title": "综合模拟：老人院里的饼干",
+  "subtitle": "提交前不显示提示",
+  "skill": "道理迁移",
+  "rule": "像考试一样独立读题，再用答题卡检查",
+  "scaffold": "hidden",
+  "items": [
+   {
+    "id": "d13-r01",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜短语解释",
+    "errorType": "概念 / 方法",
+    "passage": "星期六，Bruce 带饼干到老人院。刚进活动室，饼干便躲到他腿后，爪子紧紧贴着地面。Bruce 没有拉它，只蹲下轻声安慰。后来，饼干主动走向独坐窗边的林爷爷。",
+    "prompt": "“爪子紧紧贴着地面”说明什么？",
+    "options": [
+     "饼干在活动室里感到十分疲倦，所以不愿意继续向前走动。",
+     "饼干十分淘气，故意躲起来。",
+     "饼干对陌生环境感到害怕，不敢向前。",
+     "饼干急着接近爷爷，却被挡住。"
+    ],
+    "correct": 2,
+    "feedback": [
+     "没有疲倦线索。",
+     "不是故意捣蛋。",
+     "答对了。",
+     "它躲在腿后，不是急着向前。"
+    ],
+    "why": "退缩动作与陌生环境共同指向害怕。",
+    "model": "饼干对陌生环境感到害怕，不敢向前走。"
+   },
+   {
+    "id": "d13-p01",
+    "type": "write",
+    "minutes": 4,
+    "topic": "阅读理解｜段落大意",
+    "errorType": "方法 / 读题",
+    "prompt": "在 15 字内概括第一段。",
+    "maxChars": 15,
+    "fields": [
+     {
+      "label": "人物：Bruce",
+      "keywords": [
+       "Bruce",
+       "布鲁斯"
+      ]
+     },
+     {
+      "label": "行动：耐心陪伴／安慰饼干",
+      "keywords": [
+       "耐心",
+       "陪",
+       "安慰"
+      ]
+     },
+     {
+      "label": "结果：饼干亲近林爷爷",
+      "keywords": [
+       "林爷爷",
+       "爷爷",
+       "亲近",
+       "走向"
+      ]
+     }
+    ],
+    "why": "概括要覆盖 Bruce 的做法和饼干后来亲近爷爷的结果。",
+    "model": "Bruce 耐心陪饼干亲近林爷爷。"
+   },
+   {
+    "id": "d13-r02",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜人物感受",
+    "errorType": "概念 / 方法",
+    "passage": "林爷爷轻轻抚摸饼干，露出久违的笑容，离开前送给 Bruce 一张画着小狗的卡片。Bruce 接过卡片，心里暖暖的。",
+    "prompt": "Bruce 为什么“心里暖暖的”？",
+    "options": [
+     "他很得意，因为林爷爷不但称赞饼干十分听话，还送给他一张小狗卡片。",
+     "他很感动，因为陪伴使爷爷露出笑容并送上感谢卡。",
+     "他很轻松，因为活动终于结束。",
+     "他很惊讶，因为不知道爷爷以前养过狗。"
+    ],
+    "correct": 1,
+    "feedback": [
+     "文中没有称赞他。",
+     "答对了。",
+     "“暖暖的”不是结束任务的轻松。",
+     "惊讶没有解释这份温暖。"
+    ],
+    "why": "爷爷的笑容和感谢卡让 Bruce 看见陪伴的价值。",
+    "model": "Bruce 很感动，因为他们的陪伴使林爷爷露出笑容并送上感谢卡。"
+   },
+   {
+    "id": "d13-p02",
+    "type": "write",
+    "minutes": 5,
+    "topic": "阅读理解｜中心思想与生活迁移",
+    "errorType": "迁移 / 方法",
+    "prompt": "写出故事的道理，并写一个学校生活中的具体例子。",
+    "fields": [
+     {
+      "label": "道理：陪伴／关心能给人温暖或力量",
+      "keywords": [
+       "陪伴",
+       "关心",
+       "温暖",
+       "力量"
+      ]
+     },
+     {
+      "label": "例子有明确对象",
+      "keywords": [
+       "同学",
+       "朋友",
+       "老师",
+       "校工"
+      ]
+     },
+     {
+      "label": "例子有具体行动",
+      "keywords": [
+       "陪",
+       "邀请",
+       "帮助",
+       "解释",
+       "听"
+      ]
+     },
+     {
+      "label": "例子写出结果",
+      "keywords": [
+       "让",
+       "使",
+       "感到",
+       "能够",
+       "融入"
+      ]
+     }
+    ],
+    "why": "道理要普遍，例子要有对象、行动和结果。",
+    "model": "道理：真诚的陪伴能给孤单的人带来温暖和力量。例子：新同学独自吃饭时，我会邀请他和我们同桌聊天，让他更快融入班级。"
+   }
+  ]
+ },
+ {
+  "id": 14,
+  "week": 2,
+  "title": "终极任务：真正的本领",
+  "subtitle": "无提示结业测验",
+  "skill": "道理迁移",
+  "rule": "线索 → 完整答案 → 一秒自检",
+  "scaffold": "hidden",
+  "items": [
+   {
+    "id": "d14-r01",
+    "type": "mcq",
+    "minutes": 3,
+    "topic": "阅读理解｜人物变化",
+    "errorType": "方法 / 迁移",
+    "passage": "社区为流浪狗筹募医药费。Bruce 起初只想让饼干参加障碍赛拿奖。后来，他看见陈奶奶手指贴着胶布仍在做狗垫，饼干也叼回被风吹倒的价目牌。Bruce 忽然停下脚步。",
+    "prompt": "“Bruce 忽然停下脚步”说明什么？",
+    "options": [
+     "他在比赛前临时感到身体十分疲倦，所以决定停下脚步，不再参加障碍比赛。",
+     "他担心饼干跑远。",
+     "他被人群挡住。",
+     "他受到陈奶奶和饼干的触动，开始重新考虑自己的选择。"
+    ],
+    "correct": 3,
+    "feedback": [
+     "文中没有疲倦。",
+     "饼干就在身边。",
+     "没有道路受阻。",
+     "答对了。"
+    ],
+    "why": "前后语境显示他由“只想赢”转向思考如何帮助别人。",
+    "model": "他受到陈奶奶和饼干的触动，开始重新考虑自己的选择。"
+   },
+   {
+    "id": "d14-p01",
+    "type": "write",
+    "minutes": 3,
+    "topic": "阅读理解｜段落大意",
+    "errorType": "方法 / 读题",
+    "passage": "Bruce 放弃赛前练习，主动帮陈奶奶招呼顾客，还请同学一起搬运物品。义卖结束时，筹得的钱比预期多了一倍。",
+    "prompt": "在 15 字内概括 Bruce 后来所做的事。",
+    "maxChars": 15,
+    "fields": [
+     {
+      "label": "人物：Bruce 和同学",
+      "keywords": [
+       "Bruce",
+       "布鲁斯",
+       "同学"
+      ]
+     },
+     {
+      "label": "行动：协助义卖",
+      "keywords": [
+       "协助",
+       "帮助",
+       "义卖"
+      ]
+     },
+     {
+      "label": "结果／目的：筹款",
+      "keywords": [
+       "筹款",
+       "筹募",
+       "医药费"
+      ]
+     }
+    ],
+    "why": "概括应保留人物、核心行动和义卖目的。",
+    "model": "Bruce 和同学协助义卖筹款。"
+   },
+   {
+    "id": "d14-p02",
+    "type": "write",
+    "minutes": 4,
+    "topic": "阅读理解｜人物变化",
+    "errorType": "方法 / 迁移",
+    "prompt": "Bruce 前后有什么变化？为什么？",
+    "fields": [
+     {
+      "label": "起初：只想比赛拿奖",
+      "keywords": [
+       "起初",
+       "比赛",
+       "拿奖",
+       "只想"
+      ]
+     },
+     {
+      "label": "触发：奶奶带伤做狗垫＋饼干帮忙",
+      "keywords": [
+       "陈奶奶",
+       "奶奶",
+       "胶布",
+       "狗垫",
+       "饼干"
+      ]
+     },
+     {
+      "label": "领悟：本领也能帮助别人",
+      "keywords": [
+       "本领",
+       "帮助",
+       "别人"
+      ]
+     },
+     {
+      "label": "后来：协助义卖并邀请同学",
+      "keywords": [
+       "后来",
+       "义卖",
+       "同学",
+       "招呼",
+       "搬运"
+      ]
+     }
+    ],
+    "why": "变化原因题必须写齐“前—事—悟—后”。",
+    "model": "Bruce 起初只想着带饼干比赛拿奖；看见陈奶奶忍着手痛做狗垫，饼干也主动帮忙后，他明白本领还能帮助别人，于是放弃练习，和同学一起协助义卖。"
+   },
+   {
+    "id": "d14-p03",
+    "type": "write",
+    "minutes": 5,
+    "topic": "阅读理解｜中心思想与生活迁移",
+    "errorType": "迁移 / 方法",
+    "prompt": "写出故事的道理，再写一个家庭生活中的具体例子。",
+    "fields": [
+     {
+      "label": "道理：本领不只表现自己，也能助人",
+      "keywords": [
+       "本领",
+       "表现",
+       "帮助",
+       "别人"
+      ]
+     },
+     {
+      "label": "例子有明确对象",
+      "keywords": [
+       "外公",
+       "爷爷",
+       "奶奶",
+       "家人",
+       "弟弟",
+       "妹妹"
+      ]
+     },
+     {
+      "label": "例子写出运用什么本领／具体行动",
+      "keywords": [
+       "教",
+       "画",
+       "解释",
+       "整理",
+       "操作",
+       "帮助"
+      ]
+     },
+     {
+      "label": "例子写出实际结果",
+      "keywords": [
+       "让",
+       "使",
+       "能够",
+       "学会",
+       "完成",
+       "不再"
+      ]
+     }
+    ],
+    "why": "生活迁移要让人看见你把什么本领用在谁身上，带来什么结果。",
+    "model": "道理：一个人的本领不应只用来表现自己，更应在别人需要时发挥作用。例子：外公不会用手机预约看诊时，我会一步步教他操作，让他下次也能自己完成。"
+   }
+  ]
+ }
+];
+
+/* ================================================================
+   STATE — persistence, streak, skill stats
+   ================================================================ */
+const LS_KEY = "johnson_hcl_camp";
+const SKILLS = ["短语解释","人物感受","限字概括","变化原因","道理迁移"];
+const SKILL_EMOJI = {"短语解释":"🔍","人物感受":"💗","限字概括":"✂️","变化原因":"🔗","道理迁移":"🌱"};
+const TYPE_LABEL = {mcq:"选一选", build:"拼一拼", write:"写一写"};
+
+function defaultState(){
+  return { completedDays:{}, xp:0, bones:0,
+           streak:{count:0,lastDate:null}, mistakes:[], skillStats:{} };
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return defaultState();
+    const s = JSON.parse(raw);
+    return Object.assign(defaultState(), s);
+  }catch(e){ return defaultState(); }
+}
+function saveState(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){} }
+let S = loadState();
+
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function isYesterday(dateStr){
+  if(!dateStr) return false;
+  const y = new Date(); y.setDate(y.getDate()-1);
+  const ys = y.getFullYear()+"-"+String(y.getMonth()+1).padStart(2,"0")+"-"+String(y.getDate()).padStart(2,"0");
+  return dateStr === ys;
+}
+function bumpStreak(){
+  const t = todayStr();
+  if(S.streak.lastDate === t) return;
+  S.streak.count = isYesterday(S.streak.lastDate) ? S.streak.count+1 : 1;
+  S.streak.lastDate = t;
+}
+function recordSkill(skill, firstTryCorrect){
+  if(!S.skillStats[skill]) S.skillStats[skill] = {attempted:0, correct:0};
+  S.skillStats[skill].attempted++;
+  if(firstTryCorrect) S.skillStats[skill].correct++;
+}
+function addMistake(day, item, userAnswer){
+  const entry = {
+    key:item.id, dayId:day.id, prompt:item.prompt,
+    passage:item.passage||"", answer:userAnswer||"（未作答）",
+    model:item.model||"", why:item.why||"", skill:day.skill,
+    type:item.type, repaired:false
+  };
+  const i = S.mistakes.findIndex(m=>m.key===item.id);
+  if(i>=0){ entry.repaired=false; S.mistakes[i]=entry; } else S.mistakes.push(entry);
+}
+function findItemByKey(key){
+  for(const d of DAYS) for(const it of d.items) if(it.id===key) return {day:d,item:it};
+  return null;
+}
+function unrepairedCount(){ return S.mistakes.filter(m=>!m.repaired).length; }
+
+/* ================================================================
+   MASCOT + helpers
+   ================================================================ */
+const BARKS_HOME = [
+  "汪！Johnson，今天也一起探险吧！",
+  "别怕，我们一步一步来！🐾",
+  "汪汪！每天 15 分钟，本领悄悄长大！",
+  "我是饼干🦴，你的阅读小伙伴！",
+  "口诀记牢了，题目就不可怕！"
+];
+const BARKS_GOOD = ["汪！你真棒！","太厉害了，就是这样！","饼干为你转圈圈！🐕","一击即中！继续！","这就是高手的味道！"];
+const BARKS_SOFT = ["没关系，再看看线索 🐾","别急，饼干陪你再想想！","错了也没关系，线索就在文中！","深呼吸，我们换个角度看！"];
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function esc(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+const app = document.getElementById("app");
+
+/* ================================================================
+   EFFECTS — confetti, XP float
+   ================================================================ */
+function confetti(n){
+  const colors = ["#4a90c2","#3aa876","#f0a94b","#8a6fc8","#7db8de","#f4c877"];
+  n = n||36;
+  for(let i=0;i<n;i++){
+    const p = document.createElement("div");
+    p.className = "confetti-piece";
+    const size = 6+Math.random()*8;
+    p.style.width = size+"px";
+    p.style.height = (size*0.6)+"px";
+    p.style.left = (Math.random()*100)+"vw";
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (1.4+Math.random()*1.4)+"s";
+    p.style.animationDelay = (Math.random()*0.35)+"s";
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 3400);
+  }
+}
+function xpFloat(text){
+  const el = document.createElement("div");
+  el.className = "xp-float";
+  el.textContent = text;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 1300);
+}
+
+/* ================================================================
+   SESSION (in-lesson runtime state)
+   ================================================================ */
+let session = null;
+/* session = { day, idx, answered, firstTryResults:[], mode:"day"|"repair",
+               repairKey, itemState:{} (per-question scratch) } */
+
+function startDay(day){
+  session = { day, idx:0, firstTryResults:[], mode:"day", itemState:null };
+  renderIntro();
+}
+function startRepair(mkey){
+  const found = findItemByKey(mkey);
+  if(!found) return;
+  session = { day:found.day, idx:found.day.items.indexOf(found.item),
+              firstTryResults:[], mode:"repair", repairKey:mkey, itemState:null };
+  renderLesson();
+}
+
+/* ================================================================
+   RENDER_HOME — adventure path, thermometer, toolbox
+   ================================================================ */
+function currentDayId(){
+  for(const d of DAYS) if(!S.completedDays[d.id]) return d.id;
+  return null;
+}
+function topbarHTML(){
+  const mc = unrepairedCount();
+  return `<div class="topbar">
+    <div class="stat">🔥 <span class="num">${S.streak.count}</span></div>
+    <div class="stat">⭐ <span class="num">${S.xp}</span></div>
+    <div class="stat warm">🦴 <span class="num">${S.bones}</span></div>
+    <div class="spacer"></div>
+    <button class="toolbox-btn" id="btn-toolbox" aria-label="修补箱">🧰${mc?`<span class="badge">${mc}</span>`:""}</button>
+  </div>`;
+}
+function renderHome(){
+  const curId = currentDayId();
+  let nodes = "";
+  DAYS.forEach((d,i)=>{
+    const done = S.completedDays[d.id];
+    const state = done ? "done" : (d.id===curId ? "current" : "locked");
+    const stars = done ? "★".repeat(done.stars)+"☆".repeat(3-done.stars) : "";
+    const side = i%2===0 ? "left" : "right";
+    nodes += `<div class="node-row ${side}">
+      <button class="node ${state}" data-day="${d.id}">
+        <div class="circle">
+          <span class="emoji">${SKILL_EMOJI[d.skill]||"📖"}</span>
+          <span class="dnum">${done?"✓ ":""}第${d.id}天</span>
+        </div>
+        <div class="stars">${stars}</div>
+        <div class="ntitle">${esc(d.title)}</div>
+      </button>
+    </div>`;
+  });
+  let therm = "";
+  for(const sk of SKILLS){
+    const st = S.skillStats[sk];
+    const pct = st && st.attempted ? Math.round(st.correct/st.attempted*100) : 0;
+    const label = st && st.attempted ? pct+"%" : "—";
+    therm += `<div class="skill-row">
+      <div class="skill-name">${SKILL_EMOJI[sk]} ${esc(sk)}</div>
+      <div class="skill-bar"><div class="skill-fill" style="width:${pct}%"></div></div>
+      <div class="skill-pct">${label}</div>
+    </div>`;
+  }
+  app.innerHTML = topbarHTML() + `
+    <div class="hero">
+      <h1>🐾 高华阅读探险营 · Johnson</h1>
+      <p class="sub">14 天阅读理解闯关地图</p>
+    </div>
+    <div class="mascot-row">
+      <div class="mascot">🐶</div>
+      <div class="bubble">${esc(pick(BARKS_HOME))}</div>
+    </div>
+    <div class="path"><div class="path-line"></div>${nodes}</div>
+    <div class="panel">
+      <h3>🌡️ 能力温度计</h3>
+      ${therm}
+    </div>
+    <p class="footer-note">进度保存在本设备 · 每天 15 分钟</p>`;
+  app.querySelectorAll(".node").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const d = DAYS.find(x=>x.id===Number(btn.dataset.day));
+      if(d) startDay(d);
+    });
+  });
+  document.getElementById("btn-toolbox").addEventListener("click", renderRepairBox);
+  window.scrollTo(0,0);
+}
+
+/* ================================================================
+   RENDER_INTRO — day title + rule ribbon
+   ================================================================ */
+function renderIntro(){
+  const d = session.day;
+  app.innerHTML = topbarHTML() + `
+    <div class="lesson-top">
+      <button class="back-btn" id="btn-back">←</button>
+      <div style="font-weight:700;color:var(--primary-dark);">第 ${d.id} 天 · ${esc(d.skill)}</div>
+    </div>
+    <div class="center-card">
+      <div class="big-emoji">${SKILL_EMOJI[d.skill]||"📖"}</div>
+      <h2>${esc(d.title)}</h2>
+      <p class="sub">${esc(d.subtitle)}</p>
+      <div class="ribbon">📣 <b>今日口诀：</b>${esc(d.rule)}</div>
+      <div class="mascot-row" style="text-align:left;">
+        <div class="mascot">🐶</div>
+        <div class="bubble">共 ${d.items.length} 题，别怕，我们一步一步来！</div>
+      </div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn primary" id="btn-start">🚀 开始闯关</button>
+      </div>
+    </div>`;
+  document.getElementById("btn-back").addEventListener("click", renderHome);
+  document.getElementById("btn-start").addEventListener("click", ()=>{ session.idx=0; renderLesson(); });
+  window.scrollTo(0,0);
+}
+
+/* ================================================================
+   RENDER_LESSON — question shell, dispatch by type
+   ================================================================ */
+function lessonShellHTML(item){
+  const d = session.day;
+  const total = d.items.length;
+  const doneCount = session.mode==="repair" ? 0 : session.idx;
+  const pct = Math.round(doneCount/total*100);
+  const kicker = session.mode==="repair"
+    ? `<span class="type-badge ${item.type}">${TYPE_LABEL[item.type]}</span><span class="count">🧰 修补练习</span>`
+    : `<span class="type-badge ${item.type}">${TYPE_LABEL[item.type]}</span><span class="count">第 ${session.idx+1} / ${total} 题</span>`;
+  return `
+    <div class="lesson-top">
+      <button class="back-btn" id="btn-back">←</button>
+      <div class="progress-wrap"><div class="progress-fill" id="pbar" style="width:${session.mode==="repair"?50:pct}%"></div></div>
+    </div>
+    <div class="kicker">${kicker}</div>
+    ${item.passage?`<div class="passage">📖 ${esc(item.passage)}</div>`:""}
+    <div class="qtext">${esc(item.prompt)}</div>
+    <div id="q-body"></div>
+    <div id="fb-zone"></div>
+    <div id="aux-zone"></div>
+    <div class="btn-row" id="action-zone"></div>`;
+}
+function renderLesson(){
+  const item = session.day.items[session.idx];
+  session.itemState = { attempts:0, firstDone:false, hintShown:false, modelShown:false, solved:false };
+  app.innerHTML = topbarHTML() + lessonShellHTML(item);
+  document.getElementById("btn-back").addEventListener("click", ()=>{
+    if(session.mode==="repair") renderRepairBox(); else renderHome();
+  });
+  if(item.type==="mcq") renderMCQ(item);
+  else if(item.type==="build") renderBuild(item);
+  else renderWrite(item);
+  window.scrollTo(0,0);
+}
+
+/* record first-try outcome once per item */
+function markFirstTry(item, correct){
+  const st = session.itemState;
+  if(st.firstDone) return;
+  st.firstDone = true;
+  recordSkill(session.day.skill, correct);
+  if(session.mode==="day") session.firstTryResults.push(!!correct);
+  saveState();
+}
+function rewardCorrect(xp){
+  S.xp += xp; saveState();
+  confetti(30); xpFloat("+"+xp+" XP");
+}
+function fbZone(){ return document.getElementById("fb-zone"); }
+function auxZone(){ return document.getElementById("aux-zone"); }
+function actionZone(){ return document.getElementById("action-zone"); }
+
+function goodBanner(extra){
+  return `<div class="banner good"><span class="btitle">🎉 ${esc(pick(BARKS_GOOD))}</span>${extra||""}</div>`;
+}
+function softBanner(extra){
+  return `<div class="banner soft"><span class="btitle">🐾 ${esc(pick(BARKS_SOFT))}</span>${extra||""}</div>`;
+}
+function continueBtnHTML(){
+  const last = session.mode==="repair" || session.idx >= session.day.items.length-1;
+  return `<button class="btn green" id="btn-next">${session.mode==="repair"?"完成修补 ✓":(last?"完成今天！🏁":"下一题 →")}</button>`;
+}
+function bindContinue(wasCorrect){
+  const b = document.getElementById("btn-next");
+  if(!b) return;
+  b.addEventListener("click", ()=>{
+    if(session.mode==="repair"){ finishRepair(wasCorrect); return; }
+    session.idx++;
+    if(session.idx >= session.day.items.length) renderComplete();
+    else renderLesson();
+  });
+}
+function finishRepair(correct){
+  if(correct){
+    const m = S.mistakes.find(m=>m.key===session.repairKey);
+    if(m) m.repaired = true;
+    saveState();
+  }
+  renderRepairBox();
+}
+function hintModelButtonsHTML(){
+  return `<button class="btn warm" id="btn-hint">💡 提示</button>`;
+}
+function bindHintModel(item, opts){
+  opts = opts||{};
+  const hb = document.getElementById("btn-hint");
+  if(!hb) return;
+  hb.addEventListener("click", ()=>{
+    const st = session.itemState;
+    if(!st.hintShown){
+      st.hintShown = true;
+      auxZone().insertAdjacentHTML("beforeend",
+        `<div class="hint-box">💡 <b>提示：</b>${esc(item.hint||"再读一遍文段，圈出关键词。")}</div>`);
+      hb.innerHTML = "📖 看范例";
+    } else if(!st.modelShown){
+      st.modelShown = true;
+      auxZone().insertAdjacentHTML("beforeend",
+        `<div class="model-box">📖 <b>范例答案：</b>${esc(item.model||"")}<br><span style="color:var(--muted);font-size:14px;">看懂后，试着用自己的话写／选出来，再继续！</span></div>`);
+      hb.disabled = true;
+      if(opts.onModel) opts.onModel();
+    }
+  });
+}
+
+/* ================================================================
+   CHECKERS — MCQ
+   ================================================================ */
+function renderMCQ(item){
+  const body = document.getElementById("q-body");
+  const letters = ["A","B","C","D","E","F"];
+  body.innerHTML = item.options.map((o,i)=>
+    `<button class="opt" data-i="${i}"><span class="letter">${letters[i]}</span>${esc(o)}</button>`).join("");
+  actionZone().innerHTML = hintModelButtonsHTML();
+  bindHintModel(item);
+  const st = session.itemState;
+  body.querySelectorAll(".opt").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      if(st.solved) return;
+      const i = Number(btn.dataset.i);
+      st.attempts++;
+      const correct = (i === item.correct);
+      markFirstTry(item, correct && st.attempts===1);
+      if(correct){
+        st.solved = true;
+        btn.classList.add("sel-correct");
+        body.querySelectorAll(".opt").forEach(b=>b.disabled=true);
+        const firstTry = st.attempts===1;
+        if(!firstTry || session.mode==="repair"){ /* mistake already logged if 2nd try */ }
+        rewardCorrect(10);
+        fbZone().innerHTML = goodBanner(`<div>${esc(item.why||"")}</div>`);
+        actionZone().innerHTML = continueBtnHTML();
+        bindContinue(true);
+      } else {
+        btn.classList.add("sel-wrong");
+        btn.disabled = true;
+        const fbText = (item.feedback && item.feedback[i]) || "";
+        if(st.attempts===1){
+          addMistake(session.day, item, item.options[i]); saveState();
+          fbZone().innerHTML = softBanner(`<div>${esc(fbText)}</div><div style="margin-top:4px;">再试一次，你可以的！</div>`);
+        } else {
+          /* second wrong: reveal answer */
+          st.solved = true;
+          body.querySelectorAll(".opt").forEach(b=>{
+            b.disabled = true;
+            if(Number(b.dataset.i)===item.correct) b.classList.add("reveal-correct");
+          });
+          fbZone().innerHTML = softBanner(`<div>${esc(fbText)}</div>`) +
+            `<div class="banner info"><span class="btitle">✅ 正确答案是 ${letters[item.correct]}</span>
+             <div>${esc(item.why||"")}</div>
+             <div style="margin-top:4px;"><b>范例：</b>${esc(item.model||"")}</div></div>`;
+          actionZone().innerHTML = continueBtnHTML();
+          bindContinue(false);
+        }
+      }
+    });
+  });
+}
+
+/* ================================================================
+   CHECKERS — BUILD (tap to assemble)
+   ================================================================ */
+function renderBuild(item){
+  const body = document.getElementById("q-body");
+  const st = session.itemState;
+  st.zone = []; /* indexes into item.chunks */
+  body.innerHTML = `
+    <div class="assembly" id="assembly"><span class="placeholder">👇 点击下面的答案块，按顺序放进来</span></div>
+    <div class="chunk-pool" id="pool">
+      ${item.chunks.map((c,i)=>`<button class="chunk" data-i="${i}">${esc(c)}</button>`).join("")}
+    </div>`;
+  actionZone().innerHTML = `<button class="btn primary" id="btn-check">✅ 检查</button>` + hintModelButtonsHTML();
+  bindHintModel(item);
+
+  const zoneEl = document.getElementById("assembly");
+  const poolEl = document.getElementById("pool");
+  function redraw(){
+    zoneEl.innerHTML = st.zone.length
+      ? st.zone.map(i=>`<button class="chunk in-zone" data-i="${i}">${esc(item.chunks[i])}</button>`).join("")
+      : `<span class="placeholder">👇 点击下面的答案块，按顺序放进来</span>`;
+    poolEl.querySelectorAll(".chunk").forEach(b=>{
+      b.classList.toggle("ghost", st.zone.includes(Number(b.dataset.i)));
+    });
+    zoneEl.querySelectorAll(".chunk").forEach(b=>{
+      b.addEventListener("click", ()=>{
+        if(st.solved) return;
+        st.zone = st.zone.filter(x=>x!==Number(b.dataset.i));
+        redraw();
+      });
+    });
+  }
+  poolEl.querySelectorAll(".chunk").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      if(st.solved) return;
+      const i = Number(b.dataset.i);
+      if(!st.zone.includes(i)){ st.zone.push(i); redraw(); }
+    });
+  });
+  redraw();
+
+  document.getElementById("btn-check").addEventListener("click", ()=>{
+    if(st.solved) return;
+    if(st.zone.length !== item.chunks.length){
+      fbZone().innerHTML = `<div class="banner info">先把所有答案块都放进拼装区哦！</div>`;
+      return;
+    }
+    st.attempts++;
+    const userSeq = st.zone.map(i=>item.chunks[i]);
+    const ok = userSeq.join("␟") === item.correctOrder.join("␟");
+    markFirstTry(item, ok && st.attempts===1);
+    if(ok){
+      st.solved = true;
+      rewardCorrect(10);
+      fbZone().innerHTML = goodBanner(`<div>${esc(item.why||"")}</div>`);
+      actionZone().innerHTML = continueBtnHTML();
+      bindContinue(true);
+    } else {
+      if(st.attempts===1){ addMistake(session.day, item, userSeq.join("")); saveState(); }
+      zoneEl.classList.add("shake");
+      setTimeout(()=>zoneEl.classList.remove("shake"), 500);
+      fbZone().innerHTML = softBanner(`<div>顺序还不对——想想：应该先说什么，再说什么？（可点 💡 提示）</div>`);
+      if(st.attempts>=3 && !st.modelShown){
+        fbZone().insertAdjacentHTML("beforeend",
+          `<div class="banner info"><b>正确顺序：</b>${item.correctOrder.map(esc).join(" → ")}<br>照着拼一次，再按检查！</div>`);
+      }
+    }
+  });
+}
+
+/* ================================================================
+   CHECKERS — WRITE (OEQ scaffold: field cards + keyword chips)
+   ================================================================ */
+function renderWrite(item){
+  const body = document.getElementById("q-body");
+  const st = session.itemState;
+  const chipsSet = [];
+  item.fields.forEach(f=>(f.keywords||[]).forEach(k=>{ if(!chipsSet.includes(k)) chipsSet.push(k); }));
+  body.innerHTML = `
+    <div class="field-cards">
+      ${item.fields.map((f,i)=>`<div class="field-card" id="fc-${i}"><span class="mark">${i+1}</span><span>${esc(f.label)}</span></div>`).join("")}
+    </div>
+    <div class="chips-label">🔤 提示词（点一下就放进答案里）：</div>
+    <div class="chips">${chipsSet.map(k=>`<button class="chip" data-w="${esc(k)}">${esc(k)}</button>`).join("")}</div>
+    <textarea class="answer" id="answer" placeholder="在这里写下你的答案……"></textarea>`;
+  actionZone().innerHTML = `<button class="btn primary" id="btn-check">✅ 检查</button>` + hintModelButtonsHTML();
+
+  const ta = document.getElementById("answer");
+  body.querySelectorAll(".chip").forEach(ch=>{
+    ch.addEventListener("click", ()=>{
+      const w = ch.dataset.w;
+      const start = ta.selectionStart!=null ? ta.selectionStart : ta.value.length;
+      const end = ta.selectionEnd!=null ? ta.selectionEnd : ta.value.length;
+      ta.value = ta.value.slice(0,start) + w + ta.value.slice(end);
+      const pos = start + w.length;
+      ta.focus(); try{ ta.setSelectionRange(pos,pos); }catch(e){}
+    });
+  });
+
+  let modelContinueShown = false;
+  function showModelContinue(){
+    if(modelContinueShown || st.solved) return;
+    modelContinueShown = true;
+    actionZone().insertAdjacentHTML("beforeend",
+      `<button class="btn ghost" id="btn-skip">参考范例后继续 →</button>`);
+    document.getElementById("btn-skip").addEventListener("click", ()=>{
+      if(st.solved) return;
+      st.solved = true;
+      markFirstTry(item, false);
+      if(!S.mistakes.find(m=>m.key===item.id)){ addMistake(session.day, item, ta.value.trim()); }
+      S.xp += 5; saveState();
+      xpFloat("+5 XP");
+      fbZone().innerHTML = `<div class="banner info"><span class="btitle">👍 看懂范例也是学习！</span>下次试着自己写出来。</div>`;
+      actionZone().innerHTML = continueBtnHTML();
+      bindContinue(false);
+    });
+  }
+  bindHintModel(item, {onModel: showModelContinue});
+
+  document.getElementById("btn-check").addEventListener("click", ()=>{
+    if(st.solved) return;
+    const text = ta.value.trim();
+    if(text.length < 5){
+      fbZone().innerHTML = `<div class="banner info">先写至少 5 个字，再按检查哦！可以用上面的提示词。</div>`;
+      return;
+    }
+    st.attempts++;
+    let passCount = 0;
+    const missing = [];
+    item.fields.forEach((f,i)=>{
+      const ok = (f.keywords||[]).some(k=>text.includes(k));
+      const card = document.getElementById("fc-"+i);
+      if(ok){ passCount++; card.classList.add("pass"); card.querySelector(".mark").textContent="✓"; }
+      else { card.classList.remove("pass"); card.querySelector(".mark").textContent=String(i+1); missing.push(f.label); }
+    });
+    const allPass = passCount === item.fields.length;
+    markFirstTry(item, allPass && st.attempts===1);
+    if(allPass){
+      st.solved = true;
+      rewardCorrect(10);
+      fbZone().innerHTML = goodBanner(`<div>${item.fields.length} 个得分点全部拿下！</div><div style="margin-top:4px;"><b>范例参考：</b>${esc(item.model||"")}</div>`);
+      actionZone().innerHTML = continueBtnHTML();
+      bindContinue(true);
+    } else {
+      if(st.attempts===1){ addMistake(session.day, item, text); saveState(); }
+      fbZone().innerHTML = softBanner(
+        `<div>已经有 <b>${passCount}/${item.fields.length}</b> 个得分点了！再加上：${missing.map(m=>`「${esc(m)}」`).join("、")}</div>
+         <div style="margin-top:4px;">改一改再检查，不限次数！</div>`);
+      showModelContinue();
+    }
+  });
+}
+
+/* ================================================================
+   RENDER_COMPLETE — celebration
+   ================================================================ */
+function starsFromAccuracy(acc){
+  if(acc >= 0.99) return 3;
+  if(acc >= 0.5) return 2;
+  return 1;
+}
+function renderComplete(){
+  const d = session.day;
+  const total = session.firstTryResults.length || d.items.length;
+  const correct = session.firstTryResults.filter(Boolean).length;
+  const acc = total ? correct/total : 0;
+  const stars = starsFromAccuracy(acc);
+  const firstTime = !S.completedDays[d.id];
+  const prev = S.completedDays[d.id];
+  S.completedDays[d.id] = {
+    stars: prev ? Math.max(prev.stars, stars) : stars,
+    accuracy: prev ? Math.max(prev.accuracy, acc) : acc
+  };
+  if(firstTime) S.bones += 1;
+  bumpStreak();
+  saveState();
+  confetti(70);
+  setTimeout(()=>confetti(40), 600);
+  app.innerHTML = topbarHTML() + `
+    <div class="center-card">
+      <div class="big-emoji">🐶</div>
+      <h2>第 ${d.id} 天完成！</h2>
+      <p class="sub">${esc(d.title)}</p>
+      <div class="star-line">
+        ${[1,2,3].map(i=>`<span class="${i<=stars?"on":"off"}">★</span>`).join("")}
+      </div>
+      <div class="reward-line">一次答对：<b>${correct} / ${total}</b></div>
+      <div class="reward-line">⭐ 总 XP：<b>${S.xp}</b>${firstTime?` &nbsp;·&nbsp; 🦴 +1 饼干奖励`:""}</div>
+      <div class="mascot-row">
+        <div class="mascot" style="font-size:34px;">💬</div>
+        <div class="bubble">汪！今天的探险结束啦，明天见！</div>
+      </div>
+      <div class="btn-row" style="justify-content:center;">
+        <button class="btn primary" id="btn-map">🗺️ 返回地图</button>
+        <button class="btn ghost" id="btn-again">🔁 再练一次</button>
+      </div>
+    </div>`;
+  document.getElementById("btn-map").addEventListener("click", renderHome);
+  document.getElementById("btn-again").addEventListener("click", ()=>startDay(d));
+  window.scrollTo(0,0);
+}
+
+/* ================================================================
+   REPAIR BOX (修补箱)
+   ================================================================ */
+function renderRepairBox(){
+  const list = S.mistakes.slice().reverse();
+  let inner;
+  if(!list.length){
+    inner = `<div class="empty-box">🧰 修补箱是空的！<br>答错的题目会存到这里，方便重练。</div>`;
+  } else {
+    inner = list.map(m=>{
+      const found = findItemByKey(m.key);
+      return `<div class="mistake-card ${m.repaired?"fixed":""}">
+        <div class="mq">${SKILL_EMOJI[m.skill]||"📖"} ${esc(m.prompt)}</div>
+        <div class="mrow">我的答案：<b>${esc(m.answer)}</b></div>
+        <div class="mrow">范例：<b>${esc(m.model)}</b></div>
+        ${m.why?`<div class="mrow">为什么：${esc(m.why)}</div>`:""}
+        <div class="btn-row" style="margin:10px 0 0;">
+          ${m.repaired
+            ? `<span class="fixed-tag">✅ 已修补</span>`
+            : (found?`<button class="btn primary" data-rekey="${esc(m.key)}" style="padding:9px 18px;min-height:44px;">🔧 重练</button>`:"")}
+        </div>
+      </div>`;
+    }).join("");
+  }
+  app.innerHTML = topbarHTML() + `
+    <div class="lesson-top">
+      <button class="back-btn" id="btn-back">←</button>
+      <div style="font-weight:700;color:var(--primary-dark);">🧰 修补箱（${unrepairedCount()} 个待修补）</div>
+    </div>
+    <div class="mascot-row">
+      <div class="mascot">🐶</div>
+      <div class="bubble">错题不是敌人，是宝藏！修好一个，本领＋1！</div>
+    </div>
+    ${inner}`;
+  document.getElementById("btn-back").addEventListener("click", renderHome);
+  document.getElementById("btn-toolbox").addEventListener("click", renderRepairBox);
+  app.querySelectorAll("[data-rekey]").forEach(b=>{
+    b.addEventListener("click", ()=>startRepair(b.dataset.rekey));
+  });
+  window.scrollTo(0,0);
+}
+
+/* ================================================================
+   BOOT
+   ================================================================ */
+renderHome();
+</script>
+</body>
+</html>

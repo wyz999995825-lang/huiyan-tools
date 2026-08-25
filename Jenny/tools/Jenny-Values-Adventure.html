@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Jenny & Mochi's Values Adventure</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Baloo+2:wght@500;700&display=swap');
+:root{
+  --tiffany:#0ABAB5;--tiffany-light:#E0F7F6;--tiffany-dark:#089E9A;
+  --pink:#FFB5C2;--pink-light:#FFE4E9;
+  --yellow:#FFD93D;--yellow-light:#FFF8E1;
+  --coral:#FF6B6B;--green:#6BCB77;--purple:#9B59B6;--blue:#5DADE2;
+  --text:#2C3E50;--bg:#F0FFFE;--gray:#95A5A6;
+}
+html,body{height:100%;overflow:hidden;font-family:'Quicksand',sans-serif;background:var(--bg);color:var(--text);font-size:18px;}
+
+/* ===== SCREENS ===== */
+.screen{display:none;width:100%;height:100%;position:absolute;top:0;left:0;flex-direction:column;align-items:center;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.screen.active{display:flex;}
+.screen.fade-in{animation:fadeIn 0.5s ease;}
+
+/* ===== TOP BAR (Duolingo style) ===== */
+.top-bar{width:100%;max-width:600px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;background:var(--bg);z-index:10;}
+.top-bar .exit-btn{width:36px;height:36px;border-radius:50%;border:2px solid #DDD;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.2em;color:#999;transition:all 0.2s;}
+.top-bar .exit-btn:hover{border-color:var(--coral);color:var(--coral);}
+.top-bar .progress-wrap{flex:1;height:14px;background:#E8E8E8;border-radius:7px;overflow:hidden;}
+.top-bar .progress-fill{height:100%;background:linear-gradient(90deg,var(--tiffany),var(--green));border-radius:7px;transition:width 0.5s ease;}
+.top-bar .hearts{display:flex;align-items:center;gap:2px;font-size:0.9em;color:var(--coral);font-weight:700;}
+.top-bar .xp{font-size:0.85em;color:var(--yellow);font-weight:700;background:var(--yellow-light);padding:2px 8px;border-radius:10px;}
+
+/* ===== WELCOME ===== */
+#welcome{background:linear-gradient(180deg,#E0F7F6 0%,#F0FFFE 40%,#FFF8E1 100%);justify-content:center;text-align:center;padding:20px;}
+#welcome h1{font-family:'Baloo 2',cursive;font-size:2em;color:var(--tiffany-dark);margin:10px 0 5px;text-shadow:2px 2px 0 rgba(10,186,181,0.12);}
+#welcome .subtitle{font-size:1em;color:#666;margin-bottom:20px;line-height:1.5;}
+.btn-primary{background:var(--tiffany);color:#fff;border:none;padding:14px 44px;border-radius:50px;font-family:'Baloo 2',cursive;font-size:1.2em;cursor:pointer;box-shadow:0 4px 15px rgba(10,186,181,0.3);transition:all 0.2s;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(10,186,181,0.4);}
+.btn-primary:active{transform:translateY(1px);}
+
+/* ===== MAP / CHAPTER SELECT ===== */
+#map{background:linear-gradient(180deg,var(--tiffany-light) 0%,var(--bg) 100%);padding:20px;padding-bottom:40px;}
+#map .map-header{text-align:center;margin:10px 0 15px;}
+#map h2{font-family:'Baloo 2',cursive;font-size:1.6em;color:var(--tiffany-dark);}
+#map .stats-row{display:flex;justify-content:center;gap:15px;margin:8px 0 15px;font-size:0.9em;}
+#map .stat{background:#fff;padding:5px 14px;border-radius:20px;box-shadow:0 2px 6px rgba(0,0,0,0.05);font-weight:600;}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:500px;margin:0 auto;width:100%;}
+.story-card{background:#fff;border-radius:18px;padding:16px 12px;text-align:center;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.06);border:2.5px solid transparent;transition:all 0.2s;position:relative;overflow:hidden;}
+.story-card:hover{transform:translateY(-3px);border-color:var(--tiffany);}
+.story-card.completed{border-color:var(--green);background:#F8FFF8;}
+.story-card.completed::after{content:'⭐';position:absolute;top:8px;right:8px;font-size:1.1em;}
+.story-card .card-emoji{font-size:2.2em;margin-bottom:6px;display:block;}
+.story-card .card-title{font-family:'Baloo 2',cursive;font-size:1.05em;color:var(--text);line-height:1.2;}
+.story-card .card-tag{font-size:0.8em;color:#999;margin-top:4px;display:block;}
+
+/* ===== STORY PLAY SCREEN ===== */
+#play{background:var(--bg);padding:0;flex-direction:column;}
+.play-body{width:100%;max-width:600px;margin:0 auto;padding:0 16px 30px;flex:1;display:flex;flex-direction:column;}
+.scene-area{width:100%;margin:10px auto;text-align:center;min-height:180px;display:flex;align-items:center;justify-content:center;}
+.dialogue-box{background:#fff;border-radius:20px;padding:18px 22px;box-shadow:0 3px 12px rgba(0,0,0,0.06);margin-bottom:12px;text-align:center;font-size:1.1em;line-height:1.7;}
+.dialogue-box .speaker{font-weight:700;color:var(--tiffany-dark);}
+.dialogue-box .highlight{color:var(--coral);font-weight:700;}
+
+/* ===== INTERACTION TYPES ===== */
+/* Multiple Choice */
+.interact-area{display:flex;flex-direction:column;gap:10px;margin-top:auto;}
+.mc-btn{background:#fff;border:2.5px solid #E0E0E0;border-radius:14px;padding:13px 16px;font-family:'Quicksand',sans-serif;font-size:1em;font-weight:600;color:var(--text);cursor:pointer;transition:all 0.2s;text-align:left;display:flex;align-items:center;gap:10px;}
+.mc-btn:hover{border-color:var(--tiffany);background:var(--tiffany-light);}
+.mc-btn .mc-icon{font-size:1.2em;width:28px;text-align:center;flex-shrink:0;}
+.mc-btn.correct{border-color:var(--green);background:#E8F8E8;animation:popIn 0.3s ease;}
+.mc-btn.wrong{border-color:var(--coral);background:#FFE8E8;animation:shake 0.4s ease;}
+.mc-btn:disabled{cursor:default;}
+
+/* True/False (Thumbs) */
+.tf-row{display:flex;gap:15px;justify-content:center;}
+.tf-btn{width:100px;height:100px;border-radius:20px;border:3px solid #E0E0E0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:all 0.2s;font-size:2em;}
+.tf-btn span{font-size:0.35em;font-weight:700;color:#666;}
+.tf-btn:hover{border-color:var(--tiffany);transform:scale(1.05);}
+.tf-btn.correct{border-color:var(--green);background:#E8F8E8;animation:popIn 0.3s;}
+.tf-btn.wrong{border-color:var(--coral);background:#FFE8E8;animation:shake 0.4s;}
+
+/* Sort / Rank */
+.sort-area{display:flex;flex-direction:column;gap:8px;}
+.sort-item{background:#fff;border:2px solid #E0E0E0;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:grab;transition:all 0.2s;user-select:none;}
+.sort-item:active{cursor:grabbing;box-shadow:0 4px 15px rgba(0,0,0,0.1);}
+.sort-item .sort-num{width:24px;height:24px;border-radius:50%;background:var(--tiffany-light);display:flex;align-items:center;justify-content:center;font-size:0.8em;font-weight:700;color:var(--tiffany-dark);}
+.sort-item.dragging{opacity:0.5;border-color:var(--tiffany);}
+.sort-item.correct-pos{border-color:var(--green);background:#F0FFF0;}
+.sort-item.wrong-pos{border-color:var(--coral);background:#FFF0F0;}
+
+/* Multi-select (tap all correct) */
+.multi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.multi-btn{background:#fff;border:2.5px solid #E0E0E0;border-radius:12px;padding:14px 12px;text-align:center;font-size:1em;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.multi-btn.selected{border-color:var(--tiffany);background:var(--tiffany-light);}
+.multi-btn.correct-sel{border-color:var(--green);background:#E8F8E8;}
+.multi-btn.wrong-sel{border-color:var(--coral);background:#FFE8E8;}
+.multi-btn.missed{border-color:var(--yellow);background:var(--yellow-light);}
+
+/* Submit button for multi-select and sort */
+.submit-btn{background:var(--tiffany);color:#fff;border:none;padding:12px 30px;border-radius:50px;font-family:'Quicksand',sans-serif;font-size:1em;font-weight:700;cursor:pointer;margin:12px auto 0;display:block;transition:all 0.2s;opacity:0.5;pointer-events:none;}
+.submit-btn.ready{opacity:1;pointer-events:auto;}
+.submit-btn:hover{transform:translateY(-2px);}
+
+/* Feedback bar */
+.feedback{display:none;padding:16px 20px;border-radius:16px;margin-top:12px;font-weight:600;font-size:0.95em;line-height:1.5;animation:slideUp 0.4s ease;}
+.feedback.show{display:block;}
+.feedback.good{background:#E8F8E8;border:2px solid var(--green);color:#2E7D32;}
+.feedback.bad{background:#FFE8E8;border:2px solid var(--coral);color:#C62828;}
+.feedback .fb-title{font-family:'Baloo 2',cursive;font-size:1.1em;margin-bottom:4px;}
+.feedback .fb-text{font-weight:500;font-size:1em;color:#555;}
+
+/* Continue button */
+.continue-btn{background:var(--green);color:#fff;border:none;padding:14px 0;border-radius:14px;font-family:'Quicksand',sans-serif;font-size:1.05em;font-weight:700;cursor:pointer;margin-top:12px;width:100%;transition:all 0.2s;display:none;}
+.continue-btn.show{display:block;animation:fadeIn 0.4s ease;}
+.continue-btn:hover{filter:brightness(1.05);transform:translateY(-1px);}
+.continue-btn.btn-finish{background:var(--yellow);color:var(--text);}
+
+/* ===== CHAPTER COMPLETE ===== */
+#complete{background:linear-gradient(180deg,#FFF8E1 0%,var(--tiffany-light) 100%);justify-content:center;text-align:center;padding:30px 20px;}
+#complete h2{font-family:'Baloo 2',cursive;font-size:1.8em;color:var(--tiffany-dark);margin:10px 0;}
+.complete-stars{font-size:2.5em;margin:10px 0;letter-spacing:5px;}
+.complete-msg{font-size:1em;color:#555;line-height:1.6;max-width:350px;margin:10px auto 20px;}
+.complete-xp{font-size:1.3em;font-weight:700;color:var(--yellow);margin-bottom:15px;}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{0%{transform:scale(0.95)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}15%{transform:scale(1.2)}30%{transform:scale(1)}}
+@keyframes sparkle{0%,100%{opacity:1}50%{opacity:0.4}}
+@keyframes confettiFall{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.float{animation:float 2.5s ease-in-out infinite;}
+.bounce{animation:bounce 1s ease infinite;}
+
+/* Stars burst */
+.star-burst{position:fixed;pointer-events:none;z-index:999;}
+.star-particle{position:absolute;animation:starFly 0.8s ease-out forwards;}
+@keyframes starFly{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
+
+/* Confetti */
+.confetti-piece{position:fixed;width:10px;height:10px;top:-10px;z-index:999;animation:confettiFall 2.5s ease-in forwards;}
+
+/* Hearts animation */
+@keyframes heartBreak{0%{transform:scale(1)}30%{transform:scale(1.3)}100%{transform:scale(0);opacity:0}}
+.heart-break{animation:heartBreak 0.5s ease forwards;}
+
+/* XP pop */
+.xp-pop{position:fixed;pointer-events:none;z-index:999;font-family:'Baloo 2',cursive;font-size:1.3em;color:var(--yellow);font-weight:700;animation:xpFloat 1s ease-out forwards;}
+@keyframes xpFloat{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-40px)}}
+
+/* Mobile */
+@media(max-width:480px){
+  #welcome h1{font-size:1.6em;}
+  .story-grid{grid-template-columns:1fr 1fr;gap:10px;}
+  .story-card{padding:12px 8px;}
+  .story-card .card-emoji{font-size:1.8em;}
+  .dialogue-box{font-size:1em;padding:14px 16px;}
+  .mc-btn{font-size:0.9em;padding:11px 12px;}
+  .scene-area{min-height:150px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== WELCOME ===== -->
+<div class="screen active" id="welcome">
+  <svg width="240" height="180" viewBox="0 0 240 180" class="float" style="margin-top:10px">
+    <!-- Jenny -->
+    <g transform="translate(50,15)">
+      <ellipse cx="40" cy="42" rx="30" ry="33" fill="#1a1a2e"/>
+      <ellipse cx="40" cy="46" rx="23" ry="25" fill="#FFE0BD"/>
+      <path d="M12 38 Q22 18 40 14 Q58 18 68 38" fill="#1a1a2e"/>
+      <path d="M12 38 Q8 60 14 82" fill="#1a1a2e"/>
+      <path d="M68 38 Q72 60 66 82" fill="#1a1a2e"/>
+      <ellipse cx="32" cy="43" rx="3.5" ry="4" fill="#1a1a2e"/>
+      <ellipse cx="48" cy="43" rx="3.5" ry="4" fill="#1a1a2e"/>
+      <circle cx="33.5" cy="41.5" r="1.2" fill="#fff"/>
+      <circle cx="49.5" cy="41.5" r="1.2" fill="#fff"/>
+      <path d="M33 55 Q40 62 47 55" fill="none" stroke="#E88B7A" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="26" cy="52" rx="4" ry="2.5" fill="#FFB5C2" opacity="0.4"/>
+      <ellipse cx="54" cy="52" rx="4" ry="2.5" fill="#FFB5C2" opacity="0.4"/>
+      <path d="M18 70 Q40 66 62 70 L66 120 Q40 125 14 120 Z" fill="#0ABAB5"/>
+      <path d="M28 70 L40 82 L52 70" fill="#fff"/>
+      <line x1="14" y1="82" x2="4" y2="100" stroke="#FFE0BD" stroke-width="7" stroke-linecap="round"/>
+      <line x1="66" y1="82" x2="76" y2="100" stroke="#FFE0BD" stroke-width="7" stroke-linecap="round"/>
+      <path d="M14 118 Q40 125 66 118 L70 132 Q40 140 10 132 Z" fill="#1a1a2e"/>
+      <line x1="28" y1="132" x2="26" y2="152" stroke="#FFE0BD" stroke-width="6" stroke-linecap="round"/>
+      <line x1="52" y1="132" x2="54" y2="152" stroke="#FFE0BD" stroke-width="6" stroke-linecap="round"/>
+      <ellipse cx="26" cy="155" rx="8" ry="4" fill="#1a1a2e"/>
+      <ellipse cx="54" cy="155" rx="8" ry="4" fill="#1a1a2e"/>
+    </g>
+    <!-- Mochi -->
+    <g transform="translate(148,50)">
+      <ellipse cx="30" cy="65" rx="24" ry="26" fill="#fff" stroke="#EEE" stroke-width="1.5"/>
+      <circle cx="30" cy="36" r="20" fill="#fff" stroke="#EEE" stroke-width="1.5"/>
+      <ellipse cx="18" cy="8" rx="7" ry="20" fill="#fff" stroke="#EEE" stroke-width="1.5"/>
+      <ellipse cx="18" cy="10" rx="3.5" ry="13" fill="var(--pink-light)"/>
+      <ellipse cx="42" cy="8" rx="7" ry="20" fill="#fff" stroke="#EEE" stroke-width="1.5" transform="rotate(8,42,8)"/>
+      <ellipse cx="43" cy="10" rx="3.5" ry="13" fill="var(--pink-light)" transform="rotate(8,43,10)"/>
+      <circle cx="22" cy="34" r="3" fill="#1a1a2e"/>
+      <circle cx="38" cy="34" r="3" fill="#1a1a2e"/>
+      <circle cx="23.3" cy="32.5" r="1" fill="#fff"/>
+      <circle cx="39.3" cy="32.5" r="1" fill="#fff"/>
+      <ellipse cx="30" cy="41" rx="2.5" ry="1.8" fill="var(--pink)"/>
+      <path d="M25 44 Q30 48 35 44" fill="none" stroke="#E88B7A" stroke-width="1.5" stroke-linecap="round"/>
+      <ellipse cx="15" cy="40" rx="4" ry="2.2" fill="var(--pink)" opacity="0.3"/>
+      <ellipse cx="45" cy="40" rx="4" ry="2.2" fill="var(--pink)" opacity="0.3"/>
+      <path d="M23 24 Q30 28 37 24 Q30 27 30 32 Q30 27 23 24Z" fill="var(--tiffany)" opacity="0.8"/>
+      <ellipse cx="16" cy="88" rx="9" ry="5" fill="#fff" stroke="#EEE" stroke-width="1"/>
+      <ellipse cx="44" cy="88" rx="9" ry="5" fill="#fff" stroke="#EEE" stroke-width="1"/>
+    </g>
+    <!-- Sparkles -->
+    <circle cx="20" cy="30" r="3" fill="var(--yellow)" style="animation:sparkle 2s infinite"/>
+    <circle cx="220" cy="40" r="2.5" fill="var(--tiffany)" style="animation:sparkle 2s infinite 0.7s"/>
+    <circle cx="135" cy="20" r="2" fill="var(--pink)" style="animation:sparkle 2s infinite 1.2s"/>
+  </svg>
+  <h1>Jenny & Mochi's<br>Values Adventure</h1>
+  <p class="subtitle">Help Jenny and her bunny Mochi<br>learn to make great choices!</p>
+  <button class="btn-primary" onclick="showScreen('map')">Start Adventure! 🌟</button>
+</div>
+
+<!-- ===== MAP ===== -->
+<div class="screen" id="map">
+  <div class="map-header">
+    <h2>🗺️ Story Map</h2>
+    <div class="stats-row">
+      <span class="stat" id="mapXP">⚡ 0 XP</span>
+      <span class="stat" id="mapStars">⭐ 0/11</span>
+    </div>
+  </div>
+  <div class="story-grid" id="storyGrid"></div>
+</div>
+
+<!-- ===== PLAY ===== -->
+<div class="screen" id="play">
+  <div class="top-bar">
+    <div class="exit-btn" onclick="exitStory()">✕</div>
+    <div class="progress-wrap"><div class="progress-fill" id="playProgress"></div></div>
+    <div class="hearts" id="playHearts">❤️5</div>
+    <div class="xp" id="playXP">⚡0</div>
+  </div>
+  <div class="play-body">
+    <div class="scene-area" id="sceneArea"></div>
+    <div class="dialogue-box" id="dialogueBox"></div>
+    <div class="interact-area" id="interactArea"></div>
+    <div class="feedback" id="feedback"><div class="fb-title"></div><div class="fb-text"></div></div>
+    <button class="continue-btn" id="continueBtn" onclick="nextStep()">CONTINUE</button>
+  </div>
+</div>
+
+<!-- ===== COMPLETE ===== -->
+<div class="screen" id="complete">
+  <svg width="100" height="80" viewBox="0 0 100 80" class="bounce" style="animation-duration:2s">
+    <text x="50" y="55" text-anchor="middle" font-size="50">🏆</text>
+  </svg>
+  <h2 id="completeTitle">Great Job!</h2>
+  <div class="complete-stars" id="completeStars"></div>
+  <div class="complete-xp" id="completeXP"></div>
+  <p class="complete-msg" id="completeMsg"></p>
+  <button class="btn-primary" onclick="showScreen('map')" style="font-size:1em;padding:12px 36px;">Back to Map 🗺️</button>
+</div>
+
+<script>
+// ===== GAME STATE =====
+const G = {
+  totalXP: 0,
+  hearts: 5,
+  sessionXP: 0,
+  currentStory: null,
+  currentStep: 0,
+  completed: {},
+  storyHearts: 5
+};
+
+// ===== 11 STORIES =====
+const STORIES = [
+  {id:'honesty', emoji:'💎', title:'The Shiny Sticker', tag:'Honesty', color:'#FFD93D'},
+  {id:'greet', emoji:'👋', title:'Good Morning!', tag:'Manners & Greetings', color:'#FFB5C2'},
+  {id:'focus', emoji:'🎯', title:'Eyes on Teacher', tag:'Focus in Class', color:'#5DADE2'},
+  {id:'helping', emoji:'🤝', title:'Helping Hands', tag:'Being Helpful', color:'#6BCB77'},
+  {id:'truth', emoji:'🪞', title:'The Broken Vase', tag:'Telling the Truth', color:'#9B59B6'},
+  {id:'kind', emoji:'💗', title:'The New Girl', tag:'Kindness & Friends', color:'#FF6B6B'},
+  {id:'think', emoji:'🧠', title:'Stop & Think', tag:'Think Before You Act', color:'#0ABAB5'},
+  {id:'share', emoji:'🍪', title:'Enough for All', tag:'Sharing', color:'#F0C420'},
+  {id:'patience', emoji:'⏳', title:'My Turn Will Come', tag:'Patience', color:'#AF7AC5'},
+  {id:'respect', emoji:'🙏', title:'Not Mine to Take', tag:'Respecting Others', color:'#5DADE2'},
+  {id:'friendship', emoji:'🤗', title:'Real Friends', tag:'True Friendship', color:'#FF8A65'}
+];
+
+// Step types: 'narrate', 'mc' (multiple choice), 'tf' (true/false), 'multi' (select all correct), 'sort' (rank order)
+const STORY_DATA = {
+  // ===== 1. HONESTY =====
+  honesty: [
+    {type:'narrate', text:'After class, Jenny sees a <span class="highlight">sparkly sticker</span> on Ms Lee\'s desk. It\'s the prettiest one she\'s ever seen! ✨', scene:'classroom'},
+    {type:'narrate', text:'<span class="speaker">Mochi:</span> "Ooh! That sticker is SO pretty! I really want one..."', scene:'mochi_excited'},
+    {type:'mc', text:'Nobody is watching. What should Jenny do?',
+      options:['Take it quickly — no one will see!','Leave it alone — it\'s not mine','Ask Ms Lee nicely if I can earn one'],
+      correct:[1,2], explain_good:'Even when no one is watching, being honest matters! Asking politely is brave and right. 💪',
+      explain_bad:'Taking something that isn\'t yours — even something small — is wrong. It doesn\'t matter if no one sees. YOU know.'},
+    {type:'tf', text:'Is this TRUE or FALSE? "It\'s okay to take something if it\'s very small and no one notices."',
+      answer:false, explain_good:'Size doesn\'t matter — taking without asking is always wrong, even a tiny eraser! ✨',
+      explain_bad:'Nope! Small or big, if it\'s not yours, don\'t take it. Always ask first!'},
+    {type:'mc', text:'Jenny asks Ms Lee politely. Ms Lee says: "This sticker is for honest students — and you just showed me you ARE one!" What did Jenny learn?',
+      options:['Being honest gets you better rewards than sneaking','It\'s only wrong if you get caught','Stickers aren\'t that nice anyway'],
+      correct:[0], explain_good:'Exactly! Honesty brings REAL rewards — trust, respect, and feeling proud of yourself!',
+      explain_bad:'The real lesson is: being honest feels GOOD inside and people trust you more!'},
+    {type:'multi', text:'Which of these are HONEST actions? Tap ALL the right ones:',
+      options:['Returning a pencil you found','Saying "I did it" when you made a mess','Pretending you didn\'t eat the last cookie','Telling teacher you don\'t understand'],
+      correct:[0,1,3], explain:'Honesty means owning your actions, returning things, and asking for help. Hiding the truth is dishonest!'},
+    {type:'narrate', text:'<span class="speaker">Mochi:</span> "I learned today: Being honest means doing the right thing even when it\'s hard or no one is watching! That makes me feel proud inside!" 💎', scene:'mochi_proud'}
+  ],
+
+  // ===== 2. GREETING =====
+  greet: [
+    {type:'narrate', text:'Monday morning. Jenny walks into school. She sees Ms Lee at the door, smiling and waiting to say good morning to students. 🏫', scene:'school_door'},
+    {type:'narrate', text:'Jenny feels shy. Her mouth won\'t open. She walks past quickly, looking at the ground... 😶', scene:'jenny_shy'},
+    {type:'mc', text:'<span class="speaker">Mochi:</span> "Jenny, Ms Lee looked a bit sad when you didn\'t say hi. Why is greeting important?"',
+      options:['It makes others feel noticed and happy','It\'s just a boring rule grown-ups made up','I don\'t need to talk to teachers'],
+      correct:[0], explain_good:'Yes! A simple "Good morning" tells someone: "I see you, and I care." It makes BOTH people feel good!',
+      explain_bad:'Greetings aren\'t just rules — they\'re how we show we care about people around us. Even a small wave counts!'},
+    {type:'tf', text:'"It\'s okay to not greet my teacher because I feel shy."',
+      answer:false, explain_good:'Being shy is normal, but we can still try! Even a small wave or smile counts as a greeting. Baby steps! 🐾',
+      explain_bad:'Feeling shy is okay, but we can practice! Start with a smile, then a wave, then words. Each day gets easier!'},
+    {type:'mc', text:'What\'s the EASIEST way to start if you feel too shy to say "Good morning"?',
+      options:['A small wave and smile 👋','Say it super loud to everyone','Wait until you\'re not shy anymore (maybe never)'],
+      correct:[0], explain_good:'Perfect! A wave + smile is a great baby step. Soon your mouth will follow! It gets easier every time you try.',
+      explain_bad:'You don\'t need to be loud! And waiting forever won\'t help. Start small — a wave or a nod. That\'s already greeting!'},
+    {type:'multi', text:'When should we greet people? Tap ALL correct answers:',
+      options:['Morning — seeing your teacher','Entering a shop — saying "hello"','When someone helps you — "thank you!"','Never — just ignore everyone'],
+      correct:[0,1,2], explain:'We greet people all day! Teachers, shopkeepers, bus drivers, neighbors — it makes the world friendlier!'},
+    {type:'sort', text:'Put these from EASIEST to HARDEST for a shy person:', items:['Smile 😊','Wave 👋','Say "Hi"','Say "Good morning, Ms Lee!"'],
+      correctOrder:[0,1,2,3], explain:'Start with what\'s easy and work up! Even just smiling is a greeting. You don\'t have to be perfect — just TRY! 💪'},
+    {type:'mc', text:'The next day, Jenny takes a deep breath and says quietly: "Good morning, Ms Lee." Ms Lee beams! How does Jenny feel?',
+      options:['Proud — "I did it! That wasn\'t so bad!"','Nothing — it doesn\'t matter','Embarrassed — "Everyone heard me!"'],
+      correct:[0], explain_good:'YES! That proud feeling is your brain saying "You did something brave!" And it gets easier every single day! 🌟',
+      explain_bad:'Actually, saying hi feels AMAZING once you do it. That little scared feeling before turns into a big proud feeling after!'},
+    {type:'narrate', text:'<span class="speaker">Mochi:</span> "Jenny, you were SO brave today! Remember: greeting is like a tiny gift you give someone. It costs nothing but means everything!" 👋💝', scene:'mochi_celebrating'}
+  ],
+
+  // ===== 3. FOCUS IN CLASS =====
+  focus: [
+    {type:'narrate', text:'Math class has started. Ms Lee is explaining fractions. But Jenny has her art pencils hidden in her desk... She really wants to draw a bunny. 🐰✏️', scene:'classroom_draw'},
+    {type:'mc', text:'Jenny thinks: "I\'ll just draw a tiny bit... Ms Lee won\'t notice." What should she do?',
+      options:['Draw secretly — what Ms Lee doesn\'t know won\'t hurt','Put the pencils away and listen to class','Draw AND listen at the same time — easy!'],
+      correct:[1], explain_good:'Putting the pencils away removes the temptation! When class is over, THEN you can draw all you want! 🎨',
+      explain_bad:'Secret drawing means you miss what teacher is saying. Your brain can\'t fully do two things at once! You\'ll fall behind.'},
+    {type:'tf', text:'"I can draw AND listen to the teacher at the same time perfectly."',
+      answer:false, explain_good:'Right! Our brain THINKS it can multitask, but it actually switches back and forth and misses things. Focus on ONE thing at a time! 🧠',
+      explain_bad:'Research shows your brain can\'t truly do two focus-tasks at once. You\'ll miss important instructions and get confused later!'},
+    {type:'multi', text:'What could happen if Jenny draws during class? Tap ALL possible consequences:',
+      options:['Miss important instructions','Not understand homework later','Teacher might be disappointed','Get time to draw AFTER class instead'],
+      correct:[0,1,2], explain:'Drawing in class seems fun NOW but causes problems LATER — missed work, confusion, and broken trust with teacher.'},
+    {type:'mc', text:'<span class="speaker">Mochi:</span> "But Jenny, what if class is REALLY boring? What should you do?"',
+      options:['Draw anyway — boring = free time','Try to find something interesting in the lesson','Ask yourself: What is teacher saying RIGHT NOW?'],
+      correct:[1,2], explain_good:'Great strategies! Active listening (asking yourself questions) makes ANY topic more interesting. Try it!',
+      explain_bad:'Feeling bored doesn\'t mean it\'s okay to stop paying attention. Challenge yourself: "What is one new thing I can learn right now?"'},
+    {type:'sort', text:'Rank these focus strategies from MOST helpful to LEAST helpful:', items:['Eyes on teacher 👀','Sit up straight 🪑','Hide phone/toys in bag 🎒','Daydream about recess 💭'],
+      correctOrder:[0,2,1,3], explain:'Eyes on teacher + removing distractions are the best! Sitting up helps too. Daydreaming? Not a strategy — it\'s the problem! 😄'},
+    {type:'mc', text:'Class is over! Jenny paid attention the whole time. She understood everything and finished her work fast. Now she has FREE TIME. What can she do?',
+      options:['Draw her bunny! She earned it! 🎨','Nothing — class is never over','Feel bad she wanted to draw earlier'],
+      correct:[0], explain_good:'YES! Focus now = free time later! Jenny earned her drawing time by paying attention first. That\'s the reward of self-discipline! 🌟',
+      explain_bad:'Don\'t feel guilty for WANTING to draw — that\'s normal! The skill is choosing WHEN to draw (after work, not during class).'},
+    {type:'narrate', text:'<span class="speaker">Mochi:</span> "Focus first, fun later! When you listen in class, homework is easier, you have more free time, AND teacher trusts you more!" 🎯✨', scene:'mochi_proud'}
+  ],
+
+  // ===== 4. HELPING =====
+  helping: [
+    {type:'narrate', text:'Recess time! Jenny sees a younger student (P1) crying because she dropped her lunchbox and food spilled everywhere. 😢🍱', scene:'playground_spill'},
+    {type:'mc', text:'What should Jenny do?',
+      options:['Walk past — not my problem','Help pick up the food and ask "Are you okay?"','Laugh at the mess'],
+      correct:[1], explain_good:'Helping someone in trouble is one of the kindest things you can do. You just made that girl\'s terrible day so much better! 💗',
+      explain_bad:'Imagine if YOU dropped your food and everyone just walked past or laughed. That would feel awful, right? Be the person you\'d want to meet!'},
+    {type:'multi', text:'Which of these are ways to HELP others? Tap all correct:',
+      options:['Hold the door for someone','Help carry heavy books','Only help if you get a reward','Offer to explain homework to a friend'],
+      correct:[0,1,3], explain:'Real helping doesn\'t need a reward! You help because you CARE, not because you want something back.'},
+    {type:'tf', text:'"I should only help people if they ask me first."',
+      answer:false, explain_good:'Great! Sometimes people are too shy or upset to ask. If you SEE someone needs help, offer it! "Can I help?" are magic words! ✨',
+      explain_bad:'Don\'t wait to be asked! If you see someone struggling, step in. Most people are too shy or embarrassed to ask for help.'},
+    {type:'mc', text:'At home, Mum is cooking dinner and looks very tired. What can Jenny do?',
+      options:['Ask: "Can I help set the table?"','Wait to be asked','Stay in room — that\'s adult work'],
+      correct:[0], explain_good:'Offering to help without being asked shows INITIATIVE — that means you notice what needs doing and step up! Adults love this! 🌟',
+      explain_bad:'Helping at home is part of being a family! You don\'t need to be asked. Look around — if you see something you CAN do, just do it!'},
+    {type:'sort', text:'Rank these from MOST helpful to LEAST helpful:', items:['Help without being asked','Help when asked','Help but complain about it','Don\'t help at all'],
+      correctOrder:[0,1,2,3], explain:'Helping without being asked = AMAZING! Even helping when asked is great. Complaining while helping... well, it\'s still better than nothing, but try to have a good attitude! 😊'},
+    {type:'narrate', text:'<span class="speaker">Mochi:</span> "Helpers are heroes! Look around every day — at school, at home — and ask: Who can I help today? It feels SO good inside!" 🤝✨', scene:'mochi_celebrating'}
+  ],
+
+  // ===== 5. TRUTH =====
+  truth: [
+    {type:'narrate', text:'Uh oh! Jenny was running in the house and accidentally knocked over Mum\'s favourite vase. CRASH! 💥 It broke into pieces...', scene:'broken_vase'},
+    {type:'narrate', text:'Jenny\'s heart is pounding. Nobody saw it happen. She could hide the pieces and pretend she doesn\'t know... 😰', scene:'jenny_scared'},
+    {type:'mc', text:'What should Jenny do?',
+      options:['Hide the pieces and act innocent','Tell Mum: "I\'m sorry, I broke the vase by accident"','Blame the cat 🐱'],
+      correct:[1], explain_good:'Telling the truth takes COURAGE. Mum might be upset about the vase, but she\'ll be PROUD that you were honest. Trust is worth more than any vase! 💪',
+      explain_bad:'Hiding it or blaming others makes everything WORSE. The truth usually comes out, and then you\'re in trouble for the break AND the lie. Double trouble!'},
+    {type:'tf', text:'"If I tell the truth, I\'ll get in MORE trouble than if I hide it."',
+      answer:false, explain_good:'The opposite! When you lie and get caught later, the punishment is ALWAYS worse. Adults respect honesty and are usually gentler when you tell the truth right away.',
+      explain_bad:'Actually, most parents are LESS upset when their child tells the truth immediately. Lying + getting caught later = much bigger trouble!'},
+    {type:'mc', text:'Jenny tells Mum. Mum says: "I\'m sad about the vase, but I\'m PROUD of you for telling me the truth." How should Jenny feel?',
+      options:['Relieved and proud — I did the right thing!','Confused — why isn\'t she mad?','Guilty — I should have hidden it better'],
+      correct:[0], explain_good:'That relief feeling is your brain saying "No more secrets! I\'m free!" Being truthful lifts a weight off your chest every time. 🌟',
+      explain_bad:'When someone says they\'re proud of your honesty, believe them! That feeling of relief is REAL — truth sets you free from worry!'},
+    {type:'multi', text:'Why is telling the truth important? Tap ALL correct reasons:',
+      options:['People trust you more','You don\'t have to remember your lies','You feel good inside','Lies always get bigger and harder to keep'],
+      correct:[0,1,2,3], explain:'ALL of these! Lies are heavy — you have to remember them, add more lies, worry about getting caught. Truth is simple and light! ✨'},
+    {type:'mc', text:'<span class="speaker">Mochi:</span> "What if the truth might hurt someone\'s feelings — like if a friend\'s drawing isn\'t great?"',
+      options:['Be honest but KIND: "I like this part! Maybe you could try..."','Lie: "It\'s the best drawing ever!" (it\'s not)','Be mean: "That\'s ugly!"'],
+      correct:[0], explain_good:'Kind honesty! You don\'t have to lie or be mean. Find something true AND nice to say, then suggest gently. That\'s a real skill! 💗',
+      explain_bad:'We can be honest AND kind at the same time. Find something you genuinely like, then offer a gentle suggestion. No need to lie or hurt!'},
+    {type:'narrate', text:'<span class="speaker">Mochi:</span> "Telling the truth is like cleaning up a mess right away — it\'s easier NOW than later! And people learn they can always trust you." 🪞✨', scene:'mochi_proud'}
+  ],
+
+  // ===== 6. KINDNESS =====
+  kind: [
+    {type:'narrate', text:'A new girl named Lily joins Jenny\'s class today. She looks nervous and doesn\'t know anyone. At recess, she sits alone. 😟', scene:'new_girl'},
+    {type:'mc', text:'What should Jenny do?',
+      options:['Go say "Hi! I\'m Jenny. Want to play with us?"','She\'ll make friends eventually — not my job','Stay with my own friends only'],
+      correct:[0], explain_good:'Being the FIRST person to say hi takes courage — but it can change someone\'s whole life! You might gain an amazing friend! 🌟',
+      explain_bad:'Remember how it feels to be alone? A simple "Hi!" costs nothing but means EVERYTHING to someone new. Be the friend you\'d want to have!'},
+    {type:'tf', text:'"If someone is sitting alone, they probably WANT to be alone."',
+      answer:false, explain_good:'Most of the time, people sitting alone WISH someone would come talk to them — they\'re just too shy to ask! Be brave and say hi!',
+      explain_bad:'Some people might want quiet time, and that\'s okay. But usually? They\'re waiting for someone to be kind enough to include them.'},
+    {type:'multi', text:'Which are KIND actions? Tap ALL correct:',
+      options:['Saving a seat for the new girl','Sharing your snack','Whispering about someone','Including everyone in the game'],
+      correct:[0,1,3], explain:'Kindness is including, sharing, and making others feel welcome. Whispering about someone is the OPPOSITE — it hurts! 💔'},
+    {type:'mc', text:'Ryan teases Lily: "Your lunchbox is weird!" Lily looks like she might cry. What should Jenny do?',
+      options:['Say to Ryan: "That\'s not nice. I think her lunchbox is cool!"','Laugh with Ryan','Say nothing — it\'s not about me'],
+      correct:[0], explain_good:'Standing up for someone = being a TRUE friend! You don\'t have to be mean to Ryan — just be firm and kind. You\'re a shield of kindness! 🛡️',
+      explain_bad:'Staying silent or laughing makes the hurt bigger. Even just saying "That\'s not nice" can stop bullying. Your words have power!'},
+    {type:'sort', text:'Rank these from MOST kind to LEAST kind:', items:['Include the lonely kid in your game','Share your snack even when hungry','Ignore someone who needs help','Make fun of someone different'],
+      correctOrder:[0,1,2,3], explain:'Including and sharing are beautiful acts of kindness! Ignoring is not great, but making fun? That\'s cruelty. Choose kindness always! 💗'},
+    {type:'narrate', text:'<span class="speaker">Mochi:</span> "Kindness is a superpower! One small act — a smile, a shared snack, an invitation to play — can change someone\'s whole day. Be a kindness hero!" 💗🦸', scene:'mochi_celebrating'}
+  ],
+
+  // ===== 7. THINK BEFORE ACT =====
+  think: [
+    {type:'narrate', text:'Jenny sees her brother playing with her favourite toy without asking. She feels ANGRY and wants to grab it and yell! 😡🔥', scene:'angry'},
+    {type:'mc', text:'Jenny\'s face is hot, her fists are tight. What should she do FIRST?',
+      options:['Grab the toy back and scream "MINE!"','STOP. Take 3 deep breaths. Then decide.','Push her brother away'],
+      correct:[1], explain_good:'STOP → BREATHE → THINK → ACT. This is the superpower of self-control! When you pause, your brain has time to choose the SMART action! 🧠',
+      explain_bad:'Acting on anger ALWAYS makes things worse — hitting, screaming, breaking things you\'ll regret. Take 3 breaths first. ALWAYS.'},
+    {type:'tf', text:'"When I\'m angry, it\'s okay to hit because I can\'t control myself."',
+      answer:false, explain_good:'You CAN control yourself — it just takes practice! Anger is a feeling (okay to feel), but hitting is an ACTION (not okay to do). You choose your actions!',
+      explain_bad:'Feeling angry = normal and okay. Hitting = NEVER okay. You always have a choice in what you DO, even when feelings are big!'},
+    {type:'sort', text:'Put these STEPS in the right order:', items:['STOP — freeze your body 🛑','BREATHE — 3 deep breaths 🌬️','THINK — what\'s the smart choice? 🧠','ACT — do the right thing ✅'],
+      correctOrder:[0,1,2,3], explain:'Stop → Breathe → Think → Act! Practice this every time you feel big emotions. It becomes automatic over time! 💪'},
+    {type:'multi', text:'Good ways to calm down when angry? Tap ALL that work:',
+      options:['Count to 10 slowly','Squeeze a stress ball','Hit a pillow (then breathe)','Tell someone: "I feel angry because..."'],
+      correct:[0,1,2,3], explain:'ALL of these work! Different strategies work for different people. Find YOUR favourite and use it every time you feel anger rising!'},
+    {type:'mc', text:'After breathing, Jenny calmly says: "That\'s my toy. Please ask before you take it." Her brother says "Sorry!" and gives it back. What worked?',
+      options:['Using calm words instead of angry actions','Waiting forever and doing nothing','Screaming until she got her way'],
+      correct:[0], explain_good:'Calm words are 100x more powerful than angry screaming! People LISTEN when you speak calmly. Yelling makes them defensive and nothing gets solved.',
+      explain_bad:'Using words — firm but calm — gets results faster than yelling and doesn\'t hurt anyone. It\'s a life skill that even adults struggle with!'},
+    {type:'mc', text:'<span class="speaker">Mochi:</span> "What about when you feel like doing something fun but risky — like running in the hallway?"',
+      options:['Think: What could happen? Is it worth it?','Just do it — YOLO!','Only think about it if teacher is watching'],
+      correct:[0], explain_good:'Asking "What could happen?" is thinking ahead! You might trip, hurt someone, or get in trouble. 2 seconds of thinking saves a lot of pain!',
+      explain_bad:'Thinking before acting isn\'t about rules — it\'s about protecting yourself and others. Ask: "What could go wrong?" BEFORE you act.'},
+    {type:'narrate', text:'<span class="speaker">Mochi:</span> "Remember: STOP 🛑 BREATHE 🌬️ THINK 🧠 ACT ✅ — This works for anger, excitement, and any big feeling! You are in control!" 🧠💪', scene:'mochi_proud'}
+  ],
+
+  // ===== 8. SHARING =====
+  share: [
+    {type:'narrate', text:'Jenny has a pack of 6 yummy cookies. Her friends Sarah and Lily are with her, and they don\'t have any snacks today. 🍪🍪🍪', scene:'cookies'},
+    {type:'mc', text:'Jenny has 6 cookies. Sarah and Lily have none. What\'s the kind thing to do?',
+      options:['Keep all 6 — they\'re MINE!','Give each friend 2 cookies (2+2+2)','Give away all 6 and have none'],
+      correct:[1], explain_good:'Fair sharing! Everyone gets 2, including Jenny. Sharing doesn\'t mean giving away everything — it means making sure everyone has enough! 🍪',
+      explain_bad:'Sharing means finding a fair way so everyone gets some — including YOU! You don\'t have to give away everything, just be fair.'},
+    {type:'tf', text:'"Sharing means I have to give away ALL my things."',
+      answer:false, explain_good:'No! Sharing means dividing fairly or taking turns. You can keep some for yourself AND share with others. Both are okay! 😊',
+      explain_bad:'Sharing isn\'t giving everything away! It\'s about fairness and generosity. Keep your fair share too!'},
+    {type:'multi', text:'What are GOOD things to share? Tap ALL correct:',
+      options:['Snacks with friends','Your toothbrush (no!)','Ideas and creativity','Toys during playtime'],
+      correct:[0,2,3], explain:'We share food, ideas, toys, time — but NOT personal hygiene items! Smart sharing means knowing WHAT to share and what\'s private.'},
+    {type:'mc', text:'Your friend asks to borrow your favourite pencil. You\'re afraid she might break it. What do you say?',
+      options:['"Yes, but please be careful with it — it\'s my favourite!"','"No! It\'s mine, go away!"','"Fine..." (but feel angry inside)'],
+      correct:[0], explain_good:'Setting boundaries while sharing is SMART! You can share AND ask people to be careful. Using words like "please be careful" is mature! 🌟',
+      explain_bad:'You CAN say "please be careful" — that\'s not being mean, it\'s being responsible! Share with trust but also communication.'},
+    {type:'narrate', text:'<span class="speaker">Mochi:</span> "Sharing makes friendships stronger! When you share, people remember your kindness and want to share with YOU too. It\'s a cycle of happiness!" 🍪💝', scene:'mochi_celebrating'}
+  ],
+
+  // ===== 9. PATIENCE =====
+  patience: [
+    {type:'narrate', text:'Jenny is queuing for the slide at recess. There are 5 kids ahead of her. She\'s SO excited and wants to push to the front! 🎢😤', scene:'queue'},
+    {type:'mc', text:'What should Jenny do?',
+      options:['Push to the front — I was here first (she wasn\'t)!','Wait her turn patiently — everyone gets a go','Cry and complain to teacher'],
+      correct:[1], explain_good:'Waiting is HARD but fair. Everyone deserves their turn. When it\'s finally YOUR turn, it feels even more special because you earned it! 🌟',
+      explain_bad:'Pushing ahead is unfair to everyone who waited. How would YOU feel if someone pushed in front of you? Patience = fairness.'},
+    {type:'tf', text:'"If I\'m really excited, it\'s okay to skip the line just this once."',
+      answer:false, explain_good:'Nope! Everyone in line is excited too! Waiting your turn shows you respect other people\'s time and feelings, not just your own.',
+      explain_bad:'Being excited doesn\'t give you special rights. Everyone in that line is excited too! Fair is fair — wait your turn.'},
+    {type:'multi', text:'What can help you be PATIENT while waiting? Tap ALL good strategies:',
+      options:['Count slowly in your head','Chat with the person next to you','Keep saying "Are we there yet?!"','Think about how fun it will be when it\'s your turn'],
+      correct:[0,1,3], explain:'Counting, chatting, and positive thinking all help! Complaining "are we there yet" just makes waiting feel LONGER for everyone. 😅'},
+    {type:'sort', text:'Rank these from MOST patient to LEAST patient:', items:['Wait quietly and happily','Wait but fidget a bit','Ask every 10 seconds "Is it my turn?"','Push to the front'],
+      correctOrder:[0,1,2,3], explain:'Waiting happily is the goal! Fidgeting is normal. Asking constantly is annoying. Pushing? That\'s NOT patience at all! Build your patience muscle! 💪'},
+    {type:'mc', text:'Jenny waited, and now it\'s FINALLY her turn! The slide is amazing! Was waiting worth it?',
+      options:['YES! It feels extra special because I waited!','No, they should have let me go first','I don\'t remember — I\'m having too much fun!'],
+      correct:[0], explain_good:'Earned rewards feel BETTER than stolen ones! Patience makes good things even sweeter when they finally come! 🎢✨',
+      explain_bad:'The joy of getting something you waited for patiently is one of the best feelings! That\'s the reward of patience!'},
+    {type:'narrate', text:'<span class="speaker">Mochi:</span> "Patience is a muscle — the more you practice, the stronger it gets! And patient people get to enjoy things MORE because they earned the wait!" ⏳💪', scene:'mochi_proud'}
+  ],
+
+  // ===== 10. RESPECT =====
+  respect: [
+    {type:'narrate', text:'Jenny is at her friend\'s house. She sees a beautiful toy on the shelf that she REALLY wants. Her friend is in the bathroom... 🧸', scene:'friend_house'},
+    {type:'mc', text:'Jenny really wants to play with the toy. What should she do?',
+      options:['Take it off the shelf and play — she won\'t notice','Wait and ASK: "Can I play with this?"','Put it in her bag to take home'],
+      correct:[1], explain_good:'ALWAYS ask before touching other people\'s things! Even at a friend\'s house. Asking shows respect and builds trust! 🙏',
+      explain_bad:'Taking or using without asking — even "just to look" — is disrespectful. The magic words are: "May I...?" Always ask first!'},
+    {type:'tf', text:'"If my friend has a lot of toys, she won\'t miss one if I borrow it without asking."',
+      answer:false, explain_good:'How many things someone has doesn\'t matter! Every item belongs to them. ALWAYS ask. Even if they have 100 toys, each one is theirs to decide about.',
+      explain_bad:'It doesn\'t matter if they have 1 toy or 1000 — each one belongs to THEM. Their things, their choice. Always ask!'},
+    {type:'multi', text:'Which show RESPECT for others\' things? Tap ALL correct:',
+      options:['Asking before borrowing','Returning things in good condition','Using someone\'s eraser without asking','Saying "thank you" after borrowing'],
+      correct:[0,1,3], explain:'Respect = Ask first, take care of it, return it nicely, and say thank you! Using without asking is disrespectful even if it\'s small.'},
+    {type:'mc', text:'You borrowed a book from a classmate and accidentally tore a page. What do you do?',
+      options:['Tell them honestly and offer to fix or replace it','Hide it and hope they don\'t notice','Never return the book'],
+      correct:[0], explain_good:'Honesty + Responsibility = Respect! Accidents happen, but how you handle them shows your character. Owning up and offering to fix it is mature! 💪',
+      explain_bad:'Hiding damage or not returning things breaks trust. Be honest about accidents and take responsibility. That\'s how you KEEP friends!'},
+    {type:'sort', text:'Rank from MOST respectful to LEAST:', items:['Ask before touching someone\'s things','Return borrowed items quickly and nicely','Use without asking but return it','Take it and never give it back'],
+      correctOrder:[0,1,2,3], explain:'Asking permission is the gold standard of respect! Returning things well is great too. Using without asking? Meh. Taking and keeping? That\'s stealing! 🚫'},
+    {type:'narrate', text:'<span class="speaker">Mochi:</span> "Remember: If it\'s not yours, ASK. If you borrow it, RETURN it. If you break it, OWN UP. That\'s how you earn everyone\'s trust and respect!" 🙏✨', scene:'mochi_proud'}
+  ],
+
+  // ===== 11. TRUE FRIENDSHIP =====
+  friendship: [
+    {type:'narrate', text:'It\'s recess time! Jenny sees her friend Mei eating a yummy sandwich. Jenny\'s tummy rumbles... 🥪', scene:'canteen'},
+    {type:'narrate', text:'<span class="speaker">Jenny:</span> "Mei, can I have some of your sandwich?"<br><span class="speaker">Mei:</span> "Sorry Jenny, this is all I have for lunch today."', scene:'canteen'},
+    {type:'mc', text:'Mei said no. What should Jenny do?',
+      options:['Say "Fine! I\'m not your friend anymore!"','Say "Okay!" and eat her own food','Keep asking until Mei gives in'],
+      correct:[1], explain_good:'When someone says no, a good friend respects that! Mei\'s food is Mei\'s choice. Saying "okay" shows you\'re mature! 💪',
+      explain_bad:'Threatening to end a friendship over food is hurtful. And asking again and again is pressuring — that\'s not kind! A real friend respects "no."'},
+    {type:'tf', text:'"If my friend won\'t give me her food, she is not a real friend."',
+      answer:false, explain_good:'That\'s right — friendship is NOT about what people give you! Your friend\'s lunch is HERS. A real friend doesn\'t need to give you things to prove they care. 💗',
+      explain_bad:'Friendship is not about getting things! Mei can be a wonderful friend AND still keep her own food. That\'s totally normal and okay!'},
+    {type:'multi', text:'Which are signs of a TRUE friend? Tap ALL correct:',
+      options:['Plays with you even when you have nothing to share','Gives you their food every time you ask','Respects when you say "no"','Says "I\'m not your friend" when upset'],
+      correct:[0,2], explain:'True friends stick by you no matter what — and they respect each other\'s choices! Demanding food or threatening friendship? That\'s NOT how real friends act.'},
+    {type:'mc', text:'Why is it wrong to say "I won\'t be your friend" when someone won\'t share?',
+      options:['Because it hurts their feelings and is like bullying','Because they might tell the teacher','Because you\'ll be hungry'],
+      correct:[0], explain_good:'Yes! Saying "I won\'t be your friend" is a THREAT. It tries to scare someone into doing what you want. That\'s manipulation and it really hurts people\'s feelings. 💔',
+      explain_bad:'The biggest reason is that it HURTS people. Using friendship as a weapon is a form of bullying — it makes others feel scared and sad.'},
+    {type:'sort', text:'Rank from BEST to WORST behaviour at recess:', items:['Eat your own food happily','Ask politely, accept "no" gracefully','Keep asking again and again','Say "I won\'t be your friend!" if they refuse'],
+      correctOrder:[0,1,2,3], explain:'Eating your own food = great! Asking politely & accepting no = also great! But pressuring someone or threatening them? Those are the WORST choices. No one wants a friend who does that! 🚫'},
+    {type:'narrate', text:'<span class="speaker">Mochi:</span> "Real friendship is about CARING, not TAKING! A true friend never says \'give me your food or I won\'t like you.\' That\'s not friendship — that\'s a threat! Always bring your own snacks and be happy for your friends!" 🤗✨', scene:'mochi_proud'}
+  ]
+};
+
+// ===== SCENE SVG GENERATOR =====
+function getSceneSVG(scene){
+  const w=320, h=170;
+  let bg='', characters='';
+
+  switch(scene){
+    case 'classroom':
+    case 'classroom_draw':
+      bg=`<rect width="${w}" height="${h}" fill="#F5F0FF"/><rect x="0" y="${h-30}" width="${w}" height="30" fill="#E8E0F0"/>
+        <rect x="20" y="15" width="140" height="70" rx="4" fill="#4A7C59" stroke="#3A6249" stroke-width="2"/>
+        <text x="90" y="55" text-anchor="middle" font-size="11" fill="#fff" font-family="Quicksand">a × b = ?</text>`;
+      if(scene==='classroom_draw') bg+=`<rect x="220" y="60" width="50" height="35" rx="3" fill="#fff" stroke="#DDD" stroke-width="1"/><text x="245" y="82" text-anchor="middle" font-size="8" fill="#DDD">🎨</text>`;
+      break;
+    case 'school_door':
+      bg=`<rect width="${w}" height="${h}" fill="#E8F5E9"/><rect x="120" y="10" width="80" height="130" rx="4" fill="#8D6E63"/><rect x="130" y="25" width="60" height="50" fill="#BBDEFB"/><circle cx="185" cy="80" r="4" fill="#FFD93D"/>
+        <rect x="0" y="${h-30}" width="${w}" height="30" fill="#A5D6A7"/>`;
+      break;
+    case 'mochi_excited':
+    case 'mochi_proud':
+    case 'mochi_celebrating':
+      bg=`<rect width="${w}" height="${h}" fill="#F0FFFE"/><circle cx="${w/2}" cy="${h/2}" r="60" fill="var(--tiffany)" opacity="0.05"/>`;
+      break;
+    case 'jenny_shy':
+      bg=`<rect width="${w}" height="${h}" fill="#F5F0FF"/><text x="${w/2+50}" y="40" text-anchor="middle" font-size="22" opacity="0.3">😶</text>`;
+      break;
+    case 'angry':
+      bg=`<rect width="${w}" height="${h}" fill="#FFEBEE"/><text x="50" y="35" font-size="18" opacity="0.3">😡</text><text x="260" y="45" font-size="14" opacity="0.2">💢</text>`;
+      break;
+    case 'broken_vase':
+      bg=`<rect width="${w}" height="${h}" fill="#FFF3E0"/><rect x="0" y="${h-25}" width="${w}" height="25" fill="#EFEBE9"/>
+        <path d="M140 50 L150 30 L170 30 L180 50 L175 90 L145 90 Z" fill="#80DEEA" stroke="#4DD0E1" stroke-width="1.5" opacity="0.7"/>
+        <text x="160" y="110" text-anchor="middle" font-size="12">💥</text>
+        <path d="M148 92 L143 105" stroke="#4DD0E1" stroke-width="2"/><path d="M165 92 L170 103" stroke="#4DD0E1" stroke-width="2"/><path d="M155 92 L155 107" stroke="#4DD0E1" stroke-width="2"/>`;
+      break;
+    case 'jenny_scared':
+      bg=`<rect width="${w}" height="${h}" fill="#FFF8E1"/><text x="60" y="40" font-size="18" opacity="0.3">😰</text>`;
+      break;
+    case 'new_girl':
+    case 'playground_spill':
+    case 'queue':
+      bg=`<rect width="${w}" height="${h}" fill="#E8F5E9"/><rect x="0" y="${h-35}" width="${w}" height="35" fill="#A5D6A7"/>
+        <circle cx="40" cy="50" r="20" fill="#66BB6A" opacity="0.4"/><circle cx="280" cy="60" r="15" fill="#66BB6A" opacity="0.3"/>`;
+      break;
+    case 'cookies':
+      bg=`<rect width="${w}" height="${h}" fill="#FFF8E1"/>
+        <circle cx="130" cy="85" r="12" fill="#D4A574" stroke="#B8956A" stroke-width="1.5"/><circle cx="150" cy="80" r="12" fill="#D4A574" stroke="#B8956A" stroke-width="1.5"/>
+        <circle cx="140" cy="95" r="12" fill="#D4A574" stroke="#B8956A" stroke-width="1.5"/><circle cx="160" cy="90" r="12" fill="#D4A574" stroke="#B8956A" stroke-width="1.5"/>
+        <circle cx="170" cy="82" r="12" fill="#D4A574" stroke="#B8956A" stroke-width="1.5"/><circle cx="155" cy="100" r="12" fill="#D4A574" stroke="#B8956A" stroke-width="1.5"/>
+        <g><circle cx="133" cy="83" r="2" fill="#5D4037"/><circle cx="153" cy="78" r="2" fill="#5D4037"/><circle cx="143" cy="93" r="2" fill="#5D4037"/><circle cx="163" cy="88" r="2" fill="#5D4037"/><circle cx="173" cy="80" r="2" fill="#5D4037"/><circle cx="158" cy="98" r="2" fill="#5D4037"/></g>`;
+      break;
+    case 'canteen':
+      bg=`<rect width="${w}" height="${h}" fill="#FFF8E1"/><rect x="0" y="${h-30}" width="${w}" height="30" fill="#FFE0B2"/>
+        <rect x="160" y="25" width="100" height="55" rx="4" fill="#FFCC80" stroke="#FFB74D" stroke-width="1.5"/>
+        <rect x="170" y="35" width="30" height="15" rx="3" fill="#A5D6A7"/><rect x="210" y="35" width="30" height="15" rx="3" fill="#EF9A9A"/>
+        <rect x="180" y="55" width="50" height="12" rx="2" fill="#FFAB91"/>
+        <text x="295" y="50" text-anchor="middle" font-size="20" opacity="0.3">🥪</text>`;
+      break;
+    case 'friend_house':
+      bg=`<rect width="${w}" height="${h}" fill="#FFF3E0"/><rect x="0" y="${h-25}" width="${w}" height="25" fill="#EFEBE9"/>
+        <rect x="200" y="30" width="80" height="90" rx="3" fill="#FFCC80" stroke="#FFB74D" stroke-width="1.5"/>
+        <rect x="210" y="45" width="15" height="20" rx="2" fill="#FF7043"/><rect x="235" y="45" width="15" height="20" rx="2" fill="#42A5F5"/><rect x="260" y="45" width="15" height="20" rx="2" fill="#66BB6A"/>`;
+      break;
+    default:
+      bg=`<rect width="${w}" height="${h}" fill="#F0FFFE"/>`;
+  }
+
+  // Draw characters based on scene
+  let jenny = drawMiniJenny(scene);
+  let mochi = drawMiniMochi(scene);
+
+  return `<svg width="100%" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="max-width:500px;border-radius:16px;">${bg}${jenny}${mochi}</svg>`;
+}
+
+function drawMiniJenny(scene){
+  if(scene.startsWith('mochi_')) return ''; // Mochi solo scenes
+  let x=70, y=55;
+  if(scene==='jenny_shy'||scene==='jenny_scared'){x=130;y=55;}
+  if(scene==='angry'){x=90;y=55;}
+
+  let mood='happy';
+  if(scene==='jenny_shy') mood='shy';
+  if(scene==='jenny_scared'||scene==='angry') mood='upset';
+  if(scene==='broken_vase') mood='scared';
+
+  let eyes='';
+  switch(mood){
+    case 'shy': eyes=`<path d="M-4 0 Q0 -3 4 0" fill="none" stroke="#1a1a2e" stroke-width="1.8" stroke-linecap="round" transform="translate(${x-4},${y+2})"/><path d="M-4 0 Q0 -3 4 0" fill="none" stroke="#1a1a2e" stroke-width="1.8" stroke-linecap="round" transform="translate(${x+8},${y+2})"/>`;break;
+    case 'upset': eyes=`<circle cx="${x-3}" cy="${y+1}" r="2.5" fill="#1a1a2e"/><circle cx="${x+9}" cy="${y+1}" r="2.5" fill="#1a1a2e"/><path d="M${x-5} ${y-3} L${x-1} ${y-1}" stroke="#1a1a2e" stroke-width="1.3"/><path d="M${x+11} ${y-3} L${x+7} ${y-1}" stroke="#1a1a2e" stroke-width="1.3"/>`;break;
+    case 'scared': eyes=`<circle cx="${x-3}" cy="${y}" r="3.5" fill="#fff" stroke="#1a1a2e" stroke-width="1.5"/><circle cx="${x+9}" cy="${y}" r="3.5" fill="#fff" stroke="#1a1a2e" stroke-width="1.5"/><circle cx="${x-3}" cy="${y+1}" r="1.5" fill="#1a1a2e"/><circle cx="${x+9}" cy="${y+1}" r="1.5" fill="#1a1a2e"/>`;break;
+    default: eyes=`<circle cx="${x-3}" cy="${y+1}" r="2.5" fill="#1a1a2e"/><circle cx="${x+9}" cy="${y+1}" r="2.5" fill="#1a1a2e"/><circle cx="${x-1.8}" cy="${y-0.5}" r="0.8" fill="#fff"/><circle cx="${x+10.2}" cy="${y-0.5}" r="0.8" fill="#fff"/>`;
+  }
+  let mouth = mood==='happy' ? `<path d="M${x-2} ${y+10} Q${x+3} ${y+15} ${x+8} ${y+10}" fill="none" stroke="#E88B7A" stroke-width="1.8" stroke-linecap="round"/>`
+    : mood==='shy' ? `<path d="M${x} ${y+10} Q${x+3} ${y+11} ${x+6} ${y+10}" fill="none" stroke="#C0756B" stroke-width="1.5" stroke-linecap="round"/>`
+    : `<path d="M${x-1} ${y+11} Q${x+3} ${y+9} ${x+7} ${y+11}" fill="none" stroke="#C0756B" stroke-width="1.5" stroke-linecap="round"/>`;
+
+  return `<g>
+    <ellipse cx="${x+3}" cy="${y-6}" rx="18" ry="20" fill="#1a1a2e"/>
+    <ellipse cx="${x+3}" cy="${y-2}" rx="14" ry="15" fill="#FFE0BD"/>
+    <path d="M${x-12} ${y-10} Q${x-4} ${y-22} ${x+3} ${y-24} Q${x+10} ${y-22} ${x+18} ${y-10}" fill="#1a1a2e"/>
+    <path d="M${x-12} ${y-10} Q${x-15} ${y+8} ${x-10} ${y+22}" fill="#1a1a2e"/>
+    <path d="M${x+18} ${y-10} Q${x+21} ${y+8} ${x+16} ${y+22}" fill="#1a1a2e"/>
+    ${eyes}${mouth}
+    <ellipse cx="${x-7}" cy="${y+7}" rx="3" ry="1.8" fill="#FFB5C2" opacity="0.4"/>
+    <ellipse cx="${x+13}" cy="${y+7}" rx="3" ry="1.8" fill="#FFB5C2" opacity="0.4"/>
+    <path d="M${x-9} ${y+18} Q${x+3} ${y+16} ${x+15} ${y+18} L${x+17} ${y+52} Q${x+3} ${y+55} ${x-11} ${y+52} Z" fill="#0ABAB5"/>
+    <path d="M${x-3} ${y+18} L${x+3} ${y+26} L${x+9} ${y+18}" fill="#fff"/>
+    <line x1="${x-11}" y1="${y+28}" x2="${x-17}" y2="${y+40}" stroke="#FFE0BD" stroke-width="5" stroke-linecap="round"/>
+    <line x1="${x+17}" y1="${y+28}" x2="${x+23}" y2="${y+40}" stroke="#FFE0BD" stroke-width="5" stroke-linecap="round"/>
+    <path d="M${x-11} ${y+50} Q${x+3} ${y+55} ${x+17} ${y+50} L${x+19} ${y+60} Q${x+3} ${y+65} ${x-13} ${y+60} Z" fill="#1a1a2e"/>
+    <line x1="${x-4}" y1="${y+60}" x2="${x-5}" y2="${y+73}" stroke="#FFE0BD" stroke-width="4.5" stroke-linecap="round"/>
+    <line x1="${x+10}" y1="${y+60}" x2="${x+11}" y2="${y+73}" stroke="#FFE0BD" stroke-width="4.5" stroke-linecap="round"/>
+    <ellipse cx="${x-5}" cy="${y+75}" rx="6" ry="3" fill="#1a1a2e"/>
+    <ellipse cx="${x+11}" cy="${y+75}" rx="6" ry="3" fill="#1a1a2e"/>
+  </g>`;
+}
+
+function drawMiniMochi(scene){
+  let x=210, y=60;
+  if(scene.startsWith('mochi_')){x=140;y=40;}
+  if(scene==='cookies'||scene==='queue'){x=230;y=70;}
+
+  let mood = scene.includes('celebrating')?'yay':scene.includes('proud')?'proud':scene.includes('excited')?'excited':'happy';
+
+  let face='';
+  switch(mood){
+    case 'yay': face=`<path d="M${x-5} ${y}" Q${x} ${y-3} ${x+5} ${y}" fill="none" stroke="#1a1a2e" stroke-width="1.8" stroke-linecap="round"/><path d="M${x+3} ${y}" Q${x+8} ${y-3} ${x+13} ${y}" fill="none" stroke="#1a1a2e" stroke-width="1.8" stroke-linecap="round"/><path d="M${x-2} ${y+6} Q${x+4} ${y+11} ${x+10} ${y+6}" fill="none" stroke="#E88B7A" stroke-width="1.8" stroke-linecap="round"/><text x="${x+18}" y="${y-10}" font-size="12">✨</text>`;break;
+    case 'proud': face=`<path d="M${x-5} ${y}" Q${x} ${y-3} ${x+5} ${y}" fill="none" stroke="#1a1a2e" stroke-width="1.8" stroke-linecap="round"/><path d="M${x+3} ${y}" Q${x+8} ${y-3} ${x+13} ${y}" fill="none" stroke="#1a1a2e" stroke-width="1.8" stroke-linecap="round"/><path d="M${x-1} ${y+6} Q${x+4} ${y+10} ${x+9} ${y+6}" fill="none" stroke="#E88B7A" stroke-width="1.5" stroke-linecap="round"/>`;break;
+    case 'excited': face=`<circle cx="${x}" cy="${y}" r="2.5" fill="#1a1a2e"/><circle cx="${x+8}" cy="${y}" r="2.5" fill="#1a1a2e"/><circle cx="${x+1}" cy="${y-1}" r="0.8" fill="#fff"/><circle cx="${x+9}" cy="${y-1}" r="0.8" fill="#fff"/><path d="M${x-1} ${y+6} Q${x+4} ${y+11} ${x+9} ${y+6}" fill="none" stroke="#E88B7A" stroke-width="1.8" stroke-linecap="round"/>`;break;
+    default: face=`<circle cx="${x}" cy="${y}" r="2.2" fill="#1a1a2e"/><circle cx="${x+8}" cy="${y}" r="2.2" fill="#1a1a2e"/><circle cx="${x+1}" cy="${y-1}" r="0.7" fill="#fff"/><circle cx="${x+9}" cy="${y-1}" r="0.7" fill="#fff"/><path d="M${x} ${y+5} Q${x+4} ${y+8} ${x+8} ${y+5}" fill="none" stroke="#E88B7A" stroke-width="1.3" stroke-linecap="round"/>`;
+  }
+
+  return `<g>
+    <ellipse cx="${x+4}" cy="${y+28}" rx="16" ry="18" fill="#fff" stroke="#EEE" stroke-width="1.2"/>
+    <circle cx="${x+4}" cy="${y+5}" r="13" fill="#fff" stroke="#EEE" stroke-width="1.2"/>
+    <ellipse cx="${x-4}" cy="${y-14}" rx="5" ry="14" fill="#fff" stroke="#EEE" stroke-width="1.2"/>
+    <ellipse cx="${x-4}" cy="${y-12}" rx="2.5" ry="9" fill="var(--pink-light)"/>
+    <ellipse cx="${x+12}" cy="${y-14}" rx="5" ry="14" fill="#fff" stroke="#EEE" stroke-width="1.2" transform="rotate(6,${x+12},${y-14})"/>
+    <ellipse cx="${x+13}" cy="${y-12}" rx="2.5" ry="9" fill="var(--pink-light)" transform="rotate(6,${x+13},${y-12})"/>
+    ${face}
+    <ellipse cx="${x+4}" cy="${y+3}" rx="2" ry="1.3" fill="var(--pink)"/>
+    <ellipse cx="${x-5}" cy="${y+3}" rx="3" ry="1.5" fill="var(--pink)" opacity="0.3"/>
+    <ellipse cx="${x+13}" cy="${y+3}" rx="3" ry="1.5" fill="var(--pink)" opacity="0.3"/>
+    <path d="M${x} ${y-8} Q${x+4} ${y-5} ${x+8} ${y-8} Q${x+4} ${y-6} ${x+4} ${y-3} Q${x+4} ${y-6} ${x} ${y-8}Z" fill="var(--tiffany)" opacity="0.7"/>
+    <ellipse cx="${x-5}" cy="${y+44}" rx="6" ry="3.5" fill="#fff" stroke="#EEE" stroke-width="1"/>
+    <ellipse cx="${x+13}" cy="${y+44}" rx="6" ry="3.5" fill="#fff" stroke="#EEE" stroke-width="1"/>
+  </g>`;
+}
+
+// ===== RENDER MAP =====
+function renderMap(){
+  const grid = document.getElementById('storyGrid');
+  grid.innerHTML = '';
+  STORIES.forEach(s=>{
+    const done = G.completed[s.id];
+    const card = document.createElement('div');
+    card.className = 'story-card' + (done?' completed':'');
+    card.innerHTML = `<span class="card-emoji">${s.emoji}</span><span class="card-title">${s.title}</span><span class="card-tag">${s.tag}</span>`;
+    card.onclick = ()=> startStory(s.id);
+    grid.appendChild(card);
+  });
+  document.getElementById('mapXP').textContent = `⚡ ${G.totalXP} XP`;
+  document.getElementById('mapStars').textContent = `⭐ ${Object.keys(G.completed).length}/11`;
+}
+
+// ===== SCREEN NAV =====
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active','fade-in'));
+  document.getElementById(id).classList.add('active','fade-in');
+  if(id==='map') renderMap();
+}
+
+// ===== START STORY =====
+function startStory(id){
+  G.currentStory = id;
+  G.currentStep = 0;
+  G.storyHearts = 5;
+  G.sessionXP = 0;
+  showScreen('play');
+  renderPlayStep();
+}
+
+function exitStory(){
+  showScreen('map');
+}
+
+// ===== RENDER PLAY STEP =====
+function renderPlayStep(){
+  const steps = STORY_DATA[G.currentStory];
+  const step = steps[G.currentStep];
+  const total = steps.length;
+  const pct = ((G.currentStep+1)/total)*100;
+
+  // Update top bar
+  document.getElementById('playProgress').style.width = pct+'%';
+  document.getElementById('playHearts').innerHTML = '❤️'+G.storyHearts;
+  document.getElementById('playXP').textContent = '⚡'+G.sessionXP;
+
+  // Scene
+  const sceneArea = document.getElementById('sceneArea');
+  sceneArea.innerHTML = getSceneSVG(step.scene||'mochi_proud');
+
+  // Dialogue
+  document.getElementById('dialogueBox').innerHTML = step.text;
+
+  // Clear interaction and feedback
+  const ia = document.getElementById('interactArea');
+  ia.innerHTML = '';
+  const fb = document.getElementById('feedback');
+  fb.classList.remove('show','good','bad');
+  const cb = document.getElementById('continueBtn');
+  cb.classList.remove('show','btn-finish');
+  cb.textContent = 'CONTINUE';
+
+  // Render interaction based on type
+  switch(step.type){
+    case 'narrate':
+      if(G.currentStep === total-1){
+        cb.textContent = '🎉 FINISH STORY';
+        cb.classList.add('btn-finish');
+      }
+      cb.classList.add('show');
+      break;
+    case 'mc':
+      renderMC(step, ia);
+      break;
+    case 'tf':
+      renderTF(step, ia);
+      break;
+    case 'multi':
+      renderMulti(step, ia);
+      break;
+    case 'sort':
+      renderSort(step, ia);
+      break;
+  }
+
+  // Scroll to top
+  document.getElementById('play').scrollTop = 0;
+}
+
+// ===== MC =====
+function renderMC(step, container){
+  step.options.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'mc-btn';
+    btn.innerHTML = `<span class="mc-icon">${['🅰️','🅱️','🅲️','🅳️'][i]}</span>${opt}`;
+    btn.onclick = ()=> handleMC(i, step, container);
+    container.appendChild(btn);
+  });
+}
+
+function handleMC(idx, step, container){
+  const btns = container.querySelectorAll('.mc-btn');
+  const isCorrect = Array.isArray(step.correct) ? step.correct.includes(idx) : step.correct===idx;
+
+  btns.forEach((b,i)=>{
+    b.disabled = true;
+    if(i===idx) b.classList.add(isCorrect?'correct':'wrong');
+    // Show correct answers
+    const correctArr = Array.isArray(step.correct)?step.correct:[step.correct];
+    if(!isCorrect && correctArr.includes(i)){
+      setTimeout(()=>b.classList.add('correct'),500);
+    }
+  });
+
+  showFeedback(isCorrect, step);
+}
+
+// ===== TF =====
+function renderTF(step, container){
+  const row = document.createElement('div');
+  row.className = 'tf-row';
+
+  const trueBtn = document.createElement('button');
+  trueBtn.className = 'tf-btn';
+  trueBtn.innerHTML = '👍<span>TRUE</span>';
+  trueBtn.onclick = ()=> handleTF(true, step, row);
+
+  const falseBtn = document.createElement('button');
+  falseBtn.className = 'tf-btn';
+  falseBtn.innerHTML = '👎<span>FALSE</span>';
+  falseBtn.onclick = ()=> handleTF(false, step, row);
+
+  row.appendChild(trueBtn);
+  row.appendChild(falseBtn);
+  container.appendChild(row);
+}
+
+function handleTF(answer, step, row){
+  const btns = row.querySelectorAll('.tf-btn');
+  const isCorrect = answer === step.answer;
+
+  btns.forEach(b=>b.disabled=true);
+  const idx = answer ? 0 : 1;
+  btns[idx].classList.add(isCorrect?'correct':'wrong');
+  if(!isCorrect) btns[1-idx].classList.add('correct');
+
+  showFeedback(isCorrect, step);
+}
+
+// ===== MULTI SELECT =====
+function renderMulti(step, container){
+  const grid = document.createElement('div');
+  grid.className = 'multi-grid';
+  const selected = new Set();
+
+  step.options.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'multi-btn';
+    btn.textContent = opt;
+    btn.onclick = ()=>{
+      if(btn.classList.contains('selected')){
+        btn.classList.remove('selected');
+        selected.delete(i);
+      } else {
+        btn.classList.add('selected');
+        selected.add(i);
+      }
+      subBtn.classList.toggle('ready', selected.size > 0);
+    };
+    grid.appendChild(btn);
+  });
+  container.appendChild(grid);
+
+  const subBtn = document.createElement('button');
+  subBtn.className = 'submit-btn';
+  subBtn.textContent = 'CHECK ✓';
+  subBtn.onclick = ()=> handleMulti(selected, step, grid, subBtn);
+  container.appendChild(subBtn);
+}
+
+function handleMulti(selected, step, grid, subBtn){
+  subBtn.style.display = 'none';
+  const btns = grid.querySelectorAll('.multi-btn');
+  const correctSet = new Set(step.correct);
+  let allRight = true;
+
+  btns.forEach((b,i)=>{
+    b.style.pointerEvents = 'none';
+    if(selected.has(i) && correctSet.has(i)){
+      b.classList.add('correct-sel');
+    } else if(selected.has(i) && !correctSet.has(i)){
+      b.classList.add('wrong-sel');
+      allRight = false;
+    } else if(!selected.has(i) && correctSet.has(i)){
+      b.classList.add('missed');
+      allRight = false;
+    }
+  });
+
+  showFeedback(allRight, step, true);
+}
+
+// ===== SORT =====
+function renderSort(step, container){
+  const area = document.createElement('div');
+  area.className = 'sort-area';
+
+  // Shuffle items
+  let indices = step.items.map((_,i)=>i);
+  for(let i=indices.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [indices[i],indices[j]]=[indices[j],indices[i]];
+  }
+
+  indices.forEach((origIdx,pos)=>{
+    const item = document.createElement('div');
+    item.className = 'sort-item';
+    item.draggable = true;
+    item.dataset.origIdx = origIdx;
+    item.innerHTML = `<span class="sort-num">${pos+1}</span>${step.items[origIdx]}`;
+
+    item.addEventListener('dragstart', e=>{
+      e.dataTransfer.setData('text/plain', pos);
+      item.classList.add('dragging');
+    });
+    item.addEventListener('dragend', ()=>item.classList.remove('dragging'));
+    item.addEventListener('dragover', e=>e.preventDefault());
+    item.addEventListener('drop', e=>{
+      e.preventDefault();
+      const fromPos = parseInt(e.dataTransfer.getData('text/plain'));
+      const toPos = [...area.children].indexOf(item);
+      if(fromPos !== toPos){
+        const items = [...area.children];
+        const movedItem = items[fromPos];
+        if(fromPos < toPos) area.insertBefore(movedItem, item.nextSibling);
+        else area.insertBefore(movedItem, item);
+        updateSortNums(area);
+      }
+    });
+
+    // Touch support
+    item.addEventListener('touchstart', e=>{
+      item._touchY = e.touches[0].clientY;
+      item.classList.add('dragging');
+    });
+    item.addEventListener('touchmove', e=>{
+      e.preventDefault();
+      const touch = e.touches[0];
+      const items = [...area.children];
+      const idx = items.indexOf(item);
+      const dy = touch.clientY - item._touchY;
+      if(Math.abs(dy) > 40){
+        if(dy > 0 && idx < items.length-1){
+          area.insertBefore(items[idx+1], item);
+          item._touchY = touch.clientY;
+        } else if(dy < 0 && idx > 0){
+          area.insertBefore(item, items[idx-1]);
+          item._touchY = touch.clientY;
+        }
+        updateSortNums(area);
+      }
+    },{passive:false});
+    item.addEventListener('touchend', ()=>item.classList.remove('dragging'));
+
+    area.appendChild(item);
+  });
+  container.appendChild(area);
+
+  const subBtn = document.createElement('button');
+  subBtn.className = 'submit-btn ready';
+  subBtn.textContent = 'CHECK ORDER ✓';
+  subBtn.onclick = ()=> handleSort(step, area, subBtn);
+  container.appendChild(subBtn);
+}
+
+function updateSortNums(area){
+  [...area.children].forEach((item,i)=>{
+    item.querySelector('.sort-num').textContent = i+1;
+  });
+}
+
+function handleSort(step, area, subBtn){
+  subBtn.style.display = 'none';
+  const items = [...area.children];
+  let allCorrect = true;
+
+  items.forEach((item,pos)=>{
+    const origIdx = parseInt(item.dataset.origIdx);
+    const correctPos = step.correctOrder.indexOf(origIdx);
+    if(correctPos === pos){
+      item.classList.add('correct-pos');
+    } else {
+      item.classList.add('wrong-pos');
+      allCorrect = false;
+    }
+    item.draggable = false;
+    item.style.pointerEvents = 'none';
+  });
+
+  showFeedback(allCorrect, step, true);
+}
+
+// ===== FEEDBACK =====
+function showFeedback(isCorrect, step, isMultiOrSort=false){
+  const fb = document.getElementById('feedback');
+  const title = fb.querySelector('.fb-title');
+  const text = fb.querySelector('.fb-text');
+
+  if(isCorrect){
+    G.sessionXP += 10;
+    fb.className = 'feedback show good';
+    title.textContent = ['🎉 Awesome!','💪 Great job!','✨ Perfect!','🌟 You got it!'][Math.floor(Math.random()*4)];
+    text.textContent = step.explain_good || step.explain || '';
+    spawnStars();
+    showXPPop('+10 XP');
+  } else {
+    G.storyHearts = Math.max(0, G.storyHearts-1);
+    fb.className = 'feedback show bad';
+    title.textContent = ['🤔 Not quite...','💭 Think again...','Hmm...'][Math.floor(Math.random()*3)];
+    text.textContent = step.explain_bad || step.explain || '';
+    animateHeartLoss();
+  }
+
+  // Update top bar
+  document.getElementById('playHearts').innerHTML = '❤️'+G.storyHearts;
+  document.getElementById('playXP').textContent = '⚡'+G.sessionXP;
+
+  // Show continue
+  const cb = document.getElementById('continueBtn');
+  setTimeout(()=>{
+    cb.classList.add('show');
+    cb.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }, 600);
+}
+
+// ===== NEXT STEP =====
+function nextStep(){
+  const steps = STORY_DATA[G.currentStory];
+  G.currentStep++;
+  if(G.currentStep >= steps.length){
+    finishStory();
+  } else {
+    renderPlayStep();
+  }
+}
+
+// ===== FINISH STORY =====
+function finishStory(){
+  G.completed[G.currentStory] = true;
+  G.totalXP += G.sessionXP;
+
+  // Calculate stars
+  const maxHearts = 5;
+  const stars = G.storyHearts >= 5 ? 3 : G.storyHearts >= 3 ? 2 : 1;
+
+  document.getElementById('completeTitle').textContent = ['Good effort!','Great job!','PERFECT! 🏆'][stars-1];
+  document.getElementById('completeStars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3-stars);
+  document.getElementById('completeXP').textContent = `+${G.sessionXP} XP earned!`;
+
+  const storyInfo = STORIES.find(s=>s.id===G.currentStory);
+  document.getElementById('completeMsg').textContent = `You completed "${storyInfo.title}"! ${stars===3?'No mistakes — incredible!':stars===2?'Almost perfect — keep it up!':'Good try — play again to do even better!'}`;
+
+  showScreen('complete');
+  launchConfetti();
+}
+
+// ===== EFFECTS =====
+function spawnStars(){
+  for(let i=0;i<5;i++){
+    const el = document.createElement('div');
+    el.className = 'star-burst';
+    el.style.left = (Math.random()*60+20)+'%';
+    el.style.top = (Math.random()*30+40)+'%';
+    el.innerHTML = `<span class="star-particle" style="--tx:${(Math.random()-0.5)*80}px;--ty:${-20-Math.random()*60}px;font-size:${1+Math.random()}em">${['⭐','✨','🌟','💫'][i%4]}</span>`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),900);
+  }
+}
+
+function showXPPop(text){
+  const el = document.createElement('div');
+  el.className = 'xp-pop';
+  el.textContent = text;
+  el.style.left = '50%';
+  el.style.top = '12%';
+  el.style.transform = 'translateX(-50%)';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1100);
+}
+
+function animateHeartLoss(){
+  const h = document.getElementById('playHearts');
+  h.style.animation = 'none';
+  h.offsetHeight;
+  h.style.animation = 'shake 0.4s ease';
+}
+
+function launchConfetti(){
+  const colors = ['#FFD93D','#0ABAB5','#FF6B6B','#6BCB77','#9B59B6','#FFB5C2'];
+  for(let i=0;i<25;i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random()*100+'%';
+    piece.style.background = colors[i%colors.length];
+    piece.style.borderRadius = Math.random()>0.5?'50%':'2px';
+    piece.style.width = (6+Math.random()*8)+'px';
+    piece.style.height = (6+Math.random()*8)+'px';
+    piece.style.animationDelay = (Math.random()*0.8)+'s';
+    piece.style.animationDuration = (2+Math.random()*1.5)+'s';
+    document.body.appendChild(piece);
+    setTimeout(()=>piece.remove(),4000);
+  }
+}
+
+// ===== INIT =====
+renderMap();
+</script>
+</body>
+</html>
