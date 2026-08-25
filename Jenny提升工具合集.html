@@ -487,8 +487,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
 
 /* ===== WebAudio 合成音效（无音频文件） ===== */
 let _ac=null;
-function ac(){try{_ac=_ac||new (window.AudioContext||window.webkitAudioContext)();if(_ac.state==='suspended')_ac.resume();return _ac}catch(e){return null}}
-function tone(f,t0,dur,type,vol,slide){
+function ac(){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){}try{_ac=_ac||new (window.AudioContext||window.webkitAudioContext)();if(_ac.state==='suspended')_ac.resume();return _ac}catch(e){return null}}
+function tone(f,t0,dur,type,vol,slide){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){}
   const c=ac();if(!c)return;
   const o=c.createOscillator(),g=c.createGain();
   o.type=type||'sine';o.frequency.setValueAtTime(f,c.currentTime+t0);

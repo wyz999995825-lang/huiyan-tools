@@ -294,7 +294,7 @@ function bumpOral(){
   try{localStorage.setItem(DAILY_KEY,JSON.stringify(d));}catch(e){}
   updateHeader();
 }
-function updateHeader(){
+function updateHeader(){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){}
   document.getElementById("xpPill").textContent="⭐ "+state.xp;
   const n=todayOral(),pct=Math.min(1,n/ORAL_GOAL);
   const R=20,C=2*Math.PI*R;
@@ -305,7 +305,7 @@ function updateHeader(){
 }
 /* ============ WebAudio 合成音效（无音频文件） ============ */
 let _ac=null;
-function ac(){
+function ac(){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){}
   try{
     const C=window.AudioContext||window.webkitAudioContext;
     if(!C)return null;
@@ -314,7 +314,7 @@ function ac(){
     return _ac;
   }catch(e){return null;}
 }
-function tone(freq,start,dur,type,vol,slideTo){
+function tone(freq,start,dur,type,vol,slideTo){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){}
   const a=ac();if(!a)return;
   try{
     const o=a.createOscillator(),g=a.createGain();

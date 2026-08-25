@@ -968,7 +968,7 @@ function bumpReading(){
   d[k].reading++;
   try{localStorage.setItem(DAILY_KEY,JSON.stringify(d));}catch(e){}
 }
-function updateHeader(){
+function updateHeader(){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){}
   document.getElementById("xpPill").textContent="⭐ "+state.xp;
   document.getElementById("streakPill").textContent="🔥 "+state.streak;
   const n=todayReading(),pct=Math.min(1,n/READING_GOAL),R=19,C=2*Math.PI*R;
@@ -979,7 +979,7 @@ function updateHeader(){
 }
 /* ================= WEBAUDIO CHIMES (synth only, no files) ================= */
 let _ac=null;
-function ac(){
+function ac(){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){}
   try{
     const C=window.AudioContext||window.webkitAudioContext;
     if(!C)return null;
@@ -988,7 +988,7 @@ function ac(){
     return _ac;
   }catch(e){return null;}
 }
-function tone(freq,start,dur,type,vol,slideTo){
+function tone(freq,start,dur,type,vol,slideTo){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){}
   const a=ac();if(!a)return;
   try{
     const o=a.createOscillator(),g=a.createGain();
