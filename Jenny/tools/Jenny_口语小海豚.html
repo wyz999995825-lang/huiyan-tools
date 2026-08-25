@@ -5,87 +5,122 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>口语小海豚 🐬</title>
 <style>
+:root{
+  --tiffany:#0abab5; --tiffany-light:#81d8d0; --lagoon:#e6f7f5; --sky:#f4fbfa;
+  --deep:#0a8a86; --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff;
+  --ink:#144644; --ink-soft:#3d7f7c; --ink-faint:#7aada9;
+}
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html{ -webkit-text-size-adjust:100%; }
 body {
   font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,sans-serif;
-  background:#f0fafd; color:#134b63; font-size:16px; padding-bottom:90px;
+  background:var(--sky); color:var(--ink); font-size:17px; line-height:1.8; padding-bottom:92px;
 }
 header {
-  background:linear-gradient(160deg,#dff2f9,#a5e0ef);
-  padding:16px 16px 14px; border-radius:0 0 24px 24px;
-  box-shadow:0 4px 14px rgba(26,126,168,.12);
+  background:linear-gradient(160deg,var(--lagoon),var(--tiffany-light));
+  padding:14px 14px 12px; border-radius:0 0 26px 26px;
+  box-shadow:0 4px 16px rgba(10,138,134,.16);
 }
-.hrow { display:flex; align-items:center; gap:12px; max-width:760px; margin:0 auto; }
-.mermaid-big { font-size:44px; line-height:1; }
-.htitle { font-size:22px; font-weight:800; color:#1a7ea8; }
-.hsub { font-size:13px; color:#3d7f9c; margin-top:2px; }
-.stats { display:flex; gap:8px; margin-left:auto; }
-.pill { background:#ffffffcc; border-radius:999px; padding:7px 12px; font-weight:700; font-size:14px; color:#1a7ea8; box-shadow:0 2px 6px rgba(26,126,168,.12); white-space:nowrap; }
+.hrow { display:flex; align-items:center; gap:10px; max-width:760px; margin:0 auto; }
+.mermaid-big { font-size:46px; line-height:1; animation:floaty 3s ease-in-out infinite; filter:drop-shadow(0 4px 4px rgba(10,138,134,.25)); }
+@keyframes floaty { 0%,100%{transform:translateY(0) rotate(-4deg);} 50%{transform:translateY(-8px) rotate(4deg);} }
+.htitle { font-size:22px; font-weight:800; color:var(--deep); }
+.hsub { font-size:13px; color:var(--ink-soft); margin-top:2px; }
+.stats { display:flex; gap:8px; margin-left:auto; align-items:center; }
+.pill { background:#ffffffd9; border-radius:999px; padding:7px 12px; font-weight:800; font-size:14px; color:var(--deep); box-shadow:0 2px 6px rgba(10,138,134,.14); white-space:nowrap; }
+.ttsbtn { width:48px; height:48px; border-radius:50%; border:none; background:#ffffffd9; font-size:22px; cursor:pointer;
+  box-shadow:0 2px 6px rgba(10,138,134,.18); transition:transform .18s cubic-bezier(.34,1.56,.64,1); }
+.ttsbtn:active { transform:scale(.88) rotate(-6deg); }
+.ttsbtn.off { opacity:.55; filter:grayscale(1); }
+.ringwrap { position:relative; width:48px; height:48px; flex-shrink:0; }
+.ringwrap svg { width:48px; height:48px; transform:rotate(-90deg); }
+.ringwrap .ringtxt { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:10px; font-weight:800; color:var(--deep); line-height:1.15; }
+.ringwrap .ringtxt b { font-size:13px; }
 nav {
-  position:fixed; bottom:0; left:0; right:0; z-index:50; background:#fff;
-  box-shadow:0 -4px 16px rgba(26,126,168,.15); display:flex; justify-content:space-around;
-  padding:6px 4px calc(6px + env(safe-area-inset-bottom)); border-radius:20px 20px 0 0;
+  position:fixed; bottom:0; left:0; right:0; z-index:50; background:var(--card);
+  box-shadow:0 -4px 16px rgba(10,138,134,.16); display:flex; justify-content:space-around;
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom)); border-radius:22px 22px 0 0;
 }
-.navbtn { border:none; background:none; font-size:13px; font-weight:700; color:#7aa9bd; display:flex; flex-direction:column; align-items:center; gap:2px; min-width:72px; min-height:52px; justify-content:center; border-radius:14px; cursor:pointer; font-family:inherit; }
+.navbtn { border:none; background:none; font-size:13px; font-weight:800; color:var(--ink-faint); display:flex; flex-direction:column; align-items:center; gap:2px; min-width:72px; min-height:54px; justify-content:center; border-radius:16px; cursor:pointer; font-family:inherit; transition:transform .18s cubic-bezier(.34,1.56,.64,1); }
 .navbtn .ico { font-size:24px; }
-.navbtn.active { color:#1a7ea8; background:#dff2f9; }
-main { max-width:760px; margin:0 auto; padding:16px; }
-.card { background:#fff; border-radius:18px; padding:18px; box-shadow:0 4px 14px rgba(26,126,168,.10); margin-bottom:16px; }
-.bubble { background:#dff2f9; border-radius:18px; padding:12px 16px; position:relative; font-size:16px; line-height:1.7; color:#155e7d; margin:10px 0 16px 14px; }
-.bubble:before { content:""; position:absolute; left:-9px; top:16px; border:9px solid transparent; border-right-color:#dff2f9; border-left:none; }
+.navbtn:active { transform:scale(.9); }
+.navbtn.active { color:var(--deep); background:var(--lagoon); }
+main { max-width:760px; margin:0 auto; padding:14px; }
+.card { background:var(--card); border-radius:20px; padding:16px; box-shadow:0 4px 16px rgba(10,138,134,.10); margin-bottom:14px; }
+.bubble { background:var(--lagoon); border-radius:18px; padding:12px 16px; position:relative; font-size:17px; line-height:1.8; color:var(--ink); margin:8px 0 14px 14px; }
+.bubble:before { content:""; position:absolute; left:-9px; top:16px; border:9px solid transparent; border-right-color:var(--lagoon); border-left:none; }
 .brow { display:flex; align-items:flex-start; gap:4px; }
-.brow .face { font-size:34px; margin-top:6px; }
+.brow .face { font-size:36px; margin-top:4px; animation:floaty 3.4s ease-in-out infinite; }
 .grow { flex:1; }
-h2 { color:#1a7ea8; font-size:19px; margin-bottom:10px; }
-h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
-.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; background:#4ab8d8; color:#fff; border:none; border-radius:16px; padding:12px 20px; font-size:16px; font-weight:800; cursor:pointer; min-height:48px; box-shadow:0 3px 8px rgba(26,126,168,.25); font-family:inherit; }
-.btn:active { transform:scale(.97); }
-.btn.sand { background:#fdf3dd; color:#a4762a; box-shadow:0 3px 8px rgba(190,150,60,.2); }
-.btn.coral { background:#ff8a7a; }
-.btn.ghost { background:#eaf6fb; color:#1a7ea8; box-shadow:none; }
-.btn.small { padding:8px 14px; min-height:44px; font-size:14px; }
-.itemcard { display:flex; gap:14px; align-items:center; background:#fff; border-radius:18px; padding:14px; box-shadow:0 4px 12px rgba(26,126,168,.10); margin-bottom:12px; cursor:pointer; border:2px solid transparent; width:100%; text-align:left; font-family:inherit; color:inherit; }
-.itemcard.done { border-color:#8fd7b8; background:#f4fcf8; }
-.itemcard .cover { width:56px; height:56px; border-radius:16px; background:#dff2f9; display:flex; align-items:center; justify-content:center; font-size:30px; flex-shrink:0; }
-.itemcard .t { font-weight:800; font-size:17px; }
-.itemcard .k { font-size:13px; color:#6fa3ba; margin-top:3px; }
-.readtext { font-size:20px; line-height:2.3; color:#183f52; }
-.readtext ruby rt { font-size:10px; color:#6fa3ba; font-weight:400; }
+h2 { color:var(--deep); font-size:20px; margin-bottom:10px; }
+h3 { color:var(--deep); font-size:18px; margin-bottom:8px; }
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--tiffany); color:#fff; border:none; border-radius:18px; padding:12px 20px; font-size:17px; font-weight:800; cursor:pointer; min-height:48px; box-shadow:0 4px 10px rgba(10,138,134,.28); font-family:inherit; transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s; }
+.btn:hover { transform:scale(1.04) rotate(-1deg); }
+.btn:active { transform:scale(.93) rotate(1.5deg); box-shadow:0 2px 5px rgba(10,138,134,.25); }
+.btn.sand { background:var(--sand); color:#a4762a; box-shadow:0 3px 8px rgba(190,150,60,.2); }
+.btn.coral { background:var(--coral); box-shadow:0 4px 10px rgba(255,138,122,.35); }
+.btn.ghost { background:var(--lagoon); color:var(--deep); box-shadow:none; }
+.btn.small { padding:9px 14px; min-height:46px; font-size:15px; }
+.btn.recording { background:#e05b4b; animation:recpulse 1.1s ease-in-out infinite; }
+@keyframes recpulse { 0%,100%{box-shadow:0 0 0 0 rgba(255,138,122,.55);} 50%{box-shadow:0 0 0 12px rgba(255,138,122,0);} }
+.btn[disabled] { opacity:.45; pointer-events:none; }
+.playmini { border:none; background:var(--lagoon); color:var(--deep); border-radius:14px; min-width:46px; min-height:46px; font-size:19px; cursor:pointer; font-family:inherit; transition:transform .18s cubic-bezier(.34,1.56,.64,1); vertical-align:middle; }
+.playmini:active { transform:scale(.86) rotate(-8deg); }
+.itemcard { display:flex; gap:14px; align-items:center; background:var(--card); border-radius:20px; padding:14px; box-shadow:0 4px 14px rgba(10,138,134,.10); margin-bottom:12px; cursor:pointer; border:2px solid transparent; width:100%; text-align:left; font-family:inherit; color:inherit; font-size:17px; transition:transform .18s cubic-bezier(.34,1.56,.64,1); }
+.itemcard:active { transform:scale(.97); }
+.itemcard.done { border-color:var(--tiffany-light); background:#f2fbfa; }
+.itemcard .cover { width:58px; height:58px; border-radius:18px; background:var(--lagoon); display:flex; align-items:center; justify-content:center; font-size:30px; flex-shrink:0; }
+.itemcard .t { font-weight:800; font-size:18px; }
+.itemcard .k { font-size:13px; color:var(--ink-faint); margin-top:3px; line-height:1.5; }
+.readtext { font-size:20px; line-height:2.3; color:var(--ink); }
+.readtext ruby rt { font-size:10px; color:var(--ink-faint); font-weight:400; }
 .sentline { border-radius:12px; padding:6px 10px; margin:4px 0; display:block; transition:background .3s; }
-.sentline.now { background:#fdf3dd; box-shadow:inset 0 0 0 2px #f0d9a5; }
-.sentline.done { color:#9fc2d2; }
-.switchrow { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
-.switch { position:relative; width:54px; height:32px; background:#cfe9f4; border-radius:999px; border:none; cursor:pointer; transition:background .2s; flex-shrink:0; }
-.switch.on { background:#4ab8d8; }
-.switch:after { content:""; position:absolute; top:3px; left:3px; width:26px; height:26px; background:#fff; border-radius:50%; transition:left .2s; box-shadow:0 1px 4px rgba(0,0,0,.2); }
-.switch.on:after { left:25px; }
-.tipbox { background:#fdf3dd; border-radius:16px; padding:14px; margin-top:14px; }
+.sentline.done { color:#9fc9c5; }
+.senscard { background:var(--sky); border:2px solid var(--tiffany-light); border-radius:18px; padding:16px; margin-top:8px; }
+.recrow { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:14px 0 6px; }
+.recstatus { text-align:center; font-size:14px; font-weight:700; color:var(--ink-soft); min-height:24px; margin-bottom:6px; }
+.switchrow { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.switch { position:relative; width:58px; height:46px; background:none; border:none; cursor:pointer; flex-shrink:0; }
+.switch::before { content:""; position:absolute; left:0; top:6px; width:58px; height:34px; border-radius:999px; background:#cfe8e5; transition:background .2s; }
+.switch.on::before { background:var(--tiffany); }
+.switch::after { content:""; position:absolute; top:10px; left:4px; width:26px; height:26px; background:#fff; border-radius:50%; transition:left .25s cubic-bezier(.34,1.56,.64,1); box-shadow:0 1px 4px rgba(0,0,0,.2); }
+.switch.on::after { left:28px; }
+.tipbox { background:var(--sand); border-radius:16px; padding:14px; margin-top:14px; }
 .tipbox h3 { color:#a4762a; }
 .tipword { display:inline-block; background:#fff; border-radius:12px; padding:6px 12px; margin:4px 4px 4px 0; font-size:16px; }
 .tipword b { color:#c26a2e; }
-.selfbtn { font-size:34px; background:#fff; border:2px solid #cfe9f4; border-radius:18px; padding:10px 16px; cursor:pointer; min-width:88px; min-height:76px; font-family:inherit; }
-.selfbtn small { display:block; font-size:13px; font-weight:700; color:#5b8ba1; margin-top:4px; }
-.selfbtn:active { background:#dff2f9; }
-.scene { background:linear-gradient(180deg,#bfe6f5 55%,#fdf3dd 55%); border-radius:16px; margin-bottom:14px; overflow:hidden; }
+.selfbtn { font-size:34px; background:#fff; border:2px solid var(--tiffany-light); border-radius:18px; padding:10px 16px; cursor:pointer; min-width:92px; min-height:80px; font-family:inherit; transition:transform .18s cubic-bezier(.34,1.56,.64,1); }
+.selfbtn small { display:block; font-size:13px; font-weight:800; color:var(--ink-soft); margin-top:4px; }
+.selfbtn:active { background:var(--lagoon); transform:scale(.9) rotate(-2deg); }
+.scene { background:linear-gradient(180deg,#c7ecf3 55%,var(--sand) 55%); border-radius:16px; margin-bottom:14px; overflow:hidden; }
 .scene svg { display:block; width:100%; height:auto; }
-.qchip { background:#eef7fb; border-radius:14px; padding:10px 14px; margin-bottom:8px; font-size:16px; line-height:1.7; }
-.qchip b { color:#1a7ea8; }
-.samplebox { background:#f4fcf8; border:2px solid #bde7d2; border-radius:16px; padding:16px; font-size:18px; line-height:2.1; }
+.qchip { background:var(--lagoon); border-radius:14px; padding:10px 14px; margin-bottom:8px; font-size:17px; line-height:1.8; }
+.qchip b { color:var(--deep); }
+.samplebox { background:#f2fbf6; border:2px solid #a9dfc4; border-radius:16px; padding:16px; font-size:18px; line-height:2.1; }
 .goodword { background:#ffe9a8; border-radius:6px; padding:0 3px; font-weight:700; color:#8a6410; }
-.lvl { border-radius:14px; padding:12px 14px; margin-bottom:10px; font-size:17px; line-height:1.9; }
-.lvl1 { background:#eef7fb; }
+.lvl { border-radius:14px; padding:12px 14px; margin-bottom:10px; font-size:17px; line-height:1.9; display:flex; gap:10px; align-items:flex-start; }
+.lvl .txt { flex:1; }
+.lvl1 { background:var(--lagoon); }
 .lvl2 { background:#e3f4ec; }
-.lvl3 { background:#fdf3dd; box-shadow:inset 0 0 0 2px #f0d9a5; }
+.lvl3 { background:var(--sand); box-shadow:inset 0 0 0 2px #f0d9a5; }
 .lvl .lab { font-size:13px; font-weight:800; display:block; margin-bottom:4px; }
-.lvl1 .lab { color:#4ab8d8; } .lvl2 .lab { color:#2e9c6b; } .lvl3 .lab { color:#c2903a; }
-.progressbar { height:10px; background:#dff2f9; border-radius:999px; overflow:hidden; margin:8px 0 14px; }
-.progressbar > div { height:100%; background:linear-gradient(90deg,#4ab8d8,#1a7ea8); border-radius:999px; transition:width .4s; }
+.lvl1 .lab { color:var(--tiffany); } .lvl2 .lab { color:#2e9c6b; } .lvl3 .lab { color:#c2903a; }
+.progressbar { height:12px; background:var(--lagoon); border-radius:999px; overflow:hidden; margin:8px 0 14px; }
+.progressbar > div { height:100%; background:linear-gradient(90deg,var(--tiffany-light),var(--tiffany)); border-radius:999px; transition:width .4s cubic-bezier(.34,1.56,.64,1); }
 .center { text-align:center; }
 .big { font-size:52px; }
 #fx { position:fixed; inset:0; pointer-events:none; z-index:200; }
 .backrow { margin-bottom:12px; }
 .hidden { display:none; }
-.stepnote { font-size:14px; color:#6fa3ba; font-weight:700; margin-bottom:8px; }
+.stepnote { font-size:14px; color:var(--ink-soft); font-weight:800; margin-bottom:8px; }
+.gentle { background:var(--sand); border-radius:14px; padding:10px 14px; font-size:15px; line-height:1.8; color:#7c5a22; margin:10px 0; }
+#medal { position:fixed; inset:0; z-index:210; display:flex; align-items:center; justify-content:center; background:rgba(10,138,134,.25); }
+#medal .inner { background:var(--card); border-radius:26px; padding:28px 34px; text-align:center; box-shadow:0 10px 40px rgba(10,70,68,.3); animation:medalpop .55s cubic-bezier(.34,1.56,.64,1); max-width:86vw; }
+#medal .m { font-size:74px; display:inline-block; animation:medalspin 1.4s ease-in-out infinite alternate; }
+@keyframes medalpop { 0%{transform:scale(.2) rotate(-20deg); opacity:0;} 100%{transform:scale(1) rotate(0);} }
+@keyframes medalspin { 0%{transform:rotate(-8deg) scale(1);} 100%{transform:rotate(8deg) scale(1.08);} }
+#medal .mt { font-size:21px; font-weight:800; color:var(--deep); margin-top:6px; }
+#medal .ms { font-size:15px; color:var(--ink-soft); margin:6px 0 14px; }
 </style>
 </head>
 <body>
@@ -93,12 +128,13 @@ h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
   <div class="hrow">
     <div class="mermaid-big">🐬</div>
     <div>
-      <div class="htitle">口语小海豚 🐬</div>
+      <div class="htitle">口语小海豚</div>
       <div class="hsub">大声说，大胆说，越说越棒！</div>
     </div>
     <div class="stats">
+      <div class="ringwrap" id="ringWrap"></div>
       <div class="pill" id="xpPill">⭐ 0</div>
-      <div class="pill" id="donePill">✅ 0</div>
+      <button class="ttsbtn" id="ttsBtn" onclick="toggleTts()" title="语音开关">🔊</button>
     </div>
   </div>
 </header>
@@ -112,7 +148,7 @@ h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
 <canvas id="fx"></canvas>
 <script>
 "use strict";
-/* ============ 朗读小浪花（8段） ============ */
+/* ============ 朗读小浪花（10段） ============ */
 /* sent: 每句是 [汉字,拼音] 词块数组 */
 const READS=[
 {id:"r1",t:"小浪花",e:"🌊",
@@ -177,7 +213,23 @@ sent:[
  [["妈妈","mā ma"],["说","shuō"],["，",""],["水果","shuǐ guǒ"],["里","lǐ"],["有","yǒu"],["很多","hěn duō"],["维生素","wéi shēng sù"],["，",""],["多吃","duō chī"],["身体","shēn tǐ"],["好","hǎo"],["。",""]],
  [["我","wǒ"],["每天","měi tiān"],["都","dōu"],["要","yào"],["吃","chī"],["一份","yí fèn"],["水果","shuǐ guǒ"],["，",""],["你","nǐ"],["呢","ne"],["？",""]]],
 tips:{words:[{w:"榴梿",p:"liú lián",note:"两个字都是第二声"},{w:"维生素",p:"wéi shēng sù",note:"三个字连起来读顺一点"}],
-pause:"最后的「你呢？」是问句，声音要往上扬，像在邀请朋友回答。"}}
+pause:"最后的「你呢？」是问句，声音要往上扬，像在邀请朋友回答。"}},
+{id:"r9",t:"爱护地球",e:"🌍",
+sent:[
+ [["地球","dì qiú"],["是","shì"],["我们","wǒ men"],["共同","gòng tóng"],["的","de"],["家","jiā"],["。",""]],
+ [["喝完","hē wán"],["水","shuǐ"],["，",""],["我","wǒ"],["把","bǎ"],["瓶子","píng zi"],["放进","fàng jìn"],["回收箱","huí shōu xiāng"],["。",""]],
+ [["离开","lí kāi"],["房间","fáng jiān"],["的","de"],["时候","shí hou"],["，",""],["我","wǒ"],["记得","jì de"],["随手","suí shǒu"],["关灯","guān dēng"],["。",""]],
+ [["爱护","ài hù"],["环境","huán jìng"],["，",""],["从","cóng"],["小事","xiǎo shì"],["做起","zuò qǐ"],["！",""]]],
+tips:{words:[{w:"回收",p:"huí shōu",note:"「收」是第一声，读得平平的"},{w:"环境",p:"huán jìng",note:"「境」是第四声"}],
+pause:"最后一句像小口号，要读得响亮、有力，一字一顿也可以哦。"}},
+{id:"r10",t:"健康小卫士",e:"💪",
+sent:[
+ [["我","wǒ"],["是","shì"],["健康","jiàn kāng"],["小卫士","xiǎo wèi shì"],["。",""]],
+ [["每天","měi tiān"],["早睡","zǎo shuì"],["早起","zǎo qǐ"],["，",""],["吃","chī"],["早餐","zǎo cān"],["，",""],["多","duō"],["喝","hē"],["水","shuǐ"],["。",""]],
+ [["放学","fàng xué"],["后","hòu"],["，",""],["我","wǒ"],["和","hé"],["朋友","péng you"],["在","zài"],["楼下","lóu xià"],["跑步","pǎo bù"],["、",""],["跳绳","tiào shéng"],["。",""]],
+ [["运动","yùn dòng"],["让","ràng"],["我","wǒ"],["身体","shēn tǐ"],["棒棒","bàng bàng"],["，",""],["心情","xīn qíng"],["好好","hǎo hǎo"],["！",""]]],
+tips:{words:[{w:"卫士",p:"wèi shì",note:"「士」是翘舌音 shì"},{w:"跳绳",p:"tiào shéng",note:"「绳」是第二声，翘舌音"}],
+pause:"这一段要读得精神满满、快快乐乐，像做早操一样有节奏！"}}
 ];
 /* ============ 看图说话（6个场景） ============ */
 const SCENES=[
@@ -206,7 +258,7 @@ svg:`<svg viewBox="0 0 320 170"><rect width="320" height="170" fill="#f6f1e7"/><
 qs:["他们在<b>哪里</b>？","他们在<b>做什么</b>？","图书馆里要注意<b>什么</b>？","看书给他们带来了<b>什么</b>？"],
 sample:`星期六，我和同学一起到图书馆看书。图书馆里【安安静静】的，大家都不说话。我挑了一本关于海洋动物的书，【津津有味】地读了起来。原来海豚是用声音来聊天的，真【神奇】！离开的时候，我们把书【轻轻地】放回书架，还借了两本书回家慢慢看。`},
 ];
-/* ============ 问答小贝壳（10题） ============ */
+/* ============ 问答小贝壳（12题） ============ */
 const QAS=[
 {q:"你最喜欢的动物是什么？",l1:"我最喜欢小兔子。",l2:"我最喜欢小兔子，因为它毛茸茸的，很可爱。",l3:"我最喜欢小兔子，因为它毛茸茸的，很可爱。它有长长的耳朵和红红的眼睛，吃胡萝卜的时候嘴巴一动一动的，有趣极了。我希望以后可以养一只小兔子。"},
 {q:"周末你做了什么？",l1:"周末我去了公园。",l2:"周末我和爸爸妈妈去了公园，因为天气很好。",l3:"周末天气很好，我和爸爸妈妈一起去公园野餐。我们铺上垫子，吃了三明治和水果，还一起放风筝。风筝飞得很高，我玩得非常开心，希望下个周末还能再去。"},
@@ -217,22 +269,236 @@ const QAS=[
 {q:"下雨天你喜欢做什么？",l1:"下雨天我喜欢在家看书。",l2:"下雨天我喜欢在家看书，因为不能出去玩。",l3:"下雨天不能出去玩，我就坐在窗边看故事书。听着雨点打在窗户上的滴答声，看着有趣的故事，很舒服。有时候我还会和妹妹一起搭积木，下雨天也可以很快乐。"},
 {q:"你长大以后想做什么？",l1:"我长大以后想当老师。",l2:"我长大以后想当老师，因为我想教小朋友读书。",l3:"我长大以后想当老师，因为老师可以教小朋友很多本领。我要像我的老师一样，温柔又有耐心，把有趣的故事讲给学生听。从现在开始，我要好好学习，实现我的梦想。"},
 {q:"你最喜欢的节日是什么？",l1:"我最喜欢过新年。",l2:"我最喜欢过新年，因为可以拿红包。",l3:"我最喜欢过农历新年，因为全家人会聚在一起吃团圆饭。我可以穿新衣服，向长辈拜年，还能拿到红包。家家户户都挂上红灯笼，到处热热闹闹的，我觉得特别幸福。"},
-{q:"放学后你通常做什么？",l1:"放学后我先做功课。",l2:"放学后我先做功课，因为做完功课才可以玩。",l3:"放学后，我先吃点心休息一下，然后认真做功课。做完功课，妈妈检查以后，我就可以下楼骑脚踏车或者看故事书。先做完该做的事再玩，玩起来才安心。"}
+{q:"放学后你通常做什么？",l1:"放学后我先做功课。",l2:"放学后我先做功课，因为做完功课才可以玩。",l3:"放学后，我先吃点心休息一下，然后认真做功课。做完功课，妈妈检查以后，我就可以下楼骑脚踏车或者看故事书。先做完该做的事再玩，玩起来才安心。"},
+{q:"你是怎么爱护环境的？",l1:"我会把垃圾丢进垃圾桶。",l2:"我会把垃圾丢进垃圾桶，还会节约用水，因为地球是我们的家。",l3:"我会把垃圾丢进垃圾桶，喝完的瓶子放进回收箱。在家里，我记得随手关灯、节约用水。妈妈说，地球是我们共同的家，爱护环境要从小事做起，我要做一个爱护地球的好孩子。"},
+{q:"你是怎样让身体更健康的？",l1:"我每天都做运动。",l2:"我每天都做运动，还早睡早起，因为这样身体才会强壮。",l3:"我每天放学后都和朋友去楼下跑步、跳绳，出一身汗，很舒服。我还坚持早睡早起，每天吃早餐，多吃蔬菜和水果，少喝甜甜的饮料。身体健康了，上课才有精神，玩起来也更开心！"}
 ];
-/* ============ 状态 ============ */
+/* ============ 状态（兼容 v2：jenny_oral_dolphin 同名同结构扩展） ============ */
 const LS_KEY="jenny_oral_dolphin";
 let state={xp:0,read:{},pic:{},qa:{},pinyinOn:true};
 try{const s=localStorage.getItem(LS_KEY);if(s)state=Object.assign(state,JSON.parse(s));}catch(e){}
 function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}}
 function addXP(n){state.xp+=n;save();updateHeader();}
 function doneCount(){return Object.keys(state.read).length+Object.keys(state.pic).length+Object.keys(state.qa).length;}
+/* ============ 每日任务（jenny_daily_v1 · oral 目标 1/天） ============ */
+const DAILY_KEY="jenny_daily_v1";
+const ORAL_GOAL=1;
+function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function dailyLoad(){try{const s=localStorage.getItem(DAILY_KEY);if(s)return JSON.parse(s)||{};}catch(e){}return {};}
+function todayOral(){const d=dailyLoad();const t=d[todayStr()];return t&&t.oral?t.oral:0;}
+function bumpOral(){
+  const d=dailyLoad();const k=todayStr();
+  if(!d[k])d[k]={math:0,science:0,reading:0,chinese:0,oral:0};
+  if(typeof d[k].oral!=="number")d[k].oral=0;
+  d[k].oral++;
+  try{localStorage.setItem(DAILY_KEY,JSON.stringify(d));}catch(e){}
+  updateHeader();
+}
 function updateHeader(){
   document.getElementById("xpPill").textContent="⭐ "+state.xp;
-  document.getElementById("donePill").textContent="✅ "+doneCount();
+  const n=todayOral(),pct=Math.min(1,n/ORAL_GOAL);
+  const R=20,C=2*Math.PI*R;
+  document.getElementById("ringWrap").innerHTML=
+   `<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="${R}" fill="#ffffffd9" stroke="#cfe8e5" stroke-width="4"/>`+
+   `<circle cx="24" cy="24" r="${R}" fill="none" stroke="${pct>=1?"#0abab5":"#ff8a7a"}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${(C*pct).toFixed(1)} ${C.toFixed(1)}"/></svg>`+
+   `<span class="ringtxt">${pct>=1?"<b>✓</b>":"<b>"+Math.min(n,ORAL_GOAL)+"/"+ORAL_GOAL+"</b>"}<span>今日</span></span>`;
+}
+/* ============ WebAudio 合成音效（无音频文件） ============ */
+let _ac=null;
+function ac(){
+  try{
+    const C=window.AudioContext||window.webkitAudioContext;
+    if(!C)return null;
+    if(!_ac)_ac=new C();
+    if(_ac.state==="suspended")_ac.resume();
+    return _ac;
+  }catch(e){return null;}
+}
+function tone(freq,start,dur,type,vol,slideTo){
+  const a=ac();if(!a)return;
+  try{
+    const o=a.createOscillator(),g=a.createGain();
+    o.type=type||"sine";o.frequency.setValueAtTime(freq,a.currentTime+start);
+    if(slideTo)o.frequency.exponentialRampToValueAtTime(slideTo,a.currentTime+start+dur);
+    g.gain.setValueAtTime(0.0001,a.currentTime+start);
+    g.gain.exponentialRampToValueAtTime(vol||0.18,a.currentTime+start+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,a.currentTime+start+dur);
+    o.connect(g);g.connect(a.destination);
+    o.start(a.currentTime+start);o.stop(a.currentTime+start+dur+0.05);
+  }catch(e){}
+}
+function sndPop(){tone(520,0,0.09,"sine",0.14,320);}                       /* 点按轻"啵" */
+function sndDing(){tone(880,0,0.16,"sine",0.16);tone(1318.5,0.12,0.28,"sine",0.16);} /* 完成叮咚 */
+function sndYay(){tone(523.25,0,0.12,"triangle",0.15);tone(659.25,0.1,0.12,"triangle",0.15);tone(783.99,0.2,0.2,"triangle",0.15);}
+function sndMagic(){ /* 勋章魔法音：上行琶音+闪光 */
+  [523.25,659.25,783.99,1046.5,1318.5].forEach((f,i)=>tone(f,i*0.09,0.22,"triangle",0.13));
+  tone(2093,0.5,0.4,"sine",0.08);
+}
+function sndRecStart(){tone(660,0,0.1,"sine",0.12);tone(990,0.1,0.12,"sine",0.12);}
+function sndRecStop(){tone(990,0,0.1,"sine",0.12);tone(660,0.1,0.14,"sine",0.12);}
+/* ============ TTS（Web Speech API） ============ */
+let ttsOn=true;
+try{ttsOn=localStorage.getItem("jenny_tts_on")!=="0";}catch(e){}
+let zhVoice=null,voicesReady=false;
+function pickVoice(){
+  if(!("speechSynthesis" in window))return;
+  try{
+    const vs=speechSynthesis.getVoices();
+    if(!vs||!vs.length)return;
+    voicesReady=true;
+    const zh=vs.filter(v=>/^zh([-_](CN|Hans))?/i.test(v.lang)||/zh/i.test(v.lang));
+    const pref=["tingting","婷婷","ting-ting","meijia","美嘉","mei-jia","sinji","yue","xiaoxiao","huihui","lili"];
+    for(const p of pref){
+      const hit=zh.find(v=>v.name.toLowerCase().includes(p));
+      if(hit){zhVoice=hit;return;}
+    }
+    const cn=zh.find(v=>/CN|Hans/i.test(v.lang));
+    zhVoice=cn||zh[0]||null;
+  }catch(e){}
+}
+if("speechSynthesis" in window){
+  pickVoice();
+  try{speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}
+}
+function speak(text,opts){
+  opts=opts||{};
+  if(!ttsOn)return;
+  if(!("speechSynthesis" in window))return;      /* 不支持则静默降级 */
+  if(!zhVoice)pickVoice();
+  if(voicesReady&&!zhVoice)return;                /* 无中文音色，静默降级 */
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang="zh-CN";
+    if(zhVoice)u.voice=zhVoice;
+    u.rate=opts.rate||0.95;
+    u.pitch=opts.pitch||1.05;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+const CHEERS=["太棒啦！","你真厉害！","读得真好听！","哇，说得真棒！","小海豚为你鼓掌！","你越来越棒了！","真是口语小明星！"];
+function speakCheer(){speak(CHEERS[Math.floor(Math.random()*CHEERS.length)],{rate:1,pitch:1.15});}
+function toggleTts(){
+  ttsOn=!ttsOn;
+  try{localStorage.setItem("jenny_tts_on",ttsOn?"1":"0");}catch(e){}
+  if(!ttsOn&&("speechSynthesis" in window)){try{speechSynthesis.cancel();}catch(e){}}
+  sndPop();
+  document.getElementById("ttsBtn").textContent=ttsOn?"🔊":"🔇";
+  document.getElementById("ttsBtn").classList.toggle("off",!ttsOn);
+}
+/* ============ 录音（MediaRecorder · 内存保存，不写存储） ============ */
+const REC={
+  supported:!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder),
+  denied:false, stream:null, mr:null, chunks:[], url:null, recording:false, audio:null
+};
+function recAvailable(){return REC.supported&&!REC.denied;}
+function pickMime(){
+  try{
+    if(window.MediaRecorder&&MediaRecorder.isTypeSupported){
+      if(MediaRecorder.isTypeSupported("audio/mp4"))return "audio/mp4";       /* iPad Safari 优先 */
+      if(MediaRecorder.isTypeSupported("audio/webm"))return "audio/webm";
+    }
+  }catch(e){}
+  return "";
+}
+function clearRecUrl(){
+  if(REC.audio){try{REC.audio.pause();}catch(e){}REC.audio=null;}
+  if(REC.url){try{URL.revokeObjectURL(REC.url);}catch(e){}REC.url=null;}
+}
+function stopRecTracks(){
+  if(REC.mr&&REC.recording){try{REC.mr.stop();}catch(e){}}
+  REC.recording=false;REC.mr=null;
+  if(REC.stream){try{REC.stream.getTracks().forEach(t=>t.stop());}catch(e){}REC.stream=null;}
+}
+function recFail(){
+  REC.denied=true;
+  stopRecTracks();
+  const st=document.getElementById("recStatus");
+  const rb=document.getElementById("recBtn"),pb=document.getElementById("playBtn");
+  if(rb)rb.classList.add("hidden");
+  if(pb)pb.classList.add("hidden");
+  if(st)st.innerHTML="没关系～跟着小海豚<b>大声读出来</b>就好！🐬";
+}
+async function toggleRec(onReady){
+  if(!recAvailable()){recFail();return;}
+  if(REC.recording){ /* 停止 */
+    try{REC.mr.stop();}catch(e){recFail();}
+    return;
+  }
+  try{
+    if(!REC.stream||!REC.stream.active){
+      REC.stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    }
+    clearRecUrl();
+    REC.chunks=[];
+    const mime=pickMime();
+    REC.mr=mime?new MediaRecorder(REC.stream,{mimeType:mime}):new MediaRecorder(REC.stream);
+    REC.mr.ondataavailable=e=>{if(e.data&&e.data.size)REC.chunks.push(e.data);};
+    REC.mr.onstop=()=>{
+      REC.recording=false;
+      try{
+        const blob=new Blob(REC.chunks,{type:REC.mr&&REC.mr.mimeType?REC.mr.mimeType:"audio/mp4"});
+        REC.url=URL.createObjectURL(blob);   /* 仅内存，离开页面即丢弃 */
+      }catch(e){REC.url=null;}
+      sndRecStop();
+      updateRecUI();
+    };
+    REC.mr.start();
+    REC.recording=true;
+    sndRecStart();
+    updateRecUI();
+  }catch(e){
+    recFail();
+  }
+}
+function playRec(){
+  if(!REC.url)return;
+  sndPop();
+  try{
+    if(REC.audio){REC.audio.pause();}
+    REC.audio=new Audio(REC.url);
+    REC.audio.play();
+    const st=document.getElementById("recStatus");
+    if(st)st.textContent="▶️ 正在播放你的声音……听听看，和示范像不像？";
+    REC.audio.onended=()=>{const s=document.getElementById("recStatus");if(s)s.textContent="听完了！可以再录一次，也可以给自己评分啦。";};
+  }catch(e){}
+}
+function updateRecUI(){
+  const rb=document.getElementById("recBtn"),pb=document.getElementById("playBtn"),st=document.getElementById("recStatus");
+  if(!rb)return;
+  if(REC.recording){
+    rb.textContent="⏹ 停止录音";
+    rb.classList.add("recording");
+    if(st)st.textContent="🔴 正在录音……大声读出来吧！";
+    if(pb)pb.classList.add("hidden");
+  }else{
+    rb.textContent="🎙️ 开始录音";
+    rb.classList.remove("recording");
+    if(REC.url){
+      if(pb)pb.classList.remove("hidden");
+      if(st)st.textContent="录好啦！点 ▶️ 听听自己的声音，再和示范比一比。";
+    }else{
+      if(pb)pb.classList.add("hidden");
+      if(st)st.textContent=recAvailable()?"先听示范，再点 🎙️ 录下你的朗读。":"";
+    }
+  }
+}
+/* 录音练习卡通用 HTML。demoJs：点击听示范时执行的 JS 字符串 */
+function recCardHTML(demoJs,demoLabel){
+  const canRec=recAvailable();
+  return `<div class="recrow">
+    <button class="btn" onclick="sndPop();${demoJs}">🔊 ${demoLabel||"听示范"}</button>
+    ${canRec?`<button class="btn coral" id="recBtn" onclick="toggleRec()">🎙️ 开始录音</button>
+    <button class="btn ghost hidden" id="playBtn" onclick="playRec()">▶️ 听我的</button>`:""}
+  </div>
+  <div class="recstatus" id="recStatus">${canRec?"先听示范，再点 🎙️ 录下你的朗读。":""}</div>
+  ${canRec?"":'<div class="gentle">这台设备暂时不能录音，没关系～跟着小海豚<b>大声读出来</b>就好！🐬</div>'}`;
 }
 /* ============ 导航 ============ */
 let currentTab="home";
 function go(tab){
+  stopRecTracks();clearRecUrl();
+  if("speechSynthesis" in window){try{speechSynthesis.cancel();}catch(e){}}
   currentTab=tab;
   ["home","read","pic","qa"].forEach(t=>document.getElementById("nav-"+t).classList.toggle("active",t===tab));
   if(tab==="home")renderHome();
@@ -244,54 +510,78 @@ function go(tab){
 /* ============ 首页 ============ */
 function renderHome(){
   const r=Object.keys(state.read).length,p=Object.keys(state.pic).length,q=Object.keys(state.qa).length;
+  const n=todayOral();
   document.getElementById("view").innerHTML=`
-  <div class="brow"><div class="face">🐬</div><div class="bubble grow">Jenny 你好！我是小海豚。华文口语最重要的是<b>敢开口、多开口</b>！每天练一点点，你会说得越来越好听。今天想练哪一个？</div></div>
-  <button class="itemcard" onclick="go('read')"><div class="cover">🌊</div>
-  <div class="grow"><div class="t">朗读小浪花</div><div class="k">${READS.length} 段朗读练习 · 已完成 ${r} 段</div></div><div style="font-size:22px;">➜</div></button>
-  <button class="itemcard" onclick="go('pic')"><div class="cover">🖼️</div>
-  <div class="grow"><div class="t">看图说话</div><div class="k">${SCENES.length} 个场景 · 已练 ${p} 个 · 先说一说，再看范例</div></div><div style="font-size:22px;">➜</div></button>
-  <button class="itemcard" onclick="go('qa')"><div class="cover">🐚</div>
-  <div class="grow"><div class="t">问答小贝壳</div><div class="k">${QAS.length} 个口试问答 · 已练 ${q} 个 · 学最完整的说法</div></div><div style="font-size:22px;">➜</div></button>
-  <div class="card" style="background:#fdf3dd;"><h3 style="color:#a4762a;">🐚 小海豚的悄悄话</h3>
-  <div style="font-size:15px;line-height:1.9;color:#7c5a22;">说错了完全没关系！大声说出来，就已经赢了一半。可以请妈妈当你的小听众哦。🎤</div></div>`;
+  <div class="brow"><div class="face">🐬</div><div class="bubble grow">Jenny 你好！我是小海豚。华文口语最重要的是<b>敢开口、多开口</b>！现在我会<b>读给你听</b>，还能<b>录下你的声音</b>让你自己听哦。今天想练哪一个？</div></div>
+  <button class="itemcard" onclick="sndPop();go('read')"><div class="cover">🌊</div>
+  <div class="grow"><div class="t">朗读小浪花</div><div class="k">${READS.length} 段朗读 · 已完成 ${r} 段 · 🔊听示范 → 🎙️跟读录音</div></div><div style="font-size:22px;">➜</div></button>
+  <button class="itemcard" onclick="sndPop();go('pic')"><div class="cover">🖼️</div>
+  <div class="grow"><div class="t">看图说话</div><div class="k">${SCENES.length} 个场景 · 已练 ${p} 个 · 听范例，再录自己的小故事</div></div><div style="font-size:22px;">➜</div></button>
+  <button class="itemcard" onclick="sndPop();go('qa')"><div class="cover">🐚</div>
+  <div class="grow"><div class="t">问答小贝壳</div><div class="k">${QAS.length} 个口试问答 · 已练 ${q} 个 · 每个等级都可以点读</div></div><div style="font-size:22px;">➜</div></button>
+  <div class="card" style="background:var(--sand);"><h3 style="color:#a4762a;">🐚 小海豚的悄悄话</h3>
+  <div style="font-size:16px;line-height:1.9;color:#7c5a22;">${n>=ORAL_GOAL?"今天的口语任务已经完成啦，超棒！多练的都是<b>加分</b>哦。🏅":"今天还差 "+(ORAL_GOAL-n)+" 个板块就完成口语任务啦！"}说错了完全没关系，大声说出来，就已经赢了一半。录音只有你自己听得到，离开页面就消失，放心大胆读！🎤</div></div>`;
 }
-/* ============ 朗读小浪花 ============ */
+/* ============ 朗读小浪花（逐句：示范→录音→回放→自评） ============ */
 function renderReadList(){
-  let h=`<div class="brow"><div class="face">🐬</div><div class="bubble grow">选一段来朗读吧！先在心里<b>默读一遍</b>，再跟着<b>黄色亮光</b>一句一句大声读。</div></div>`;
+  let h=`<div class="brow"><div class="face">🐬</div><div class="bubble grow">选一段来朗读吧！每一句都是：<b>🔊 听示范 → 🎙️ 自己录 → ▶️ 听回放 → 评一评</b>。像小小配音员一样练！</div></div>`;
   READS.forEach(r=>{
     const d=state.read[r.id];
-    h+=`<button class="itemcard ${d?"done":""}" onclick="openRead('${r.id}')"><div class="cover">${r.e}</div>
-    <div class="grow"><div class="t">${r.t}</div><div class="k">${d?"✔ 已练过（自评："+d+"）· 可以再练！":r.sent.length+" 句 · 点我开始"}</div></div>
+    h+=`<button class="itemcard ${d?"done":""}" onclick="sndPop();openRead('${r.id}')"><div class="cover">${r.e}</div>
+    <div class="grow"><div class="t">${r.t}</div><div class="k">${d?"✔ 已获朗读小勋章（自评："+d+"）· 可以再练！":r.sent.length+" 句 · 点我开始"}</div></div>
     <div style="font-size:22px;">${d?"🏅":"➜"}</div></button>`;
   });
   document.getElementById("view").innerHTML=h;
 }
-let rd={id:null,phase:0,cur:0};
+let rd={id:null,phase:0,cur:0,rates:[]};
 function sentHTML(sentence){
   return sentence.map(c=>{
     if(state.pinyinOn&&c[1])return `<ruby>${c[0]}<rt>${c[1]}</rt></ruby>`;
     return c[0];
   }).join("");
 }
-function openRead(id){rd={id:id,phase:0,cur:0};renderRead();}
+function sentText(sentence){return sentence.map(c=>c[0]).join("");}
+function openRead(id){rd={id:id,phase:0,cur:0,rates:[]};renderRead();}
+function speakCurSent(){
+  const r=READS.find(x=>x.id===rd.id);
+  if(r&&r.sent[rd.cur])speak(sentText(r.sent[rd.cur]),{rate:0.9});
+}
+function speakWholeRead(){
+  const r=READS.find(x=>x.id===rd.id);
+  if(r)speak(r.sent.map(sentText).join(""),{rate:0.9});
+}
 function renderRead(){
   const r=READS.find(x=>x.id===rd.id);
   let inner="";
   if(rd.phase===0){
-    inner=`<div class="stepnote">第一步 · 先在心里默读一遍 👀</div>
+    inner=`<div class="stepnote">第一步 · 先听小海豚读一遍，眼睛跟着文字走 👀</div>
+    <div class="center" style="margin-bottom:10px;"><button class="btn ghost" onclick="sndPop();speakWholeRead()">🔊 听小海豚读整段</button></div>
     <div class="readtext">${r.sent.map(s=>`<span class="sentline">${sentHTML(s)}</span>`).join("")}</div>
-    <div class="center" style="margin-top:16px;"><button class="btn" onclick="rd.phase=1;rd.cur=0;renderRead()">🎤 开始朗读</button></div>`;
+    <div class="center" style="margin-top:16px;"><button class="btn" onclick="sndPop();rd.phase=1;rd.cur=0;clearRecUrl();renderRead()">🎤 一句一句开始练</button></div>`;
   }else if(rd.phase===1){
-    inner=`<div class="stepnote">第二步 · 大声读出<b>黄色亮光</b>的那一句 🎤（第 ${rd.cur+1} / ${r.sent.length} 句）</div>
-    <div class="readtext">${r.sent.map((s,i)=>`<span class="sentline ${i===rd.cur?"now":(i<rd.cur?"done":"")}">${sentHTML(s)}</span>`).join("")}</div>
-    <div class="center" style="margin-top:16px;">
-    <button class="btn" onclick="nextSent()">${rd.cur+1<r.sent.length?"读好了，下一句 →":"读完啦！🎉"}</button></div>`;
+    const total=r.sent.length,pct=Math.round(rd.cur/total*100);
+    inner=`<div class="stepnote">第二步 · 一句一句跟小海豚练（第 ${rd.cur+1} / ${total} 句）</div>
+    <div class="progressbar"><div style="width:${pct}%"></div></div>
+    <div class="senscard">
+      <div class="readtext" style="text-align:center;">${sentHTML(r.sent[rd.cur])}</div>
+      ${recCardHTML("speakCurSent()","听示范")}
+      <div class="stepnote" style="text-align:center;margin-top:8px;">读得怎么样？评一评就到下一句：</div>
+      <div class="center" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="selfbtn" onclick="rateSent('😄')">😄<small>很棒</small></button>
+        <button class="selfbtn" onclick="rateSent('🙂')">🙂<small>不错</small></button>
+        <button class="selfbtn" onclick="rateSent('😅')">😅<small>再练</small></button>
+      </div>
+    </div>`;
   }else{
-    inner=`<div class="stepnote">第三步 · 自己评一评：刚才读得怎么样？（没有对错，说真话就好）</div>
-    <div class="center" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
-      <button class="selfbtn" onclick="selfRate('😄')">😄<small>很流利！</small></button>
-      <button class="selfbtn" onclick="selfRate('🙂')">🙂<small>还不错</small></button>
-      <button class="selfbtn" onclick="selfRate('😅')">😅<small>想再练一次</small></button>
+    const face=state.read[rd.id]||"😄";
+    inner=`<div class="center" style="padding:10px 0;">
+      <div class="big">🏅</div>
+      <h3 style="margin-top:6px;">朗读小勋章 · ${r.t}</h3>
+      <div style="font-size:15px;color:var(--ink-soft);margin:6px 0 4px;">整段 ${r.sent.length} 句全部练完！自评：${rd.rates.join(" ")||face}</div>
+    </div>
+    <div class="center" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
+      <button class="btn" onclick="sndPop();go('read')">🌊 练下一段</button>
+      <button class="btn ghost" onclick="sndPop();rd.phase=1;rd.cur=0;rd.rates=[];clearRecUrl();renderRead()">🎤 再读一遍</button>
     </div>`;
   }
   const tips=`<div class="tipbox"><h3>💡 朗读小贴士</h3>
@@ -300,49 +590,59 @@ function renderRead(){
   document.getElementById("view").innerHTML=`
   <div class="backrow"><button class="btn ghost small" onclick="go('read')">← 返回</button></div>
   <div class="card"><h2 style="font-size:22px;">${r.e} ${r.t}</h2>
-  <div class="switchrow"><button class="switch ${state.pinyinOn?"on":""}" onclick="state.pinyinOn=!state.pinyinOn;save();renderRead()"></button><span style="font-size:14px;font-weight:700;color:#5b8ba1;">显示拼音</span></div>
-  ${inner}</div>${rd.phase===2?tips:""}
-  <div id="rateBox"></div>`;
+  <div class="switchrow"><button class="switch ${state.pinyinOn?"on":""}" onclick="sndPop();state.pinyinOn=!state.pinyinOn;save();renderRead()"></button><span style="font-size:14px;font-weight:800;color:var(--ink-soft);">显示拼音</span></div>
+  ${inner}</div>${rd.phase===2?tips:""}`;
+  if(rd.phase===1)updateRecUI();
   window.scrollTo(0,0);
 }
-function nextSent(){
+function rateSent(face){
+  sndPop();
+  rd.rates.push(face);
+  clearRecUrl();
   const r=READS.find(x=>x.id===rd.id);
-  if(rd.cur+1<r.sent.length){rd.cur++;renderRead();}
-  else{rd.phase=2;renderRead();}
+  if(rd.cur+1<r.sent.length){
+    rd.cur++;
+    sndDing();
+    renderRead();
+    speakCurSent();          /* 自动示范下一句 */
+  }else{
+    finishRead();
+  }
 }
-function selfRate(face){
+function finishRead(){
+  const cnt={};rd.rates.forEach(f=>cnt[f]=(cnt[f]||0)+1);
+  const order=["😄","🙂","😅"];
+  let best="😄",bn=-1;
+  order.forEach(f=>{if((cnt[f]||0)>bn){bn=cnt[f]||0;best=f;}});
   const first=!state.read[rd.id];
-  state.read[rd.id]=face;
+  state.read[rd.id]=best;
   if(first)addXP(10);else addXP(3);
   save();updateHeader();
-  let msg,btns;
-  if(face==="😅"){
-    msg="想再练一次？太棒了！好的朗读都是练出来的。这次先看看下面的小贴士，再来一遍吧！💪";
-    btns=`<button class="btn" onclick="rd.phase=1;rd.cur=0;renderRead()">🎤 再读一遍</button>
-    <button class="btn ghost" onclick="go('read')">先休息一下</button>`;
-    confettiBurst();
-  }else{
-    msg=face==="😄"?"哇，读得很流利！你的声音一定很好听！记得也看看小贴士，下次读得更棒！🌟":"不错不错！多读几遍会越来越顺哦。看看小贴士里的小秘密吧！✨";
-    btns=`<button class="btn" onclick="go('read')">🌊 练下一段</button>
-    <button class="btn ghost" onclick="rd.phase=1;rd.cur=0;renderRead()">再读一遍</button>`;
-    fireworks();
-  }
-  document.getElementById("rateBox").innerHTML=`
-  <div class="brow"><div class="face">🐬</div><div class="bubble grow">${msg}</div></div>
-  <div class="center" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">${btns}</div>`;
+  bumpOral();
+  rd.phase=2;
+  renderRead();
+  showMedal("朗读小勋章","整段读完啦！你的声音真好听！");
+  speakCheer();
 }
-/* ============ 看图说话 ============ */
+/* ============ 看图说话（听范例→自己录一段→自评） ============ */
 function renderPicList(){
-  let h=`<div class="brow"><div class="face">🐬</div><div class="bubble grow">看图说话的小秘诀：先想清楚<b>谁？在哪里？做什么？心情怎样？</b>自己先说一遍，再看范例。范例要<b>多看几遍</b>，好句子看多了，自然就会说啦！</div></div>`;
+  let h=`<div class="brow"><div class="face">🐬</div><div class="bubble grow">看图说话的小秘诀：<b>谁？在哪里？做什么？心情怎样？</b>先看图想一想，<b>🔊 听范例</b>怎么说，再<b>🎙️ 录下自己的小故事</b>，比一比！好句子听多了，自然就会说啦。</div></div>`;
   SCENES.forEach(s=>{
     const d=state.pic[s.id];
-    h+=`<button class="itemcard ${d?"done":""}" onclick="openScene('${s.id}')"><div class="cover">${s.e}</div>
-    <div class="grow"><div class="t">${s.t}</div><div class="k">${d?"✔ 已练过 · 再看看范例！":"点我开始"}</div></div>
+    h+=`<button class="itemcard ${d?"done":""}" onclick="sndPop();openScene('${s.id}')"><div class="cover">${s.e}</div>
+    <div class="grow"><div class="t">${s.t}</div><div class="k">${d?"✔ 已练过 · 再讲一次会更棒！":"点我开始"}</div></div>
     <div style="font-size:22px;">${d?"🏅":"➜"}</div></button>`;
   });
   document.getElementById("view").innerHTML=h;
 }
+let curScene=null;
+function sampleText(id){
+  const s=SCENES.find(x=>x.id===id);
+  return s?s.sample.replace(/[【】]/g,""):"";
+}
+function speakSample(){if(curScene)speak(sampleText(curScene),{rate:0.9});}
 function openScene(id){
+  curScene=id;
   const s=SCENES.find(x=>x.id===id);
   const qs=s.qs.map((q,i)=>`<div class="qchip">${["1️⃣","2️⃣","3️⃣","4️⃣"][i]} ${q}</div>`).join("");
   document.getElementById("view").innerHTML=`
@@ -350,46 +650,77 @@ function openScene(id){
   <div class="card"><h2 style="font-size:22px;">${s.e} ${s.t}</h2>
   <div class="scene">${s.svg}</div>
   <div class="stepnote">第一步 · 看着图，想一想这些问题：</div>${qs}
-  <div class="stepnote" style="margin-top:12px;">第二步 · 自己大声说一说（可以说给妈妈听）🎤</div>
-  <div class="center" style="margin-top:12px;"><button class="btn sand" onclick="showSample('${id}')">👀 我说完了，看看范例</button></div>
+  <div class="center" style="margin-top:14px;"><button class="btn sand" onclick="sndPop();showSample('${id}')">👀 想好了，听听范例怎么说</button></div>
   <div id="sampleBox"></div></div>`;
   window.scrollTo(0,0);
 }
 function showSample(id){
   const s=SCENES.find(x=>x.id===id);
-  const first=!state.pic[id];
-  state.pic[id]=true;
-  if(first)addXP(10);else addXP(3);
-  save();updateHeader();fireworks();
   const text=s.sample.replace(/【([^】]+)】/g,'<span class="goodword">$1</span>');
   document.getElementById("sampleBox").innerHTML=`
-  <div class="stepnote" style="margin-top:16px;">第三步 · 范例来啦！<span class="goodword">黄色</span>的是好词好句，跟着读一读：</div>
+  <div class="stepnote" style="margin-top:16px;">第二步 · 范例来啦！<span class="goodword">黄色</span>的是好词好句。<button class="playmini" onclick="sndPop();speakSample()" title="听范例">🔊</button> 听小海豚读，跟着读一读：</div>
   <div class="samplebox">${text}</div>
-  <div class="brow" style="margin-top:12px;"><div class="face">🐬</div><div class="bubble grow">把范例<b>大声读两遍</b>，再试着不看范例，用自己的话说一遍。每次都会比上一次说得好！🌟</div></div>
-  <div class="center" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-  <button class="btn" onclick="go('pic')">🖼️ 练下一个场景</button></div>`;
+  <div class="stepnote" style="margin-top:16px;">第三步 · 轮到你啦！看着图，把这幅图的故事<b>录下来</b>说给小海豚听 🎤</div>
+  <div class="senscard">
+    ${recCardHTML("speakSample()","再听范例")}
+    <div class="stepnote" style="text--align:center;text-align:center;margin-top:8px;">说得怎么样？评一评：</div>
+    <div class="center" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="selfbtn" onclick="finishScene('😄')">😄<small>很棒</small></button>
+      <button class="selfbtn" onclick="finishScene('🙂')">🙂<small>不错</small></button>
+      <button class="selfbtn" onclick="finishScene('😅')">😅<small>再练</small></button>
+    </div>
+  </div>
+  <div id="sceneDoneBox"></div>`;
+  updateRecUI();
+  speakSample();
 }
-/* ============ 问答小贝壳 ============ */
+function finishScene(face){
+  const id=curScene;
+  const first=!state.pic[id];
+  state.pic[id]=face;
+  if(first)addXP(10);else addXP(3);
+  save();updateHeader();
+  bumpOral();
+  clearRecUrl();
+  fireworks();sndMagic();
+  speakCheer();
+  let msg;
+  if(face==="😅")msg="想再练一次？太棒了！好的故事都是越讲越好的。再听一遍范例，学几个好词，马上再来一遍！💪";
+  else if(face==="😄")msg="哇！你把图讲成了一个完整的小故事，真厉害！记得把范例里的<b>黄色好词</b>也用进去，下次讲得更精彩！🌟";
+  else msg="不错不错！多讲几遍会越来越顺哦。试着不看范例，用自己的话再说一遍！✨";
+  document.getElementById("sceneDoneBox").innerHTML=`
+  <div class="brow" style="margin-top:14px;"><div class="face">🐬</div><div class="bubble grow">${msg}</div></div>
+  <div class="center" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+    <button class="btn" onclick="sndPop();go('pic')">🖼️ 练下一个场景</button>
+    <button class="btn ghost" onclick="sndPop();openScene('${id}')">再练一次</button>
+  </div>`;
+}
+/* ============ 问答小贝壳（三级答案逐级点读） ============ */
 function renderQaList(){
-  let h=`<div class="brow"><div class="face">🐬</div><div class="bubble grow">口试问答有个小魔法：<b>回答 + 原因 + 小细节</b>，三步说出最完整的答案！每题都有三个等级，照着<b>金色的完整版</b>多说几遍。</div></div>`;
+  let h=`<div class="brow"><div class="face">🐬</div><div class="bubble grow">口试问答有个小魔法：<b>回答 + 原因 + 小细节</b>，三步说出最完整的答案！每个等级都可以点 🔊 听小海豚读，照着<b>金色的完整版</b>多说几遍。</div></div>`;
   QAS.forEach((qa,i)=>{
     const d=state.qa["q"+i];
-    h+=`<button class="itemcard ${d?"done":""}" onclick="openQa(${i})"><div class="cover">🐚</div>
+    h+=`<button class="itemcard ${d?"done":""}" onclick="sndPop();openQa(${i})"><div class="cover">🐚</div>
     <div class="grow"><div class="t">${qa.q}</div><div class="k">${d?"✔ 已练过 · 温故知新！":"点我练一练"}</div></div>
     <div style="font-size:22px;">${d?"🏅":"➜"}</div></button>`;
   });
   document.getElementById("view").innerHTML=h;
 }
+function speakQa(i,lvl){
+  const qa=QAS[i];if(!qa)return;
+  const t=lvl===0?qa.q:lvl===1?qa.l1:lvl===2?qa.l2:qa.l3;
+  speak(t,{rate:0.9});
+}
 function openQa(i){
   const qa=QAS[i];
   document.getElementById("view").innerHTML=`
   <div class="backrow"><button class="btn ghost small" onclick="go('qa')">← 返回</button></div>
-  <div class="card"><h2 style="font-size:21px;">🐚 ${qa.q}</h2>
-  <div class="stepnote">第一步 · 先自己回答一遍 🎤</div>
-  <div class="stepnote" style="margin-top:10px;">第二步 · 看看回答的三个等级，一级比一级棒：</div>
-  <div class="lvl lvl1"><span class="lab">🌱 简单回答</span>${qa.l1}</div>
-  <div class="lvl lvl2"><span class="lab">🌿 加上原因</span>${qa.l2}</div>
-  <div class="lvl lvl3"><span class="lab">🌟 加上细节（照着这个说！）</span>${qa.l3}</div>
+  <div class="card"><h2 style="font-size:21px;">🐚 ${qa.q} <button class="playmini" onclick="sndPop();speakQa(${i},0)" title="听问题">🔊</button></h2>
+  <div class="stepnote">第一步 · 听听问题，先自己回答一遍 🎤</div>
+  <div class="stepnote" style="margin-top:10px;">第二步 · 三个等级，一级比一级棒，每级都点 🔊 听一听：</div>
+  <div class="lvl lvl1"><button class="playmini" onclick="sndPop();speakQa(${i},1)">🔊</button><div class="txt"><span class="lab">🌱 简单回答</span>${qa.l1}</div></div>
+  <div class="lvl lvl2"><button class="playmini" onclick="sndPop();speakQa(${i},2)">🔊</button><div class="txt"><span class="lab">🌿 加上原因</span>${qa.l2}</div></div>
+  <div class="lvl lvl3"><button class="playmini" onclick="sndPop();speakQa(${i},3)">🔊</button><div class="txt"><span class="lab">🌟 加上细节（照着这个说！）</span>${qa.l3}</div></div>
   <div class="stepnote" style="margin-top:10px;">第三步 · 跟着 🌟 金色完整版，大声说两遍！</div>
   <div class="center" style="margin-top:12px;"><button class="btn" onclick="finishQa(${i})">✅ 我说完啦！</button></div>
   <div id="qaDoneBox"></div></div>`;
@@ -399,10 +730,26 @@ function finishQa(i){
   const first=!state.qa["q"+i];
   state.qa["q"+i]=true;
   if(first)addXP(10);else addXP(3);
-  save();updateHeader();fireworks();
+  save();updateHeader();
+  bumpOral();
+  fireworks();sndDing();
+  speakCheer();
   document.getElementById("qaDoneBox").innerHTML=`
   <div class="brow" style="margin-top:14px;"><div class="face">🐬</div><div class="bubble grow">太棒了！${first?"+10 颗星星！":"温故知新，+3 颗星星！"}记住这个魔法：<b>回答 + 原因 + 细节</b>。考试的时候也要这样说完整的句子哦！🌟</div></div>
-  <div class="center"><button class="btn" onclick="go('qa')">🐚 练下一题</button></div>`;
+  <div class="center"><button class="btn" onclick="sndPop();go('qa')">🐚 练下一题</button></div>`;
+}
+/* ============ 勋章弹窗 ============ */
+function showMedal(title,subtitle){
+  sndMagic();fireworks();
+  const old=document.getElementById("medal");
+  if(old)old.remove();
+  const d=document.createElement("div");
+  d.id="medal";
+  d.innerHTML=`<div class="inner"><span class="m">🏅</span>
+  <div class="mt">${title}</div><div class="ms">${subtitle}</div>
+  <button class="btn" onclick="sndPop();document.getElementById('medal').remove()">收下勋章！</button></div>`;
+  d.addEventListener("click",e=>{if(e.target===d)d.remove();});
+  document.body.appendChild(d);
 }
 /* ============ 特效 ============ */
 const fxCanvas=document.getElementById("fx");
@@ -410,7 +757,7 @@ const fxCtx=fxCanvas.getContext("2d");
 let parts=[],fxRunning=false;
 function fxResize(){fxCanvas.width=innerWidth;fxCanvas.height=innerHeight;}
 addEventListener("resize",fxResize);fxResize();
-const FX_COLORS=["#4ab8d8","#ff8a7a","#ffd66b","#8fd7b8","#a5e0ef","#f7a8d8"];
+const FX_COLORS=["#0abab5","#81d8d0","#ff8a7a","#ffd66b","#8fd7b8","#f7a8d8"];
 function spawnConfetti(n,x,y,spread){
   for(let i=0;i<n;i++){
     parts.push({x:x??Math.random()*fxCanvas.width,y:y??-10,
@@ -450,6 +797,8 @@ function runFX(){
   requestAnimationFrame(tick);
 }
 /* ============ 启动 ============ */
+document.getElementById("ttsBtn").textContent=ttsOn?"🔊":"🔇";
+document.getElementById("ttsBtn").classList.toggle("off",!ttsOn);
 updateHeader();
 go("home");
 </script>

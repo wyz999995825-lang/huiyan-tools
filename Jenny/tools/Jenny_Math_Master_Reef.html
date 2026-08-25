@@ -5,152 +5,220 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Math Master Reef 🐬</title>
 <style>
+  :root {
+    --tiffany:#0abab5; --tiffany-light:#81d8d0; --lagoon:#e6f7f5; --sky:#f4fbfa;
+    --deep:#0a8a86; --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff;
+    --ink:#144644; --ink2:#4e7d78; --line:#bfe9e4; --line2:#8fd8d0;
+    --good:#2fae82; --goodbg:#e2f7ee; --badbg:#ffece9; --sandline:#f0d79a; --sandink:#a8781a;
+  }
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { height:100%; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    font-size:16px; color:#12475e; background:#f0fafd;
-    background-image: linear-gradient(180deg,#f0fafd 0%,#dff2f9 60%,#cfeef8 100%);
-    min-height:100%;
+    font-size:17px; line-height:1.8; color:var(--ink);
+    background:var(--sky);
+    background-image: linear-gradient(180deg,var(--sky) 0%,var(--lagoon) 55%,#d8f2ef 100%);
+    background-attachment:fixed; min-height:100%;
   }
-  #app { max-width:760px; margin:0 auto; padding:14px 14px 90px; }
-  button { font-family:inherit; cursor:pointer; border:none; min-height:48px; }
+  #app { max-width:780px; margin:0 auto; padding:10px 10px 80px; }
+  button { font-family:inherit; cursor:pointer; border:none; min-height:46px; color:var(--ink); }
+  /* ---------- springy motion ---------- */
+  @keyframes floaty { 0%,100%{transform:translateY(0) rotate(-2deg);} 50%{transform:translateY(-7px) rotate(2deg);} }
+  @keyframes wiggle { 0%,100%{transform:rotate(0);} 25%{transform:rotate(-2.5deg) scale(1.02);} 75%{transform:rotate(2.5deg) scale(1.02);} }
+  @keyframes popIn { 0%{opacity:0; transform:scale(.8);} 60%{opacity:1; transform:scale(1.04);} 100%{transform:scale(1);} }
+  @keyframes slidein { from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;} }
+  @keyframes shineflow { 0%{background-position:0 0;} 100%{background-position:60px 0;} }
   /* ---------- Header ---------- */
-  .topbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+  .topbar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
   .chip {
-    background:#fff; border-radius:18px; padding:8px 14px; font-weight:700; font-size:16px;
-    box-shadow:0 3px 10px rgba(26,126,168,.12); display:flex; align-items:center; gap:6px; min-height:44px;
+    background:var(--card); border-radius:16px; padding:6px 12px; font-weight:800; font-size:16px;
+    box-shadow:0 3px 10px rgba(10,138,134,.13); display:flex; align-items:center; gap:6px; min-height:44px;
   }
-  .chip small { font-weight:600; color:#5a92a8; font-size:12px; }
-  .lvlbar { flex:1 1 140px; background:#fff; border-radius:18px; padding:8px 14px; box-shadow:0 3px 10px rgba(26,126,168,.12); min-height:44px;}
-  .lvlbar .t { font-size:13px; font-weight:800; color:#1a7ea8; }
-  .pbar { height:10px; background:#dff2f9; border-radius:6px; overflow:hidden; margin-top:5px;}
-  .pbar > div { height:100%; background:linear-gradient(90deg,#4ab8d8,#1a7ea8); border-radius:6px; transition:width .5s; }
+  .chip small { font-weight:700; color:var(--ink2); font-size:12px; }
+  button.chip { transition:transform .15s cubic-bezier(.34,1.56,.64,1); }
+  button.chip:active { transform:scale(.92); }
+  .lvlbar { flex:1 1 130px; background:var(--card); border-radius:16px; padding:6px 12px; box-shadow:0 3px 10px rgba(10,138,134,.13); min-height:44px;}
+  .lvlbar .t { font-size:13px; font-weight:800; color:var(--deep); }
+  .pbar { height:10px; background:var(--lagoon); border-radius:6px; overflow:hidden; margin-top:4px;}
+  .pbar > div { height:100%; background:linear-gradient(90deg,var(--tiffany-light),var(--tiffany)); border-radius:6px; transition:width .5s; }
   /* ---------- Mermaid bubble ---------- */
-  .guide { display:flex; align-items:flex-start; gap:10px; margin:10px 0 16px; }
-  .guide .face { font-size:44px; line-height:1; filter:drop-shadow(0 3px 4px rgba(26,126,168,.25)); }
+  .guide { display:flex; align-items:flex-start; gap:10px; margin:8px 0 12px; }
+  .guide .face { font-size:44px; line-height:1.15; filter:drop-shadow(0 3px 4px rgba(10,138,134,.25)); animation:floaty 3.2s ease-in-out infinite; }
   .bubble {
-    background:#fff; border-radius:4px 18px 18px 18px; padding:12px 16px; font-size:16px;
-    box-shadow:0 4px 12px rgba(26,126,168,.13); flex:1; border:2px solid #a5e0ef;
+    background:var(--card); border-radius:4px 18px 18px 18px; padding:10px 15px; font-size:17px;
+    box-shadow:0 4px 12px rgba(10,138,134,.13); flex:1; border:2px solid var(--tiffany-light); animation:popIn .35s;
   }
   /* ---------- Island map ---------- */
-  .map { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:14px; }
+  .mapttl { color:var(--deep); font-size:18px; margin:8px 2px 8px; }
+  .map { display:grid; grid-template-columns:repeat(auto-fill,minmax(205px,1fr)); gap:10px; }
   .island {
-    background:#fff; border-radius:20px; padding:16px; text-align:left; box-shadow:0 5px 16px rgba(26,126,168,.13);
-    display:flex; align-items:center; gap:12px; border:2px solid transparent; transition:transform .15s;
-    position:relative; min-height:96px; width:100%;
+    background:var(--card); border-radius:20px; padding:12px 14px; text-align:left; box-shadow:0 5px 16px rgba(10,138,134,.13);
+    display:flex; align-items:center; gap:10px; border:2px solid transparent;
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s;
+    position:relative; min-height:92px; width:100%;
   }
-  .island:active { transform:scale(.97); }
-  .island .em { font-size:40px; }
-  .island .nm { font-weight:800; font-size:17px; color:#12475e; }
-  .island .sub { font-size:13px; color:#5a92a8; margin-top:3px; }
-  .island.preview { background:linear-gradient(135deg,#fff 60%,#fdf3dd); border-color:#f4d58a; }
-  .ptag { position:absolute; top:-9px; right:12px; background:#fdf3dd; border:2px solid #f4d58a; color:#a8781a;
-    font-size:11px; font-weight:800; padding:2px 9px; border-radius:12px; }
+  .island:hover { transform:translateY(-3px) scale(1.02); box-shadow:0 8px 20px rgba(10,138,134,.2); animation:wiggle .5s; }
+  .island:active { transform:scale(.96); }
+  .island .em { font-size:38px; }
+  .island .nm { font-weight:800; font-size:16px; color:var(--ink); line-height:1.3; }
+  .island .sub { font-size:13px; color:var(--ink2); margin-top:2px; line-height:1.3; }
+  .island.preview { background:linear-gradient(135deg,var(--card) 60%,var(--sand)); border-color:var(--sandline); }
+  .island.logic { background:linear-gradient(135deg,var(--card) 55%,var(--lagoon)); border-color:var(--line2); }
+  .ptag { position:absolute; top:-9px; right:12px; background:var(--sand); border:2px solid var(--sandline); color:var(--sandink);
+    font-size:11px; font-weight:800; padding:1px 9px; border-radius:12px; }
   .ring { margin-left:auto; flex:none; }
+  .shellbar {
+    width:100%; margin:12px 0 4px; background:linear-gradient(135deg,var(--card) 60%,#ffeee9); border:2px solid #ffcdc4;
+    border-radius:20px; padding:12px 16px; font-size:17px; font-weight:800; color:var(--ink); text-align:left;
+    box-shadow:0 5px 16px rgba(10,138,134,.12); display:flex; align-items:center; gap:10px;
+    transition:transform .18s cubic-bezier(.34,1.56,.64,1);
+  }
+  .shellbar:hover { transform:scale(1.015); }
+  .shellbar:active { transform:scale(.97); }
+  .shellbar .cnt { background:var(--coral); color:#fff; border-radius:14px; padding:1px 11px; font-size:15px; }
+  .shellbar .cnt.zero { background:var(--good); }
   /* ---------- Quiz ---------- */
-  .qcard { background:#fff; border-radius:20px; padding:20px; box-shadow:0 5px 18px rgba(26,126,168,.14); margin-bottom:14px; }
-  .qtext { font-size:18px; line-height:1.55; font-weight:600; }
-  .qvis { margin:14px 0 4px; display:flex; justify-content:center; }
-  .opts { display:grid; grid-template-columns:1fr; gap:10px; margin-top:16px; }
+  .qcard { background:var(--card); border-radius:20px; padding:18px; box-shadow:0 5px 18px rgba(10,138,134,.14); margin-bottom:12px; animation:popIn .3s; }
+  .qtext { font-size:20px; line-height:1.8; font-weight:650; }
+  .qtext b { color:var(--deep); }
+  .qvis { margin:12px 0 4px; }
+  .opts { display:grid; grid-template-columns:1fr; gap:10px; margin-top:14px; }
   @media(min-width:520px){ .opts.short { grid-template-columns:1fr 1fr; } }
+  .opts.vis { grid-template-columns:1fr 1fr; }
   .opt {
-    background:#f0fafd; border:2px solid #a5e0ef; border-radius:16px; padding:13px 16px; font-size:18px; font-weight:700;
-    color:#12475e; text-align:left; min-height:52px; transition:all .15s;
+    background:var(--sky); border:2px solid var(--line); border-radius:16px; padding:12px 15px; font-size:19px; font-weight:700;
+    color:var(--ink); text-align:left; min-height:52px;
+    transition:transform .15s cubic-bezier(.34,1.56,.64,1), background .15s, border-color .15s;
   }
-  .opt:not(:disabled):active { background:#dff2f9; }
-  .opt.sel-ok { background:#e2f7ee; border-color:#39b98a; color:#177a55; }
-  .opt.sel-no { background:#ffece9; border-color:#ff8a7a; color:#c65a4c; }
-  .opt.show-ok { background:#e2f7ee; border-color:#39b98a; color:#177a55; }
-  .inputrow { display:flex; gap:10px; margin-top:16px; align-items:stretch; flex-wrap:wrap; }
+  .opt.vis { display:flex; align-items:center; justify-content:center; padding:8px; }
+  .opt:not(:disabled):hover { transform:scale(1.02); border-color:var(--tiffany-light); }
+  .opt:not(:disabled):active { background:var(--lagoon); transform:scale(.97); }
+  .opt.sel-ok { background:var(--goodbg); border-color:var(--good); color:#177a55; }
+  .opt.sel-no { background:var(--badbg); border-color:var(--coral); color:#c65a4c; }
+  .opt.show-ok { background:var(--goodbg); border-color:var(--good); color:#177a55; }
+  .inputrow { display:flex; gap:10px; margin-top:14px; align-items:stretch; flex-wrap:wrap; }
   .ansin {
-    flex:1 1 140px; font-size:22px; font-weight:800; padding:10px 14px; border:2px solid #a5e0ef; border-radius:16px;
-    color:#12475e; background:#f0fafd; min-height:52px; width:100px; font-family:inherit;
+    flex:1 1 140px; font-size:22px; font-weight:800; padding:10px 14px; border:2px solid var(--line); border-radius:16px;
+    color:var(--ink); background:var(--sky); min-height:52px; width:100px; font-family:inherit;
   }
-  .ansin:focus { outline:none; border-color:#4ab8d8; background:#fff; }
+  .ansin:focus { outline:none; border-color:var(--tiffany); background:var(--card); }
   .btn {
-    background:linear-gradient(180deg,#4ab8d8,#2b9cc4); color:#fff; font-weight:800; font-size:17px;
-    border-radius:16px; padding:12px 22px; box-shadow:0 4px 0 #1a7ea8; min-height:52px;
+    background:linear-gradient(180deg,#2ec9c4,var(--tiffany)); color:#fff; font-weight:800; font-size:17px;
+    border-radius:16px; padding:11px 20px; box-shadow:0 4px 0 var(--deep); min-height:50px;
+    transition:transform .15s cubic-bezier(.34,1.56,.64,1);
   }
-  .btn:active { transform:translateY(2px); box-shadow:0 2px 0 #1a7ea8; }
+  .btn:hover { transform:scale(1.03); }
+  .btn:active { transform:translateY(2px) scale(.98); box-shadow:0 2px 0 var(--deep); }
   .btn.sand { background:linear-gradient(180deg,#ffd98e,#f4c35d); color:#7a5a12; box-shadow:0 4px 0 #d9a83f; }
-  .btn.ghost { background:#fff; color:#1a7ea8; border:2px solid #a5e0ef; box-shadow:none; }
+  .btn.ghost { background:var(--card); color:var(--deep); border:2px solid var(--line); box-shadow:none; }
+  .btn.coral { background:linear-gradient(180deg,#ff9d8f,var(--coral)); box-shadow:0 4px 0 #e06a5a; }
   .btn:disabled { opacity:.5; }
+  /* ---------- Sudoku ---------- */
+  .sud { display:grid; grid-template-columns:repeat(4,60px); gap:5px; justify-content:center; margin:12px auto 4px; }
+  .sudc {
+    width:60px; height:60px; border-radius:12px; background:var(--card); border:2px solid var(--line);
+    font-size:28px; display:flex; align-items:center; justify-content:center; min-height:46px; padding:0;
+    transition:transform .12s cubic-bezier(.34,1.56,.64,1);
+  }
+  .sudc:not(.giv):not(:disabled):active { transform:scale(.9); }
+  .sudc.giv { background:var(--lagoon); border-color:var(--line2); }
+  .sudc.bad { background:var(--badbg); border-color:var(--coral); }
+  .sudc.mr { margin-right:8px; } .sudc.mb { margin-bottom:8px; }
+  .sudmini { display:grid; grid-template-columns:repeat(4,44px); gap:4px; justify-content:center; margin:8px auto; }
+  .sudmini .mc { width:44px; height:44px; border-radius:9px; background:var(--card); border:2px solid var(--line);
+    font-size:21px; display:flex; align-items:center; justify-content:center; }
+  .sudmini .mc.giv { background:var(--lagoon); border-color:var(--line2); }
+  .sudmini .mc.hl { background:var(--sand); border-color:var(--sandline); }
+  .sudmini .mc.new { background:var(--goodbg); border-color:var(--good); }
+  .sudmini .mc.mr { margin-right:7px; } .sudmini .mc.mb { margin-bottom:7px; }
   /* ---------- Feedback / steps ---------- */
-  .fb { border-radius:20px; padding:16px; margin-bottom:14px; animation:pop .3s; }
-  .fb.good { background:#e2f7ee; border:2px solid #7fd8b4; }
+  .fb { border-radius:20px; padding:14px 16px; margin-bottom:12px; animation:popIn .3s; }
+  .fb.good { background:var(--goodbg); border:2px solid #7fd8b4; }
   .fb.oops { background:#fff4f2; border:2px solid #ffb8ae; }
   .fb .big { font-size:19px; font-weight:800; }
   .fb.good .big { color:#177a55; } .fb.oops .big { color:#c65a4c; }
   .model {
-    background:#eaf9ff; border:2px dashed #4ab8d8; border-radius:16px; padding:13px 15px; margin:12px 0;
+    background:var(--lagoon); border:2px dashed var(--tiffany); border-radius:16px; padding:12px 15px; margin:10px 0;
     font-size:17px; }
-  .model b { color:#1a7ea8; }
-  .model .tag { font-weight:800; color:#1a7ea8; font-size:14px; display:block; margin-bottom:4px; }
-  .steps { background:#fff; border-radius:20px; padding:16px; box-shadow:0 5px 16px rgba(26,126,168,.13); margin-bottom:14px; }
-  .steps h4 { color:#1a7ea8; font-size:15px; margin-bottom:6px; }
+  .model b { color:var(--deep); }
+  .model .tag { font-weight:800; color:var(--deep); font-size:14px; display:block; margin-bottom:2px; }
+  .steps { background:var(--card); border-radius:20px; padding:15px; box-shadow:0 5px 16px rgba(10,138,134,.13); margin-bottom:12px; }
+  .steps h4 { color:var(--deep); font-size:15px; margin-bottom:6px; }
   .step { margin:12px 0; animation:slidein .45s; }
-  .stepcap { font-size:15px; font-weight:700; color:#1a7ea8; margin-bottom:6px; }
-  .stepcap .no { background:#4ab8d8; color:#fff; border-radius:50%; display:inline-flex; width:22px; height:22px;
+  .stepcap { font-size:15px; font-weight:700; color:var(--deep); margin-bottom:6px; line-height:1.6; }
+  .stepcap .no { background:var(--tiffany); color:#fff; border-radius:50%; display:inline-flex; width:22px; height:22px;
     align-items:center; justify-content:center; font-size:13px; margin-right:6px; }
-  @keyframes slidein { from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;} }
-  @keyframes pop { from{opacity:0; transform:scale(.92);} to{opacity:1; transform:none;} }
-  .hintbox { background:#fdf3dd; border:2px solid #f4d58a; border-radius:16px; padding:11px 14px; margin-top:12px; font-size:15px; color:#7a5a12; }
+  .hintbox { background:var(--sand); border:2px solid var(--sandline); border-radius:16px; padding:10px 14px; margin-top:12px; font-size:15px; color:#7a5a12; line-height:1.6; }
   /* ---------- Bar model ---------- */
   .bm { width:100%; max-width:520px; margin:4px auto; }
   .bmrow { display:flex; align-items:center; gap:8px; margin:7px 0; }
-  .bmname { flex:0 0 76px; font-size:13px; font-weight:700; color:#5a92a8; text-align:right; }
+  .bmname { flex:0 0 76px; font-size:13px; font-weight:700; color:var(--ink2); text-align:right; line-height:1.3; }
   .bmbar { flex:1; display:flex; height:40px; border-radius:8px; overflow:hidden; }
   .bmseg { display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:15px;
-    border-right:2px solid #fff; min-width:26px; }
+    border-right:2px solid #fff; min-width:26px; line-height:1.2; }
   .bmseg:last-child { border-right:none; }
-  .bmseg.q { background:repeating-linear-gradient(45deg,#fdf3dd,#fdf3dd 8px,#f7e6bd 8px,#f7e6bd 16px)!important; color:#a8781a; border:2px dashed #d9a83f; }
-  .bmbrace { flex:1; text-align:center; font-size:14px; font-weight:800; color:#1a7ea8;
-    border-left:2px solid #1a7ea8; border-right:2px solid #1a7ea8; border-bottom:2px solid #1a7ea8;
-    border-radius:0 0 10px 10px; padding:4px 0 2px; margin-top:-2px; }
-  .bmwrap { display:flex; gap:8px; } .bmwrap .bmname{ align-self:center; }
+  .bmseg.q { background:repeating-linear-gradient(45deg,var(--sand),var(--sand) 8px,#f7e6bd 8px,#f7e6bd 16px)!important; color:var(--sandink); border:2px dashed #d9a83f; }
+  .bmbrace { flex:1; text-align:center; font-size:14px; font-weight:800; color:var(--deep);
+    border-left:2px solid var(--deep); border-right:2px solid var(--deep); border-bottom:2px solid var(--deep);
+    border-radius:0 0 10px 10px; padding:2px 0 1px; margin-top:-2px; line-height:1.4; }
   /* ---------- misc visuals ---------- */
-  .eq { font-size:20px; font-weight:800; color:#12475e; text-align:center; margin:6px 0; }
-  .eq b { color:#1a7ea8; }
+  .eq { font-size:20px; font-weight:800; color:var(--ink); text-align:center; margin:6px 0; line-height:1.7; }
+  .eq b { color:var(--deep); }
   .blocks { display:flex; flex-wrap:wrap; gap:6px; align-items:flex-end; justify-content:center; }
-  .hb { width:52px; height:52px; border-radius:8px; background:#4ab8d8; color:#fff; font-size:12px; font-weight:800;
+  .hb { width:52px; height:52px; border-radius:8px; background:var(--tiffany); color:#fff; font-size:12px; font-weight:800;
     display:flex; align-items:center; justify-content:center;
     background-image:linear-gradient(#ffffff44 1px,transparent 1px),linear-gradient(90deg,#ffffff44 1px,transparent 1px);
     background-size:5.2px 5.2px; }
-  .tb { width:14px; height:52px; border-radius:5px; background:#7fd0e6; color:#0d5b7c; font-size:9px; font-weight:800;
+  .tb { width:14px; height:52px; border-radius:5px; background:var(--tiffany-light); color:#0d5b57; font-size:9px; font-weight:800;
     display:flex; align-items:flex-end; justify-content:center;
     background-image:linear-gradient(#ffffff55 1px,transparent 1px); background-size:100% 5.2px; }
   .ob { width:13px; height:13px; border-radius:4px; background:#ffd98e; }
   .pvchart { border-collapse:collapse; margin:0 auto; }
-  .pvchart th { background:#dff2f9; color:#1a7ea8; padding:6px 16px; font-size:13px; border:2px solid #a5e0ef; }
-  .pvchart td { font-size:24px; font-weight:800; padding:8px 16px; border:2px solid #a5e0ef; text-align:center; }
-  .pvchart td.hl { background:#fdf3dd; color:#d97706; }
+  .pvchart th { background:var(--lagoon); color:var(--deep); padding:5px 14px; font-size:13px; border:2px solid var(--line); }
+  .pvchart td { font-size:24px; font-weight:800; padding:7px 14px; border:2px solid var(--line); text-align:center; }
+  .pvchart td.hl { background:var(--sand); color:#d97706; }
   .chain { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:4px; }
-  .chainbox { background:#f0fafd; border:2px solid #4ab8d8; border-radius:12px; padding:8px 12px; font-weight:800; font-size:17px; }
-  .chainbox.miss { border-style:dashed; background:#fdf3dd; border-color:#d9a83f; color:#a8781a; }
-  .chainarrow { color:#ff8a7a; font-weight:800; font-size:13px; text-align:center; padding:0 2px; }
-  .chainarrow span { display:block; font-size:16px; color:#1a7ea8; }
+  .chainbox { background:var(--sky); border:2px solid var(--tiffany); border-radius:12px; padding:6px 11px; font-weight:800; font-size:17px; line-height:1.4; }
+  .chainbox.miss { border-style:dashed; background:var(--sand); border-color:#d9a83f; color:var(--sandink); }
+  .chainarrow { color:var(--coral); font-weight:800; font-size:13px; text-align:center; padding:0 2px; line-height:1.3; }
+  .chainarrow span { display:block; font-size:16px; color:var(--deep); }
   .grps { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
-  .grp { border:2px dashed #4ab8d8; border-radius:12px; padding:6px 8px; font-size:18px; letter-spacing:2px;
-    background:#f0fafd; max-width:150px; text-align:center; line-height:1.5;}
-  .grp.hl { background:#fdf3dd; border-color:#d9a83f; border-style:solid; }
+  .grp { border:2px dashed var(--tiffany); border-radius:12px; padding:5px 8px; font-size:18px; letter-spacing:2px;
+    background:var(--sky); max-width:150px; text-align:center; line-height:1.5;}
+  .grp.hl { background:var(--sand); border-color:#d9a83f; border-style:solid; }
   .fbarwrap { display:flex; align-items:center; gap:8px; margin:6px auto; max-width:420px; }
-  .fbar { display:flex; flex:1; height:38px; border:2px solid #1a7ea8; border-radius:8px; overflow:hidden; }
-  .fcell { flex:1; border-right:2px solid #1a7ea8; background:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; color:#1a7ea8;}
+  .fbar { display:flex; flex:1; height:38px; border:2px solid var(--deep); border-radius:8px; overflow:hidden; }
+  .fcell { flex:1; border-right:2px solid var(--deep); background:var(--card); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; color:var(--deep);}
   .fcell:last-child { border-right:none; }
-  .fcell.sh { background:#4ab8d8; color:#fff; }
-  .fcell.miss { background:repeating-linear-gradient(45deg,#fdf3dd,#fdf3dd 7px,#f7e6bd 7px,#f7e6bd 14px); color:#a8781a; }
-  .flabel { font-weight:800; font-size:16px; color:#12475e; flex:0 0 46px; }
-  .cap { font-size:13px; color:#5a92a8; text-align:center; margin-top:4px; }
-  .backrow { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .fcell.sh { background:var(--tiffany); color:#fff; }
+  .fcell.miss { background:repeating-linear-gradient(45deg,var(--sand),var(--sand) 7px,#f7e6bd 7px,#f7e6bd 14px); color:var(--sandink); }
+  .flabel { font-weight:800; font-size:16px; color:var(--ink); flex:0 0 46px; }
+  .cap { font-size:13px; color:var(--ink2); text-align:center; margin-top:4px; line-height:1.5; }
+  .backrow { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
   .combo { margin-left:auto; font-weight:800; color:#ff7a5c; font-size:16px; }
   #fx { position:fixed; inset:0; pointer-events:none; z-index:50; }
-  .badgebox { background:#fff; border-radius:20px; padding:14px 16px; box-shadow:0 5px 16px rgba(26,126,168,.13); margin-top:16px; }
-  .badgebox h3 { color:#1a7ea8; font-size:15px; margin-bottom:8px; }
-  .bdg { display:inline-flex; align-items:center; gap:5px; background:#f0fafd; border:2px solid #a5e0ef;
-    border-radius:14px; padding:5px 11px; margin:3px; font-size:13px; font-weight:700; }
+  .badgebox { background:var(--card); border-radius:20px; padding:12px 15px; box-shadow:0 5px 16px rgba(10,138,134,.13); margin-top:14px; }
+  .badgebox h3 { color:var(--deep); font-size:15px; margin-bottom:6px; }
+  .bdg { display:inline-flex; align-items:center; gap:5px; background:var(--sky); border:2px solid var(--line);
+    border-radius:14px; padding:4px 11px; margin:3px; font-size:13px; font-weight:700; }
   .bdg.locked { opacity:.38; filter:grayscale(1); }
-  footer { text-align:center; color:#8fb9ca; font-size:12px; margin-top:22px; }
+  /* ---------- mistake shells ---------- */
+  .mcardlist { display:flex; flex-direction:column; gap:10px; }
+  .mcard { background:var(--card); border-radius:18px; padding:12px 15px; box-shadow:0 4px 14px rgba(10,138,134,.12);
+    text-align:left; display:flex; align-items:center; gap:10px; border:2px solid transparent; width:100%;
+    transition:transform .15s cubic-bezier(.34,1.56,.64,1); }
+  .mcard:hover { transform:scale(1.01); }
+  .mcard.fx { border-color:#7fd8b4; background:linear-gradient(135deg,var(--card) 70%,var(--goodbg)); }
+  .mcard .em { font-size:28px; }
+  .mcard .tx { flex:1; font-size:15px; line-height:1.5; color:var(--ink); font-weight:650; }
+  .mcard .st { font-size:12px; font-weight:800; border-radius:12px; padding:2px 10px; white-space:nowrap; }
+  .mcard .st.todo { background:var(--badbg); color:#c65a4c; }
+  .mcard .st.done { background:var(--goodbg); color:#177a55; }
+  .permchip { display:inline-block; background:var(--sky); border:2px solid var(--line); border-radius:12px;
+    padding:4px 10px; margin:3px; font-weight:800; font-size:15px; }
+  .permchip.out { opacity:.4; text-decoration:line-through; border-style:dashed; }
+  .permchip.win { background:var(--goodbg); border-color:var(--good); color:#177a55; }
+  footer { text-align:center; color:#7fb5af; font-size:12px; margin-top:20px; line-height:1.6; }
 </style>
 </head>
 <body>
@@ -162,14 +230,87 @@
 function ri(a,b){ return a + Math.floor(Math.random()*(b-a+1)); }
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-function esc(s){ return String(s); }
 function fmtMoney(c){ return "$" + (c/100).toFixed(2); }
 function fmtTime(mins){ mins=((mins%720)+720)%720; let h=Math.floor(mins/60); if(h===0)h=12; const m=mins%60; return h + ":" + String(m).padStart(2,"0"); }
+function qid(topic,tpl,parts){ return topic+":"+tpl+":"+parts.join("_"); }
+function stripTags(s){ return String(s).replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim(); }
+
+/* ============ WebAudio synth (no audio files) ============ */
+let AC=null;
+function ensureAC(){
+  try{
+    if(typeof window==="undefined") return null;
+    if(!AC){ const Ctor=window.AudioContext||window.webkitAudioContext; if(Ctor) AC=new Ctor(); }
+    if(AC && AC.state==="suspended") AC.resume();
+  }catch(e){ return null; }
+  return AC;
+}
+function tone(freq,dur,type,vol,when,slide){
+  const c=ensureAC(); if(!c) return;
+  try{
+    const t0=c.currentTime+(when||0);
+    const o=c.createOscillator(), g=c.createGain();
+    o.type=type||"sine"; o.frequency.setValueAtTime(freq,t0);
+    if(slide) o.frequency.exponentialRampToValueAtTime(slide,t0+dur);
+    g.gain.setValueAtTime(0.0001,t0);
+    g.gain.exponentialRampToValueAtTime(vol||0.15,t0+0.015);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(t0); o.stop(t0+dur+0.05);
+  }catch(e){}
+}
+function sndPop(){ tone(340,0.08,"sine",0.1,0,180); }              /* soft tap "pop" */
+function sndDing(){ tone(880,0.16,"sine",0.16); tone(1318,0.2,"sine",0.13,0.09); tone(1760,0.3,"sine",0.07,0.18,2100); } /* bubble ding */
+function sndOops(){ tone(280,0.22,"sine",0.09,0,200); }
+function sndCombo(){ [523,659,784,1047].forEach((f,i)=>tone(f,0.15,"triangle",0.13,i*0.09)); tone(2093,0.4,"sine",0.07,0.38,2600); } /* arpeggio */
+function sndFix(){ tone(660,0.12,"sine",0.13); tone(990,0.22,"sine",0.12,0.1); }
+
+/* ============ TTS (Web Speech API) ============ */
+const TTSKEY="jenny_tts_on";
+function ttsOn(){ try{ if(typeof localStorage==="undefined") return true; const v=localStorage.getItem(TTSKEY); return v===null?true:v==="1"; }catch(e){ return true; } }
+function setTtsOn(on){ try{ if(typeof localStorage!=="undefined") localStorage.setItem(TTSKEY,on?"1":"0"); }catch(e){} }
+let VOICES=[];
+function loadVoices(){ try{ VOICES=speechSynthesis.getVoices()||[]; }catch(e){ VOICES=[]; } }
+function pickVoice(lang){
+  const en=lang.indexOf("en")===0;
+  const prefs=en?["samantha","karen","enhanced","premium","natural"]:["tingting","ting-ting","meijia","mei-jia","婷婷"];
+  const cand=VOICES.filter(v=>v.lang && v.lang.toLowerCase().indexOf(en?"en":"zh")===0);
+  for(const p of prefs){ const f=cand.find(v=>(v.name||"").toLowerCase().indexOf(p)>=0); if(f) return f; }
+  return cand[0]||null;
+}
+function speak(text,lang){
+  if(!ttsOn()) return;
+  try{
+    if(typeof speechSynthesis==="undefined") return;
+    if(!VOICES.length) loadVoices();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang=lang||"en-US";
+    const v=pickVoice(u.lang);
+    if(v) u.voice=v;
+    else if(u.lang.indexOf("zh")===0) return; /* silent fallback: no zh voice on device */
+    u.rate=0.95; u.pitch=1.05;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+/* ============ daily quota (cross-tool convention) ============ */
+const DKEY="jenny_daily_v1", DGOAL=10;
+function today(){ return new Date().toISOString().slice(0,10); }
+function dailyAll(){ try{ if(typeof localStorage==="undefined") return {}; return JSON.parse(localStorage.getItem(DKEY))||{}; }catch(e){ return {}; } }
+function dailyMath(){ const d=dailyAll()[today()]; return d?(d.math||0):0; }
+function bumpDaily(){
+  try{
+    if(typeof localStorage==="undefined") return;
+    const all=dailyAll(), t=today();
+    if(!all[t]) all[t]={math:0,science:0,reading:0,chinese:0,oral:0};
+    all[t].math=(all[t].math||0)+1;
+    localStorage.setItem(DKEY,JSON.stringify(all));
+  }catch(e){}
+}
 
 /* ============ visual builders (pure string HTML) ============ */
-const C1="#4ab8d8", C2="#ff8a7a", C3="#7fd8b4", C4="#f4c35d";
+const C1="#0abab5", C2="#ff8a7a", C3="#7fd8b4", C4="#f4c35d", CDEEP="#0a8a86", CINK="#144644";
 function bm(rows){
-  // rows: [{name, segs:[{v, t, c, q}], brace}]
   let max=0;
   rows.forEach(r=>{ const s=r.segs.reduce((a,x)=>a+x.v,0); if(s>max)max=s; });
   let h='<div class="bm">';
@@ -188,9 +329,9 @@ function bm(rows){
 function eq(s){ return '<div class="eq">'+s+'</div>'; }
 function bond(whole,a,b){
   return '<svg viewBox="0 0 220 120" style="max-width:220px;display:block;margin:0 auto">'
-   +'<line x1="110" y1="38" x2="55" y2="86" stroke="#4ab8d8" stroke-width="3"/>'
-   +'<line x1="110" y1="38" x2="165" y2="86" stroke="#4ab8d8" stroke-width="3"/>'
-   +'<circle cx="110" cy="28" r="26" fill="#4ab8d8"/><text x="110" y="34" text-anchor="middle" font-size="17" font-weight="800" fill="#fff">'+whole+'</text>'
+   +'<line x1="110" y1="38" x2="55" y2="86" stroke="'+C1+'" stroke-width="3"/>'
+   +'<line x1="110" y1="38" x2="165" y2="86" stroke="'+C1+'" stroke-width="3"/>'
+   +'<circle cx="110" cy="28" r="26" fill="'+C1+'"/><text x="110" y="34" text-anchor="middle" font-size="17" font-weight="800" fill="#fff">'+whole+'</text>'
    +'<circle cx="50" cy="94" r="24" fill="#fdf3dd" stroke="#d9a83f" stroke-width="2.5"/><text x="50" y="100" text-anchor="middle" font-size="16" font-weight="800" fill="#a8781a">'+a+'</text>'
    +'<circle cx="170" cy="94" r="24" fill="#fdf3dd" stroke="#d9a83f" stroke-width="2.5"/><text x="170" y="100" text-anchor="middle" font-size="16" font-weight="800" fill="#a8781a">'+b+'</text></svg>';
 }
@@ -212,7 +353,6 @@ function pvChart(n, hlPos){
   return s+'</tr></table>';
 }
 function chain(items){
-  // items: [{box, miss} , {arrow}] alternate
   let s='<div class="chain">';
   items.forEach(it=>{
     if(it.arrow!==undefined) s+='<div class="chainarrow"><span>➜</span>'+it.arrow+'</div>';
@@ -236,31 +376,166 @@ function fracBar(d, sh, label, missFrom){
 function clockSVG(h,m,size){
   size=size||150; const cx=75, cy=75, r=68;
   let s='<svg viewBox="0 0 150 150" style="width:'+size+'px;height:'+size+'px;display:block;margin:0 auto">';
-  s+='<circle cx="75" cy="75" r="70" fill="#fff" stroke="#1a7ea8" stroke-width="4"/>';
+  s+='<circle cx="75" cy="75" r="70" fill="#fff" stroke="'+CDEEP+'" stroke-width="4"/>';
   for(let i=0;i<60;i++){
     const a=i*6*Math.PI/180, big=i%5===0;
     const r1=big?60:64, r2=r;
-    s+='<line x1="'+(cx+r1*Math.sin(a)).toFixed(1)+'" y1="'+(cy-r1*Math.cos(a)).toFixed(1)+'" x2="'+(cx+r2*Math.sin(a)).toFixed(1)+'" y2="'+(cy-r2*Math.cos(a)).toFixed(1)+'" stroke="#a5e0ef" stroke-width="'+(big?3:1.5)+'"/>';
+    s+='<line x1="'+(cx+r1*Math.sin(a)).toFixed(1)+'" y1="'+(cy-r1*Math.cos(a)).toFixed(1)+'" x2="'+(cx+r2*Math.sin(a)).toFixed(1)+'" y2="'+(cy-r2*Math.cos(a)).toFixed(1)+'" stroke="#81d8d0" stroke-width="'+(big?3:1.5)+'"/>';
   }
   for(let i=1;i<=12;i++){
     const a=i*30*Math.PI/180;
-    s+='<text x="'+(cx+50*Math.sin(a)).toFixed(1)+'" y="'+(cy-50*Math.cos(a)+5).toFixed(1)+'" text-anchor="middle" font-size="13" font-weight="800" fill="#12475e">'+i+'</text>';
+    s+='<text x="'+(cx+50*Math.sin(a)).toFixed(1)+'" y="'+(cy-50*Math.cos(a)+5).toFixed(1)+'" text-anchor="middle" font-size="13" font-weight="800" fill="'+CINK+'">'+i+'</text>';
   }
   const ha=((h%12)+m/60)*30*Math.PI/180, ma=m*6*Math.PI/180;
-  s+='<line x1="75" y1="75" x2="'+(cx+30*Math.sin(ha)).toFixed(1)+'" y2="'+(cy-30*Math.cos(ha)).toFixed(1)+'" stroke="#1a7ea8" stroke-width="6" stroke-linecap="round"/>';
+  s+='<line x1="75" y1="75" x2="'+(cx+30*Math.sin(ha)).toFixed(1)+'" y2="'+(cy-30*Math.cos(ha)).toFixed(1)+'" stroke="'+CDEEP+'" stroke-width="6" stroke-linecap="round"/>';
   s+='<line x1="75" y1="75" x2="'+(cx+45*Math.sin(ma)).toFixed(1)+'" y2="'+(cy-45*Math.cos(ma)).toFixed(1)+'" stroke="#ff8a7a" stroke-width="4" stroke-linecap="round"/>';
-  s+='<circle cx="75" cy="75" r="5" fill="#12475e"/></svg>';
+  s+='<circle cx="75" cy="75" r="5" fill="'+CINK+'"/></svg>';
   return s;
 }
 function rectSVG(l,w){
   const scale = 200/Math.max(l,w);
   const W=Math.max(90,l*scale), H=Math.max(60,w*scale*0.8);
   return '<svg viewBox="0 0 '+(W+70)+' '+(H+60)+'" style="max-width:300px;display:block;margin:0 auto">'
-   +'<rect x="35" y="28" width="'+W+'" height="'+H+'" fill="#dff2f9" stroke="#1a7ea8" stroke-width="3" rx="4"/>'
-   +'<text x="'+(35+W/2)+'" y="18" text-anchor="middle" font-size="15" font-weight="800" fill="#1a7ea8">'+l+' cm</text>'
-   +'<text x="'+(35+W/2)+'" y="'+(H+50)+'" text-anchor="middle" font-size="15" font-weight="800" fill="#1a7ea8">'+l+' cm</text>'
+   +'<rect x="35" y="28" width="'+W+'" height="'+H+'" fill="#e6f7f5" stroke="'+CDEEP+'" stroke-width="3" rx="4"/>'
+   +'<text x="'+(35+W/2)+'" y="18" text-anchor="middle" font-size="15" font-weight="800" fill="'+CDEEP+'">'+l+' cm</text>'
+   +'<text x="'+(35+W/2)+'" y="'+(H+50)+'" text-anchor="middle" font-size="15" font-weight="800" fill="'+CDEEP+'">'+l+' cm</text>'
    +'<text x="16" y="'+(28+H/2)+'" text-anchor="middle" font-size="15" font-weight="800" fill="#ff8a7a">'+w+' cm</text>'
    +'<text x="'+(W+56)+'" y="'+(28+H/2)+'" text-anchor="middle" font-size="15" font-weight="800" fill="#ff8a7a">'+w+' cm</text></svg>';
+}
+function gridRectSVG(l,w,countAll){
+  const cs=26, W=l*cs, H=w*cs;
+  let s='<svg viewBox="0 0 '+(W+20)+' '+(H+20)+'" style="max-width:'+Math.min(320,W+20)+'px;display:block;margin:0 auto">';
+  for(let r=0;r<w;r++) for(let c=0;c<l;c++){
+    s+='<rect x="'+(10+c*cs)+'" y="'+(10+r*cs)+'" width="'+cs+'" height="'+cs+'" fill="'+((r+c)%2?'#e6f7f5':'#d2f0ec')+'" stroke="'+CDEEP+'" stroke-width="1.4"/>';
+    if(countAll) s+='<text x="'+(10+c*cs+cs/2)+'" y="'+(10+r*cs+cs/2+4)+'" text-anchor="middle" font-size="11" font-weight="800" fill="'+CDEEP+'">'+(r*l+c+1)+'</text>';
+  }
+  return s+'</svg>';
+}
+/* balance scale (two pans of emoji) */
+function scaleSVG(L,R,cap){
+  const em=a=>a.join("");
+  let s='<svg viewBox="0 0 360 160" style="max-width:360px;display:block;margin:0 auto">';
+  s+='<rect x="172" y="55" width="8" height="80" rx="3" fill="'+CDEEP+'"/>';
+  s+='<ellipse cx="176" cy="140" rx="46" ry="9" fill="#81d8d0"/>';
+  s+='<rect x="46" y="48" width="260" height="8" rx="4" fill="'+C1+'"/>';
+  s+='<circle cx="176" cy="52" r="9" fill="'+CDEEP+'"/>';
+  s+='<line x1="58" y1="54" x2="38" y2="86" stroke="'+C1+'" stroke-width="3"/>';
+  s+='<line x1="58" y1="54" x2="98" y2="86" stroke="'+C1+'" stroke-width="3"/>';
+  s+='<path d="M 30 88 Q 68 108 106 88" fill="#d2f0ec" stroke="'+CDEEP+'" stroke-width="3"/>';
+  s+='<line x1="294" y1="54" x2="274" y2="86" stroke="'+C1+'" stroke-width="3"/>';
+  s+='<line x1="294" y1="54" x2="314" y2="86" stroke="'+C1+'" stroke-width="3"/>';
+  s+='<path d="M 266 88 Q 304 108 342 88" fill="#d2f0ec" stroke="'+CDEEP+'" stroke-width="3"/>';
+  const pan=(arr,cx)=>{
+    const fs=arr.length>3?(arr.length>6?11:14):20;
+    if(arr.length>6){
+      const half=Math.ceil(arr.length/2);
+      return '<text x="'+cx+'" y="72" text-anchor="middle" font-size="'+fs+'">'+em(arr.slice(0,half))+'</text>'
+        +'<text x="'+cx+'" y="85" text-anchor="middle" font-size="'+fs+'">'+em(arr.slice(half))+'</text>';
+    }
+    return '<text x="'+cx+'" y="84" text-anchor="middle" font-size="'+fs+'">'+em(arr)+'</text>';
+  };
+  s+=pan(L,68)+pan(R,304);
+  s+='<text x="176" y="30" text-anchor="middle" font-size="13" font-weight="800" fill="'+CDEEP+'">BALANCED ⚖️</text>';
+  s+='</svg>';
+  if(cap) s+='<div class="cap">'+cap+'</div>';
+  return s;
+}
+/* number pyramid: cells [top,m1,m2,b1,b2,b3], missIdx shows ?, hl highlights */
+function pyrSVG(cells, missIdx, hlIdx){
+  const pos=[[122,6],[80,56],[164,56],[38,106],[122,106],[206,106]];
+  let s='<svg viewBox="0 0 320 160" style="max-width:320px;display:block;margin:0 auto">';
+  pos.forEach((p,i)=>{
+    const miss=i===missIdx, hl=i===hlIdx;
+    s+='<rect x="'+p[0]+'" y="'+p[1]+'" width="76" height="44" rx="10" fill="'+(miss?'#fdf3dd':(hl?'#e2f7ee':'#e6f7f5'))+'" stroke="'+(miss?'#d9a83f':(hl?'#2fae82':CDEEP))+'" stroke-width="2.6"'+(miss?' stroke-dasharray="6 4"':'')+'/>';
+    s+='<text x="'+(p[0]+38)+'" y="'+(p[1]+29)+'" text-anchor="middle" font-size="19" font-weight="800" fill="'+(miss?'#a8781a':CINK)+'">'+(miss?'?':cells[i])+'</text>';
+  });
+  return s+'</svg>';
+}
+function starPts(cx,cy,R,r){
+  let p=[];
+  for(let i=0;i<10;i++){ const a=(-90+i*36)*Math.PI/180, rr=i%2?r:R; p.push((cx+rr*Math.cos(a)).toFixed(1)+","+(cy+rr*Math.sin(a)).toFixed(1)); }
+  return p.join(" ");
+}
+/* shape tile for pattern island; token: "shape-colorIdx" | "arr-rot" | "dots-n" */
+const SHAPE_COLS=["#0abab5","#ff8a7a","#f4c35d","#8f7ae0","#2fae82"];
+function shapeTile(tok, size){
+  size=size||64; const half=size/2;
+  let inner="";
+  const parts=tok.split("-");
+  if(parts[0]==="arr"){
+    const rot=+parts[1];
+    inner='<g transform="rotate('+rot+' 32 32)"><polygon points="32,8 50,34 38,34 38,54 26,54 26,34 14,34" fill="'+C1+'" stroke="'+CDEEP+'" stroke-width="2.5" stroke-linejoin="round"/></g>';
+  } else if(parts[0]==="dots"){
+    const n=+parts[1];
+    const posns=[[16,16],[32,16],[48,16],[16,32],[32,32],[48,32],[16,48],[32,48],[48,48],[24,60],[40,60],[32,60]];
+    for(let i=0;i<n && i<12;i++) inner+='<circle cx="'+posns[i][0]+'" cy="'+posns[i][1]+'" r="6" fill="'+C1+'" stroke="'+CDEEP+'" stroke-width="1.6"/>';
+  } else {
+    const c=SHAPE_COLS[+parts[1]]||C1, sh=parts[0];
+    if(sh==="circle") inner='<circle cx="32" cy="32" r="20" fill="'+c+'" stroke="'+CINK+'" stroke-width="2.2"/>';
+    else if(sh==="square") inner='<rect x="13" y="13" width="38" height="38" rx="6" fill="'+c+'" stroke="'+CINK+'" stroke-width="2.2"/>';
+    else if(sh==="triangle") inner='<polygon points="32,10 54,52 10,52" fill="'+c+'" stroke="'+CINK+'" stroke-width="2.2" stroke-linejoin="round"/>';
+    else if(sh==="star") inner='<polygon points="'+starPts(32,34,21,9)+'" fill="'+c+'" stroke="'+CINK+'" stroke-width="2" stroke-linejoin="round"/>';
+    else if(sh==="heart") inner='<path d="M32 52 C 12 38 8 24 16 16 C 22 10 30 13 32 20 C 34 13 42 10 48 16 C 56 24 52 38 32 52 Z" fill="'+c+'" stroke="'+CINK+'" stroke-width="2.2"/>';
+    else if(sh==="diamond") inner='<polygon points="32,8 54,32 32,56 10,32" fill="'+c+'" stroke="'+CINK+'" stroke-width="2.2" stroke-linejoin="round"/>';
+    else inner='<circle cx="32" cy="32" r="20" fill="'+c+'"/>';
+  }
+  return '<svg viewBox="0 0 64 64" style="width:'+size+'px;height:'+size+'px">'+inner+'</svg>';
+}
+function patternRow(toks, qMark){
+  let s='<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center">';
+  toks.forEach(t=>{
+    s+='<div style="background:#fff;border:2px solid var(--line);border-radius:12px;padding:4px">'+shapeTile(t,56)+'</div>';
+  });
+  if(qMark) s+='<div style="background:var(--sand);border:2px dashed #d9a83f;border-radius:12px;width:68px;height:68px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:var(--sandink)">?</div>';
+  return s+'</div>';
+}
+/* spatial motif tile: variant v rotated rot deg */
+function motifSVG(v, rot, size, missing){
+  size=size||70;
+  let inner="";
+  if(missing){
+    return '<svg viewBox="0 0 70 70" style="width:'+size+'px;height:'+size+'px"><rect x="3" y="3" width="64" height="64" rx="8" fill="#fdf3dd" stroke="#d9a83f" stroke-width="2.5" stroke-dasharray="7 5"/><text x="35" y="45" text-anchor="middle" font-size="26" font-weight="800" fill="#a8781a">?</text></svg>';
+  }
+  if(v===0){
+    inner='<path d="M 8 62 A 54 54 0 0 1 62 8 L 62 62 Z" fill="#81d8d0" stroke="'+CDEEP+'" stroke-width="2.4"/>'
+      +'<circle cx="22" cy="22" r="8" fill="'+C2+'" stroke="'+CINK+'" stroke-width="1.8"/>'
+      +'<polygon points="46,40 58,52 40,54" fill="'+C4+'" stroke="'+CINK+'" stroke-width="1.6"/>';
+  } else if(v===1){
+    inner='<polygon points="10,60 60,60 60,14" fill="#bfe9e4" stroke="'+CDEEP+'" stroke-width="2.4" stroke-linejoin="round"/>'
+      +'<circle cx="50" cy="48" r="7" fill="'+C1+'" stroke="'+CINK+'" stroke-width="1.8"/>'
+      +'<rect x="12" y="10" width="16" height="16" rx="3" fill="'+C2+'" stroke="'+CINK+'" stroke-width="1.6"/>';
+  } else {
+    inner='<path d="M 6 6 L 64 6 L 64 26 L 26 64 L 6 64 Z" fill="#d2f0ec" stroke="'+CDEEP+'" stroke-width="2.4" stroke-linejoin="round"/>'
+      +'<polygon points="'+starPts(46,46,12,5)+'" fill="'+C4+'" stroke="'+CINK+'" stroke-width="1.4"/>'
+      +'<circle cx="16" cy="20" r="6" fill="'+C2+'" stroke="'+CINK+'" stroke-width="1.6"/>';
+  }
+  return '<svg viewBox="0 0 70 70" style="width:'+size+'px;height:'+size+'px"><g transform="rotate('+rot+' 35 35)">'+inner+'</g></svg>';
+}
+/* 2x2 assembled picture; quadrant q rotated q*90; missQ shows ? */
+function mosaicSVG(v, missQ, done){
+  let s='<div style="display:grid;grid-template-columns:74px 74px;gap:3px;justify-content:center;background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px;width:max-content;margin:0 auto">';
+  for(let q=0;q<4;q++){
+    const rot=[0,90,270,180][q]; /* visual mandala arrangement: TL,TR,BL,BR */
+    if(q===missQ && !done) s+='<div>'+motifSVG(v,0,70,true)+'</div>';
+    else s+='<div>'+motifSVG(v,rot,70)+'</div>';
+  }
+  return s+'</div>';
+}
+/* sudoku read-only mini grid; vals: 16 (0=blank); opts {hl, giv} */
+function sudMini(vals, syms, o){
+  o=o||{};
+  let s='<div class="sudmini">';
+  for(let i=0;i<16;i++){
+    const r=Math.floor(i/4), c=i%4;
+    let cls="mc";
+    if(o.giv && o.giv[i]!==0) cls+=" giv";
+    else if(o.giv && vals[i]!==0) cls+=" new";
+    if(!o.giv && vals[i]!==0) cls+=" giv";
+    if(o.hl===i) cls+=" hl";
+    if(c===1) cls+=" mr"; if(r===1) cls+=" mb";
+    s+='<div class="'+cls+'">'+(vals[i]===0?"":syms[vals[i]-1])+'</div>';
+  }
+  return s+'</div>';
 }
 
 /* ============ option helper ============ */
@@ -268,39 +543,65 @@ function mkOpts(correct, wrongs, fmt){
   fmt = fmt || (x=>String(x));
   const ansS = fmt(correct);
   const set = new Set([ansS]); const out=[ansS];
-  for(const w of wrongs){ const s=fmt(w); if(!set.has(s)){ set.add(s); out.push(s);} if(out.length===4) break; }
+  for(const w of wrongs){ const s=fmt(w); if(!set.has(s) && out.length<4){ set.add(s); out.push(s);} }
   let i=1;
-  while(out.length<4 && i<40){
+  while(out.length<4 && i<80 && typeof correct==="number"){
     for(const c of [correct+i, correct-i]){
-      const s=fmt(c); if(out.length<4 && !set.has(s) && (typeof c!=="number" || c>0)){ set.add(s); out.push(s); }
+      const s=fmt(c); if(out.length<4 && !set.has(s) && c>0){ set.add(s); out.push(s); }
     }
     i++;
   }
-  return { opts: shuffle(out), ans: ansS };
+  const opts=shuffle(out);
+  return { opts:opts, ansIdx:opts.indexOf(ansS), ans:ansS };
 }
 
-/* ============ contexts ============ */
-const KIDS=["Ali","Meili","Siti","Raju","Ben","Jenny","Wei Ming","Devi"];
-const ITEMS=[["shells","🐚"],["starfish","⭐"],["fish","🐠"],["crabs","🦀"],["pearls","🫧"],["mangoes","🥭"],["stickers","🌟"],["seashell beads","📿"]];
+/* ============ contexts (variety!) ============ */
+const KIDS=["Ali","Meili","Siti","Raju","Ben","Jenny","Wei Ming","Devi","Nurul","Sam","Xiu Li","Arjun"];
+const ITEMS=[["shells","🐚"],["starfish","⭐"],["fish","🐠"],["crabs","🦀"],["pearls","🫧"],["mangoes","🥭"],["stickers","🌟"],["beads","📿"],["marbles","🔮"],["cookies","🍪"]];
+const PLACES=["at the beach","at the reef market","in the tide pools","at the aquarium","on Coral Island","at the sandcastle contest","during recess","at the funfair"];
+const SHOPS=[["toy dolphin","🐬"],["storybook","📖"],["hair clip","🎀"],["snack box","🍪"],["kite","🪁"],["pencil case","✏️"],["water bottle","🥤"],["sticker album","📒"],["beach ball","🏐"],["puzzle set","🧩"]];
+/* ==================================================================
+   MATH TOPIC GENERATORS — each topic has >=6 distinct templates.
+   Every question: stable id = topic:template:params, dbg for harness.
+   ================================================================== */
 
-/* ============ Topic generators ============ */
-function genNum(){
-  const sub=pick(["pv","cmp","pat"]);
+/* ---------- Numbers to 1000 ---------- */
+function genNum(d){
+  const sub=pick(["pv","digit","cmp","pat","moreless","expand"]);
   if(sub==="pv"){
-    let n; do{ n=ri(102,987); }while(new Set(String(n)).size<3);
-    const p=pick([0,1,2]); const d=+String(n)[p]; const val=d*Math.pow(10,2-p);
+    let n; do{ n=ri(102,987); }while(new Set(String(n)).size<3 || String(n).includes("0"));
+    const p=pick([0,1,2]); const dg=+String(n)[p]; const val=dg*Math.pow(10,2-p);
     const place=["hundreds","tens","ones"][p];
-    const o=mkOpts(val,[d, d*Math.pow(10,(2-p+1)%3), d*Math.pow(10,(2-p+2)%3), n-val]);
-    return { type:"mcq", short:true,
-      text:"In the number <b>"+n+"</b>, what is the <b>value</b> of the digit <b>"+d+"</b>?",
-      opts:o.opts, ans:o.ans,
-      model:"The digit "+d+" is in the "+place+" place, so its value is <b>"+val+"</b>.",
+    const o=mkOpts(val,[dg, dg*Math.pow(10,(2-p+1)%3), dg*Math.pow(10,(2-p+2)%3), n-val]);
+    return { id:qid("num","pv",[n,p]), type:"mcq", short:true,
+      text:"In the number <b>"+n+"</b>, what is the <b>value</b> of the digit <b>"+dg+"</b>?",
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+      model:"The digit "+dg+" is in the "+place+" place, so its value is <b>"+val+"</b>.",
       steps:[
-        {c:"Put "+n+" in a place-value chart. The digit "+d+" sits in the "+place+" place.", h:pvChart(n,p)},
-        {c:d+" "+place.slice(0,-1)+(d===1?"":"s")+" makes "+val+".", h:base10(val)},
-        {c:"So the value of the digit "+d+" is "+val+".", h:eq(d+" × "+Math.pow(10,2-p)+" = <b>"+val+"</b>")}
+        {c:"Put "+n+" in a place-value chart. The digit "+dg+" sits in the "+place+" place.", h:pvChart(n,p)},
+        {c:dg+" in the "+place+" place makes "+val+".", h:base10(val)},
+        {c:"So the value of the digit "+dg+" is "+val+".", h:eq(dg+" × "+Math.pow(10,2-p)+" = <b>"+val+"</b>")}
       ],
-      dbg:{expr:"d*Math.pow(10,2-p)", v:{d:d,p:p}, ans:val} };
+      dbg:{tpl:"pv", n:n, p:p} };
+  }
+  if(sub==="digit"){
+    let n; do{ n=ri(123,987); }while(new Set(String(n)).size<3 || String(n).includes("0"));
+    const p=pick([0,1,2]); const dg=+String(n)[p];
+    const place=["hundreds","tens","ones"][p];
+    const digits=String(n).split("").map(Number);
+    const wrong=[]; digits.forEach(x=>{ if(x!==dg) wrong.push(x); });
+    let extra=ri(1,9); while(digits.includes(extra)) extra=(extra%9)+1;
+    wrong.push(extra);
+    const o=mkOpts(dg,wrong);
+    return { id:qid("num","digit",[n,p]), type:"mcq", short:true,
+      text:"Which digit of <b>"+n+"</b> is in the <b>"+place+" place</b>?",
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+      model:"The digit in the "+place+" place of "+n+" is <b>"+dg+"</b>.",
+      steps:[
+        {c:"Write "+n+" in a place-value chart.", h:pvChart(n,p)},
+        {c:"Read the "+place+" column — it holds the digit "+dg+".", h:eq("The "+place+" digit of "+n+" is <b>"+dg+"</b>")}
+      ],
+      dbg:{tpl:"digit", n:n, p:p} };
   }
   if(sub==="cmp"){
     const h=ri(2,8);
@@ -310,117 +611,192 @@ function genNum(){
     const arr=shuffle([...nums]);
     const big=pick([true,false]);
     const ans=big?Math.max(...arr):Math.min(...arr);
-    return { type:"mcq", short:true,
-      text:"Which is the <b>"+(big?"greatest":"smallest")+"</b> number?<br><span style='color:#1a7ea8'>"+arr.join(" , ")+"</span>",
-      opts:shuffle(arr.map(String)), ans:String(ans),
+    const opts=shuffle(arr.map(String));
+    return { id:qid("num","cmp",arr.concat(big?1:0)), type:"mcq", short:true,
+      text:"Which is the <b>"+(big?"greatest":"smallest")+"</b> number?<br><span style='color:var(--deep)'>"+arr.join(" , ")+"</span>",
+      opts:opts, ansIdx:opts.indexOf(String(ans)), ans:String(ans),
       model:"The "+(big?"greatest":"smallest")+" number is <b>"+ans+"</b>.",
       steps:[
         {c:"Compare the hundreds digit first.", h:'<div class="chain">'+arr.map(x=>'<div class="chainbox"><b style="color:#ff8a7a">'+String(x)[0]+'</b>'+String(x).slice(1)+'</div>').join("")+'</div>'},
         {c:"If the hundreds are the same, compare the tens next.", h:'<div class="chain">'+arr.filter(x=>Math.floor(x/100)===Math.floor(ans/100)).map(x=>'<div class="chainbox">'+String(x)[0]+'<b style="color:#ff8a7a">'+String(x)[1]+'</b>'+String(x)[2]+'</div>').join("")+'</div>'},
         {c:"Line them up from smallest to greatest.", h:eq(arr.slice().sort((a,b)=>a-b).join(" &lt; "))}
       ],
-      dbg:{expr:big?"Math.max.apply(null,arr)":"Math.min.apply(null,arr)", v:{arr:arr}, ans:ans} };
+      dbg:{tpl:"cmp", arr:arr, big:big} };
   }
-  // pattern
-  const step=pick([2,3,5,10,25,50,100]) * pick([1,-1]);
-  let start = step>0 ? ri(3,Math.max(4,900-4*step)) : ri(4*(-step)+3, 950);
-  const seq=[0,1,2,3,4].map(i=>start+i*step);
-  const mi=pick([1,2,3]);
-  const ans=seq[mi];
-  const shown=seq.map((v,i)=>i===mi?"?":v);
-  return { type:"input", intOnly:true,
-    text:"What is the <b>missing number</b> in this pattern?",
-    qvis:chain(shown.flatMap((v,i)=>i===0?[{box:v,miss:v==="?"}]:[{arrow:""},{box:v,miss:v==="?"}])),
+  if(sub==="pat"){
+    const step=pick([2,3,5,10,25,50,100]) * pick([1,-1]);
+    let start = step>0 ? ri(3,Math.max(4,900-4*step)) : ri(4*(-step)+3, 950);
+    const seq=[0,1,2,3,4].map(i=>start+i*step);
+    const mi=pick([1,2,3]);
+    const ans=seq[mi];
+    const shown=seq.map((v,i)=>i===mi?"?":v);
+    return { id:qid("num","pat",[start,step,mi]), type:"input", intOnly:true,
+      text:"What is the <b>missing number</b> in this pattern?",
+      qvis:chain(shown.flatMap((v,i)=>i===0?[{box:v,miss:v==="?"}]:[{arrow:""},{box:v,miss:v==="?"}])),
+      ans:ans,
+      model:"The missing number is <b>"+ans+"</b>. The pattern "+(step>0?"adds":"subtracts")+" "+Math.abs(step)+" each time.",
+      steps:[
+        {c:"Find the jump between two numbers you can see.", h:eq(seq[mi===1?2:0]+" ➜ "+seq[mi===1?3:1]+" is a jump of <b>"+(step>0?"+":"−")+Math.abs(step)+"</b>")},
+        {c:"Use the same jump for every step.", h:chain(seq.flatMap((v,i)=>i===0?[{box:v}]:[{arrow:(step>0?"+":"−")+Math.abs(step)},{box:(i===mi?"?":v),miss:i===mi}]))},
+        {c:seq[mi-1]+" "+(step>0?"+":"−")+" "+Math.abs(step)+" = "+ans+".", h:chain(seq.flatMap((v,i)=>i===0?[{box:v}]:[{arrow:(step>0?"+":"−")+Math.abs(step)},{box:v,miss:i===mi}]))}
+      ],
+      dbg:{tpl:"pat", start:start, step:step, mi:mi} };
+  }
+  if(sub==="moreless"){
+    const delta=pick([10,-10,100,-100,1,-1]);
+    let n; do{ n=ri(115,880); }while(n+delta<1 || n+delta>999 || (delta===-10 && n%100<10) || (delta===-1 && n%10===0) || (delta===1 && n%10===9) || (delta===10 && n%100>=90));
+    const ans=n+delta;
+    const word=(Math.abs(delta))+" "+(delta>0?"more than":"less than");
+    return { id:qid("num","moreless",[n,delta]), type:"input", intOnly:true,
+      text:"What number is <b>"+word+" "+n+"</b>?",
+      ans:ans,
+      model:"<b>"+ans+"</b> is "+word+" "+n+".",
+      steps:[
+        {c:(delta>0?"Count on":"Count back")+" by "+Math.abs(delta)+" from "+n+".", h:chain([{box:n},{arrow:(delta>0?"+":"−")+Math.abs(delta)},{box:"?",miss:true}])},
+        {c:"Only the "+(Math.abs(delta)===100?"hundreds":Math.abs(delta)===10?"tens":"ones")+" digit changes"+(Math.abs(delta)===10&&(n%100>=90||n%100<10)?" (watch the regrouping!)":"")+".", h:eq(n+" "+(delta>0?"+":"−")+" "+Math.abs(delta)+" = <b>"+ans+"</b>")},
+        {c:"Check with blocks.", h:base10(ans, ans+" = "+Math.floor(ans/100)+" hundreds, "+Math.floor(ans%100/10)+" tens, "+(ans%10)+" ones")}
+      ],
+      dbg:{tpl:"moreless", n:n, delta:delta} };
+  }
+  const hh=ri(1,9), tt=ri(1,9), oo=ri(1,9);
+  const ans=hh*100+tt*10+oo;
+  return { id:qid("num","expand",[hh,tt,oo]), type:"input", intOnly:true,
+    text:"<b>"+(hh*100)+" + "+(tt*10)+" + "+oo+" = ?</b><br>What is the number?",
     ans:ans,
-    model:"The missing number is <b>"+ans+"</b>. The pattern "+(step>0?"adds":"subtracts")+" "+Math.abs(step)+" each time.",
+    model:(hh*100)+" + "+(tt*10)+" + "+oo+" = <b>"+ans+"</b>.",
     steps:[
-      {c:"Find the jump between two numbers you can see.", h:eq(seq[mi===1?2:0]+" ➜ "+seq[mi===1?3:1]+" is a jump of <b>"+(step>0?"+":"−")+Math.abs(step)+"</b>")},
-      {c:"Use the same jump for every step.", h:chain(seq.flatMap((v,i)=>i===0?[{box:v}]:[{arrow:(step>0?"+":"−")+Math.abs(step)},{box:(i===mi?"?":v),miss:i===mi}]))},
-      {c:seq[mi-1]+" "+(step>0?"+":"−")+" "+Math.abs(step)+" = "+ans+".", h:chain(seq.flatMap((v,i)=>i===0?[{box:v}]:[{arrow:(step>0?"+":"−")+Math.abs(step)},{box:v,miss:i===mi}]))}
+      {c:"Each part goes to its own place-value column.", h:pvChart(ans)},
+      {c:"Build it with blocks: "+hh+" hundreds, "+tt+" tens, "+oo+" ones.", h:base10(ans)},
+      {c:"Read the number: "+ans+".", h:eq((hh*100)+" + "+(tt*10)+" + "+oo+" = <b>"+ans+"</b>")}
     ],
-    dbg:{expr:"start+mi*step", v:{start:start,mi:mi,step:step}, ans:ans} };
+    dbg:{tpl:"expand", h:hh, t:tt, o:oo} };
 }
 
-function subBondSteps(T, C, itemName){
-  // optional make-a-round-number bond for T - C
+function subBondSteps(T, C){
   const x=T%100;
   if(x>0 && x<C && C-x>0){
     return [{c:"Number bond trick: split "+C+" into "+x+" and "+(C-x)+" to reach a nice round number.", h:bond(C,x,C-x)+eq(T+" − "+x+" = "+(T-x)+" , then "+(T-x)+" − "+(C-x)+" = <b>"+(T-C)+"</b>")}];
   }
   return [];
 }
-function genAddSub(){
-  const sub=pick(["addThenSub","subSub","compare"]);
-  const name=pick(KIDS), [item,em]=pick(ITEMS);
-  if(sub==="addThenSub"){
+
+/* ---------- Add & Subtract ---------- */
+function genAddSub(d){
+  const sub=pick(["addsub","subsub","moretotal","misspart","howmore","addthree"]);
+  const name=pick(KIDS), [item,em]=pick(ITEMS), place=pick(PLACES);
+  if(sub==="addsub"){
     let A,B; do{ A=ri(150,470); B=ri(126,380); }while((A%10)+(B%10)<10);
     const T=A+B; const Cc=ri(56,199); const ans=T-Cc;
-    return { type:"input", intOnly:true,
-      text:name+" had <b>"+A+"</b> "+item+" "+em+". "+name+" found <b>"+B+"</b> more at the beach, then gave <b>"+Cc+"</b> to a friend.<br>How many "+item+" does "+name+" have now?",
+    return { id:qid("addsub","addsub",[A,B,Cc]), type:"input", intOnly:true,
+      text:name+" had <b>"+A+"</b> "+item+" "+em+". "+name+" found <b>"+B+"</b> more "+place+", then gave <b>"+Cc+"</b> to a friend.<br>How many "+item+" does "+name+" have now?",
       ans:ans,
       model:name+" has <b>"+ans+"</b> "+item+" now.",
       steps:[
         {c:"Step 1: Draw a bar for what "+name+" had and found. Add them.", h:bm([{name:name, segs:[{v:A,t:A,c:C1},{v:B,t:B,c:C3}], brace:"? in total"}])},
         {c:A+" + "+B+" = "+T+". Watch the ones: "+(A%10)+" + "+(B%10)+" needs regrouping!", h:eq(A+" + "+B+" = <b>"+T+"</b>")},
         {c:"Step 2: "+name+" gave away "+Cc+". Cut it from the bar.", h:bm([{name:"Total", segs:[{v:ans,t:"?",q:1},{v:Cc,t:Cc,c:C2}], brace:T}])}
-      ].concat(subBondSteps(T,Cc,item)).concat([
+      ].concat(subBondSteps(T,Cc)).concat([
         {c:T+" − "+Cc+" = "+ans+".", h:eq(T+" − "+Cc+" = <b>"+ans+"</b>")}
       ]),
-      dbg:{expr:"A+B-C", v:{A:A,B:B,C:Cc}, ans:ans} };
+      dbg:{tpl:"addsub", A:A, B:B, C:Cc} };
   }
-  if(sub==="subSub"){
+  if(sub==="subsub"){
     const A=ri(520,930); const B=ri(128,300); const Cc=ri(115,Math.min(300,A-B-50));
     const ans=A-B-Cc;
-    return { type:"input", intOnly:true,
-      text:"A fish shop had <b>"+A+"</b> "+item+" "+em+". It sold <b>"+B+"</b> in the morning and <b>"+Cc+"</b> in the afternoon.<br>How many "+item+" were left?",
+    const shop=pick(["fish shop","gift stall","shell stand","snack kiosk"]);
+    return { id:qid("addsub","subsub",[A,B,Cc]), type:"input", intOnly:true,
+      text:"A "+shop+" had <b>"+A+"</b> "+item+" "+em+". It sold <b>"+B+"</b> in the morning and <b>"+Cc+"</b> in the afternoon.<br>How many "+item+" were left?",
       ans:ans,
       model:"There were <b>"+ans+"</b> "+item+" left.",
       steps:[
         {c:"Draw one bar for all "+A+". Cut off the two parts that were sold.", h:bm([{name:"Shop", segs:[{v:B,t:B,c:C2},{v:Cc,t:Cc,c:C4},{v:ans,t:"?",q:1}], brace:A}])},
         {c:"Step 1: Take away the morning sale.", h:eq(A+" − "+B+" = <b>"+(A-B)+"</b>")}
-      ].concat(subBondSteps(A-B,Cc,item)).concat([
+      ].concat(subBondSteps(A-B,Cc)).concat([
         {c:"Step 2: Take away the afternoon sale.", h:eq((A-B)+" − "+Cc+" = <b>"+ans+"</b>")}
       ]),
-      dbg:{expr:"A-B-C", v:{A:A,B:B,C:Cc}, ans:ans} };
+      dbg:{tpl:"subsub", A:A, B:B, C:Cc} };
   }
-  // compare
-  const A=ri(120,340), B=ri(45,180); const ans=2*A+B;
-  const name2=pick(KIDS.filter(k=>k!==name));
-  const o=mkOpts(ans,[A+B, 2*A, 2*(A+B)]);
-  return { type:"mcq", short:true,
-    text:name+" collected <b>"+A+"</b> "+item+" "+em+". "+name2+" collected <b>"+B+"</b> more "+item+" than "+name+".<br>How many "+item+" did they collect <b>altogether</b>?",
-    opts:o.opts, ans:o.ans,
-    model:"They collected <b>"+ans+"</b> "+item+" altogether.",
+  if(sub==="moretotal"){
+    const A=ri(120,340), B=ri(45,180); const ans=2*A+B;
+    const name2=pick(KIDS.filter(k=>k!==name));
+    const o=mkOpts(ans,[A+B, 2*A, 2*(A+B)]);
+    return { id:qid("addsub","moretotal",[A,B]), type:"mcq", short:true,
+      text:name+" collected <b>"+A+"</b> "+item+" "+em+" "+place+". "+name2+" collected <b>"+B+"</b> more "+item+" than "+name+".<br>How many "+item+" did they collect <b>altogether</b>?",
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+      model:"They collected <b>"+ans+"</b> "+item+" altogether.",
+      steps:[
+        {c:"Draw a bar for each child. "+name2+"'s bar is longer by "+B+".", h:bm([{name:name, segs:[{v:A,t:A,c:C1}]},{name:name2, segs:[{v:A,t:A,c:C1},{v:B,t:B,c:C2}]}])},
+        {c:"Step 1: Find "+name2+"'s number.", h:eq(A+" + "+B+" = <b>"+(A+B)+"</b>")},
+        {c:"Step 2: Add both children. Careful — not just "+A+" + "+B+"!", h:bm([{name:name, segs:[{v:A,t:A,c:C1}]},{name:name2, segs:[{v:A+B,t:A+B,c:C3}]},{name:"Total", segs:[{v:ans,t:"?",q:1}]}])+eq(A+" + "+(A+B)+" = <b>"+ans+"</b>")}
+      ],
+      dbg:{tpl:"moretotal", A:A, B:B} };
+  }
+  if(sub==="misspart"){
+    const T=ri(320,900), P=ri(130,T-130); const ans=T-P;
+    const pairs=[["boys","girls"],["red shells","white shells"],["big fish","small fish"],["chocolate cookies","vanilla cookies"]];
+    const pr=pick(pairs);
+    return { id:qid("addsub","misspart",[T,P]), type:"input", intOnly:true,
+      text:"There are <b>"+T+"</b> "+pr[0]+" and "+pr[1]+" altogether "+place+".<br><b>"+P+"</b> of them are "+pr[0]+". The rest are "+pr[1]+".<br>How many "+pr[1]+" are there?",
+      ans:ans,
+      model:"There are <b>"+ans+"</b> "+pr[1]+".",
+      steps:[
+        {c:"Whole = "+T+". One part = "+P+". The other part is hiding!", h:bm([{name:"Total", segs:[{v:P,t:P,c:C1},{v:ans,t:"?",q:1}], brace:T}])},
+        {c:"Part-whole bond: whole minus the known part.", h:bond(T,P,"?")},
+        {c:T+" − "+P+" = "+ans+".", h:eq(T+" − "+P+" = <b>"+ans+"</b>")}
+      ],
+      dbg:{tpl:"misspart", T:T, P:P} };
+  }
+  if(sub==="howmore"){
+    const A=ri(220,680), B=ri(105,A-80); const ans=A-B;
+    const name2=pick(KIDS.filter(k=>k!==name));
+    return { id:qid("addsub","howmore",[A,B]), type:"input", intOnly:true,
+      text:name+" has <b>"+A+"</b> "+item+" "+em+". "+name2+" has <b>"+B+"</b> "+item+".<br>How many <b>more</b> "+item+" does "+name+" have than "+name2+"?",
+      ans:ans,
+      model:name+" has <b>"+ans+"</b> more "+item+" than "+name2+".",
+      steps:[
+        {c:"Draw both bars and line them up. The extra piece is the answer.", h:bm([{name:name, segs:[{v:B,t:B,c:C1},{v:ans,t:"?",q:1}]},{name:name2, segs:[{v:B,t:B,c:C3}]}])},
+        {c:"'How many more' → subtract!", h:eq(A+" − "+B+" = <b>"+ans+"</b>")}
+      ].concat(subBondSteps(A,B)),
+      dbg:{tpl:"howmore", A:A, B:B} };
+  }
+  const A=ri(120,300), B=ri(120,300), Cc=ri(120,300); const ans=A+B+Cc;
+  const n2=pick(KIDS.filter(k=>k!==name)), n3=pick(KIDS.filter(k=>k!==name&&k!==n2));
+  return { id:qid("addsub","addthree",[A,B,Cc]), type:"input", intOnly:true,
+    text:name+", "+n2+" and "+n3+" collected "+item+" "+em+" "+place+".<br>"+name+" got <b>"+A+"</b>, "+n2+" got <b>"+B+"</b> and "+n3+" got <b>"+Cc+"</b>.<br>How many "+item+" did they collect in all?",
+    ans:ans,
+    model:"They collected <b>"+ans+"</b> "+item+" in all.",
     steps:[
-      {c:"Draw a bar for each child. "+name2+"'s bar is longer by "+B+".", h:bm([{name:name, segs:[{v:A,t:A,c:C1}]},{name:name2, segs:[{v:A,t:A,c:C1},{v:B,t:B,c:C2}]}])},
-      {c:"Step 1: Find "+name2+"'s number.", h:eq(A+" + "+B+" = <b>"+(A+B)+"</b>")},
-      {c:"Step 2: Add both children. Careful — not just "+A+" + "+B+"!", h:bm([{name:name, segs:[{v:A,t:A,c:C1}]},{name:name2, segs:[{v:A+B,t:A+B,c:C3}]},{name:"Total", segs:[{v:ans,t:"?",q:1}]}])+eq(A+" + "+(A+B)+" = <b>"+ans+"</b>")}
+      {c:"Three parts make one long bar.", h:bm([{name:"All", segs:[{v:A,t:A,c:C1},{v:B,t:B,c:C3},{v:Cc,t:Cc,c:C4}], brace:"?"}])},
+      {c:"Add two numbers first: "+A+" + "+B+" = "+(A+B)+".", h:eq(A+" + "+B+" = <b>"+(A+B)+"</b>")},
+      {c:"Then add the last one.", h:eq((A+B)+" + "+Cc+" = <b>"+ans+"</b>")}
     ],
-    dbg:{expr:"2*A+B", v:{A:A,B:B}, ans:ans} };
+    dbg:{tpl:"addthree", A:A, B:B, C:Cc} };
 }
 
-function genMulDiv(){
-  const sub=pick(["groups","share","twostep"]);
+/* ---------- Multiply & Divide ---------- */
+function genMulDiv(d){
+  const sub=pick(["groups","share","mulsub","array","quot","muladd"]);
   const [item,em]=pick(ITEMS.slice(0,6));
   const table=pick([2,3,4,5,10]);
+  const name=pick(KIDS);
   if(sub==="groups"){
     const g=ri(3,9); const ans=g*table;
     const o=mkOpts(ans,[g+table, ans+table, ans-table]);
-    return { type:"mcq", short:true,
-      text:"There are <b>"+g+"</b> rock pools. Each rock pool has <b>"+table+"</b> "+item+" "+em+".<br>How many "+item+" are there <b>altogether</b>?",
-      opts:o.opts, ans:o.ans,
+    const holder=pick(["rock pools","buckets","baskets","treasure chests","nets"]);
+    return { id:qid("muldiv","groups",[g,table]), type:"mcq", short:true,
+      text:"There are <b>"+g+"</b> "+holder+". Each has <b>"+table+"</b> "+item+" "+em+".<br>How many "+item+" are there <b>altogether</b>?",
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
       model:"There are <b>"+ans+"</b> "+item+" altogether.",
       steps:[
         {c:"Draw "+g+" equal groups of "+table+".", h:groups(g,table,em)},
         {c:g+" groups of "+table+" → multiply!", h:eq(g+" × "+table+" = <b>"+ans+"</b>")},
         {c:"Skip count to check: "+Array.from({length:g},(_,i)=>(i+1)*table).join(", ")+".", h:chain(Array.from({length:g},(_,i)=>({box:(i+1)*table})).flatMap((b,i)=>i===0?[b]:[{arrow:"+"+table},b]))}
       ],
-      dbg:{expr:"g*t", v:{g:g,t:table}, ans:ans} };
+      dbg:{tpl:"groups", g:g, t:table} };
   }
   if(sub==="share"){
     const g=pick([2,3,4,5]); const k=ri(3,9); const T=g*k;
-    const name=pick(KIDS);
-    return { type:"input", intOnly:true,
+    return { id:qid("muldiv","share",[T,g]), type:"input", intOnly:true,
       text:name+" shares <b>"+T+"</b> "+item+" "+em+" <b>equally</b> among <b>"+g+"</b> friends.<br>How many "+item+" does each friend get?",
       ans:k,
       model:"Each friend gets <b>"+k+"</b> "+item+".",
@@ -429,30 +805,71 @@ function genMulDiv(){
         {c:"Sharing equally → divide!", h:eq(T+" ÷ "+g+" = <b>"+k+"</b>")},
         {c:"Check by multiplying back.", h:eq(g+" × "+k+" = "+T+" ✓")}
       ],
-      dbg:{expr:"T/g", v:{T:T,g:g}, ans:k} };
+      dbg:{tpl:"share", T:T, g:g} };
   }
-  const g=ri(3,8); const T=g*table; const c=ri(2,Math.min(9,T-2)); const ans=T-c;
-  return { type:"input", intOnly:true,
-    text:"There are <b>"+g+"</b> buckets with <b>"+table+"</b> "+item+" "+em+" in each bucket. Then <b>"+c+"</b> "+item+" are taken away.<br>How many "+item+" are left?",
+  if(sub==="mulsub"){
+    const g=ri(3,8); const T=g*table; const c=ri(2,Math.min(9,T-2)); const ans=T-c;
+    return { id:qid("muldiv","mulsub",[g,table,c]), type:"input", intOnly:true,
+      text:"There are <b>"+g+"</b> buckets with <b>"+table+"</b> "+item+" "+em+" in each bucket. Then <b>"+c+"</b> "+item+" are taken away.<br>How many "+item+" are left?",
+      ans:ans,
+      model:"There are <b>"+ans+"</b> "+item+" left.",
+      steps:[
+        {c:"Step 1: Find the total in the buckets first.", h:groups(g,table,em)},
+        {c:g+" × "+table+" = "+T+".", h:eq(g+" × "+table+" = <b>"+T+"</b>")},
+        {c:"Step 2: Take away "+c+".", h:bm([{name:"Total", segs:[{v:ans,t:"?",q:1},{v:c,t:c,c:C2}], brace:T}])+eq(T+" − "+c+" = <b>"+ans+"</b>")}
+      ],
+      dbg:{tpl:"mulsub", g:g, t:table, c:c} };
+  }
+  if(sub==="array"){
+    const r=pick([2,3,4,5]); const c=ri(3,9); const ans=r*c;
+    return { id:qid("muldiv","array",[r,c]), type:"input", intOnly:true,
+      text:"The "+item+" "+em+" are arranged in <b>"+r+"</b> rows. Each row has <b>"+c+"</b> "+item+".<br>How many "+item+" are there in all?",
+      ans:ans,
+      qvis:'<div style="text-align:center;line-height:1.6;font-size:20px;letter-spacing:3px">'+Array.from({length:r},()=>em.repeat(c)).join("<br>")+'</div>',
+      model:"There are <b>"+ans+"</b> "+item+" in all.",
+      steps:[
+        {c:r+" rows of "+c+" — an array is just equal groups in neat lines!", h:groups(r,c,em)},
+        {c:"Multiply rows × columns.", h:eq(r+" × "+c+" = <b>"+ans+"</b>")},
+        {c:"Fun check: turn your head — "+c+" columns of "+r+" gives the same total!", h:eq(c+" × "+r+" = <b>"+ans+"</b> too ✓")}
+      ],
+      dbg:{tpl:"array", r:r, c:c} };
+  }
+  if(sub==="quot"){
+    const k=pick([2,3,4,5,10]); const q=ri(3,9); const T=k*q;
+    const holder=pick(["bags","jars","boxes","tanks"]);
+    return { id:qid("muldiv","quot",[T,k]), type:"input", intOnly:true,
+      text:name+" puts <b>"+T+"</b> "+item+" "+em+" into "+holder+" of <b>"+k+"</b>.<br>How many "+holder+" does "+name+" fill?",
+      ans:q,
+      model:name+" fills <b>"+q+"</b> "+holder+".",
+      steps:[
+        {c:"Make groups of "+k+" until all "+T+" are used up.", h:groups(q,k,em)},
+        {c:"'How many groups of "+k+" in "+T+"' → divide!", h:eq(T+" ÷ "+k+" = <b>"+q+"</b>")},
+        {c:"Check: "+q+" "+holder+" × "+k+" each = "+T+" ✓", h:eq(q+" × "+k+" = "+T+" ✓")}
+      ],
+      dbg:{tpl:"quot", T:T, k:k} };
+  }
+  const g=ri(3,8); const e=ri(2,9); const T=g*table; const ans=T+e;
+  return { id:qid("muldiv","muladd",[g,table,e]), type:"input", intOnly:true,
+    text:"There are <b>"+g+"</b> nets with <b>"+table+"</b> "+item+" "+em+" in each net, and <b>"+e+"</b> more "+item+" outside.<br>How many "+item+" are there altogether?",
     ans:ans,
-    model:"There are <b>"+ans+"</b> "+item+" left.",
+    model:"There are <b>"+ans+"</b> "+item+" altogether.",
     steps:[
-      {c:"Step 1: Find the total in the buckets first.", h:groups(g,table,em)},
-      {c:g+" × "+table+" = "+T+".", h:eq(g+" × "+table+" = <b>"+T+"</b>")},
-      {c:"Step 2: Take away "+c+".", h:bm([{name:"Total", segs:[{v:ans,t:"?",q:1},{v:c,t:c,c:C2}], brace:T}])+eq(T+" − "+c+" = <b>"+ans+"</b>")}
+      {c:"Step 1: Multiply to find the "+item+" in the nets.", h:groups(g,table,em)+eq(g+" × "+table+" = <b>"+T+"</b>")},
+      {c:"Step 2: Add the ones outside.", h:bm([{name:"All", segs:[{v:T,t:T,c:C1},{v:e,t:e,c:C3}], brace:"?"}])},
+      {c:T+" + "+e+" = "+ans+".", h:eq(T+" + "+e+" = <b>"+ans+"</b>")}
     ],
-    dbg:{expr:"g*t-c", v:{g:g,t:table,c:c}, ans:ans} };
+    dbg:{tpl:"muladd", g:g, t:table, e:e} };
 }
 
-function genMoney(){
-  const sub=pick(["add","change","two"]);
+/* ---------- Money ---------- */
+function genMoney(d){
+  const sub=pick(["add","change","two","diff","save","notes"]);
   const name=pick(KIDS);
-  const things=[["toy dolphin","🐬"],["storybook","📖"],["hair clip","🎀"],["snack","🍪"],["kite","🪁"],["pencil case","✏️"]];
   if(sub==="add"){
-    const [t1]=pick(things); let t2; do{ t2=pick(things)[0]; }while(t2===t1);
+    const [t1]=pick(SHOPS); let t2; do{ t2=pick(SHOPS)[0]; }while(t2===t1);
     let p1,p2; do{ p1=ri(25,179)*5; p2=ri(25,179)*5; }while((p1%100)+(p2%100)<100);
-    const ans=(p1+p2);
-    return { type:"input", money:true,
+    const ans=p1+p2;
+    return { id:qid("money","add",[p1,p2]), type:"input", money:true,
       text:name+" buys a "+t1+" for <b>"+fmtMoney(p1)+"</b> and a "+t2+" for <b>"+fmtMoney(p2)+"</b>.<br>How much does "+name+" pay <b>altogether</b>? (e.g. 7.45)",
       ans:ans/100,
       model:name+" pays <b>"+fmtMoney(ans)+"</b> altogether.",
@@ -461,13 +878,13 @@ function genMoney(){
         {c:"Add the cents first: "+(p1%100)+"¢ + "+(p2%100)+"¢ = "+(p1%100+p2%100)+"¢ = $1 and "+((p1%100+p2%100)-100)+"¢.", h:eq((p1%100)+"¢ + "+(p2%100)+"¢ = <b>"+(p1%100+p2%100)+"¢</b>")},
         {c:"Then add the dollars, plus the extra $1 from the cents.", h:eq(fmtMoney(p1)+" + "+fmtMoney(p2)+" = <b>"+fmtMoney(ans)+"</b>")}
       ],
-      dbg:{expr:"(p1+p2)/100", v:{p1:p1,p2:p2}, ans:ans/100} };
+      dbg:{tpl:"add", p1:p1, p2:p2} };
   }
   if(sub==="change"){
     const cost=ri(25,179)*5; const pay=cost<500?pick([500,1000]):(cost<1000?1000:2000);
     const ans=pay-cost;
-    return { type:"input", money:true,
-      text:name+" buys a "+pick(things)[0]+" for <b>"+fmtMoney(cost)+"</b> and pays with a <b>"+fmtMoney(pay)+"</b> note.<br>How much <b>change</b> does "+name+" get? (e.g. 3.15)",
+    return { id:qid("money","change",[cost,pay]), type:"input", money:true,
+      text:name+" buys a "+pick(SHOPS)[0]+" for <b>"+fmtMoney(cost)+"</b> and pays with a <b>"+fmtMoney(pay)+"</b> note.<br>How much <b>change</b> does "+name+" get? (e.g. 3.15)",
       ans:ans/100,
       model:name+" gets <b>"+fmtMoney(ans)+"</b> change.",
       steps:[
@@ -475,83 +892,187 @@ function genMoney(){
         {c:"Count on from "+fmtMoney(cost)+" to the next dollar, then up to "+fmtMoney(pay)+".", h:chain([{box:fmtMoney(cost)},{arrow:"+"+((100-cost%100)%100)+"¢"},{box:fmtMoney(cost+((100-cost%100)%100))},{arrow:"+"+fmtMoney(pay-cost-((100-cost%100)%100))},{box:fmtMoney(pay)}])},
         {c:fmtMoney(pay)+" − "+fmtMoney(cost)+" = "+fmtMoney(ans)+".", h:eq(fmtMoney(pay)+" − "+fmtMoney(cost)+" = <b>"+fmtMoney(ans)+"</b>")}
       ],
-      dbg:{expr:"(pay-cost)/100", v:{pay:pay,cost:cost}, ans:ans/100} };
+      dbg:{tpl:"change", cost:cost, pay:pay} };
   }
-  const p1=ri(21,90)*5, p2=ri(21,90)*5; const pay=(p1+p2)<800?1000:2000; const ans=pay-p1-p2;
-  const [t1]=pick(things); let t2; do{ t2=pick(things)[0]; }while(t2===t1);
-  return { type:"input", money:true,
-    text:name+" buys a "+t1+" for <b>"+fmtMoney(p1)+"</b> and a "+t2+" for <b>"+fmtMoney(p2)+"</b>. "+name+" pays with a <b>"+fmtMoney(pay)+"</b> note.<br>How much <b>change</b> does "+name+" get? (e.g. 2.30)",
+  if(sub==="two"){
+    const p1=ri(21,90)*5, p2=ri(21,90)*5; const pay=(p1+p2)<800?1000:2000; const ans=pay-p1-p2;
+    const [t1]=pick(SHOPS); let t2; do{ t2=pick(SHOPS)[0]; }while(t2===t1);
+    return { id:qid("money","two",[p1,p2,pay]), type:"input", money:true,
+      text:name+" buys a "+t1+" for <b>"+fmtMoney(p1)+"</b> and a "+t2+" for <b>"+fmtMoney(p2)+"</b>. "+name+" pays with a <b>"+fmtMoney(pay)+"</b> note.<br>How much <b>change</b> does "+name+" get? (e.g. 2.30)",
+      ans:ans/100,
+      model:name+" gets <b>"+fmtMoney(ans)+"</b> change.",
+      steps:[
+        {c:"Step 1: Add the two prices.", h:bm([{name:"Cost", segs:[{v:p1,t:fmtMoney(p1),c:C1},{v:p2,t:fmtMoney(p2),c:C3}], brace:"?"}])+eq(fmtMoney(p1)+" + "+fmtMoney(p2)+" = <b>"+fmtMoney(p1+p2)+"</b>")},
+        {c:"Step 2: The change is what is left from the note.", h:bm([{name:"Paid", segs:[{v:p1+p2,t:fmtMoney(p1+p2),c:C2},{v:ans,t:"?",q:1}], brace:fmtMoney(pay)}])},
+        {c:fmtMoney(pay)+" − "+fmtMoney(p1+p2)+" = "+fmtMoney(ans)+".", h:eq(fmtMoney(pay)+" − "+fmtMoney(p1+p2)+" = <b>"+fmtMoney(ans)+"</b>")}
+      ],
+      dbg:{tpl:"two", p1:p1, p2:p2, pay:pay} };
+  }
+  if(sub==="diff"){
+    let p1,p2; do{ p1=ri(30,190)*5; p2=ri(21,150)*5; }while(p1-p2<60);
+    const ans=p1-p2;
+    const [t1,e1]=pick(SHOPS); let t2pair; do{ t2pair=pick(SHOPS); }while(t2pair[0]===t1);
+    return { id:qid("money","diff",[p1,p2]), type:"input", money:true,
+      text:"A "+t1+" "+e1+" costs <b>"+fmtMoney(p1)+"</b>. A "+t2pair[0]+" "+t2pair[1]+" costs <b>"+fmtMoney(p2)+"</b>.<br>How much <b>more</b> does the "+t1+" cost? (e.g. 1.25)",
+      ans:ans/100,
+      model:"The "+t1+" costs <b>"+fmtMoney(ans)+"</b> more.",
+      steps:[
+        {c:"Compare the two price bars — the extra piece is the difference.", h:bm([{name:t1, segs:[{v:p2,t:fmtMoney(p2),c:C1},{v:ans,t:"?",q:1}]},{name:t2pair[0], segs:[{v:p2,t:fmtMoney(p2),c:C3}]}])},
+        {c:"'How much more' → subtract!", h:eq(fmtMoney(p1)+" − "+fmtMoney(p2)+" = <b>"+fmtMoney(ans)+"</b>")}
+      ],
+      dbg:{tpl:"diff", p1:p1, p2:p2} };
+  }
+  if(sub==="save"){
+    const cost=ri(60,190)*10; const have=ri(2,Math.floor(cost/10)-2)*10;
+    const ans=cost-have;
+    const [t1,e1]=pick(SHOPS);
+    return { id:qid("money","save",[have,cost]), type:"input", money:true,
+      text:name+" has saved <b>"+fmtMoney(have)+"</b>. A "+t1+" "+e1+" costs <b>"+fmtMoney(cost)+"</b>.<br>How much <b>more</b> must "+name+" save to buy it? (e.g. 4.60)",
+      ans:ans/100,
+      model:name+" needs <b>"+fmtMoney(ans)+"</b> more.",
+      steps:[
+        {c:"The price is the whole. The savings are one part.", h:bm([{name:"Price", segs:[{v:have,t:fmtMoney(have),c:C1},{v:ans,t:"?",q:1}], brace:fmtMoney(cost)}])},
+        {c:"Missing part → subtract.", h:eq(fmtMoney(cost)+" − "+fmtMoney(have)+" = <b>"+fmtMoney(ans)+"</b>")},
+        {c:"Check by adding back: "+fmtMoney(have)+" + "+fmtMoney(ans)+" = "+fmtMoney(cost)+" ✓", h:eq(fmtMoney(have)+" + "+fmtMoney(ans)+" = "+fmtMoney(cost)+" ✓")}
+      ],
+      dbg:{tpl:"save", have:have, cost:cost} };
+  }
+  const a=ri(2,5), b=ri(1,5); const ans=200*a+50*b;
+  return { id:qid("money","notes",[a,b]), type:"input", money:true,
+    text:name+" has <b>"+a+"</b> two-dollar notes 💵 and <b>"+b+"</b> fifty-cent coins 🪙.<br>How much money is that altogether? (e.g. 6.50)",
     ans:ans/100,
-    model:name+" gets <b>"+fmtMoney(ans)+"</b> change.",
+    model:name+" has <b>"+fmtMoney(ans)+"</b> altogether.",
     steps:[
-      {c:"Step 1: Add the two prices.", h:bm([{name:"Cost", segs:[{v:p1,t:fmtMoney(p1),c:C1},{v:p2,t:fmtMoney(p2),c:C3}], brace:"?"}])+eq(fmtMoney(p1)+" + "+fmtMoney(p2)+" = <b>"+fmtMoney(p1+p2)+"</b>")},
-      {c:"Step 2: The change is what is left from the note.", h:bm([{name:"Paid", segs:[{v:p1+p2,t:fmtMoney(p1+p2),c:C2},{v:ans,t:"?",q:1}], brace:fmtMoney(pay)}])},
-      {c:fmtMoney(pay)+" − "+fmtMoney(p1+p2)+" = "+fmtMoney(ans)+".", h:eq(fmtMoney(pay)+" − "+fmtMoney(p1+p2)+" = <b>"+fmtMoney(ans)+"</b>")}
+      {c:"Count the notes: "+a+" × $2 = "+fmtMoney(200*a)+".", h:eq(a+" × $2 = <b>"+fmtMoney(200*a)+"</b>")},
+      {c:"Count the coins: "+b+" × 50¢ = "+fmtMoney(50*b)+".", h:eq(b+" × 50¢ = <b>"+fmtMoney(50*b)+"</b>")},
+      {c:"Add them together.", h:eq(fmtMoney(200*a)+" + "+fmtMoney(50*b)+" = <b>"+fmtMoney(ans)+"</b>")}
     ],
-    dbg:{expr:"(pay-p1-p2)/100", v:{pay:pay,p1:p1,p2:p2}, ans:ans/100} };
+    dbg:{tpl:"notes", a:a, b:b} };
 }
 
-function genTime(){
-  const sub=pick(["read","end","dur"]);
+/* ---------- Time ---------- */
+function genTime(d){
+  const sub=pick(["read","end","dur","startT","name","later"]);
+  const ACTS=["swimming class","art lesson","piano practice","a movie about the sea","reading time","kite flying","a puppet show"];
   if(sub==="read"){
     const h=ri(1,12), m=ri(0,11)*5; const mins=(h%12)*60+m;
     const wrongs=[];
-    if(m>=5 && m<=60 && m/5>=1 && m/5<=12) wrongs.push((m/5)%12*60 + (h*5)%60); // swapped hands
+    if(m>=5 && m<=60 && m/5>=1 && m/5<=12) wrongs.push((m/5)%12*60 + (h*5)%60);
     wrongs.push(mins+5, mins-5, mins+60);
     const o=mkOpts(mins, wrongs, fmtTime);
-    return { type:"mcq", short:true,
+    return { id:qid("time","read",[h,m]), type:"mcq", short:true,
       text:"What time does this clock show?",
       qvis:clockSVG(h,m),
-      opts:o.opts, ans:o.ans,
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
       model:"The time is <b>"+fmtTime(mins)+"</b>.",
       steps:[
-        {c:"The short blue hand is the hour hand. It points "+(m>=30?"between "+h+" and "+(h%12+1):"at or just past "+h)+" → the hour is "+h+".", h:clockSVG(h,m,120)},
+        {c:"The short teal hand is the hour hand. It points "+(m>=30?"between "+h+" and "+(h%12+1):"at or just past "+h)+" → the hour is "+h+".", h:clockSVG(h,m,120)},
         {c:"The long coral hand is the minute hand. Count by 5s: it points at "+(m===0?12:m/5)+" → "+m+" minutes.", h:eq((m===0?12:m/5)+" × 5 = <b>"+m+"</b> minutes")},
         {c:"Put them together.", h:eq("The time is <b>"+fmtTime(mins)+"</b>")}
       ],
-      dbg:{expr:"(h%12)*60+m", v:{h:h,m:m}, ans:mins} };
+      dbg:{tpl:"read", h:h, m:m} };
   }
   if(sub==="end"){
     const h=ri(1,10), m=ri(0,11)*5; const start=(h%12)*60+m;
     const dur=ri(4,11)*5; const end=start+dur;
-    const acts=["swimming class","art lesson","piano practice","a movie about the sea","reading time"];
     const o=mkOpts(end, [end+5, end-5, start+60, end+10], fmtTime);
     const toHour=(60-m)%60;
     const chainSteps = toHour>0 && dur>toHour
       ? chain([{box:fmtTime(start)},{arrow:"+"+toHour+" min"},{box:fmtTime(start+toHour)},{arrow:"+"+(dur-toHour)+" min"},{box:fmtTime(end),miss:true}])
       : chain([{box:fmtTime(start)},{arrow:"+"+dur+" min"},{box:fmtTime(end),miss:true}]);
-    return { type:"mcq", short:true,
-      text:pick(acts).replace(/^./,c=>c.toUpperCase())+" starts at <b>"+fmtTime(start)+"</b> and lasts <b>"+dur+" minutes</b>.<br>What time does it end?",
-      opts:o.opts, ans:o.ans,
+    return { id:qid("time","end",[h,m,dur]), type:"mcq", short:true,
+      text:pick(ACTS).replace(/^./,c=>c.toUpperCase())+" starts at <b>"+fmtTime(start)+"</b> and lasts <b>"+dur+" minutes</b>.<br>What time does it end?",
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
       model:"It ends at <b>"+fmtTime(end)+"</b>.",
       steps:[
         {c:"Start at "+fmtTime(start)+" and jump forward "+dur+" minutes on a time line.", h:chainSteps},
-        {c:"Check on the clock: the minute hand moves "+(dur/5)+" numbers around.", h:'<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'+clockSVG(h,m,110)+clockSVG(Math.floor(end/60)===0?12:Math.floor(end/60),end%60,110)+'</div>'},
+        {c:"Check on the clock: the minute hand moves "+(dur/5)+" numbers around.", h:'<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'+clockSVG(h,m,110)+clockSVG(Math.floor((end%720)/60)===0?12:Math.floor((end%720)/60),end%60,110)+'</div>'},
         {c:fmtTime(start)+" + "+dur+" min = "+fmtTime(end)+".", h:eq(fmtTime(start)+" + "+dur+" min = <b>"+fmtTime(end)+"</b>")}
       ],
-      dbg:{expr:"(h%12)*60+m+dur", v:{h:h,m:m,dur:dur}, ans:end} };
+      dbg:{tpl:"end", h:h, m:m, dur:dur} };
   }
-  const h=ri(1,10), m=ri(0,11)*5; const start=(h%12)*60+m;
-  const dur=ri(4,12)*5; const end=start+dur;
-  return { type:"input", intOnly:true,
-    text:"A dolphin show starts at <b>"+fmtTime(start)+"</b> and ends at <b>"+fmtTime(end)+"</b>.<br>How long is the show, in <b>minutes</b>?",
-    ans:dur,
-    model:"The show is <b>"+dur+" minutes</b> long.",
+  if(sub==="dur"){
+    const h=ri(1,10), m=ri(0,11)*5; const start=(h%12)*60+m;
+    const dur=ri(4,12)*5; const end=start+dur;
+    return { id:qid("time","dur",[h,m,dur]), type:"input", intOnly:true,
+      text:"A dolphin show starts at <b>"+fmtTime(start)+"</b> and ends at <b>"+fmtTime(end)+"</b>.<br>How long is the show, in <b>minutes</b>?",
+      ans:dur,
+      model:"The show is <b>"+dur+" minutes</b> long.",
+      steps:[
+        {c:"Jump from the start time to the end time in easy hops.", h:(()=>{const toHour=(60-m)%60; return toHour>0&&dur>toHour?chain([{box:fmtTime(start)},{arrow:"+"+toHour+" min"},{box:fmtTime(start+toHour)},{arrow:"+"+(dur-toHour)+" min"},{box:fmtTime(end)}]):chain([{box:fmtTime(start)},{arrow:"+"+dur+" min"},{box:fmtTime(end)}]);})()},
+        {c:"Add up the hops.", h:eq((()=>{const toHour=(60-m)%60; return toHour>0&&dur>toHour?toHour+" + "+(dur-toHour)+" = <b>"+dur+"</b> minutes":"<b>"+dur+"</b> minutes";})())},
+        {c:"The minute hand moved "+(dur/5)+" numbers → "+(dur/5)+" × 5 = "+dur+" minutes.", h:eq((dur/5)+" × 5 = <b>"+dur+"</b>")}
+      ],
+      dbg:{tpl:"dur", start:start, end:end} };
+  }
+  if(sub==="startT"){
+    const h=ri(2,10), m=ri(0,11)*5; const start=(h%12)*60+m;
+    const dur=ri(4,11)*5; const end=start+dur;
+    const o=mkOpts(start, [start+5, start-5, end, start-60], fmtTime);
+    return { id:qid("time","startT",[h,m,dur]), type:"mcq", short:true,
+      text:pick(ACTS).replace(/^./,c=>c.toUpperCase())+" <b>ends</b> at <b>"+fmtTime(end)+"</b>. It lasted <b>"+dur+" minutes</b>.<br>What time did it <b>start</b>?",
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+      model:"It started at <b>"+fmtTime(start)+"</b>.",
+      steps:[
+        {c:"This time we jump BACKWARDS from the end.", h:chain([{box:"?",miss:true},{arrow:"+"+dur+" min"},{box:fmtTime(end)}])},
+        {c:"Go back "+dur+" minutes from "+fmtTime(end)+".", h:chain([{box:fmtTime(end)},{arrow:"−"+dur+" min"},{box:fmtTime(start),miss:true}])},
+        {c:"Check forward: "+fmtTime(start)+" + "+dur+" min = "+fmtTime(end)+" ✓", h:eq(fmtTime(start)+" + "+dur+" = "+fmtTime(end)+" ✓")}
+      ],
+      dbg:{tpl:"startT", endMins:end, dur:dur} };
+  }
+  if(sub==="name"){
+    const h=ri(1,12), m=pick([0,30]);
+    const ansS = m===0 ? h+" o'clock" : "half past "+h;
+    const prevH = h===1?12:h-1, nextH = h===12?1:h+1;
+    const wrongs = m===0 ? ["half past "+h, prevH+" o'clock", "half past "+prevH] : [h+" o'clock", "half past "+nextH, nextH+" o'clock"];
+    const opts=shuffle([ansS].concat(wrongs));
+    return { id:qid("time","name",[h,m]), type:"mcq", short:true,
+      text:"How do we <b>say</b> this time?",
+      qvis:clockSVG(h,m),
+      opts:opts, ansIdx:opts.indexOf(ansS), ans:ansS,
+      model:"We say <b>"+ansS+"</b>."+(m===30?" The minute hand is at 6 — half the clock!":" The minute hand points straight up at 12."),
+      steps:[
+        {c:m===0?"The minute hand points to 12 → something o'clock.":"The minute hand points to 6 → half past something.", h:clockSVG(h,m,120)},
+        {c:"The hour hand tells us which hour: "+h+".", h:eq("<b>"+ansS+"</b>")}
+      ],
+      dbg:{tpl:"name", h:h, m:m} };
+  }
+  const h=ri(1,11), m=ri(0,11)*5; const start=(h%12)*60+m;
+  const add=pick([15,20,25,30,35,40]);
+  const o=mkOpts(start+add, [start+add+5, start+add-5, start+60, start+add+10], fmtTime);
+  return { id:qid("time","later",[h,m,add]), type:"mcq", short:true,
+    text:"Look at the clock. What time will it be <b>"+add+" minutes later</b>?",
+    qvis:clockSVG(h,m),
+    opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+    model:"It will be <b>"+fmtTime(start+add)+"</b>.",
     steps:[
-      {c:"Jump from the start time to the end time in easy hops.", h:(()=>{const toHour=(60-m)%60; return toHour>0&&dur>toHour?chain([{box:fmtTime(start)},{arrow:"+"+toHour+" min"},{box:fmtTime(start+toHour)},{arrow:"+"+(dur-toHour)+" min"},{box:fmtTime(end)}]):chain([{box:fmtTime(start)},{arrow:"+"+dur+" min"},{box:fmtTime(end)}]);})()},
-      {c:"Add up the hops.", h:eq((()=>{const toHour=(60-m)%60; return toHour>0&&dur>toHour?toHour+" + "+(dur-toHour)+" = <b>"+dur+"</b> minutes":"<b>"+dur+"</b> minutes";})())},
-      {c:"The minute hand moved "+(dur/5)+" numbers → "+(dur/5)+" × 5 = "+dur+" minutes.", h:eq((dur/5)+" × 5 = <b>"+dur+"</b>")}
+      {c:"The clock shows "+fmtTime(start)+".", h:clockSVG(h,m,110)},
+      {c:"Jump forward "+add+" minutes.", h:chain([{box:fmtTime(start)},{arrow:"+"+add+" min"},{box:fmtTime(start+add),miss:true}])},
+      {c:fmtTime(start)+" + "+add+" min = "+fmtTime(start+add)+".", h:eq(fmtTime(start)+" + "+add+" = <b>"+fmtTime(start+add)+"</b>")}
     ],
-    dbg:{expr:"dur", v:{dur:dur}, ans:dur} };
+    dbg:{tpl:"later", start:start, add:add} };
 }
 
-function genMeasure(){
-  const sub=pick(["len","mass","vol"]);
-  if(sub==="len"){
+/* ---------- Length · Mass · Volume ---------- */
+const UNITQ=[
+  ["the mass of a big sea turtle","kg"],
+  ["the mass of one seashell","g"],
+  ["the length of a pencil","cm"],
+  ["the length of a swimming pool","m"],
+  ["the water in a fish tank","ℓ"],
+  ["the mass of a school bag","kg"],
+  ["the length of a ladybug","cm"],
+  ["the water in a big pail","ℓ"],
+  ["the length of a bus","m"],
+  ["the mass of a strawberry","g"]
+];
+function genMeasure(d){
+  const sub=pick(["lendiff","lentotal","mass","vol","unit","cmp3"]);
+  if(sub==="lendiff"){
     const m1=ri(2,4), c1=ri(1,19)*5;
     const m2=ri(1,m1-1), c2=ri(1,19)*5;
     const A=m1*100+c1, B=m2*100+c2, ans=A-B;
-    return { type:"input", intOnly:true,
+    return { id:qid("measure","lendiff",[m1,c1,m2,c2]), type:"input", intOnly:true,
       text:"Rope A is <b>"+m1+" m "+c1+" cm</b> long. Rope B is <b>"+m2+" m "+c2+" cm</b> long.<br>How much <b>longer</b> is Rope A than Rope B? (answer in cm)",
       ans:ans,
       model:"Rope A is <b>"+ans+" cm</b> longer than Rope B.",
@@ -560,13 +1081,26 @@ function genMeasure(){
         {c:"Draw the two ropes as bars. The difference is the extra piece.", h:bm([{name:"Rope A", segs:[{v:B,t:B+" cm",c:C1},{v:ans,t:"?",q:1}]},{name:"Rope B", segs:[{v:B,t:B+" cm",c:C3}]}])},
         {c:A+" − "+B+" = "+ans+".", h:eq(A+" − "+B+" = <b>"+ans+"</b> cm")}
       ],
-      dbg:{expr:"(m1*100+c1)-(m2*100+c2)", v:{m1:m1,c1:c1,m2:m2,c2:c2}, ans:ans} };
+      dbg:{tpl:"lendiff", m1:m1, c1:c1, m2:m2, c2:c2} };
+  }
+  if(sub==="lentotal"){
+    const a=ri(45,180), b=ri(38,160); const ans=a+b;
+    const things=pick([["ribbon","🎀"],["seaweed strip","🌿"],["paper chain","🔗"],["string","🧵"]]);
+    return { id:qid("measure","lentotal",[a,b]), type:"input", intOnly:true,
+      text:"One "+things[0]+" "+things[1]+" is <b>"+a+" cm</b> long. Another is <b>"+b+" cm</b> long. They are tied end to end.<br>How long are they <b>altogether</b>, in cm?",
+      ans:ans,
+      model:"Together they are <b>"+ans+" cm</b> long.",
+      steps:[
+        {c:"End to end means the bars join into one long bar.", h:bm([{name:"Total", segs:[{v:a,t:a+" cm",c:C1},{v:b,t:b+" cm",c:C3}], brace:"?"}])},
+        {c:a+" + "+b+" = "+ans+".", h:eq(a+" + "+b+" = <b>"+ans+"</b> cm")}
+      ],
+      dbg:{tpl:"lentotal", a:a, b:b} };
   }
   if(sub==="mass"){
-    let A,B; do{ A=ri(320,950); B=ri(150,A-100); }while((A%10)>= (B%10));
+    let A,B; do{ A=ri(320,950); B=ri(150,A-100); }while((A%10)>=(B%10));
     const total=pick([true,false]);
     const ans= total? A+B : A-B;
-    return { type:"input", intOnly:true,
+    return { id:qid("measure","mass",[A,B,total?1:0]), type:"input", intOnly:true,
       text:"A crab has a mass of <b>"+A+" g</b> 🦀. A starfish has a mass of <b>"+B+" g</b> ⭐.<br>"+(total?"What is their <b>total</b> mass, in grams?":"How much <b>heavier</b> is the crab than the starfish, in grams?"),
       ans:ans,
       model: total? "Their total mass is <b>"+ans+" g</b>." : "The crab is <b>"+ans+" g</b> heavier than the starfish.",
@@ -577,137 +1111,582 @@ function genMeasure(){
         {c: total? "Add the two masses." : "Subtract to find the difference — mind the regrouping!", h:eq(A+(total?" + ":" − ")+B+" = <b>"+ans+"</b> g")},
         {c:"Say the answer with its unit: grams (g).", h:eq("<b>"+ans+" g</b>")}
       ],
-      dbg:{expr: total? "A+B":"A-B", v:{A:A,B:B}, ans:ans} };
+      dbg:{tpl:"mass", A:A, B:B, total:total} };
   }
-  const A=ri(24,60), B=ri(6,15), Cc=ri(5,18); const ans=A-B+Cc;
-  return { type:"input", intOnly:true,
-    text:"A fish tank had <b>"+A+" ℓ</b> of water 🐠. <b>"+B+" ℓ</b> leaked out. Then <b>"+Cc+" ℓ</b> more water was poured in.<br>How much water is in the tank now, in litres?",
-    ans:ans,
-    model:"There are <b>"+ans+" ℓ</b> of water in the tank now.",
+  if(sub==="vol"){
+    const A=ri(24,60), B=ri(6,15), Cc=ri(5,18); const ans=A-B+Cc;
+    return { id:qid("measure","vol",[A,B,Cc]), type:"input", intOnly:true,
+      text:"A fish tank had <b>"+A+" ℓ</b> of water 🐠. <b>"+B+" ℓ</b> leaked out. Then <b>"+Cc+" ℓ</b> more water was poured in.<br>How much water is in the tank now, in litres?",
+      ans:ans,
+      model:"There are <b>"+ans+" ℓ</b> of water in the tank now.",
+      steps:[
+        {c:"Step 1: Some water leaked out.", h:bm([{name:"Tank", segs:[{v:A-B,t:"?",q:1},{v:B,t:B+" ℓ out",c:C2}], brace:A+" ℓ"}])+eq(A+" − "+B+" = <b>"+(A-B)+"</b> ℓ")},
+        {c:"Step 2: More water was poured in.", h:bm([{name:"Tank", segs:[{v:A-B,t:(A-B)+" ℓ",c:C1},{v:Cc,t:"+"+Cc+" ℓ",c:C3}], brace:"?"}])},
+        {c:(A-B)+" + "+Cc+" = "+ans+".", h:eq((A-B)+" + "+Cc+" = <b>"+ans+"</b> ℓ")}
+      ],
+      dbg:{tpl:"vol", A:A, B:B, C:Cc} };
+  }
+  if(sub==="unit"){
+    const i=ri(0,UNITQ.length-1);
+    const ansU=UNITQ[i][1];
+    const allU=["g","kg","cm","m","ℓ"];
+    const opts=shuffle([ansU].concat(shuffle(allU.filter(u=>u!==ansU)).slice(0,3)));
+    return { id:qid("measure","unit",[i]), type:"mcq", short:true,
+      text:"Which <b>unit</b> is best for measuring <b>"+UNITQ[i][0]+"</b>?",
+      opts:opts, ansIdx:opts.indexOf(ansU), ans:ansU,
+      model:"We measure "+UNITQ[i][0]+" in <b>"+ansU+"</b>.",
+      steps:[
+        {c:"Think: is it long or heavy or liquid? Is it big or small?", h:eq(UNITQ[i][0]+" → <b>"+ansU+"</b>")},
+        {c:"Remember: g/kg for mass (light/heavy), cm/m for length (short/long), ℓ for water and liquids.", h:'<div class="cap">g = light things · kg = heavy things · cm = short · m = long · ℓ = liquids</div>'}
+      ],
+      dbg:{tpl:"unit", i:i} };
+  }
+  const creatures=shuffle([["eel","🐍"],["swordfish","🐟"],["dolphin","🐬"],["turtle","🐢"],["octopus","🐙"]]).slice(0,3);
+  const vals=[];
+  while(vals.length<3){ const v=ri(35,290); if(!vals.includes(v)) vals.push(v); }
+  const big=pick([true,false]);
+  const target= big?Math.max(...vals):Math.min(...vals);
+  const ansName=creatures[vals.indexOf(target)][0];
+  const opts=shuffle(creatures.map(c=>c[0]).concat(["they are the same"]));
+  return { id:qid("measure","cmp3",vals.concat(big?1:0)), type:"mcq", short:true,
+    text:"The "+creatures[0][0]+" "+creatures[0][1]+" is <b>"+vals[0]+" cm</b>, the "+creatures[1][0]+" "+creatures[1][1]+" is <b>"+vals[1]+" cm</b>, and the "+creatures[2][0]+" "+creatures[2][1]+" is <b>"+vals[2]+" cm</b>.<br>Which is the <b>"+(big?"longest":"shortest")+"</b>?",
+    opts:opts, ansIdx:opts.indexOf(ansName), ans:ansName,
+    model:"The <b>"+ansName+"</b> is the "+(big?"longest":"shortest")+" at "+target+" cm.",
     steps:[
-      {c:"Step 1: Some water leaked out.", h:bm([{name:"Tank", segs:[{v:A-B,t:"?",q:1},{v:B,t:B+" ℓ out",c:C2}], brace:A+" ℓ"}])+eq(A+" − "+B+" = <b>"+(A-B)+"</b> ℓ")},
-      {c:"Step 2: More water was poured in.", h:bm([{name:"Tank", segs:[{v:A-B,t:(A-B)+" ℓ",c:C1},{v:Cc,t:"+"+Cc+" ℓ",c:C3}], brace:"?"}])},
-      {c:(A-B)+" + "+Cc+" = "+ans+".", h:eq((A-B)+" + "+Cc+" = <b>"+ans+"</b> ℓ")}
+      {c:"Draw the three lengths as bars and compare.", h:bm(creatures.map((c,i)=>({name:c[0]+" "+c[1], segs:[{v:vals[i],t:vals[i]+" cm",c:[C1,C3,C4][i]}]})))},
+      {c:"Order them: "+vals.slice().sort((a,b)=>a-b).join(" cm &lt; ")+" cm.", h:eq(vals.slice().sort((a,b)=>a-b).join(" &lt; "))},
+      {c:"So the "+(big?"longest":"shortest")+" is the "+ansName+".", h:eq("<b>"+ansName+"</b> — "+target+" cm")}
     ],
-    dbg:{expr:"A-B+C", v:{A:A,B:B,C:Cc}, ans:ans} };
+    dbg:{tpl:"cmp3", vals:vals, names:creatures.map(c=>c[0]), big:big} };
 }
 
-function genFrac(){
-  const sub=pick(["shade","cmp","whole","set"]);
+/* ---------- Fractions ---------- */
+function genFrac(d){
+  const sub=pick(["shade","cmp","whole","set","addlike","order"]);
   if(sub==="shade"){
-    const d=pick([2,3,4,6,8]); const s=ri(1,d-1);
-    const wrongs=[(d-s)+"/"+d, s+"/"+(d+s), d+"/"+s];
-    const o=mkOpts(s+"/"+d, wrongs, x=>String(x));
-    return { type:"mcq", short:true,
-      text:"What <b>fraction</b> of the bar is shaded blue?",
-      qvis:fracBar(d,s),
-      opts:o.opts, ans:o.ans,
-      model:"<b>"+s+"/"+d+"</b> of the bar is shaded.",
+    const dd=pick([2,3,4,6,8]); const s=ri(1,dd-1);
+    const wrongs=[(dd-s)+"/"+dd, s+"/"+(dd+s), dd+"/"+s, (s+1)+"/"+(dd+1), (dd+s)+"/"+dd].filter(w=>w!==s+"/"+dd);
+    const o=mkOpts(s+"/"+dd, wrongs, x=>String(x));
+    return { id:qid("frac","shade",[dd,s]), type:"mcq", short:true,
+      text:"What <b>fraction</b> of the bar is shaded?",
+      qvis:fracBar(dd,s),
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+      model:"<b>"+s+"/"+dd+"</b> of the bar is shaded.",
       steps:[
-        {c:"Count the equal parts: there are "+d+" parts, so each part is 1/"+d+".", h:fracBar(d,0)},
-        {c:"Count the shaded parts: "+s+" of them are shaded.", h:fracBar(d,s)},
-        {c:"So the fraction is "+s+" out of "+d+".", h:eq("<b>"+s+"/"+d+"</b> is shaded")}
+        {c:"Count the equal parts: there are "+dd+" parts, so each part is 1/"+dd+".", h:fracBar(dd,0)},
+        {c:"Count the shaded parts: "+s+" of them are shaded.", h:fracBar(dd,s)},
+        {c:"So the fraction is "+s+" out of "+dd+".", h:eq("<b>"+s+"/"+dd+"</b> is shaded")}
       ],
-      dbg:{expr:"s+'/'+d", v:{s:s,d:d}, ans:s+"/"+d, str:true} };
+      dbg:{tpl:"shade", d:dd, s:s} };
   }
   if(sub==="cmp"){
     let a,b; do{ a=pick([2,3,4,5,6,8,10]); b=pick([2,3,4,5,6,8,10]); }while(a===b);
     const small=Math.min(a,b);
     const opts=shuffle(["1/"+a,"1/"+b,"They are the same size","1/"+(a+b)]);
-    return { type:"mcq", short:true,
+    return { id:qid("frac","cmp",[a,b]), type:"mcq", short:true,
       text:"Which fraction is <b>greater</b>: <b>1/"+a+"</b> or <b>1/"+b+"</b>?",
-      opts:opts, ans:"1/"+small,
+      opts:opts, ansIdx:opts.indexOf("1/"+small), ans:"1/"+small,
       model:"<b>1/"+small+"</b> is greater than 1/"+Math.max(a,b)+", because cutting into fewer parts makes each part bigger.",
       steps:[
         {c:"Cut one bar into "+a+" parts and another into "+b+" parts. Both bars are the same length.", h:fracBar(a,1,"1/"+a)+fracBar(b,1,"1/"+b)},
         {c:"Look at one piece from each bar — the bar cut into "+small+" parts has bigger pieces.", h:eq("1/"+small+" &gt; 1/"+Math.max(a,b))},
         {c:"Rule: for unit fractions, the smaller the bottom number, the bigger the fraction.", h:eq("<b>1/"+small+"</b> is greater")}
       ],
-      dbg:{expr:"'1/'+Math.min(a,b)", v:{a:a,b:b}, ans:"1/"+small, str:true} };
+      dbg:{tpl:"cmp", a:a, b:b} };
   }
   if(sub==="whole"){
-    const d=pick([3,4,5,6,8]); const s=ri(1,d-1); const ans=d-s;
-    return { type:"input", intOnly:true,
-      text:"<b>"+s+"/"+d+" + ?/"+d+" = 1 whole</b>.<br>What is the missing numerator (top number)?",
+    const dd=pick([3,4,5,6,8]); const s=ri(1,dd-1); const ans=dd-s;
+    return { id:qid("frac","whole",[dd,s]), type:"input", intOnly:true,
+      text:"<b>"+s+"/"+dd+" + ?/"+dd+" = 1 whole</b>.<br>What is the missing numerator (top number)?",
       ans:ans,
-      model:s+"/"+d+" + <b>"+ans+"/"+d+"</b> = "+d+"/"+d+" = 1 whole.",
+      model:s+"/"+dd+" + <b>"+ans+"/"+dd+"</b> = "+dd+"/"+dd+" = 1 whole.",
       steps:[
-        {c:"1 whole cut into "+d+" equal parts is "+d+"/"+d+".", h:fracBar(d,d)},
-        {c:"You already have "+s+" parts. The empty parts are missing.", h:fracBar(d,s,undefined,s)},
-        {c:d+" − "+s+" = "+ans+" parts are missing.", h:eq(s+"/"+d+" + <b>"+ans+"/"+d+"</b> = 1")}
+        {c:"1 whole cut into "+dd+" equal parts is "+dd+"/"+dd+".", h:fracBar(dd,dd)},
+        {c:"You already have "+s+" parts. The empty parts are missing.", h:fracBar(dd,s,undefined,s)},
+        {c:dd+" − "+s+" = "+ans+" parts are missing.", h:eq(s+"/"+dd+" + <b>"+ans+"/"+dd+"</b> = 1")}
       ],
-      dbg:{expr:"d-s", v:{d:d,s:s}, ans:ans} };
+      dbg:{tpl:"whole", d:dd, s:s} };
   }
-  const den=pick([2,3,4]); const k=ri(2,5); const n=den*k;
-  return { type:"input", intOnly:true,
-    text:"Jenny sees <b>"+n+"</b> fish 🐠. <b>1/"+den+"</b> of them are clownfish.<br>How many clownfish are there?",
-    ans:k,
-    model:"There are <b>"+k+"</b> clownfish. 1/"+den+" of "+n+" is "+k+".",
+  if(sub==="set"){
+    const den=pick([2,3,4]); const k=ri(2,7); const n=den*k;
+    const FS=[["fish","🐠"],["shells","🐚"],["stars","⭐"],["crabs","🦀"],["pearls","🫧"],["turtles","🐢"]];
+    const fi=ri(0,FS.length-1);
+    const [item,em]=FS[fi];
+    return { id:qid("frac","set",[n,den,fi]), type:"input", intOnly:true,
+      text:"Jenny sees <b>"+n+"</b> "+item+" "+em+". <b>1/"+den+"</b> of them are sparkly.<br>How many sparkly "+item+" are there?",
+      ans:k,
+      model:"There are <b>"+k+"</b> sparkly "+item+". 1/"+den+" of "+n+" is "+k+".",
+      steps:[
+        {c:"Put the "+n+" "+item+" into "+den+" equal groups.", h:groups(den,k,em,true)},
+        {c:"1/"+den+" means 1 of the "+den+" equal groups.", h:eq(n+" ÷ "+den+" = <b>"+k+"</b>")},
+        {c:"So 1/"+den+" of "+n+" = "+k+".", h:eq("1/"+den+" of "+n+" = <b>"+k+"</b>")}
+      ],
+      dbg:{tpl:"set", n:n, den:den} };
+  }
+  if(sub==="addlike"){
+    const dd=pick([4,5,6,8,10,12]); const x=ri(1,dd-2); const y=ri(1,dd-1-x);
+    const ansS=(x+y)+"/"+dd;
+    const wrongs=[(x+y)+"/"+(2*dd), (x+y+1)+"/"+dd, x+"/"+dd];
+    const o=mkOpts(ansS, wrongs, v=>String(v));
+    return { id:qid("frac","addlike",[dd,x,y]), type:"mcq", short:true,
+      text:"<b>"+x+"/"+dd+" + "+y+"/"+dd+" = ?</b>",
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+      model:x+"/"+dd+" + "+y+"/"+dd+" = <b>"+(x+y)+"/"+dd+"</b>. Add the tops, keep the bottom!",
+      steps:[
+        {c:"Both fractions have the same size pieces (1/"+dd+" each).", h:fracBar(dd,x,x+"/"+dd)+fracBar(dd,y,y+"/"+dd)},
+        {c:"Put the pieces together: "+x+" + "+y+" = "+(x+y)+" pieces.", h:fracBar(dd,x+y)},
+        {c:"The bottom number stays "+dd+" — the piece size never changed!", h:eq(x+"/"+dd+" + "+y+"/"+dd+" = <b>"+(x+y)+"/"+dd+"</b>")}
+      ],
+      dbg:{tpl:"addlike", d:dd, x:x, y:y} };
+  }
+  const ds=shuffle([2,3,4,5,6,8,10,12]).slice(0,3);
+  const sorted=ds.slice().sort((a,b)=>b-a); /* biggest denominator = smallest fraction */
+  const ansS=sorted.map(v=>"1/"+v).join(" , ");
+  const perms=[[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];
+  const allOrders=perms.map(p=>p.map(i=>"1/"+sorted[i]).join(" , "));
+  const opts=shuffle([ansS].concat(shuffle(allOrders.filter(o=>o!==ansS)).slice(0,3)));
+  return { id:qid("frac","order",ds), type:"mcq",
+    text:"Arrange from <b>smallest</b> to <b>greatest</b>:<br><b>"+ds.map(v=>"1/"+v).join(" , ")+"</b>",
+    opts:opts, ansIdx:opts.indexOf(ansS), ans:ansS,
+    model:"From smallest to greatest: <b>"+ansS+"</b>.",
     steps:[
-      {c:"Put the "+n+" fish into "+den+" equal groups.", h:groups(den,k,"🐠",true)},
-      {c:"1/"+den+" means 1 of the "+den+" equal groups.", h:eq(n+" ÷ "+den+" = <b>"+k+"</b>")},
-      {c:"So 1/"+den+" of "+n+" = "+k+".", h:eq("1/"+den+" of "+n+" = <b>"+k+"</b>")}
+      {c:"Draw each fraction on same-length bars.", h:ds.map(v=>fracBar(v,1,"1/"+v)).join("")},
+      {c:"More parts → smaller pieces. So 1/"+sorted[0]+" is smallest and 1/"+sorted[2]+" is greatest.", h:eq("1/"+sorted[0]+" &lt; 1/"+sorted[1]+" &lt; 1/"+sorted[2])},
+      {c:"Answer: "+ansS+".", h:eq("<b>"+ansS+"</b>")}
     ],
-    dbg:{expr:"n/den", v:{n:n,den:den}, ans:k} };
+    dbg:{tpl:"order", ds:ds} };
 }
 
-function genP3(){
-  const sub=pick(["pv4","bigtab","eqfrac","peri"]);
+/* ---------- P3 Preview ---------- */
+function genP3(d){
+  const sub=pick(["pv4","bigtab","eqfrac","peri","add4","area"]);
   if(sub==="pv4"){
-    let n; do{ n=ri(1023,9876); }while(new Set(String(n)).size<4);
-    const p=pick([0,1,2,3]); const d=+String(n)[p]; const val=d*Math.pow(10,3-p);
+    let n; do{ n=ri(1023,9876); }while(new Set(String(n)).size<4 || String(n).includes("0"));
+    const p=pick([0,1,2,3]); const dg=+String(n)[p]; const val=dg*Math.pow(10,3-p);
     const place=["thousands","hundreds","tens","ones"][p];
-    const o=mkOpts(val,[d, d*Math.pow(10,(3-p+1)%4), d*Math.pow(10,(3-p+3)%4)]);
-    return { type:"mcq", short:true, hint:"Use a Thousands | Hundreds | Tens | Ones chart. Where does the digit "+d+" sit?",
-      text:"🌟 P3 Preview — In the number <b>"+n+"</b>, what is the value of the digit <b>"+d+"</b>?",
-      opts:o.opts, ans:o.ans,
-      model:"The digit "+d+" is in the "+place+" place, so its value is <b>"+val+"</b>.",
+    const o=mkOpts(val,[dg, dg*Math.pow(10,(3-p+1)%4), dg*Math.pow(10,(3-p+3)%4)]);
+    return { id:qid("p3","pv4",[n,p]), type:"mcq", short:true, hint:"Use a Thousands | Hundreds | Tens | Ones chart. Where does the digit "+dg+" sit?",
+      text:"🌟 P3 Preview — In the number <b>"+n+"</b>, what is the value of the digit <b>"+dg+"</b>?",
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+      model:"The digit "+dg+" is in the "+place+" place, so its value is <b>"+val+"</b>.",
       steps:[
         {c:"P3 numbers go up to 10,000 — we just add a Thousands column!", h:pvChart(n,p)},
-        {c:d+" in the "+place+" place = "+d+" × "+Math.pow(10,3-p)+".", h:eq(d+" × "+Math.pow(10,3-p)+" = <b>"+val+"</b>")}
+        {c:dg+" in the "+place+" place = "+dg+" × "+Math.pow(10,3-p)+".", h:eq(dg+" × "+Math.pow(10,3-p)+" = <b>"+val+"</b>")}
       ],
-      dbg:{expr:"d*Math.pow(10,3-p)", v:{d:d,p:p}, ans:val} };
+      dbg:{tpl:"pv4", n:n, p:p} };
   }
   if(sub==="bigtab"){
     const t=pick([6,7,8,9]); const g=ri(2,9); const ans=t*g;
     const o=mkOpts(ans,[ans+t, ans-t, t+g]);
-    return { type:"mcq", short:true, hint:"Skip count by "+t+": "+t+", "+(2*t)+", "+(3*t)+"… "+g+" times.",
+    return { id:qid("p3","bigtab",[t,g]), type:"mcq", short:true, hint:"Skip count by "+t+": "+t+", "+(2*t)+", "+(3*t)+"… "+g+" times.",
       text:"🌟 P3 Preview — <b>"+g+" × "+t+"</b> = ?",
-      opts:o.opts, ans:o.ans,
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
       model:g+" × "+t+" = <b>"+ans+"</b>.",
       steps:[
         {c:g+" groups of "+t+".", h:groups(g,t,"🐟")},
         {c:"Skip count by "+t+".", h:chain(Array.from({length:g},(_,i)=>({box:(i+1)*t})).flatMap((b,i)=>i===0?[b]:[{arrow:"+"+t},b]))},
         {c:"So "+g+" × "+t+" = "+ans+".", h:eq(g+" × "+t+" = <b>"+ans+"</b>")}
       ],
-      dbg:{expr:"t*g", v:{t:t,g:g}, ans:ans} };
+      dbg:{tpl:"bigtab", t:t, g:g} };
   }
   if(sub==="eqfrac"){
-    const d=pick([2,3,4]); const m=pick([2,3]); const ans=m;
-    return { type:"input", intOnly:true, hint:"Cut every piece of the 1/"+d+" bar into "+m+" smaller pieces. How many pieces are shaded now?",
-      text:"🌟 P3 Preview — Equivalent fractions:<br><b>1/"+d+" = ?/"+(d*m)+"</b>. What is the missing top number?",
+    const dd=pick([2,3,4]); const m=pick([2,3]); const ans=m;
+    return { id:qid("p3","eqfrac",[dd,m]), type:"input", intOnly:true, hint:"Cut every piece of the 1/"+dd+" bar into "+m+" smaller pieces. How many pieces are shaded now?",
+      text:"🌟 P3 Preview — Equivalent fractions:<br><b>1/"+dd+" = ?/"+(dd*m)+"</b>. What is the missing top number?",
       ans:ans,
-      model:"<b>1/"+d+" = "+m+"/"+(d*m)+"</b>. They cover the same amount!",
+      model:"<b>1/"+dd+" = "+m+"/"+(dd*m)+"</b>. They cover the same amount!",
       steps:[
-        {c:"Here is 1/"+d+" — one part shaded out of "+d+".", h:fracBar(d,1)},
-        {c:"Cut every part into "+m+" smaller parts. Now there are "+(d*m)+" parts, and "+m+" are shaded.", h:fracBar(d*m,m)},
-        {c:"Same shaded amount → equivalent fractions.", h:eq("1/"+d+" = <b>"+m+"/"+(d*m)+"</b>")}
+        {c:"Here is 1/"+dd+" — one part shaded out of "+dd+".", h:fracBar(dd,1)},
+        {c:"Cut every part into "+m+" smaller parts. Now there are "+(dd*m)+" parts, and "+m+" are shaded.", h:fracBar(dd*m,m)},
+        {c:"Same shaded amount → equivalent fractions.", h:eq("1/"+dd+" = <b>"+m+"/"+(dd*m)+"</b>")}
       ],
-      dbg:{expr:"m", v:{m:m}, ans:m} };
+      dbg:{tpl:"eqfrac", d:dd, m:m} };
   }
-  const l=ri(5,12), w=ri(2,l-1); const ans=2*(l+w);
-  return { type:"input", intOnly:true, hint:"Perimeter = walk all the way around the outside. Add all 4 sides!",
-    text:"🌟 P3 Preview — A rectangle is <b>"+l+" cm</b> long and <b>"+w+" cm</b> wide.<br>What is its <b>perimeter</b>, in cm?",
+  if(sub==="peri"){
+    const l=ri(5,12), w=ri(2,l-1); const ans=2*(l+w);
+    return { id:qid("p3","peri",[l,w]), type:"input", intOnly:true, hint:"Perimeter = walk all the way around the outside. Add all 4 sides!",
+      text:"🌟 P3 Preview — A rectangle is <b>"+l+" cm</b> long and <b>"+w+" cm</b> wide.<br>What is its <b>perimeter</b>, in cm?",
+      ans:ans,
+      model:"The perimeter is <b>"+ans+" cm</b>.",
+      steps:[
+        {c:"A rectangle has 2 long sides and 2 short sides.", h:rectSVG(l,w)},
+        {c:"Walk around: "+l+" + "+w+" + "+l+" + "+w+".", h:eq(l+" + "+w+" + "+l+" + "+w+" = <b>"+ans+"</b>")},
+        {c:"Quick way: ("+l+" + "+w+") × 2 = "+ans+".", h:eq("("+l+" + "+w+") × 2 = <b>"+ans+"</b> cm")}
+      ],
+      dbg:{tpl:"peri", l:l, w:w} };
+  }
+  if(sub==="add4"){
+    const A=ri(1200,4800), B=ri(1050,9000-A); const ans=A+B;
+    return { id:qid("p3","add4",[A,B]), type:"input", intOnly:true, hint:"Line up the digits by place value, add from the ones.",
+      text:"🌟 P3 Preview — <b>"+A+" + "+B+"</b> = ?",
+      ans:ans,
+      model:A+" + "+B+" = <b>"+ans+"</b>.",
+      steps:[
+        {c:"Line the numbers up in a place-value chart.", h:pvChart(A)+pvChart(B)},
+        {c:"Add place by place, starting from the ones: "+(A%10)+"+"+(B%10)+", then tens, hundreds, thousands.", h:eq(A+" + "+B+" = <b>"+ans+"</b>")},
+        {c:"The answer in its chart.", h:pvChart(ans)}
+      ],
+      dbg:{tpl:"add4", A:A, B:B} };
+  }
+  const l=ri(3,9), w=ri(2,6); const ans=l*w;
+  return { id:qid("p3","area",[l,w]), type:"input", intOnly:true, hint:"Count the little squares — or multiply the rows!",
+    text:"🌟 P3 Preview — This rectangle is covered with square tiles.<br>How many <b>square tiles</b> cover it?",
+    qvis:gridRectSVG(l,w),
     ans:ans,
-    model:"The perimeter is <b>"+ans+" cm</b>.",
+    model:"It takes <b>"+ans+"</b> square tiles. That is called the <b>area</b>!",
     steps:[
-      {c:"A rectangle has 2 long sides and 2 short sides.", h:rectSVG(l,w)},
-      {c:"Walk around: "+l+" + "+w+" + "+l+" + "+w+".", h:eq(l+" + "+w+" + "+l+" + "+w+" = <b>"+ans+"</b>")},
-      {c:"Quick way: ("+l+" + "+w+") × 2 = "+ans+".", h:eq("("+l+" + "+w+") × 2 = <b>"+ans+"</b> cm")}
+      {c:"Count one row: "+l+" tiles.", h:gridRectSVG(l,1,true)},
+      {c:"There are "+w+" rows of "+l+".", h:gridRectSVG(l,w,true)},
+      {c:w+" × "+l+" = "+ans+" tiles.", h:eq(w+" × "+l+" = <b>"+ans+"</b> square tiles")}
     ],
-    dbg:{expr:"2*(l+w)", v:{l:l,w:w}, ans:ans} };
+    dbg:{tpl:"area", l:l, w:w} };
+}
+/* ==================================================================
+   LOGIC ISLAND 🧩 — 6 procedurally-generated thinking-skill games
+   Each with visual step-by-step model solutions + difficulty ramp.
+   ================================================================== */
+
+/* ---------- 1. Shape Pattern Sequences (Pattern Peak 🔷) ---------- */
+const PAT_SHAPES=["circle","triangle","square","star","heart","diamond"];
+function patToken(){ return pick(PAT_SHAPES)+"-"+ri(0,4); }
+function genLPat(d){
+  d=d||1;
+  const kind = d<=1 ? pick(["repeat2","repeat2","rotate"]) : (d===2 ? pick(["repeat3","rotate","repeat2"]) : pick(["repeat3","rotate","grow"]));
+  let unit=[], seq=[], ansKey="", optKeys=[], n0=0;
+  if(kind==="repeat2" || kind==="repeat3"){
+    const k=kind==="repeat2"?2:3;
+    const set=new Set();
+    while(set.size<k) set.add(patToken());
+    unit=[...set];
+    n0=k*2+ri(1,k-1); /* at least 2 full cycles shown, cut mid-cycle */
+    for(let i=0;i<n0;i++) seq.push(unit[i%k]);
+    ansKey=unit[n0%k];
+    const others=new Set(unit.filter(u=>u!==ansKey));
+    while(others.size<3){ const t=patToken(); if(t!==ansKey) others.add(t); }
+    optKeys=shuffle([ansKey].concat([...others].slice(0,3)));
+  } else if(kind==="rotate"){
+    const start=pick([0,90,180,270]);
+    n0=4;
+    for(let i=0;i<n0;i++) seq.push("arr-"+((start+i*90)%360));
+    ansKey="arr-"+((start+n0*90)%360);
+    optKeys=shuffle(["arr-0","arr-90","arr-180","arr-270"]);
+    unit=[];
+    var rotStart=start;
+  } else { /* grow */
+    const start=ri(1,2), k=ri(1,2);
+    n0=4;
+    for(let i=0;i<n0;i++) seq.push("dots-"+(start+i*k));
+    const ansN=start+n0*k;
+    ansKey="dots-"+ansN;
+    const wrongNs=new Set();
+    [ansN-k, ansN+k, ansN+1, ansN-1, ansN+2, ansN-2].forEach(w=>{ if(w>0 && w<=12 && w!==ansN) wrongNs.add(w); });
+    optKeys=shuffle([ansKey].concat([...wrongNs].slice(0,3).map(w=>"dots-"+w)));
+    var growStart=start, growK=k;
+  }
+  const ansIdx=optKeys.indexOf(ansKey);
+  const opts=optKeys.map(t=>shapeTile(t,60));
+  let steps;
+  if(kind==="rotate"){
+    steps=[
+      {c:"Watch the arrow — every step it makes a quarter turn (90°) clockwise.", h:patternRow(seq,true)},
+      {c:"Turn the last arrow one more quarter turn…", h:patternRow([seq[n0-1],ansKey])},
+      {c:"So the next arrow points like this!", h:patternRow(seq.concat([ansKey]))}
+    ];
+  } else if(kind==="grow"){
+    steps=[
+      {c:"Count the dots in each tile: "+seq.map(t=>t.split("-")[1]).join(", ")+" — they grow by "+growK+" each time!", h:patternRow(seq,true)},
+      {c:"Add "+growK+" more: "+seq[n0-1].split("-")[1]+" + "+growK+" = "+ansKey.split("-")[1]+".", h:eq(seq[n0-1].split("-")[1]+" + "+growK+" = <b>"+ansKey.split("-")[1]+"</b>")},
+      {c:"The finished pattern.", h:patternRow(seq.concat([ansKey]))}
+    ];
+  } else {
+    steps=[
+      {c:"Find the repeating unit — it is these "+unit.length+" shapes over and over.", h:patternRow(unit)},
+      {c:"Lay the unit along the pattern. The next spot is position "+(n0%unit.length+1)+" of the unit.", h:patternRow(seq,true)},
+      {c:"So the next shape is this one!", h:patternRow(seq.concat([ansKey]))}
+    ];
+  }
+  return { id:qid("lpat",kind,seq.concat([ansKey])), type:"mcq", visOpts:true,
+    text:"What comes <b>next</b> in the pattern?",
+    qvis:patternRow(seq,true),
+    opts:opts, ansIdx:ansIdx, ans:shapeTile(ansKey,44),
+    model:"The next one is shown below — the pattern "+(kind==="rotate"?"turns 90° each time":kind==="grow"?"grows by the same amount each time":"repeats every "+unit.length+" shapes")+".<br>"+shapeTile(ansKey,52),
+    steps:steps,
+    dbg:{tpl:"lpat", kind:kind, unit:unit, n0:n0, seq:seq, rotStart:(typeof rotStart!=="undefined"?rotStart:null), growStart:(typeof growStart!=="undefined"?growStart:null), growK:(typeof growK!=="undefined"?growK:null), ansKey:ansKey, optKeys:optKeys} };
 }
 
+/* ---------- 2. Sea-creature Mini Sudoku (Sudoku Shoal 🧩) ---------- */
+const SUD_SYMSETS=[["🐠","🐢","⭐","🦀"],["🐬","🐙","🐚","🪸"],["🐳","🦑","🫧","⭐"]];
+function sudCount(cells, limit){
+  const g=cells.slice();
+  function ok(i,v){
+    const r=Math.floor(i/4), c=i%4;
+    for(let j=0;j<4;j++){ if(g[r*4+j]===v) return false; if(g[j*4+c]===v) return false; }
+    const br=Math.floor(r/2)*2, bc=Math.floor(c/2)*2;
+    for(let rr=br;rr<br+2;rr++) for(let cc=bc;cc<bc+2;cc++) if(g[rr*4+cc]===v) return false;
+    return true;
+  }
+  let cnt=0;
+  (function go(){
+    const i=g.indexOf(0);
+    if(i<0){ cnt++; return; }
+    for(let v=1;v<=4;v++){
+      if(ok(i,v)){ g[i]=v; go(); g[i]=0; if(cnt>=limit) return; }
+    }
+  })();
+  return cnt;
+}
+function sudHint(giv){
+  for(let i=0;i<16;i++){
+    if(giv[i]!==0) continue;
+    const r=Math.floor(i/4), c=i%4, br=Math.floor(r/2)*2, bc=Math.floor(c/2)*2;
+    const used=new Set();
+    for(let j=0;j<4;j++){ if(giv[r*4+j]) used.add(giv[r*4+j]); if(giv[j*4+c]) used.add(giv[j*4+c]); }
+    for(let rr=br;rr<br+2;rr++) for(let cc=bc;cc<bc+2;cc++) if(giv[rr*4+cc]) used.add(giv[rr*4+cc]);
+    if(used.size===3){ let v=1; while(used.has(v)) v++; return {i:i, v:v}; }
+  }
+  return null;
+}
+function genLSud(d){
+  d=d||1;
+  let m=[[1,2,3,4],[3,4,1,2],[2,1,4,3],[4,3,2,1]];
+  const tr=x=>x[0].map((_,c)=>x.map(r=>r[c]));
+  const flip=(x,i,j)=>{ const t=x[i]; x[i]=x[j]; x[j]=t; };
+  if(Math.random()<0.5) flip(m,0,1);
+  if(Math.random()<0.5) flip(m,2,3);
+  if(Math.random()<0.5){ flip(m,0,2); flip(m,1,3); }
+  m=tr(m);
+  if(Math.random()<0.5) flip(m,0,1);
+  if(Math.random()<0.5) flip(m,2,3);
+  if(Math.random()<0.5){ flip(m,0,2); flip(m,1,3); }
+  if(Math.random()<0.5) m=tr(m);
+  const map=shuffle([1,2,3,4]);
+  const sol=[].concat(...m).map(v=>map[v-1]);
+  const target = d>=3?6 : (d===2?7:9);
+  const giv=sol.slice();
+  const order=shuffle([...Array(16).keys()]);
+  for(const i of order){
+    const count=giv.filter(x=>x!==0).length;
+    if(count<=target) break;
+    const keep=giv[i]; giv[i]=0;
+    if(sudCount(giv,2)!==1) giv[i]=keep;
+  }
+  const syms=pick(SUD_SYMSETS);
+  const hint=sudHint(giv);
+  const steps=[
+    {c:"Rule of the reef: every <b>row</b>, every <b>column</b> and every <b>2×2 box</b> must have each of the 4 friends exactly once.", h:sudMini(giv,syms,{})}
+  ];
+  if(hint) steps.push({c:"Start with an easy cell: in the sand-coloured spot, its row, column and box already use 3 friends — only "+syms[hint.v-1]+" is left!", h:sudMini(giv,syms,{hl:hint.i})});
+  steps.push({c:"Fill one cell at a time the same way. Here is the finished puzzle — check your grid against it!", h:sudMini(sol,syms,{giv:giv})});
+  return { id:qid("lsud","grid",[giv.join(""),sol.join("")]), type:"sud",
+    text:"Sea-creature Sudoku! Fill the grid: every row, column and 2×2 box needs all four friends "+syms.join(" ")+".<br><span style='font-size:14px;color:var(--ink2)'>Tap an empty cell to change its creature.</span>",
+    sol:sol, giv:giv, syms:syms,
+    model:"Every row, column and 2×2 box has "+syms.join(" ")+" exactly once — see the finished grid in the steps below.",
+    steps:steps,
+    dbg:{tpl:"lsud", sol:sol, giv:giv} };
+}
+
+/* ---------- 3. Balance Scale Puzzles (Balance Bay ⚖️) ---------- */
+const BAL_ITEMS=[["🐚","⭐","🫧"],["🐢","🐟","🪸"],["🐙","🦀","🫧"],["🎾","🍎","🧸"],["🍉","🍓","🍇"],["⚽","🧁","🍬"]];
+function genLBal(d){
+  d=d||1;
+  const kind = d<=1 ? "direct" : (d===2 ? pick(["direct","multi"]) : pick(["multi","chain"]));
+  const ii=ri(0,BAL_ITEMS.length-1);
+  const items=BAL_ITEMS[ii];
+  const A=items[0], B=items[1], Cc=items[2];
+  if(kind==="direct"){
+    const a=pick([2,3,4]); const b=ri(2, a===4?3:(a===3?4:6)); const total=a*b; const ans=b;
+    const o=mkOpts(ans,[a, total, a+b]);
+    return { id:qid("lbal","direct",[a,b,ii]), type:"mcq", short:true,
+      text:"<b>"+a+"</b> "+A+" balance <b>"+total+"</b> "+B+" on the scale.<br>How many "+B+" balance <b>1</b> "+A+"?",
+      qvis:scaleSVG(Array(a).fill(A), Array(total).fill(B)),
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+      model:"1 "+A+" = <b>"+b+"</b> "+B+". Share the "+total+" "+B+" equally among the "+a+" "+A+".",
+      steps:[
+        {c:"The scale is balanced: "+a+" "+A+" weigh the same as "+total+" "+B+".", h:scaleSVG(Array(a).fill(A), Array(total).fill(B))},
+        {c:"Share the "+B+" fairly: give each "+A+" the same number.", h:groups(a,b,B,true)},
+        {c:total+" ÷ "+a+" = "+b+". So 1 "+A+" balances "+b+" "+B+"!", h:scaleSVG([A], Array(b).fill(B))+eq(total+" ÷ "+a+" = <b>"+b+"</b>")}
+      ],
+      dbg:{tpl:"lbal", kind:"direct", a:a, b:b, total:total} };
+  }
+  if(kind==="multi"){
+    const b=ri(2,5), k=pick([2,3,4]); const ans=k*b;
+    const o=mkOpts(ans,[b+k, b, ans+b]);
+    return { id:qid("lbal","multi",[b,k,ii]), type:"mcq", short:true,
+      text:"<b>1</b> "+A+" balances <b>"+b+"</b> "+B+".<br>How many "+B+" balance <b>"+k+"</b> "+A+"?",
+      qvis:scaleSVG([A], Array(b).fill(B)),
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+      model:k+" "+A+" = <b>"+ans+"</b> "+B+". Each "+A+" swaps for "+b+" "+B+".",
+      steps:[
+        {c:"1 "+A+" is worth "+b+" "+B+".", h:scaleSVG([A], Array(b).fill(B))},
+        {c:"Swap EVERY "+A+" for "+b+" "+B+" — that is "+k+" swaps.", h:groups(k,b,B)},
+        {c:k+" × "+b+" = "+ans+".", h:scaleSVG(Array(k).fill(A), Array(ans).fill(B))+eq(k+" × "+b+" = <b>"+ans+"</b>")}
+      ],
+      dbg:{tpl:"lbal", kind:"multi", b:b, k:k} };
+  }
+  const mm=ri(2,4), nn=ri(2,4); const ans=mm*nn;
+  const o=mkOpts(ans,[mm+nn, nn, ans+nn]);
+  return { id:qid("lbal","chain",[mm,nn,ii]), type:"mcq", short:true,
+    text:"<b>1</b> "+A+" balances <b>"+mm+"</b> "+B+". And <b>1</b> "+B+" balances <b>"+nn+"</b> "+Cc+".<br>How many "+Cc+" balance <b>1</b> "+A+"?",
+    qvis:scaleSVG([A], Array(mm).fill(B))+scaleSVG([B], Array(nn).fill(Cc)),
+    opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+    model:"1 "+A+" = <b>"+ans+"</b> "+Cc+". Swap the "+A+" for "+B+", then swap each "+B+" for "+Cc+"!",
+    steps:[
+      {c:"First swap: 1 "+A+" becomes "+mm+" "+B+".", h:scaleSVG([A], Array(mm).fill(B))},
+      {c:"Second swap: EACH "+B+" becomes "+nn+" "+Cc+" — do it "+mm+" times.", h:groups(mm,nn,Cc)},
+      {c:mm+" × "+nn+" = "+ans+". So 1 "+A+" balances "+ans+" "+Cc+"!", h:scaleSVG([A], Array(ans).fill(Cc))+eq(mm+" × "+nn+" = <b>"+ans+"</b>")}
+    ],
+    dbg:{tpl:"lbal", kind:"chain", m:mm, n:nn} };
+}
+
+/* ---------- 4. Deduction Riddles (Detective Dock 🕵️‍♀️) ---------- */
+const DED_PERMS=[[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]];
+function dedSatisfy(orderNames, clue){
+  const posOf={}; orderNames.forEach((n,i)=>posOf[n]=i);
+  if(clue.t==="at") return posOf[clue.a]===clue.p;
+  if(clue.t==="not") return posOf[clue.a]!==clue.p;
+  if(clue.t==="before") return posOf[clue.a]<posOf[clue.b];
+  if(clue.t==="next") return posOf[clue.b]===posOf[clue.a]+1;
+  return false;
+}
+function dedSolutions(names, clues){
+  return DED_PERMS.map(p=>p.map(i=>names[i])).filter(ord=>clues.every(c=>dedSatisfy(ord,c)));
+}
+function genLDed(d){
+  d=d||1;
+  const names=shuffle(KIDS).slice(0,3);
+  const scen=pick([
+    {intro:" had a sandcastle race", posN:["1st","2nd","3rd"], q:"Who came 1st, 2nd and 3rd?", before:"{a} finished before {b}", next:"{a} finished just before {b}", at:"{a} came {p}", not:"{a} did NOT come {p}", medals:["🥇","🥈","🥉"]},
+    {intro:" are lining up for ice cream", posN:["1st","2nd","3rd"], q:"What is the order of the line?", before:"{a} is somewhere in front of {b}", next:"{a} is right in front of {b}", at:"{a} is {p} in line", not:"{a} is NOT {p} in line", medals:["1️⃣","2️⃣","3️⃣"]},
+    {intro:" are sitting in a row of beach chairs", posN:["on the left","in the middle","on the right"], q:"Who sits where, from left to right?", before:"{a} is somewhere left of {b}", next:"{a} is right next to {b}, on {b}'s left", at:"{a} sits {p}", not:"{a} does NOT sit {p}", medals:["⬅️","🔵","➡️"]}
+  ]);
+  for(let attempt=0; attempt<50; attempt++){
+    const order=shuffle(names.slice());
+    const posOf={}; order.forEach((n,i)=>posOf[n]=i);
+    const pool=[];
+    names.forEach(n=>{ pool.push({t:"at", a:n, p:posOf[n]}); for(let p=0;p<3;p++) if(posOf[n]!==p) pool.push({t:"not", a:n, p:p}); });
+    for(const x of names) for(const y of names) if(x!==y){
+      if(posOf[x]<posOf[y]) pool.push({t:"before", a:x, b:y});
+      if(posOf[y]===posOf[x]+1) pool.push({t:"next", a:x, b:y});
+    }
+    let cluePool;
+    if(d>=2) cluePool=shuffle(pool.filter(c=>c.t!=="at")).concat(shuffle(pool.filter(c=>c.t==="at")));
+    else cluePool=shuffle(pool);
+    const clues=[];
+    let solved=false;
+    for(const c of cluePool){
+      clues.push(c);
+      if(dedSolutions(names,clues).length===1){ solved=true; break; }
+      if(clues.length>=4) break;
+    }
+    if(!solved) continue;
+    for(let i=clues.length-1; i>=0 && clues.length>2; i--){
+      const test=clues.slice(0,i).concat(clues.slice(i+1));
+      if(dedSolutions(names,test).length===1) clues.splice(i,1);
+    }
+    if(clues.length<2 || clues.length>3) continue;
+    if(dedSolutions(names,clues).length!==1) continue;
+    const clueText=c=>{
+      let tmpl=scen[c.t];
+      return tmpl.replace("{a}",c.a).replace(/\{b\}/g,c.b||"").replace("{p}",c.p!==undefined?scen.posN[c.p]:"");
+    };
+    const key=o=>o.join("|");
+    const correctKey=key(order);
+    const allOrds=DED_PERMS.map(p=>p.map(i=>names[i]));
+    const others=shuffle(allOrds.filter(o=>key(o)!==correctKey)).slice(0,3);
+    const optOrds=shuffle([order].concat(others));
+    const ansIdx=optOrds.findIndex(o=>key(o)===correctKey);
+    const fmtOrd=o=>o.map((n,i)=>scen.medals[i]+" "+n).join(" → ");
+    const steps=[];
+    let remaining=allOrds;
+    clues.forEach((c,ci)=>{
+      const next=remaining.filter(o=>clues.slice(0,ci+1).every(cl=>dedSatisfy(o,cl)));
+      steps.push({
+        c:"Clue "+(ci+1)+": <b>"+clueText(c)+"</b> — cross out every order that breaks this clue.",
+        h:'<div style="text-align:center">'+remaining.map(o=>'<span class="permchip'+(next.some(x=>key(x)===key(o))?'':' out')+'">'+o.join(" → ")+'</span>').join("")+'</div>'
+      });
+      remaining=next;
+    });
+    steps.push({c:"Only one order survives all the clues — mystery solved! 🔍", h:'<div style="text-align:center"><span class="permchip win" style="font-size:18px">'+fmtOrd(order)+'</span></div>'});
+    return { id:qid("lded","riddle",order.concat(clues.map(c=>c.t+(c.p!==undefined?c.p:"")+(c.a||"")+(c.b||"")))), type:"mcq",
+      text:"Mystery time, detective! 🕵️‍♀️ "+names[0]+", "+names[1]+" and "+names[2]+scen.intro+".<br>"
+        +clues.map((c,i)=>"Clue "+(i+1)+": <b>"+clueText(c)+"</b>").join("<br>")
+        +"<br>"+scen.q,
+      opts:optOrds.map(fmtOrd), ansIdx:ansIdx, ans:fmtOrd(order),
+      model:"The order is <b>"+fmtOrd(order)+"</b>. Check: every clue is happy with this order!",
+      steps:steps,
+      dbg:{tpl:"lded", names:names, order:order, clues:clues} };
+  }
+  /* fallback (nearly impossible to reach): fully-told order */
+  const order=shuffle(names.slice());
+  const clues=[{t:"at",a:order[0],p:0},{t:"at",a:order[2],p:2}];
+  const fmtOrd=o=>o.join(" → ");
+  const allOrds=DED_PERMS.map(p=>p.map(i=>names[i]));
+  const optOrds=shuffle([order].concat(shuffle(allOrds.filter(o=>o.join("|")!==order.join("|"))).slice(0,3)));
+  return { id:qid("lded","riddle",order.concat(["fb"])), type:"mcq",
+    text:names.join(", ")+" had a race. Clue 1: <b>"+order[0]+" came 1st</b>. Clue 2: <b>"+order[2]+" came 3rd</b>.<br>Who came 1st, 2nd and 3rd?",
+    opts:optOrds.map(fmtOrd), ansIdx:optOrds.findIndex(o=>o.join("|")===order.join("|")), ans:fmtOrd(order),
+    model:"The order is <b>"+fmtOrd(order)+"</b>.",
+    steps:[
+      {c:"Clue 1 fixes 1st place; Clue 2 fixes 3rd place.", h:eq(order[0]+" is 1st, "+order[2]+" is 3rd")},
+      {c:"Only "+order[1]+" is left for 2nd!", h:eq("<b>"+fmtOrd(order)+"</b>")}
+    ],
+    dbg:{tpl:"lded", names:names, order:order, clues:clues} };
+}
+
+/* ---------- 5. Number Pyramids (Pyramid Point 🔺) ---------- */
+function genLPyr(d){
+  d=d||1;
+  const hi = d>=3?15 : (d===2?12:9);
+  const a=ri(1,hi), b=ri(1,hi), c=ri(1,hi);
+  const cells=[a+2*b+c, a+b, b+c, a, b, c];
+  const miss = d<=1 ? pick([0,1,2]) : pick([0,1,2,3,4,5]);
+  const ans=cells[miss];
+  const wrongPool=cells.filter((v,i)=>i!==miss).concat([ans+1,ans-1,ans+2]);
+  const o=mkOpts(ans, shuffle(wrongPool));
+  const rowOf=i=> i===0?"top":(i<3?"middle":"bottom");
+  const steps=[
+    {c:"Pyramid rule: every brick = the <b>sum of the two bricks below it</b>.", h:pyrSVG(["?","?","?",a,b,c],-1)},
+    {c:"Fill the middle row: "+a+"+"+b+"="+(a+b)+" and "+b+"+"+c+"="+(b+c)+".", h:pyrSVG([miss===0?"?":cells[0],a+b,b+c,a,b,c], miss===0?0:-1, miss===1?1:(miss===2?2:-1))}
+  ];
+  if(miss===0){
+    steps.push({c:"Top brick = "+(a+b)+" + "+(b+c)+" = "+ans+".", h:pyrSVG(cells,-1,0)+eq((a+b)+" + "+(b+c)+" = <b>"+ans+"</b>")});
+  } else if(miss<3){
+    steps.push({c:"The missing middle brick = "+(miss===1?a+" + "+b:b+" + "+c)+" = "+ans+".", h:pyrSVG(cells,-1,miss)+eq((miss===1?a+" + "+b:b+" + "+c)+" = <b>"+ans+"</b>")});
+  } else {
+    const known = miss===3 ? (a+b)+" − "+b : (miss===4 ? (a+b)+" − "+a : (b+c)+" − "+b);
+    steps.push({c:"The missing brick is on the bottom — work BACKWARDS with subtraction: "+known+" = "+ans+".", h:pyrSVG(cells,-1,miss)+eq(known+" = <b>"+ans+"</b>")});
+  }
+  return { id:qid("lpyr","pyr",[a,b,c,miss]), type:"mcq", short:true,
+    text:"Number pyramid! Each brick is the <b>sum of the two bricks below</b> it.<br>What number goes in the <b>?</b> brick?",
+    qvis:pyrSVG(cells,miss),
+    opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+    model:"The missing "+rowOf(miss)+" brick is <b>"+ans+"</b>.",
+    steps:steps,
+    dbg:{tpl:"lpyr", a:a, b:b, c:c, miss:miss} };
+}
+
+/* ---------- 6. Spatial: complete the picture (Tile Cove 🧭) ---------- */
+function genLSpa(d){
+  d=d||1;
+  const v=ri(0,2);
+  const mq=ri(0,3);
+  const baseRot=[0,90,270,180][mq];
+  const rel=shuffle([0,90,180,270]);
+  const ansIdx=rel.indexOf(0);
+  const opts=rel.map(r=>motifSVG(v,(baseRot+r)%360,64));
+  return { id:qid("lspa","tile",[v,mq].concat(rel)), type:"mcq", visOpts:true,
+    text:"One tile fell out of the picture! 🖼️ Which tile fits the empty spot <b>exactly</b>?<br><span style='font-size:14px;color:var(--ink2)'>Careful — some choices are turned the wrong way!</span>",
+    qvis:mosaicSVG(v,mq),
+    opts:opts, ansIdx:ansIdx, ans:motifSVG(v,baseRot,52),
+    model:"The right tile is shown below — same picture, same turn direction.<br>"+motifSVG(v,baseRot,60),
+    steps:[
+      {c:"Look at the whole picture: the four tiles are the SAME picture, each turned a quarter more.", h:mosaicSVG(v,mq)},
+      {c:"Look at the tiles beside the gap — follow how the picture turns around the centre.", h:mosaicSVG(v,-1,true)},
+      {c:"So the missing tile must be turned exactly like this. The other choices are twisted the wrong way!", h:'<div style="display:flex;justify-content:center">'+motifSVG(v,baseRot,80)+'</div>'}
+    ],
+    dbg:{tpl:"lspa", v:v, mq:mq, rots:rel, ansIdx:ansIdx} };
+}
+/* ============ topic registry ============ */
 const TOPICS=[
   {id:"num",    name:"Numbers to 1000",       emoji:"🐚", gen:genNum},
   {id:"addsub", name:"Add & Subtract",        emoji:"🐬", gen:genAddSub},
@@ -716,19 +1695,28 @@ const TOPICS=[
   {id:"time",   name:"Time",                  emoji:"🕑", gen:genTime},
   {id:"measure",name:"Length · Mass · Volume",emoji:"📏", gen:genMeasure},
   {id:"frac",   name:"Fractions",             emoji:"🍉", gen:genFrac},
-  {id:"p3",     name:"P3 Preview Island",     emoji:"🌟", gen:genP3, preview:true}
+  {id:"p3",     name:"P3 Preview Island",     emoji:"🌟", gen:genP3, preview:true},
+  {id:"lpat",   name:"Pattern Peak",          emoji:"🔷", gen:genLPat, logic:true, sub:"What comes next?"},
+  {id:"lsud",   name:"Sudoku Shoal",          emoji:"🧩", gen:genLSud, logic:true, sub:"Sea-creature sudoku"},
+  {id:"lbal",   name:"Balance Bay",           emoji:"⚖️", gen:genLBal, logic:true, sub:"Scale swap puzzles"},
+  {id:"lded",   name:"Detective Dock",        emoji:"🕵️‍♀️", gen:genLDed, logic:true, sub:"Clue riddles"},
+  {id:"lpyr",   name:"Pyramid Point",         emoji:"🔺", gen:genLPyr, logic:true, sub:"Number pyramids"},
+  {id:"lspa",   name:"Tile Cove",             emoji:"🧭", gen:genLSpa, logic:true, sub:"Fix the picture"}
 ];
 
-/* ============ state ============ */
+/* ============ state (extends v2 jenny_math_reef — never wipes old progress) ============ */
 const KEY="jenny_math_reef";
 let S=null;
 function loadState(){
   try{ S=JSON.parse(localStorage.getItem(KEY)); }catch(e){ S=null; }
   if(!S) S={xp:0, streak:0, lastDay:"", mastery:{}, totalAns:0};
+  if(!S.mastery) S.mastery={};
+  if(!S.mistakes) S.mistakes=[];
+  if(!S.recent) S.recent=[];
+  if(!S.fixedCount) S.fixedCount=0;
   TOPICS.forEach(t=>{ if(!S.mastery[t.id]) S.mastery[t.id]={c:0,t:0}; });
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
-function today(){ return new Date().toISOString().slice(0,10); }
 function bumpStreak(){
   const t=today();
   if(S.lastDay===t) return;
@@ -736,7 +1724,7 @@ function bumpStreak(){
   S.streak = (S.lastDay===y) ? S.streak+1 : 1;
   S.lastDay=t;
 }
-const LEVELS=[[0,"Reef Explorer 🐠"],[300,"Wave Rider 🏄‍♀️"],[800,"Ocean Master 🧜‍♀️👑"]];
+const LEVELS=[[0,"Reef Explorer 🐠"],[300,"Wave Rider 🏄‍♀️"],[800,"Ocean Master 🧜‍♀️"],[1600,"Lagoon Legend 👑"]];
 function levelInfo(){
   let title=LEVELS[0][1], next=LEVELS[1][0], base=0;
   for(let i=0;i<LEVELS.length;i++){ if(S.xp>=LEVELS[i][0]){ title=LEVELS[i][1]; base=LEVELS[i][0]; next=(LEVELS[i+1]?LEVELS[i+1][0]:null); } }
@@ -744,80 +1732,129 @@ function levelInfo(){
   return {title, pct, next};
 }
 function masteryPct(id){ const m=S.mastery[id]; return m.t===0?0:Math.round(m.c/m.t*100); }
+function topicDiff(id){ const c=S.mastery[id]?S.mastery[id].c:0; return c>=24?3:(c>=10?2:1); }
+function unfixedCount(){ return S.mistakes.filter(m=>!m.fixed).length; }
 
-/* ============ UI ============ */
-const PRAISE=["Splash-tastic! 🌊","You swam right past that one! 🐬","Pearl-fect! 🦪✨","The reef is proud of you! 🪸","Wow, shark-level smart! 🦈","Bubbling brilliant! 🫧"];
-const GENTLE=["Almost! Let's watch how it works 🧜‍♀️","No worries — every wave learns from the shore 🌊","Good try! The pictures below will help 💙","So close! Let's look at the steps together 🐚"];
-const HOME_LINES=["Welcome back to the reef! Pick an island to explore 🏝️","The sea creatures missed you! Where shall we swim today?","Every question makes your fins stronger 🐬","Ready for a splashy challenge?"];
+/* ============ microcopy (funny!) ============ */
+const PRAISE=["Splash-tastic! 🌊","High-five from all eight octopus arms! 🐙","Pearl-fect! 🦪✨","The crabs are clapping… sideways! 🦀","Shark-level smart! 🦈","Bubbling brilliant! 🫧","So smart the seaweed waved! 🌿","The reef just did a happy dance! 🪸","Jellyfish jealous of that brain! 🪼"];
+const SPOKEN_PRAISE=["Amazing!","Well done!","Great job, Jenny!","You are so smart!","Fantastic!","Super duper!","Brilliant!","Wow, perfect!"];
+const GENTLE=["Almost! Let's peek at the model answer 🧜‍♀️","No worries — even dolphins belly-flop sometimes 🐬","Good try! The pictures below show the trick 💙","So close! The starfish says: check the steps, superstar ⭐","Oops-a-bubble! Let's see how it works 🫧"];
+const HOME_LINES=["Welcome back to the reef! Pick an island to explore 🏝️","The sea creatures missed you! Where shall we swim today?","Every question makes your fins stronger 🐬","Ready for a splashy challenge?","Psst… the Logic Island puzzles are extra fun today 🧩","My mermaid hair says today is a lucky maths day! 💇‍♀️✨"];
+const LOGIC_LINES=["Time to make your brain do gymnastics! 🤸‍♀️","Detective mode: ON 🔍","Puzzle power, activate! ⚡","These puzzles tickle your brain — in a good way 🧠"];
 
-function ringSVG(pct, size){
+function ringSVG(pct, size, label){
   size=size||54; const r=(size-10)/2, c=2*Math.PI*r;
-  return '<svg class="ring" width="'+size+'" height="'+size+'"><circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="#dff2f9" stroke-width="7"/>'
-    +'<circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="'+(pct>=80?"#39b98a":"#4ab8d8")+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct/100))+'" transform="rotate(-90 '+(size/2)+' '+(size/2)+')"/>'
-    +'<text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-size="13" font-weight="800" fill="#1a7ea8">'+pct+'%</text></svg>';
+  return '<svg class="ring" width="'+size+'" height="'+size+'"><circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="#d2f0ec" stroke-width="7"/>'
+    +'<circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="'+(pct>=80?"#2fae82":"#0abab5")+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-Math.min(100,pct)/100))+'" transform="rotate(-90 '+(size/2)+' '+(size/2)+')"/>'
+    +'<text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-size="'+(label&&label.length>3?11:13)+'" font-weight="800" fill="#0a8a86">'+(label!==undefined?label:pct+"%")+'</text></svg>';
 }
 
-let cur=null, curTopic=null, combo=0, stepIdx=0, answered=false;
+let cur=null, curTopic=null, combo=0, stepIdx=0, answered=false, redoIdx=-1, curGrid=null;
 const $=id=>document.getElementById(id);
 
 function header(){
   const L=levelInfo();
+  const dm=dailyMath();
   return '<div class="topbar">'
     +'<div class="chip">⚡ '+S.xp+'<small>XP</small></div>'
-    +'<div class="chip">🔥 '+S.streak+'<small>day streak</small></div>'
+    +'<div class="chip">🔥 '+S.streak+'<small>days</small></div>'
+    +'<div class="chip" style="padding:3px 10px">'+ringSVG(dm/DGOAL*100,42,dm+"/"+DGOAL)+'<small>today</small></div>'
+    +'<button class="chip" onclick="toggleTts()" id="ttsbtn" title="Voice on/off">'+(ttsOn()?"🔊":"🔇")+'</button>'
     +'<div class="lvlbar"><div class="t">'+L.title+(L.next?' · '+S.xp+'/'+L.next+' XP':'')+'</div><div class="pbar"><div style="width:'+L.pct+'%"></div></div></div>'
     +'</div>';
 }
+function toggleTts(){
+  setTtsOn(!ttsOn());
+  const b=$("ttsbtn"); if(b) b.textContent=ttsOn()?"🔊":"🔇";
+  if(ttsOn()) speak("Voice is on!","en-US");
+}
 function showHome(){
-  cur=null; curTopic=null;
+  cur=null; curTopic=null; redoIdx=-1;
   let h=header();
   h+='<div class="guide"><div class="face">🧜‍♀️</div><div class="bubble"><b>Marina the Mermaid:</b> '+pick(HOME_LINES)+'</div></div>';
-  h+='<h2 style="color:#1a7ea8;font-size:18px;margin:4px 2px 10px">🪸 Coral Reef Map — tap an island!</h2>';
+  const uf=unfixedCount();
+  h+='<button class="shellbar" onclick="showMistakes()">🐚 Mistake Shells <span class="cnt'+(uf===0?' zero':'')+'">'+uf+'</span> <span style="font-weight:650;color:var(--ink2);font-size:14px">'+(uf===0?"all polished — nice!":"tap to fix them and make them shine!")+'</span></button>';
+  h+='<h2 class="mapttl">🪸 Coral Reef Map — tap an island!</h2>';
   h+='<div class="map">';
-  TOPICS.forEach(t=>{
+  TOPICS.filter(t=>!t.logic).forEach(t=>{
     h+='<button class="island'+(t.preview?' preview':'')+'" onclick="startTopic(\''+t.id+'\')">'
       +(t.preview?'<span class="ptag">🌟 P3 Preview</span>':'')
       +'<span class="em">'+t.emoji+'</span><span><span class="nm">'+t.name+'</span><div class="sub">'+S.mastery[t.id].t+' answered</div></span>'
       +ringSVG(masteryPct(t.id))+'</button>';
   });
   h+='</div>';
+  h+='<h2 class="mapttl">🧩 Logic Island — brain-gym puzzles! <span style="font-size:13px;color:var(--ink2);font-weight:650">(they get trickier as you master them)</span></h2>';
+  h+='<div class="map">';
+  TOPICS.filter(t=>t.logic).forEach(t=>{
+    h+='<button class="island logic" onclick="startTopic(\''+t.id+'\')">'
+      +'<span class="em">'+t.emoji+'</span><span><span class="nm">'+t.name+'</span><div class="sub">'+t.sub+' · Lv'+topicDiff(t.id)+'</div></span>'
+      +ringSVG(masteryPct(t.id))+'</button>';
+  });
+  h+='</div>';
   h+='<div class="badgebox"><h3>🏅 Badges</h3>'+badges()+'</div>';
-  h+='<footer>Math Master Reef · made with 💙 for Jenny · works offline</footer>';
+  h+='<footer>Math Master Reef v3 · made with 💙 for Jenny · works offline · Tiffany-blue edition</footer>';
   $("app").innerHTML=h;
   window.scrollTo(0,0);
 }
 function badges(){
+  const logicAns=TOPICS.filter(t=>t.logic).reduce((a,t)=>a+S.mastery[t.id].t,0);
   const defs=[
     ["🐚","First Splash", S.totalAns>=1],
     ["🐬","10 Questions", S.totalAns>=10],
     ["🦀","50 Questions", S.totalAns>=50],
+    ["🐳","200 Questions", S.totalAns>=200],
     ["🔥","3-Day Streak", S.streak>=3],
     ["⭐","100 XP", S.xp>=100],
     ["🏄‍♀️","Wave Rider", S.xp>=300],
     ["👑","Ocean Master", S.xp>=800],
-    ["🪸","Reef Star: 80% in any topic", TOPICS.some(t=>S.mastery[t.id].t>=5 && masteryPct(t.id)>=80)]
+    ["🪸","Reef Star: 80% in any topic", TOPICS.some(t=>S.mastery[t.id].t>=5 && masteryPct(t.id)>=80)],
+    ["🧩","Logic Rookie: 10 logic puzzles", logicAns>=10],
+    ["🕵️‍♀️","Puzzle Master: 80% in a logic isle", TOPICS.filter(t=>t.logic).some(t=>S.mastery[t.id].t>=5 && masteryPct(t.id)>=80)],
+    ["✨","Shell Polisher: fix 5 shells", (S.fixedCount||0)>=5]
   ];
   return defs.map(d=>'<span class="bdg'+(d[2]?'':' locked')+'">'+d[0]+' '+d[1]+'</span>').join("");
 }
 function startTopic(id){
   curTopic=TOPICS.find(t=>t.id===id);
-  combo=0;
+  combo=0; redoIdx=-1;
   nextQ();
 }
 function nextQ(){
-  cur=curTopic.gen(); answered=false; stepIdx=0;
-  let h='<div class="backrow"><button class="btn ghost" onclick="showHome()">🏝️ Map</button>'
-    +'<div class="chip" style="min-height:44px">'+curTopic.emoji+' <small>'+curTopic.name+'</small></div>'
-    +'<div class="combo">'+(combo>=2?"🔥 Combo ×"+combo:"")+'</div></div>';
-  h+='<div class="guide"><div class="face">🧜‍♀️</div><div class="bubble" id="bub">'+ (curTopic.preview?"This is a sneak peek of P3 — take your time, hints are here to help! 🌟":"Read carefully, then dive in! 🌊")+'</div></div>';
+  redoIdx=-1;
+  const d=topicDiff(curTopic.id);
+  let q=null;
+  for(let tries=0; tries<15; tries++){
+    q=curTopic.gen(d);
+    if(!S.recent.includes(q.id)) break;
+  }
+  S.recent.push(q.id);
+  if(S.recent.length>400) S.recent=S.recent.slice(-400);
+  save();
+  cur=q;
+  renderQuiz(false);
+}
+function renderQuiz(redo){
+  answered=false; stepIdx=0;
+  let h='<div class="backrow"><button class="btn ghost" onclick="'+(redo?'showMistakes()':'showHome()')+'">'+(redo?'🐚 Shells':'🏝️ Map')+'</button>'
+    +'<div class="chip" style="min-height:44px">'+curTopic.emoji+' <small>'+curTopic.name+(curTopic.logic?' · Lv'+topicDiff(curTopic.id):'')+'</small></div>'
+    +(redo?'<div class="chip" style="min-height:44px">🔧 <small>fixing a shell!</small></div>':'')
+    +'<div class="combo">'+(combo>=2&&!redo?"🔥 Combo ×"+combo:"")+'</div></div>';
+  const bubbleLine = redo ? "Let's fix this shell together — you can do it this time! 💪"
+    : (curTopic.logic ? pick(LOGIC_LINES)
+    : (curTopic.preview ? "This is a sneak peek of P3 — take your time, hints are here to help! 🌟" : "Read carefully, then dive in! 🌊"));
+  h+='<div class="guide"><div class="face">🧜‍♀️</div><div class="bubble" id="bub">'+bubbleLine+'</div></div>';
   h+='<div class="qcard"><div class="qtext">'+cur.text+'</div>';
-  if(cur.qvis) h+='<div class="qvis" style="display:block">'+cur.qvis+'</div>';
+  if(cur.qvis) h+='<div class="qvis">'+cur.qvis+'</div>';
   if(cur.hint) h+='<div class="hintbox">💡 <b>Hint:</b> '+cur.hint+'</div>';
   if(cur.type==="mcq"){
-    h+='<div class="opts'+(cur.short?' short':'')+'">';
-    cur.opts.forEach((o,i)=>{ h+='<button class="opt" id="opt'+i+'" onclick="pickOpt('+i+')">'+o+'</button>'; });
+    h+='<div class="opts'+(cur.short?' short':'')+(cur.visOpts?' vis':'')+'">';
+    cur.opts.forEach((o,i)=>{ h+='<button class="opt'+(cur.visOpts?' vis':'')+'" id="opt'+i+'" onclick="pickOpt('+i+')">'+o+'</button>'; });
     h+='</div>';
-  }else{
+  } else if(cur.type==="sud"){
+    curGrid=cur.giv.slice();
+    h+='<div class="sud" id="sudgrid">'+sudCellsHTML()+'</div>';
+    h+='<div class="inputrow" style="justify-content:center"><button class="btn" onclick="sudCheck()">Check my grid ✔</button></div>';
+  } else {
     h+='<div class="inputrow"><input class="ansin" id="ansin" type="number" step="'+(cur.money?"0.01":"1")+'" inputmode="'+(cur.money?"decimal":"numeric")+'" placeholder="?">'
       +'<button class="btn" onclick="checkInput()">Check ✔</button></div>';
   }
@@ -827,16 +1864,48 @@ function nextQ(){
   const inp=$("ansin");
   if(inp){ inp.addEventListener("keydown",e=>{ if(e.key==="Enter") checkInput(); }); }
 }
+function sudCellsHTML(showBad){
+  let h="";
+  for(let i=0;i<16;i++){
+    const r=Math.floor(i/4), c=i%4;
+    const giv=cur.giv[i]!==0;
+    let cls="sudc"+(giv?" giv":"");
+    if(c===1) cls+=" mr"; if(r===1) cls+=" mb";
+    if(showBad && !giv && curGrid[i]!==cur.sol[i]) cls+=" bad";
+    h+='<button class="'+cls+'" id="sud'+i+'" '+(giv?'disabled':'onclick="sudTap('+i+')"')+'>'+(curGrid[i]===0?"":cur.syms[curGrid[i]-1])+'</button>';
+  }
+  return h;
+}
+function sudTap(i){
+  if(answered || cur.giv[i]!==0) return;
+  curGrid[i]=(curGrid[i]+1)%5;
+  $("sud"+i).textContent = curGrid[i]===0?"":cur.syms[curGrid[i]-1];
+  sndPop();
+}
+function sudCheck(){
+  if(answered) return;
+  if(curGrid.includes(0)){
+    const b=$("bub"); if(b) b.innerHTML="Some cells are still empty — tap them to add a creature! 🐠";
+    sndOops();
+    return;
+  }
+  const ok = curGrid.every((v,i)=>v===cur.sol[i]);
+  const wrongN = curGrid.filter((v,i)=>v!==cur.sol[i]).length;
+  if(!ok) $("sudgrid").innerHTML=sudCellsHTML(true);
+  document.querySelectorAll("#sudgrid button").forEach(b=>b.disabled=true);
+  finish(ok, ok?"perfect grid":wrongN+" cell"+(wrongN>1?"s":"")+" in the wrong spot");
+}
 function pickOpt(i){
   if(answered) return;
-  const chosen=cur.opts[i];
-  const ok=chosen===cur.ans;
+  const ok = i===cur.ansIdx;
   cur.opts.forEach((o,j)=>{
-    const el=$("opt"+j); el.disabled=true;
-    if(o===cur.ans) el.classList.add(ok&&j===i?"sel-ok":"show-ok");
+    const el=$("opt"+j); if(!el) return;
+    el.disabled=true;
+    if(j===cur.ansIdx) el.classList.add(ok&&j===i?"sel-ok":"show-ok");
     if(j===i&&!ok) el.classList.add("sel-no");
   });
-  finish(ok, chosen);
+  const pickText = cur.visOpts ? "choice "+(i+1) : stripTags(cur.opts[i]);
+  finish(ok, pickText);
 }
 function checkInput(){
   if(answered) return;
@@ -845,27 +1914,60 @@ function checkInput(){
   if(isNaN(v)){ el.focus(); return; }
   const ok=Math.abs(v-cur.ans)<0.005;
   el.disabled=true;
-  el.style.borderColor= ok? "#39b98a":"#ff8a7a";
+  el.style.borderColor= ok? "#2fae82":"#ff8a7a";
   el.style.background= ok? "#e2f7ee":"#ffece9";
-  finish(ok, v);
+  finish(ok, cur.money? "$"+v.toFixed(2) : String(v));
 }
-function finish(ok){
+function addMistake(q, pickText){
+  const ex=S.mistakes.find(m=>m.id===q.id && !m.fixed);
+  if(ex){ ex.pick=pickText; ex.ts=Date.now(); return; }
+  S.mistakes.unshift({id:q.id, tid:curTopic.id, q:q, pick:pickText, fixed:false, ts:Date.now()});
+  if(S.mistakes.length>60){
+    const fi=S.mistakes.map((m,i)=>m.fixed?i:-1).filter(i=>i>=0).pop();
+    if(fi!==undefined && fi>=0) S.mistakes.splice(fi,1); else S.mistakes.pop();
+  }
+}
+function finish(ok, pickText){
   answered=true;
-  S.totalAns++; S.mastery[curTopic.id].t++;
+  const isRedo = redoIdx>=0;
+  S.totalAns++; bumpDaily();
+  if(!isRedo) S.mastery[curTopic.id].t++;
+  let headline;
   if(ok){
-    combo++; S.mastery[curTopic.id].c++;
-    const gain=10+(combo>=3?5:0);
-    S.xp+=gain; bumpStreak();
-    if(combo>=3) fireworks(); else confetti();
-  } else combo=0;
+    if(isRedo){
+      S.mistakes[redoIdx].fixed=true;
+      S.fixedCount=(S.fixedCount||0)+1;
+      S.xp+=5; bumpStreak();
+      headline="🌟 Fixed! This shell is shiny again! (+5 XP)";
+      sndFix(); confetti();
+      speak("Fixed! "+pick(SPOKEN_PRAISE),"en-US");
+    } else {
+      combo++; S.mastery[curTopic.id].c++;
+      const gain=10+(combo>=3?5:0);
+      S.xp+=gain; bumpStreak();
+      headline="✅ "+pick(PRAISE)+(combo>=3?" 🔥 Combo ×"+combo+" (+15 XP)":" (+10 XP)");
+      if(combo>=3){ sndCombo(); fireworks(); } else { sndDing(); confetti(); }
+      speak(pick(SPOKEN_PRAISE),"en-US");
+    }
+  } else {
+    if(!isRedo){ combo=0; addMistake(cur, pickText); }
+    headline="💙 "+pick(GENTLE);
+    sndOops();
+  }
   save();
-  const modelDisp = (cur.money && typeof cur.ans==="number") ? fmtMoney(Math.round(cur.ans*100)) : cur.ans;
-  let h='<div class="fb '+(ok?"good":"oops")+'"><div class="big">'+(ok? "✅ "+pick(PRAISE)+(combo>=3?" 🔥 Combo ×"+combo+" (+15 XP)":" (+10 XP)") : "💙 "+pick(GENTLE))+'</div></div>';
+  let h='<div class="fb '+(ok?"good":"oops")+'"><div class="big">'+headline+'</div>'
+    +(!ok && pickText?'<div style="font-size:14px;color:#c65a4c;margin-top:4px">Your answer: '+pickText+(cur.type==="mcq"&&!cur.visOpts?' · Correct: '+stripTags(String(cur.ans)):'')+'</div>':'')
+    +'</div>';
   h+='<div class="model"><span class="tag">✅ Model Answer</span>'+cur.model+'</div>';
   h+='<div class="steps"><h4>🔍 See it in pictures — tap for each step</h4><div id="steparea"></div>'
     +'<button class="btn sand" id="nsbtn" onclick="nextStep()">Next step ▶</button></div>';
-  h+='<div style="display:flex;gap:10px"><button class="btn" style="flex:1" onclick="nextQ()">Next question 🌊</button>'
-    +'<button class="btn ghost" onclick="showHome()">🏝️ Map</button></div>';
+  if(isRedo){
+    h+='<div style="display:flex;gap:10px"><button class="btn" style="flex:1" onclick="showMistakes()">🐚 Back to shells</button>'
+      +'<button class="btn ghost" onclick="showHome()">🏝️ Map</button></div>';
+  } else {
+    h+='<div style="display:flex;gap:10px"><button class="btn" style="flex:1" onclick="nextQ()">Next question 🌊</button>'
+      +'<button class="btn ghost" onclick="showHome()">🏝️ Map</button></div>';
+  }
   $("fbzone").innerHTML=h;
   nextStep();
   $("fbzone").scrollIntoView({behavior:"smooth"});
@@ -879,6 +1981,60 @@ function nextStep(){
   $("steparea").appendChild(div);
   stepIdx++;
   if(stepIdx>=cur.steps.length){ const b=$("nsbtn"); if(b) b.style.display="none"; }
+}
+
+/* ============ 🐚 mistake shells (错题贝壳) ============ */
+function showMistakes(){
+  cur=null; redoIdx=-1;
+  let h='<div class="backrow"><button class="btn ghost" onclick="showHome()">🏝️ Map</button>'
+    +'<div class="chip">🐚 <small>Mistake Shells</small></div></div>';
+  const uf=unfixedCount();
+  h+='<div class="guide"><div class="face">🧜‍♀️</div><div class="bubble">'
+    +(S.mistakes.length===0 ? "No shells here — your treasure box of mistakes is empty. Go make some brave tries! 🌊"
+      : uf===0 ? "Every shell is polished! You fixed them all — that is TRUE reef magic ✨"
+      : "Each shell is a question that tricked you before. Tap one, learn the trick, then fix it! 💪")+'</div></div>';
+  if(S.mistakes.length){
+    h+='<div class="mcardlist">';
+    S.mistakes.forEach((m,i)=>{
+      const t=TOPICS.find(x=>x.id===m.tid)||{emoji:"🐚",name:"?"};
+      const snippet=stripTags(m.q.text).slice(0,90);
+      h+='<button class="mcard'+(m.fixed?' fx':'')+'" onclick="showMistake('+i+')">'
+        +'<span class="em">'+(m.fixed?"✨":"🐚")+'</span>'
+        +'<span class="tx">'+t.emoji+' <b>'+t.name+'</b><br>'+snippet+(stripTags(m.q.text).length>90?"…":"")+'</span>'
+        +'<span class="st '+(m.fixed?"done":"todo")+'">'+(m.fixed?"Fixed!":"to fix")+'</span></button>';
+    });
+    h+='</div>';
+  }
+  $("app").innerHTML=h;
+  window.scrollTo(0,0);
+}
+function showMistake(i){
+  const m=S.mistakes[i];
+  const t=TOPICS.find(x=>x.id===m.tid)||{emoji:"🐚",name:"?"};
+  let h='<div class="backrow"><button class="btn ghost" onclick="showMistakes()">🐚 Shells</button>'
+    +'<div class="chip">'+t.emoji+' <small>'+t.name+'</small></div>'
+    +(m.fixed?'<div class="chip">✨ <small>Fixed!</small></div>':'')+'</div>';
+  h+='<div class="guide"><div class="face">🧜‍♀️</div><div class="bubble">First look at the model answer and the picture steps. When you feel ready, tap <b>Try again</b>! 🌟</div></div>';
+  h+='<div class="qcard"><div class="qtext">'+m.q.text+'</div>';
+  if(m.q.qvis) h+='<div class="qvis">'+m.q.qvis+'</div>';
+  if(m.q.type==="sud" && !m.fixed) h+='<div class="cap">Your grid had a mix-up: '+m.pick+'</div>';
+  else if(m.pick && !m.fixed) h+='<div class="cap">Last time you answered: <b style="color:#c65a4c">'+m.pick+'</b></div>';
+  h+='</div>';
+  h+='<div class="model"><span class="tag">✅ Model Answer</span>'+m.q.model+'</div>';
+  h+='<div class="steps"><h4>🔍 The trick, in pictures</h4>';
+  m.q.steps.forEach((st,j)=>{
+    h+='<div class="step"><div class="stepcap"><span class="no">'+(j+1)+'</span>'+st.c+'</div>'+st.h+'</div>';
+  });
+  h+='</div>';
+  h+='<div style="display:flex;gap:10px"><button class="btn coral" style="flex:1" onclick="startRedo('+i+')">'+(m.fixed?'Practise again 🔁':'Try again — fix this shell! 🔧')+'</button></div>';
+  $("app").innerHTML=h;
+  window.scrollTo(0,0);
+}
+function startRedo(i){
+  const m=S.mistakes[i];
+  curTopic=TOPICS.find(x=>x.id===m.tid)||TOPICS[0];
+  cur=m.q; redoIdx=i;
+  renderQuiz(true);
 }
 
 /* ============ confetti / fireworks ============ */
@@ -899,7 +2055,7 @@ function fxTick(){
   });
   if(particles.length) requestAnimationFrame(fxTick); else { fxRunning=false; ctx.clearRect(0,0,cv.width,cv.height); }
 }
-const FXCOLORS=["#4ab8d8","#ff8a7a","#f4c35d","#7fd8b4","#1a7ea8","#c8a2ff"];
+const FXCOLORS=["#0abab5","#81d8d0","#ff8a7a","#f4c35d","#7fd8b4","#c8a2ff"];
 function burst(x,y,n,speed){
   for(let i=0;i<n;i++){
     const a=Math.random()*Math.PI*2, v=(0.4+Math.random())*speed;
@@ -917,11 +2073,20 @@ function fireworks(){
 /* ============ boot ============ */
 if(typeof window!=="undefined" && typeof document!=="undefined" && typeof document.getElementById==="function" && document.getElementById("app")){
   loadState(); save(); showHome();
+  try{
+    if(typeof speechSynthesis!=="undefined"){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
+  }catch(e){}
+  document.addEventListener("pointerdown", function(e){
+    const b=e.target && e.target.closest ? e.target.closest("button") : null;
+    if(b && !b.classList.contains("sudc")) sndPop();
+  }, true);
   window.startTopic=startTopic; window.showHome=showHome; window.pickOpt=pickOpt;
   window.checkInput=checkInput; window.nextQ=nextQ; window.nextStep=nextStep;
+  window.sudTap=sudTap; window.sudCheck=sudCheck; window.toggleTts=toggleTts;
+  window.showMistakes=showMistakes; window.showMistake=showMistake; window.startRedo=startRedo;
 }
 if(typeof module!=="undefined" && module.exports){
-  module.exports={TOPICS, mkOpts, fmtTime, fmtMoney};
+  module.exports={TOPICS, mkOpts, fmtTime, fmtMoney, sudCount, sudHint, dedSolutions, dedSatisfy, UNITQ};
 }
 </script>
 </body>

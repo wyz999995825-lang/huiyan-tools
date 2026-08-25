@@ -5,168 +5,190 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Reading Lagoon 🐢</title>
 <style>
+:root{
+  --tiffany:#0abab5; --tiffany-light:#81d8d0; --lagoon:#e6f7f5; --sky:#f4fbfa;
+  --deep:#0a8a86; --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff;
+  --ink:#144644; --ink-soft:#3d7f7c; --ink-faint:#7aada9;
+}
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html,body { height:100%; }
+html{ -webkit-text-size-adjust:100%; }
+html,body { min-height:100%; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  background:#f0fafd; color:#134b63; font-size:16px;
-  padding-bottom:90px;
+  font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background:var(--sky); color:var(--ink); font-size:17px; line-height:1.8;
+  padding-bottom:92px;
 }
 header {
-  background:linear-gradient(160deg,#dff2f9,#a5e0ef);
-  padding:16px 16px 14px; border-radius:0 0 24px 24px;
-  box-shadow:0 4px 14px rgba(26,126,168,.12);
+  background:linear-gradient(160deg,var(--lagoon),var(--tiffany-light));
+  padding:12px 14px 11px; border-radius:0 0 26px 26px;
+  box-shadow:0 4px 16px rgba(10,138,134,.16);
 }
-.hrow { display:flex; align-items:center; gap:12px; max-width:760px; margin:0 auto; }
-.mermaid-big { font-size:44px; line-height:1; filter:drop-shadow(0 2px 3px rgba(26,126,168,.25)); }
-.htitle { font-size:22px; font-weight:800; color:#1a7ea8; }
-.hsub { font-size:13px; color:#3d7f9c; margin-top:2px; }
-.stats { display:flex; gap:8px; margin-left:auto; align-items:center; }
-.pill {
-  background:#ffffffcc; border-radius:999px; padding:7px 12px; font-weight:700;
-  font-size:14px; color:#1a7ea8; box-shadow:0 2px 6px rgba(26,126,168,.12);
-  white-space:nowrap;
-}
+.hrow { display:flex; align-items:center; gap:10px; max-width:760px; margin:0 auto; }
+.mermaid-big { font-size:44px; line-height:1; animation:floaty 3s ease-in-out infinite; filter:drop-shadow(0 4px 4px rgba(10,138,134,.25)); }
+@keyframes floaty { 0%,100%{transform:translateY(0) rotate(-4deg);} 50%{transform:translateY(-8px) rotate(4deg);} }
+.htitle { font-size:21px; font-weight:800; color:var(--deep); }
+.hsub { font-size:12px; color:var(--ink-soft); margin-top:2px; }
+.stats { display:flex; gap:7px; margin-left:auto; align-items:center; }
+.pill { background:#ffffffd9; border-radius:999px; padding:7px 11px; font-weight:800; font-size:14px; color:var(--deep); box-shadow:0 2px 6px rgba(10,138,134,.14); white-space:nowrap; }
+.ttsbtn { width:46px; height:46px; border-radius:50%; border:none; background:#ffffffd9; font-size:21px; cursor:pointer;
+  box-shadow:0 2px 6px rgba(10,138,134,.18); transition:transform .18s cubic-bezier(.34,1.56,.64,1); }
+.ttsbtn:active { transform:scale(.88) rotate(-6deg); }
+.ttsbtn.off { opacity:.55; filter:grayscale(1); }
+.ringwrap48 { position:relative; width:46px; height:46px; flex-shrink:0; }
+.ringwrap48 svg { width:46px; height:46px; transform:rotate(-90deg); }
+.ringwrap48 .ringtxt { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:9px; font-weight:800; color:var(--deep); line-height:1.1; }
+.ringwrap48 .ringtxt b { font-size:12px; }
 nav {
-  position:fixed; bottom:0; left:0; right:0; z-index:50;
-  background:#ffffff; box-shadow:0 -4px 16px rgba(26,126,168,.15);
-  display:flex; justify-content:space-around; padding:6px 4px calc(6px + env(safe-area-inset-bottom));
-  border-radius:20px 20px 0 0;
+  position:fixed; bottom:0; left:0; right:0; z-index:50; background:var(--card);
+  box-shadow:0 -4px 16px rgba(10,138,134,.16); display:flex; justify-content:space-around;
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom)); border-radius:22px 22px 0 0;
 }
-.navbtn {
-  border:none; background:none; font-size:12px; font-weight:700; color:#7aa9bd;
-  display:flex; flex-direction:column; align-items:center; gap:2px;
-  min-width:64px; min-height:52px; justify-content:center; border-radius:14px; cursor:pointer;
-}
+.navbtn { border:none; background:none; font-size:12px; font-weight:800; color:var(--ink-faint); display:flex; flex-direction:column; align-items:center; gap:2px; min-width:64px; min-height:54px; justify-content:center; border-radius:16px; cursor:pointer; font-family:inherit; transition:transform .18s cubic-bezier(.34,1.56,.64,1); }
 .navbtn .ico { font-size:24px; }
-.navbtn.active { color:#1a7ea8; background:#dff2f9; }
-main { max-width:760px; margin:0 auto; padding:16px; }
-.card {
-  background:#fff; border-radius:18px; padding:18px;
-  box-shadow:0 4px 14px rgba(26,126,168,.10); margin-bottom:16px;
-}
-.bubble {
-  background:#dff2f9; border-radius:18px; padding:12px 16px; position:relative;
-  font-size:16px; line-height:1.6; color:#155e7d; margin:10px 0 16px 14px;
-}
-.bubble:before {
-  content:""; position:absolute; left:-9px; top:16px;
-  border:9px solid transparent; border-right-color:#dff2f9; border-left:none;
-}
+.navbtn:active { transform:scale(.9); }
+.navbtn.active { color:var(--deep); background:var(--lagoon); }
+main { max-width:760px; margin:0 auto; padding:14px; }
+.card { background:var(--card); border-radius:20px; padding:16px; box-shadow:0 4px 16px rgba(10,138,134,.10); margin-bottom:14px; }
+.bubble { background:var(--lagoon); border-radius:18px; padding:12px 16px; position:relative; font-size:16px; line-height:1.7; color:var(--ink); margin:8px 0 14px 14px; }
+.bubble:before { content:""; position:absolute; left:-9px; top:16px; border:9px solid transparent; border-right-color:var(--lagoon); border-left:none; }
 .brow { display:flex; align-items:flex-start; gap:4px; }
-.brow .face { font-size:34px; margin-top:6px; }
-h2 { color:#1a7ea8; font-size:19px; margin-bottom:10px; }
-h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
-.btn {
-  display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  background:#4ab8d8; color:#fff; border:none; border-radius:16px;
-  padding:12px 20px; font-size:16px; font-weight:800; cursor:pointer;
-  min-height:48px; box-shadow:0 3px 8px rgba(26,126,168,.25);
-}
-.btn:active { transform:scale(.97); }
-.btn.sand { background:#fdf3dd; color:#a4762a; box-shadow:0 3px 8px rgba(190,150,60,.2); }
-.btn.coral { background:#ff8a7a; }
-.btn.ghost { background:#eaf6fb; color:#1a7ea8; box-shadow:none; }
-.btn.small { padding:8px 14px; min-height:44px; font-size:14px; }
+.brow .face { font-size:34px; margin-top:4px; animation:floaty 3.4s ease-in-out infinite; }
+.grow { flex:1; }
+h2 { color:var(--deep); font-size:20px; margin-bottom:10px; }
+h3 { color:var(--deep); font-size:17px; margin-bottom:8px; }
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--tiffany); color:#fff; border:none; border-radius:18px; padding:12px 20px; font-size:16px; font-weight:800; cursor:pointer; min-height:48px; box-shadow:0 4px 10px rgba(10,138,134,.28); font-family:inherit; transition:transform .18s cubic-bezier(.34,1.56,.64,1), box-shadow .18s; }
+.btn:hover { transform:scale(1.04) rotate(-1deg); }
+.btn:active { transform:scale(.93) rotate(1.5deg); box-shadow:0 2px 5px rgba(10,138,134,.25); }
+.btn.sand { background:var(--sand); color:#a4762a; box-shadow:0 3px 8px rgba(190,150,60,.2); }
+.btn.coral { background:var(--coral); box-shadow:0 4px 10px rgba(255,138,122,.35); }
+.btn.ghost { background:var(--lagoon); color:var(--deep); box-shadow:none; }
+.btn.small { padding:8px 14px; min-height:46px; font-size:14px; }
+.btn[disabled] { opacity:.5; }
 .artcard {
-  display:flex; gap:14px; align-items:center; background:#fff; border-radius:18px;
-  padding:14px; box-shadow:0 4px 12px rgba(26,126,168,.10); margin-bottom:12px;
+  position:relative; display:flex; gap:14px; align-items:center; background:var(--card); border-radius:20px;
+  padding:14px; box-shadow:0 4px 14px rgba(10,138,134,.10); margin-bottom:12px;
   cursor:pointer; border:2px solid transparent; width:100%; text-align:left;
-  font-family:inherit; color:inherit;
+  font-family:inherit; color:inherit; font-size:16px; transition:transform .18s cubic-bezier(.34,1.56,.64,1);
 }
-.artcard.done { border-color:#8fd7b8; background:#f4fcf8; }
+.artcard:active { transform:scale(.97); }
+.artcard.done { border-color:var(--tiffany-light); background:#f2fbfa; }
 .artcard .cover {
-  width:58px; height:58px; border-radius:16px; background:#dff2f9;
-  display:flex; align-items:center; justify-content:center; font-size:32px; flex-shrink:0;
+  width:58px; height:58px; border-radius:18px; background:var(--lagoon);
+  display:flex; align-items:center; justify-content:center; font-size:30px; flex-shrink:0;
 }
-.artcard .t { font-weight:800; font-size:16px; color:#134b63; }
-.artcard .k { font-size:13px; color:#6fa3ba; margin-top:3px; }
-.tag { display:inline-block; font-size:11px; font-weight:800; border-radius:999px; padding:3px 9px; margin-bottom:4px; }
-.tag.fun { background:#fdf3dd; color:#a4762a; }
-.tag.news { background:#e5e9fb; color:#4a5bbd; }
-.readtext { font-size:18px; line-height:1.9; color:#183f52; }
+.artcard .t { font-weight:800; font-size:17px; color:var(--ink); }
+.artcard .k { font-size:13px; color:var(--ink-faint); margin-top:3px; }
+.newrib {
+  position:absolute; top:-9px; right:12px; background:var(--coral); color:#fff;
+  font-size:11px; font-weight:800; padding:3px 10px; border-radius:999px;
+  box-shadow:0 3px 8px rgba(255,138,122,.5); animation:ribpop .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes ribpop { 0%{transform:scale(0) rotate(-15deg);} 100%{transform:scale(1) rotate(0);} }
+.tag { display:inline-block; font-size:11px; font-weight:800; border-radius:999px; padding:3px 9px; margin-bottom:4px; margin-right:4px; }
+.tag.fun { background:var(--sand); color:#a4762a; }
+.tag.news { background:#e0ecfb; color:#3a6cbd; }
+.tag.date { background:var(--lagoon); color:var(--ink-soft); }
+.libtabs { display:flex; gap:8px; margin-bottom:14px; }
+.libtab { flex:1; border:2px solid var(--tiffany-light); background:var(--card); color:var(--ink-soft); border-radius:16px; padding:10px; font-size:16px; font-weight:800; cursor:pointer; min-height:48px; font-family:inherit; transition:transform .18s cubic-bezier(.34,1.56,.64,1); }
+.libtab:active { transform:scale(.93); }
+.libtab.on { background:var(--tiffany); border-color:var(--tiffany); color:#fff; box-shadow:0 4px 10px rgba(10,138,134,.28); }
+.monthhead { font-size:14px; font-weight:800; color:var(--ink-soft); margin:16px 0 8px; }
+.readtext { font-size:18px; line-height:1.9; color:var(--ink); }
+.sent { border-radius:8px; padding:1px 2px; cursor:pointer; transition:background .3s, box-shadow .3s; }
+.sent.karaoke { background:#fff0bd; box-shadow:0 0 0 3px #fff0bd; }
 .kwspan {
-  border-bottom:2px dotted #4ab8d8; background:#dff2f97a; border-radius:4px;
+  border-bottom:2px dotted var(--tiffany); background:#d8f2ef; border-radius:4px;
   padding:0 2px; cursor:pointer; font-weight:600;
 }
-.kwspan.collected { background:#fdf3dd; border-bottom-color:#e0b25c; }
+.kwspan.collected { background:var(--sand); border-bottom-color:#e0b25c; }
 .ringwrap { position:relative; width:88px; height:88px; flex-shrink:0; }
 .ringwrap svg { transform:rotate(-90deg); }
 .ringlabel {
   position:absolute; inset:0; display:flex; flex-direction:column;
-  align-items:center; justify-content:center; font-weight:800; color:#1a7ea8; font-size:15px;
+  align-items:center; justify-content:center; font-weight:800; color:var(--deep); font-size:15px;
 }
-.ringlabel small { font-weight:600; font-size:10px; color:#6fa3ba; }
-.qbox { background:#f2fafd; border-radius:16px; padding:14px; margin-bottom:14px; }
-.qq { font-weight:800; margin-bottom:10px; font-size:16px; }
+.ringlabel small { font-weight:600; font-size:10px; color:var(--ink-faint); }
+.qbox { background:var(--sky); border-radius:16px; padding:14px; margin-bottom:14px; }
+.qq { font-weight:800; margin-bottom:10px; font-size:19px; line-height:1.6; }
 .opt {
-  display:block; width:100%; text-align:left; background:#fff; border:2px solid #cfe9f4;
-  border-radius:14px; padding:12px 14px; font-size:16px; margin-bottom:8px; cursor:pointer;
-  min-height:48px; color:#134b63; font-family:inherit;
+  display:block; width:100%; text-align:left; background:var(--card); border:2px solid #cde9e6;
+  border-radius:14px; padding:12px 14px; font-size:17px; line-height:1.6; margin-bottom:8px; cursor:pointer;
+  min-height:48px; color:var(--ink); font-family:inherit; transition:transform .15s cubic-bezier(.34,1.56,.64,1);
 }
+.opt:active { transform:scale(.98); }
 .opt.correct { background:#d9f5e5; border-color:#5bc596; font-weight:700; }
-.opt.wrong { background:#ffe9e5; border-color:#ff8a7a; }
+.opt.wrong { background:#ffe9e5; border-color:var(--coral); }
 .opt:disabled { opacity:1; }
 .model {
-  background:#fff; border-left:5px solid #4ab8d8; border-radius:0 12px 12px 0;
-  padding:10px 12px; margin-top:6px; font-size:15px; line-height:1.6;
+  background:var(--card); border-left:5px solid var(--tiffany); border-radius:0 12px 12px 0;
+  padding:10px 12px; margin-top:6px; font-size:15px; line-height:1.7;
 }
-.model b { color:#1a7ea8; }
-.xraybox { background:#eef7fb; border-radius:16px; padding:14px; margin:12px 0; }
+.model b { color:var(--deep); }
+.xraybox { background:#eef8f6; border-radius:16px; padding:14px; margin:12px 0; }
 .xr-sent { font-size:18px; line-height:2; margin:8px 0; }
 .xr-who { background:#d6e6ff; color:#2b5bb7; border-radius:8px; padding:2px 6px; font-weight:700; }
 .xr-act { background:#ffe1dc; color:#d1543f; border-radius:8px; padding:2px 6px; font-weight:700; }
 .xr-rest { background:#dcf3e3; color:#237a4d; border-radius:8px; padding:2px 6px; font-weight:700; }
-.xr-legend { font-size:13px; color:#5b8ba1; margin-top:6px; }
-.xr-note { font-size:14px; color:#155e7d; margin-top:8px; background:#fff; border-radius:10px; padding:8px 10px; line-height:1.6; }
+.xr-legend { font-size:13px; color:var(--ink-soft); margin-top:6px; line-height:2; }
+.xr-note { font-size:14px; color:var(--ink); margin-top:8px; background:var(--card); border-radius:10px; padding:8px 10px; line-height:1.6; }
 .popup-bg {
-  position:fixed; inset:0; background:rgba(19,75,99,.45); z-index:100;
+  position:fixed; inset:0; background:rgba(10,70,68,.45); z-index:100;
   display:none; align-items:center; justify-content:center; padding:20px;
 }
 .popup-bg.show { display:flex; }
 .popup {
-  background:#fff; border-radius:20px; padding:22px; max-width:420px; width:100%;
+  background:var(--card); border-radius:20px; padding:22px; max-width:420px; width:100%;
   box-shadow:0 10px 40px rgba(0,0,0,.25); max-height:80vh; overflow:auto;
+  animation:ribpop .35s cubic-bezier(.34,1.56,.64,1);
 }
-.popup .word { font-size:26px; font-weight:800; color:#1a7ea8; }
+.popup .word { font-size:26px; font-weight:800; color:var(--deep); }
 .popup .cn { font-size:17px; color:#c26a2e; font-weight:700; margin:4px 0 10px; }
 .popup .def { font-size:16px; line-height:1.7; }
-.popup .ex { background:#f2fafd; border-radius:12px; padding:10px 12px; margin-top:10px; font-size:15px; line-height:1.7; font-style:italic; }
+.popup .ex { background:var(--sky); border-radius:12px; padding:10px 12px; margin-top:10px; font-size:15px; line-height:1.7; font-style:italic; }
 .chestword {
-  display:flex; justify-content:space-between; align-items:center; background:#fff;
+  display:flex; justify-content:space-between; align-items:center; background:var(--card);
   border-radius:14px; padding:12px 14px; margin-bottom:8px; cursor:pointer;
-  box-shadow:0 2px 8px rgba(26,126,168,.08); border:none; width:100%; font-family:inherit; font-size:16px;
+  box-shadow:0 2px 8px rgba(10,138,134,.08); border:none; width:100%; font-family:inherit; font-size:16px;
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1);
 }
-.chestword .w { font-weight:800; color:#1a7ea8; font-size:17px; }
-.chestword .from { font-size:12px; color:#8fb4c6; text-align:right; }
+.chestword:active { transform:scale(.97); }
+.chestword .w { font-weight:800; color:var(--deep); font-size:17px; }
+.chestword .from { font-size:12px; color:var(--ink-faint); text-align:right; }
 .chip {
-  border:2px solid #cfe9f4; background:#fff; border-radius:16px; padding:10px 14px;
-  font-size:15px; font-weight:700; color:#134b63; cursor:pointer; min-height:48px;
+  border:2px solid #cde9e6; background:var(--card); border-radius:16px; padding:10px 14px;
+  font-size:15px; font-weight:700; color:var(--ink); cursor:pointer; min-height:48px;
   display:inline-flex; align-items:center; gap:6px; font-family:inherit;
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1);
 }
-.chip.sel { background:#4ab8d8; color:#fff; border-color:#4ab8d8; }
+.chip:active { transform:scale(.9) rotate(-2deg); }
+.chip.sel { background:var(--tiffany); color:#fff; border-color:var(--tiffany); }
+.chip.dice { background:var(--sand); border-color:#f0d9a5; color:#a4762a; }
 .chiprow { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 16px; }
 .slotopt {
-  display:block; width:100%; text-align:left; background:#fff; border:2px solid #cfe9f4;
-  border-radius:14px; padding:12px 14px; font-size:16px; line-height:1.6; margin-bottom:8px;
-  cursor:pointer; min-height:48px; font-family:inherit; color:#134b63;
+  display:block; width:100%; text-align:left; background:var(--card); border:2px solid #cde9e6;
+  border-radius:14px; padding:12px 14px; font-size:17px; line-height:1.7; margin-bottom:8px;
+  cursor:pointer; min-height:48px; font-family:inherit; color:var(--ink);
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1);
 }
-.slotopt:active { background:#dff2f9; }
-.storysofar { background:#fdf3dd; border-radius:16px; padding:14px; font-size:17px; line-height:1.9; margin-bottom:14px; }
-.mystory { background:#fff; border-radius:16px; padding:14px; margin-bottom:10px; box-shadow:0 2px 8px rgba(26,126,168,.08); }
-.mystory .st { font-weight:800; color:#1a7ea8; margin-bottom:6px; }
-.mystory .sx { font-size:16px; line-height:1.9; }
-.progressbar { height:10px; background:#dff2f9; border-radius:999px; overflow:hidden; margin:8px 0 14px; }
-.progressbar > div { height:100%; background:linear-gradient(90deg,#4ab8d8,#1a7ea8); border-radius:999px; transition:width .4s; }
+.slotopt:active { background:var(--lagoon); transform:scale(.98); }
+.slotopt.dice { background:var(--sand); border-color:#f0d9a5; color:#a4762a; font-weight:800; }
+.storysofar { background:var(--sand); border-radius:16px; padding:14px; font-size:17px; line-height:1.9; margin-bottom:14px; }
+.mystory { display:flex; gap:12px; align-items:center; background:var(--card); border-radius:16px; padding:12px; margin-bottom:10px; box-shadow:0 2px 8px rgba(10,138,134,.08); }
+.mystory .thumb { width:96px; flex-shrink:0; border-radius:12px; overflow:hidden; box-shadow:0 2px 6px rgba(10,138,134,.18); }
+.mystory .thumb svg { display:block; width:100%; height:auto; }
+.mystory .st { font-weight:800; color:var(--deep); margin-bottom:2px; font-size:16px; }
+.coverbig { border-radius:18px; overflow:hidden; box-shadow:0 6px 18px rgba(10,138,134,.25); margin:10px auto 14px; max-width:440px; }
+.coverbig svg { display:block; width:100%; height:auto; }
+.progressbar { height:12px; background:var(--lagoon); border-radius:999px; overflow:hidden; margin:8px 0 14px; }
+.progressbar > div { height:100%; background:linear-gradient(90deg,var(--tiffany-light),var(--tiffany)); border-radius:999px; transition:width .4s cubic-bezier(.34,1.56,.64,1); }
 .donebadge { font-size:13px; font-weight:800; color:#2e9c6b; }
 .center { text-align:center; }
 .big { font-size:52px; }
 #fx { position:fixed; inset:0; pointer-events:none; z-index:200; }
-.backrow { margin-bottom:12px; }
+.backrow { margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; }
 .hidden { display:none; }
 .rowsplit { display:flex; gap:12px; align-items:center; }
-.grow { flex:1; }
-@media (min-width:700px){ .htitle{font-size:26px;} }
+@media (min-width:700px){ .htitle{font-size:25px;} }
 </style>
 </head>
 <body>
@@ -175,11 +197,13 @@ h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
     <div class="mermaid-big">🧜‍♀️</div>
     <div>
       <div class="htitle">Reading Lagoon 🐢</div>
-      <div class="hsub">Dive into two stories every day!</div>
+      <div class="hsub">Fresh news + splashy stories, every day!</div>
     </div>
     <div class="stats">
-      <div class="pill" id="xpPill">⭐ 0 XP</div>
+      <div class="ringwrap48" id="dailyRing"></div>
+      <div class="pill" id="xpPill">⭐ 0</div>
       <div class="pill" id="streakPill">🔥 0</div>
+      <button class="ttsbtn" id="ttsBtn" onclick="toggleTts()" aria-label="Read aloud on/off">🔊</button>
     </div>
   </div>
 </header>
@@ -648,56 +672,495 @@ quiz:[
  {q:"What happened on harvest day?",o:["Baskets filled with vegetables","It rained all day","The garden closed","They planted trees"],a:0,why:"Baskets filled up with kang kong, cherry tomatoes and long green beans."},
  {q:"Why did pupils who 'never eat greens' ask for more?",o:["The greens were covered in sugar","Vegetables taste better when you grow them yourself","They were told to","The canteen was empty"],a:1,why:"As one gardener said, vegetables taste better when you grow them yourself — being part of it made them proud to try."}]}
 ];
-/* ================= STORY BUILDER DATA ================= */
-const SB_CHARS=[{n:"Marina the Mermaid",e:"🧜‍♀️"},{n:"Toby the Turtle",e:"🐢"},{n:"Dolly the Dolphin",e:"🐬"},{n:"Pip the Pufferfish",e:"🐡"},{n:"Coco the Crab",e:"🦀"}];
-const SB_SETTINGS=[{n:"the Rainbow Reef",e:"🪸"},{n:"the Old Shipwreck",e:"⛵"},{n:"the Sparkling Lagoon",e:"🏝️"},{n:"the Deep Blue Cave",e:"🌊"}];
+/* ================= STORY BUILDER DATA (v3 — wilder!) ================= */
+const SB_CHARS=[
+ {id:"mermaid",n:"Marina the Mermaid",e:"🧜‍♀️"},
+ {id:"turtle",n:"Toby the Turtle",e:"🐢"},
+ {id:"dolphin",n:"Dolly the Dolphin",e:"🐬"},
+ {id:"puffer",n:"Pip the Pufferfish",e:"🐡"},
+ {id:"crab",n:"Coco the Crab",e:"🦀"},
+ {id:"dragonmaid",n:"Ember the Dragon-Mermaid",e:"🐉"},
+ {id:"submarine",n:"Subby the Talking Submarine",e:"🛟"},
+ {id:"roboseahorse",n:"Bolt the Robot Seahorse",e:"🤖"},
+ {id:"jelly",n:"Princess Wobble the Jellyfish",e:"🪼"}];
+const SB_SETTINGS=[
+ {id:"reef",n:"the Rainbow Reef",e:"🪸"},
+ {id:"wreck",n:"the Old Shipwreck",e:"⛵"},
+ {id:"lagoon",n:"the Sparkling Lagoon",e:"🏝️"},
+ {id:"cave",n:"the Deep Blue Cave",e:"🌊"},
+ {id:"candy",n:"Candy Island",e:"🍭"},
+ {id:"moonsea",n:"the Moonlit Sea",e:"🌙"},
+ {id:"cloud",n:"the Upside-Down Cloud Sea",e:"☁️"}];
 const SB_PROBLEMS=[
- {n:"The Lost Treasure Map",e:"🗺️",news:"The great treasure map has gone missing!"},
- {n:"The Big Storm",e:"⛈️",news:"A big storm is coming tonight!"},
- {n:"The Missing Friend",e:"🔍",news:"Little Nemo the clownfish is lost!"},
- {n:"The Hungry Baby Whale",e:"🐋",news:"A baby whale is hungry and far from home!"}];
+ {id:"map",n:"The Lost Treasure Map",e:"🗺️",news:"The great treasure map has gone missing!"},
+ {id:"storm",n:"The Big Storm",e:"⛈️",news:"A big storm is coming tonight!"},
+ {id:"friend",n:"The Missing Friend",e:"🔍",news:"Little Nemo the clownfish is lost!"},
+ {id:"whale",n:"The Hungry Baby Whale",e:"🐋",news:"A baby whale is hungry and far from home!"},
+ {id:"moonfall",n:"The Moon Fell into the Sea",e:"🌕",news:"The Moon has plopped into the sea and it will not come out!"},
+ {id:"rainbow",n:"The Rainbow Lost Its Colours",e:"🌈",news:"The rainbow has gone grey — every colour has run away!"},
+ {id:"cake",n:"The Sinking Birthday Cake",e:"🎂",news:"A giant birthday cake is sinking — and the party is in one hour!"},
+ {id:"tickle",n:"The Great Tickle Wave",e:"😂",news:"A giggling tickle-wave is coming and nobody can stop laughing!"}];
 const SB_SLOTS=[
- {label:"How does your story begin?",opts:[
+ {label:"How does your story begin?",
+  hint:"Close your eyes… sniff the sea air… how does a GREAT story start? You choose!",
+  opts:[
   "One sunny morning, {C} woke up in {S}.",
   "Deep inside {S}, {C} was humming a happy song.",
-  "{C} was playing hide-and-seek with the little fish near {S}."]},
- {label:"Uh oh! What happens next?",opts:[
+  "{C} was playing hide-and-seek with the little fish near {S}.",
+  "It was pancake day in {S}, and {C} had syrup on one cheek."]},
+ {label:"Uh oh! What happens next?",
+  hint:"Every hero needs trouble — dun dun DUNNN! How does the big news arrive?",
+  opts:[
   "Suddenly a messenger seahorse zoomed up. \"{PN}\" he cried.",
   "Then {C} saw all the worried faces. \"{PN}\" everyone was saying.",
-  "A conch shell trumpeted the big news across the water: \"{PN}\""]},
- {label:"How does your hero feel?",opts:[
+  "A conch shell trumpeted the big news across the water: \"{PN}\"",
+  "A bottle floated by with a tiny note inside: \"{PN}\""]},
+ {label:"How does your hero feel?",
+  hint:"Look at your hero's face. Wibbly tummy? Brave heart? Both? That's okay!",
+  opts:[
   "\"Don't worry, everyone,\" said {C} bravely. \"I have a plan!\"",
   "{C}'s heart went thump-thump, but a deep breath made it calm again.",
-  "{C} called all the sea friends together. \"We can fix this — together!\""]},
- {label:"What does your hero do?",opts:[
+  "{C} called all the sea friends together. \"We can fix this — together!\"",
+  "{C} did three somersaults to think better. \"Aha! Ideas taste like bubbles!\""]},
+ {label:"What does your hero do?",
+  hint:"Time for action! Swim, zoom, sneak or ask — what would YOU do first?",
+  opts:[
   "First, {C} swam through a forest of tall, swaying seaweed.",
   "{C} followed a trail of shiny silver bubbles, one by one.",
-  "{C} raced to ask the wise old whale for advice."]},
- {label:"A surprise helper appears!",opts:[
+  "{C} raced to ask the wise old whale for advice.",
+  "{C} borrowed a rocket-scooter from the octopus mail office. VROOM!"]},
+ {label:"A surprise helper appears!",
+  hint:"Ooooh, my favourite part — a surprise splashes in! Who comes to help?",
+  opts:[
   "Just then, a friendly octopus appeared with eight helping arms!",
   "Suddenly, glowing jellyfish lit up the water like little lanterns.",
-  "A school of silver fish lined up to make a giant arrow, showing the way!"]},
- {label:"How does your story end?",opts:[
+  "A school of silver fish lined up to make a giant arrow, showing the way!",
+  "A grandpa cloud floated down and offered a soft, fluffy lift."]},
+ {label:"How does your story end?",
+  hint:"The grand finale! Make it sparkle — endings are the yummiest bit.",
+  opts:[
   "At last, everything was safe again, and all of {S} threw a big bubble party.",
   "The problem was solved! \"Hip hip hooray for {C}!\" everyone cheered.",
-  "That night, {C} fell asleep with a smile — the hero of {S}."]}];
-/* ================= STATE ================= */
-const LS_KEY="jenny_reading_lagoon";
-let state={xp:0,streak:0,lastStreakDay:"",daily:{},done:{},words:{},stories:[]};
-try{const s=localStorage.getItem(LS_KEY);if(s)state=Object.assign(state,JSON.parse(s));}catch(e){}
-function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}}
+  "That night, {C} fell asleep with a smile — the hero of {S}.",
+  "And from that day on, {S} was famous for the silliest, happiest rescue ever told."]}];
+/* ================= SVG STORYBOOK COVER PARTS ================= */
+function coverDefs(){
+ return '<defs>'
+ +'<linearGradient id="gSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aef0ea"/><stop offset="1" stop-color="#0abab5"/></linearGradient>'
+ +'<linearGradient id="gDeep" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a7f9e"/><stop offset="1" stop-color="#123c5c"/></linearGradient>'
+ +'<linearGradient id="gNight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2e5e"/><stop offset="1" stop-color="#0abab5"/></linearGradient>'
+ +'<linearGradient id="gCandy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe3ef"/><stop offset="1" stop-color="#f9b8d8"/></linearGradient>'
+ +'<linearGradient id="gSkyC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfeef9"/><stop offset="1" stop-color="#81d8d0"/></linearGradient>'
+ +'</defs>';
+}
+function setBG(s){
+ const sand='<ellipse cx="160" cy="248" rx="220" ry="42" fill="#fdf3dd"/>';
+ const bubbles='<circle cx="40" cy="46" r="5" fill="#ffffff66"/><circle cx="56" cy="30" r="3" fill="#ffffff66"/><circle cx="288" cy="120" r="4" fill="#ffffff55"/>';
+ switch(s){
+  case "reef":return '<rect width="320" height="240" fill="url(#gSea)"/>'
+   +'<circle cx="272" cy="34" r="20" fill="#fff8d6" opacity=".85"/>'+sand
+   +'<path d="M28 236 C24 200 40 196 36 172" stroke="#ff8a7a" stroke-width="9" fill="none" stroke-linecap="round"/>'
+   +'<path d="M52 238 C52 212 64 210 60 190" stroke="#f7a8d8" stroke-width="8" fill="none" stroke-linecap="round"/>'
+   +'<path d="M290 238 C286 210 300 206 296 186" stroke="#ffd66b" stroke-width="8" fill="none" stroke-linecap="round"/>'
+   +'<path d="M120 240 C114 214 126 210 120 194" stroke="#2e9c6b" stroke-width="6" fill="none" stroke-linecap="round"/>'+bubbles;
+  case "wreck":return '<rect width="320" height="240" fill="url(#gDeep)"/>'+sand
+   +'<path d="M60 210 L250 210 L226 156 L92 156 Z" fill="#7a5230"/>'
+   +'<rect x="150" y="96" width="8" height="62" fill="#5d3d22"/>'
+   +'<path d="M158 100 L216 132 L158 138 Z" fill="#e8e0cc" opacity=".9"/>'
+   +'<circle cx="120" cy="184" r="7" fill="#ffd66b"/><circle cx="160" cy="184" r="7" fill="#ffd66b"/><circle cx="200" cy="184" r="7" fill="#ffd66b"/>'+bubbles;
+  case "lagoon":return '<rect width="320" height="130" fill="url(#gSkyC)"/><rect y="128" width="320" height="112" fill="url(#gSea)"/>'
+   +'<circle cx="270" cy="36" r="22" fill="#ffe9a8"/>'
+   +'<ellipse cx="70" cy="132" rx="64" ry="22" fill="#fdf3dd"/>'
+   +'<rect x="64" y="86" width="7" height="42" rx="3" fill="#8a6a3a"/>'
+   +'<path d="M68 88 C50 78 42 84 36 92 C52 90 60 92 68 96 Z" fill="#2e9c6b"/>'
+   +'<path d="M68 88 C86 76 96 82 102 90 C86 88 78 92 70 96 Z" fill="#3cb87f"/>'+bubbles;
+  case "cave":return '<rect width="320" height="240" fill="url(#gDeep)"/>'
+   +'<path d="M0 240 L0 90 Q160 -50 320 90 L320 240 Z" fill="#0c2740"/>'
+   +'<path d="M60 240 L84 176 L108 240 Z" fill="#81d8d0" opacity=".85"/>'
+   +'<path d="M230 240 L252 190 L272 240 Z" fill="#b39ddb" opacity=".85"/>'
+   +'<circle cx="84" cy="172" r="10" fill="#c9fffa" opacity=".5"/><circle cx="252" cy="186" r="8" fill="#e2d6ff" opacity=".5"/>'+sand;
+  case "candy":return '<rect width="320" height="240" fill="url(#gCandy)"/>'
+   +'<ellipse cx="160" cy="238" rx="210" ry="52" fill="#ffd9e8"/>'
+   +'<rect x="52" y="120" width="8" height="70" rx="4" fill="#fff"/>'
+   +'<circle cx="56" cy="110" r="26" fill="#ff8a7a"/><path d="M56 88 A22 22 0 0 1 56 132 A11 11 0 0 1 56 110 A11 11 0 0 0 56 88" fill="#fff" opacity=".85"/>'
+   +'<circle cx="284" cy="150" r="16" fill="#ffd66b"/><circle cx="252" cy="182" r="11" fill="#b3ece6"/>'
+   +'<path d="M0 210 Q80 190 160 210 T320 210 L320 240 L0 240 Z" fill="#8a5a3a" opacity=".8"/>';
+  case "moonsea":return '<rect width="320" height="240" fill="url(#gNight)"/>'
+   +'<circle cx="160" cy="120" r="52" fill="#fff6cf"/><circle cx="144" cy="106" r="9" fill="#f0e2ae"/><circle cx="176" cy="132" r="6" fill="#f0e2ae"/>'
+   +'<path d="M0 150 Q40 140 80 150 T160 150 T240 150 T320 150 L320 240 L0 240 Z" fill="#0abab5" opacity=".9"/>'
+   +'<circle cx="40" cy="40" r="2.5" fill="#fff"/><circle cx="80" cy="24" r="2" fill="#fff"/><circle cx="260" cy="34" r="2.5" fill="#fff"/><circle cx="300" cy="60" r="2" fill="#fff"/>';
+  case "cloud":default:return '<rect width="320" height="240" fill="url(#gSkyC)"/>'
+   +'<ellipse cx="70" cy="220" rx="60" ry="24" fill="#fff"/><ellipse cx="240" cy="228" rx="76" ry="28" fill="#fff"/>'
+   +'<ellipse cx="60" cy="34" rx="46" ry="18" fill="#ffffffcc"/><ellipse cx="250" cy="52" rx="54" ry="20" fill="#ffffffcc"/>'
+   +'<path d="M120 90 q6 14 0 26 M160 70 q6 14 0 26 M200 96 q6 14 0 26" stroke="#8fd0e8" stroke-width="5" fill="none" stroke-linecap="round"/>';
+ }
+}
+function charArt(c){
+ const g0='<g transform="translate(222,150)">',g1='</g>';
+ switch(c){
+  case "mermaid":return g0
+   +'<path d="M2 26 C-4 52 -26 60 -40 62 C-22 66 2 62 12 42 Z" fill="#0abab5"/>'
+   +'<ellipse cx="4" cy="8" rx="15" ry="20" fill="#59c9be"/>'
+   +'<circle cx="4" cy="-22" r="17" fill="#ffe0c7"/>'
+   +'<path d="M-14 -30 C-20 -6 -14 8 -6 16 C-14 -2 -10 -10 -4 -38 C6 -42 16 -36 20 -26 C22 -8 18 4 12 12 C20 -4 20 -16 14 -34 Z" fill="#b0664a"/>'
+   +'<circle cx="-2" cy="-24" r="2.2" fill="#333"/><circle cx="10" cy="-24" r="2.2" fill="#333"/>'
+   +'<path d="M0 -16 q4 4 8 0" stroke="#c96" stroke-width="2" fill="none" stroke-linecap="round"/>'
+   +'<circle cx="-14" cy="-40" r="5" fill="#ff8a7a"/>'+g1;
+  case "turtle":return g0
+   +'<ellipse cx="0" cy="10" rx="34" ry="26" fill="#2e9c6b"/>'
+   +'<ellipse cx="0" cy="8" rx="24" ry="18" fill="#57c08d"/>'
+   +'<circle cx="34" cy="-6" r="13" fill="#7fd3a8"/>'
+   +'<circle cx="38" cy="-9" r="2.4" fill="#333"/><path d="M32 -1 q5 3 9 0" stroke="#20714c" stroke-width="2" fill="none" stroke-linecap="round"/>'
+   +'<ellipse cx="-24" cy="30" rx="9" ry="5" fill="#7fd3a8"/><ellipse cx="18" cy="32" rx="9" ry="5" fill="#7fd3a8"/>'+g1;
+  case "dolphin":return g0
+   +'<path d="M-40 14 C-30 -18 12 -30 34 -8 C44 2 42 14 30 22 C10 34 -26 34 -40 14 Z" fill="#9ecbe8"/>'
+   +'<path d="M-2 -22 L6 -40 L16 -20 Z" fill="#7cb5da"/>'
+   +'<path d="M-40 14 L-56 4 L-48 22 Z" fill="#7cb5da"/>'
+   +'<circle cx="26" cy="-2" r="2.6" fill="#333"/>'
+   +'<path d="M34 8 q6 2 10 -2" stroke="#4a7ea6" stroke-width="2.5" fill="none" stroke-linecap="round"/>'+g1;
+  case "puffer":return g0
+   +'<g stroke="#e8a13c" stroke-width="4" stroke-linecap="round"><path d="M0 -36 L0 -46"/><path d="M26 -26 L34 -34"/><path d="M36 0 L46 0"/><path d="M26 26 L34 34"/><path d="M0 36 L0 46"/><path d="M-26 26 L-34 34"/><path d="M-36 0 L-46 0"/><path d="M-26 -26 L-34 -34"/></g>'
+   +'<circle cx="0" cy="0" r="34" fill="#ffd66b"/><circle cx="0" cy="8" r="24" fill="#ffe9a8"/>'
+   +'<circle cx="-10" cy="-8" r="3" fill="#333"/><circle cx="10" cy="-8" r="3" fill="#333"/>'
+   +'<path d="M-6 8 q6 6 12 0" stroke="#c98a2e" stroke-width="2.5" fill="none" stroke-linecap="round"/>'+g1;
+  case "crab":return g0
+   +'<ellipse cx="0" cy="6" rx="30" ry="22" fill="#ff8a7a"/>'
+   +'<circle cx="-12" cy="-2" r="3" fill="#333"/><circle cx="12" cy="-2" r="3" fill="#333"/>'
+   +'<path d="M-8 12 q8 7 16 0" stroke="#c2543f" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
+   +'<circle cx="-38" cy="-18" r="10" fill="#ff8a7a"/><path d="M-44 -26 L-34 -20 L-44 -12 Z" fill="#f4fbfa"/>'
+   +'<circle cx="38" cy="-18" r="10" fill="#ff8a7a"/><path d="M44 -26 L34 -20 L44 -12 Z" fill="#f4fbfa"/>'
+   +'<g stroke="#e0705c" stroke-width="4" stroke-linecap="round"><path d="M-22 24 L-32 34"/><path d="M-10 28 L-14 38"/><path d="M22 24 L32 34"/><path d="M10 28 L14 38"/></g>'+g1;
+  case "dragonmaid":return g0
+   +'<path d="M-16 -26 C-30 -40 -46 -34 -52 -22 C-40 -24 -30 -20 -24 -12 Z" fill="#b39ddb"/>'
+   +'<path d="M20 -30 C34 -44 50 -38 56 -26 C44 -28 34 -24 28 -16 Z" fill="#b39ddb"/>'
+   +'<path d="M2 26 C-4 52 -26 60 -40 62 C-22 66 2 62 12 42 Z" fill="#8e6bc9"/>'
+   +'<ellipse cx="4" cy="8" rx="15" ry="20" fill="#a988d8"/>'
+   +'<circle cx="4" cy="-22" r="17" fill="#ffe0c7"/>'
+   +'<path d="M-6 -36 L-2 -46 L2 -36 Z" fill="#8e6bc9"/><path d="M6 -36 L10 -46 L14 -36 Z" fill="#8e6bc9"/>'
+   +'<circle cx="-2" cy="-24" r="2.2" fill="#333"/><circle cx="10" cy="-24" r="2.2" fill="#333"/>'
+   +'<path d="M0 -16 q4 4 8 0" stroke="#c96" stroke-width="2" fill="none" stroke-linecap="round"/>'
+   +'<path d="M22 -14 q8 -2 6 6 q8 0 4 8" stroke="#ff8a7a" stroke-width="3" fill="none" stroke-linecap="round"/>'+g1;
+  case "submarine":return g0
+   +'<rect x="-44" y="-16" width="88" height="44" rx="22" fill="#ffd66b"/>'
+   +'<rect x="-8" y="-34" width="18" height="18" rx="5" fill="#e8a13c"/>'
+   +'<rect x="-2" y="-46" width="5" height="14" fill="#e8a13c"/><circle cx="8" cy="-44" r="6" fill="#b3ece6"/>'
+   +'<circle cx="-20" cy="4" r="8" fill="#b3ece6" stroke="#e8a13c" stroke-width="3"/>'
+   +'<circle cx="8" cy="6" r="3" fill="#333"/><circle cx="24" cy="6" r="3" fill="#333"/>'
+   +'<path d="M12 14 q6 5 14 0" stroke="#b5762e" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
+   +'<path d="M-44 4 L-58 -6 L-58 16 Z" fill="#e8a13c"/>'+g1;
+  case "roboseahorse":return g0
+   +'<path d="M4 -18 C28 -14 30 8 16 20 C6 30 -6 34 -4 46 C-16 36 -12 22 0 14 C10 8 12 -4 0 -6 Z" fill="#9fb8c9" stroke="#6c8ba0" stroke-width="3"/>'
+   +'<circle cx="2" cy="-24" r="15" fill="#c3d6e2" stroke="#6c8ba0" stroke-width="3"/>'
+   +'<path d="M14 -28 L30 -24 L16 -20 Z" fill="#8aa8bb"/>'
+   +'<circle cx="-3" cy="-26" r="4" fill="#0abab5"/><circle cx="-3" cy="-26" r="1.6" fill="#fff"/>'
+   +'<path d="M0 -39 L0 -48" stroke="#6c8ba0" stroke-width="3" stroke-linecap="round"/><circle cx="0" cy="-51" r="4" fill="#ff8a7a"/>'
+   +'<circle cx="6" cy="2" r="3" fill="#ffd66b"/><circle cx="2" cy="14" r="3" fill="#ffd66b"/>'+g1;
+  case "jelly":default:return g0
+   +'<path d="M-30 0 A30 30 0 0 1 30 0 L30 8 Q20 2 14 8 Q8 14 0 8 Q-8 14 -14 8 Q-20 2 -30 8 Z" fill="#f7a8d8" opacity=".95"/>'
+   +'<path d="M-20 10 q-4 14 2 26 M-6 12 q-3 16 3 30 M8 12 q4 14 -2 28 M20 10 q5 12 0 24" stroke="#f7a8d8" stroke-width="4" fill="none" stroke-linecap="round" opacity=".8"/>'
+   +'<circle cx="-9" cy="-8" r="2.6" fill="#87375f"/><circle cx="9" cy="-8" r="2.6" fill="#87375f"/>'
+   +'<path d="M-5 0 q5 5 10 0" stroke="#87375f" stroke-width="2" fill="none" stroke-linecap="round"/>'
+   +'<path d="M-12 -28 L-7 -20 L0 -30 L7 -20 L12 -28 L12 -18 L-12 -18 Z" fill="#ffd66b"/>'+g1;
+ }
+}
+function propArt(p){
+ const g0='<g transform="translate(78,104)">',g1='</g>';
+ switch(p){
+  case "map":return g0+'<rect x="-30" y="-24" width="60" height="48" rx="6" fill="#fdf3dd" stroke="#c9a15c" stroke-width="3"/>'
+   +'<path d="M-20 14 Q-6 -10 10 6 T24 -14" stroke="#e05b4b" stroke-width="2.5" stroke-dasharray="4 4" fill="none"/>'
+   +'<path d="M18 -18 L26 -10 M26 -18 L18 -10" stroke="#e05b4b" stroke-width="3.5" stroke-linecap="round"/>'+g1;
+  case "storm":return g0+'<ellipse cx="0" cy="-10" rx="32" ry="17" fill="#8fa6b5"/><ellipse cx="-16" cy="-16" rx="16" ry="12" fill="#a6bac7"/>'
+   +'<path d="M-4 4 L6 4 L-2 20 L10 20 L-8 44 L-2 26 L-12 26 Z" fill="#ffd66b"/>'+g1;
+  case "friend":return g0+'<circle cx="-4" cy="-6" r="20" fill="none" stroke="#0a8a86" stroke-width="5"/>'
+   +'<path d="M10 8 L26 26" stroke="#0a8a86" stroke-width="7" stroke-linecap="round"/>'
+   +'<ellipse cx="-4" cy="-6" rx="11" ry="7" fill="#ff8a7a"/><rect x="-8" y="-12" width="3.5" height="12" fill="#fff"/><rect x="0" y="-12" width="3.5" height="12" fill="#fff"/><circle cx="4" cy="-8" r="1.6" fill="#333"/>'+g1;
+  case "whale":return g0+'<path d="M-30 4 C-26 -16 16 -22 28 -4 C32 4 26 12 14 14 C-4 18 -24 16 -30 4 Z" fill="#7cb5da"/>'
+   +'<path d="M28 2 L40 -4 L38 10 Z" fill="#5d9cc6"/><circle cx="14" cy="-4" r="2.4" fill="#333"/>'
+   +'<path d="M-12 -18 q-2 -8 4 -12 M-8 -18 q4 -6 10 -6" stroke="#b3ece6" stroke-width="3" fill="none" stroke-linecap="round"/>'+g1;
+  case "moonfall":return g0+'<circle cx="0" cy="0" r="24" fill="#fff6cf" stroke="#e8d89a" stroke-width="3"/>'
+   +'<circle cx="-8" cy="-6" r="4" fill="#efe2ae"/><circle cx="8" cy="6" r="3" fill="#efe2ae"/>'
+   +'<path d="M-30 26 q8 -8 14 0 q8 -8 16 0 q8 -8 14 0" stroke="#b3ece6" stroke-width="4" fill="none" stroke-linecap="round"/>'+g1;
+  case "rainbow":return g0+'<path d="M-30 20 A30 30 0 0 1 30 20" stroke="#b8b8b8" stroke-width="7" fill="none"/>'
+   +'<path d="M-21 20 A21 21 0 0 1 21 20" stroke="#d3d3d3" stroke-width="7" fill="none"/>'
+   +'<path d="M-30 20 A30 30 0 0 1 -12 -8" stroke="#ff8a7a" stroke-width="7" fill="none"/>'
+   +'<path d="M24 24 q0 10 6 12 q6 -2 6 -12 q-6 6 -12 0" fill="#ffd66b"/>'+g1;
+  case "cake":return g0+'<g transform="rotate(-8)"><rect x="-26" y="2" width="52" height="22" rx="6" fill="#f7a8d8"/>'
+   +'<rect x="-18" y="-14" width="36" height="18" rx="5" fill="#ffe9a8"/>'
+   +'<path d="M-26 6 q6 6 12 0 q6 6 12 0 q6 6 12 0 q6 6 16 0" stroke="#fff" stroke-width="4" fill="none"/>'
+   +'<rect x="-4" y="-26" width="4" height="12" fill="#e05b4b"/><circle cx="-2" cy="-29" r="3.5" fill="#ffd66b"/></g>'
+   +'<path d="M-32 30 q8 -7 14 0 q8 -7 16 0 q8 -7 14 0" stroke="#81d8d0" stroke-width="4" fill="none" stroke-linecap="round"/>'+g1;
+  case "tickle":default:return g0+'<path d="M-32 14 C-32 -8 -6 -16 4 -2 C18 -16 36 -4 28 12 C20 24 -20 26 -32 14 Z" fill="#b3ece6"/>'
+   +'<path d="M-14 12 q-8 2 -8 10 M22 10 q8 2 8 10" stroke="#b3ece6" stroke-width="5" fill="none" stroke-linecap="round"/>'
+   +'<circle cx="-8" cy="-2" r="2.6" fill="#1c5d78"/><circle cx="10" cy="-2" r="2.6" fill="#1c5d78"/>'
+   +'<path d="M-8 6 q9 9 18 0" stroke="#1c5d78" stroke-width="2.5" fill="none" stroke-linecap="round"/>'+g1;
+ }
+}
+function coverSVG(cv,title){
+ const t=(title||"").length>26?(title.slice(0,25)+"…"):(title||"");
+ return '<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" role="img">'
+  +coverDefs()+setBG(cv&&cv.s)+propArt(cv&&cv.p)+charArt(cv&&cv.c)
+  +'<rect x="0" y="200" width="320" height="40" fill="#ffffffd9"/>'
+  +'<text x="160" y="226" text-anchor="middle" font-size="15" font-weight="800" fill="#0a8a86" font-family="inherit">'+escHTML(t)+'</text>'
+  +'<rect x="4" y="4" width="312" height="232" rx="16" fill="none" stroke="#ffffff99" stroke-width="5"/>'
+  +'</svg>';
+}
+/* ================= HELPERS ================= */
+function escHTML(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function dayIndex(){return Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86400000);}
-function addXP(n){state.xp+=n;save();updateHeader();}
-function updateHeader(){
-  document.getElementById("xpPill").textContent="⭐ "+state.xp+" XP";
-  document.getElementById("streakPill").textContent="🔥 "+state.streak;
+/* ==== PURE: FETCH MERGE (kept DOM-free so it can be unit-tested) ==== */
+function normalizeFetched(raw){
+  if(!Array.isArray(raw))return [];
+  const out=[];
+  raw.forEach(function(r){
+    try{
+      if(!r||r.id==null||!r.title||!r.text)return;
+      const safeId="f_"+String(r.id).replace(/[^\w-]/g,"_");
+      const kind=r.type==="news"?"news":"fun";
+      const date=(typeof r.date==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(r.date))?r.date:"";
+      const kw=(Array.isArray(r.keywords)?r.keywords:[]).map(function(k){
+        return k&&k.w?{w:escHTML(k.w),d:escHTML(k.def||k.d||""),c:escHTML(k.zh||k.c||""),ex:escHTML(k.eg||k.ex||"")}:null;
+      }).filter(Boolean);
+      const quiz=(Array.isArray(r.questions)?r.questions:[]).map(function(q){
+        if(!q||!q.q||!Array.isArray(q.options)||q.options.length!==4)return null;
+        const a=typeof q.correct==="number"?q.correct:0;
+        return {q:escHTML(q.q),o:q.options.map(escHTML),a:Math.max(0,Math.min(3,a)),why:escHTML(q.why||"")};
+      }).filter(Boolean);
+      if(!quiz.length)return;
+      out.push({id:safeId,kind:kind,date:date,t:escHTML(r.title),e:escHTML(r.emoji||(kind==="news"?"📰":"✨")),
+        txt:escHTML(r.text),kw:kw,quiz:quiz,
+        xrayIdx:(Array.isArray(r.xray)?r.xray:[]).filter(function(n){return typeof n==="number"&&n>=0;})});
+    }catch(e){}
+  });
+  return out;
 }
+function mergeFetched(existing,incoming){
+  const map={},newIds=[];
+  (existing||[]).forEach(function(a){if(a&&a.id)map[a.id]=a;});
+  (incoming||[]).forEach(function(a){
+    if(!a||!a.id)return;
+    if(!map[a.id])newIds.push(a.id);
+    map[a.id]=a; /* newest fetched version wins; nothing is ever removed */
+  });
+  const list=Object.keys(map).map(function(k){return map[k];});
+  list.sort(function(a,b){
+    const d=(b.date||"").localeCompare(a.date||"");
+    return d!==0?d:String(a.t).localeCompare(String(b.t));
+  });
+  return {list:list,newIds:newIds};
+}
+/* ==== END PURE ==== */
+/* ================= STATE ================= */
+const LS_KEY="jenny_reading_lagoon";
+let state={xp:0,streak:0,lastStreakDay:"",daily:{},done:{},words:{},stories:[],fetched:[]};
+try{const s=localStorage.getItem(LS_KEY);if(s)state=Object.assign(state,JSON.parse(s));}catch(e){}
+if(!Array.isArray(state.fetched))state.fetched=[];
+function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}}
+function addXP(n){state.xp+=n;save();updateHeader();}
+/* ---- Daily quota (jenny_daily_v1 · reading goal 2/day, shared across tools) ---- */
+const DAILY_KEY="jenny_daily_v1", READING_GOAL=2;
+function dailyLoad(){try{const s=localStorage.getItem(DAILY_KEY);if(s)return JSON.parse(s)||{};}catch(e){}return {};}
+function todayReading(){const d=dailyLoad();const t=d[todayStr()];return t&&typeof t.reading==="number"?t.reading:0;}
+function bumpReading(){
+  const d=dailyLoad(),k=todayStr();
+  if(!d[k])d[k]={math:0,science:0,reading:0,chinese:0,oral:0};
+  if(typeof d[k].reading!=="number")d[k].reading=0;
+  d[k].reading++;
+  try{localStorage.setItem(DAILY_KEY,JSON.stringify(d));}catch(e){}
+}
+function updateHeader(){
+  document.getElementById("xpPill").textContent="⭐ "+state.xp;
+  document.getElementById("streakPill").textContent="🔥 "+state.streak;
+  const n=todayReading(),pct=Math.min(1,n/READING_GOAL),R=19,C=2*Math.PI*R;
+  document.getElementById("dailyRing").innerHTML=
+   '<svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="'+R+'" fill="#ffffffd9" stroke="#cfe8e5" stroke-width="4"/>'
+   +'<circle cx="23" cy="23" r="'+R+'" fill="none" stroke="'+(pct>=1?"#0abab5":"#ff8a7a")+'" stroke-width="4" stroke-linecap="round" stroke-dasharray="'+(C*pct).toFixed(1)+' '+C.toFixed(1)+'"/></svg>'
+   +'<span class="ringtxt">'+(pct>=1?"<b>✓</b>":"<b>"+Math.min(n,READING_GOAL)+"/"+READING_GOAL+"</b>")+'<span>today</span></span>';
+}
+/* ================= WEBAUDIO CHIMES (synth only, no files) ================= */
+let _ac=null;
+function ac(){
+  try{
+    const C=window.AudioContext||window.webkitAudioContext;
+    if(!C)return null;
+    if(!_ac)_ac=new C();
+    if(_ac.state==="suspended")_ac.resume();
+    return _ac;
+  }catch(e){return null;}
+}
+function tone(freq,start,dur,type,vol,slideTo){
+  const a=ac();if(!a)return;
+  try{
+    const o=a.createOscillator(),g=a.createGain();
+    o.type=type||"sine";o.frequency.setValueAtTime(freq,a.currentTime+start);
+    if(slideTo)o.frequency.exponentialRampToValueAtTime(slideTo,a.currentTime+start+dur);
+    g.gain.setValueAtTime(0.0001,a.currentTime+start);
+    g.gain.exponentialRampToValueAtTime(vol||0.18,a.currentTime+start+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,a.currentTime+start+dur);
+    o.connect(g);g.connect(a.destination);
+    o.start(a.currentTime+start);o.stop(a.currentTime+start+dur+0.05);
+  }catch(e){}
+}
+function sndPop(){tone(520,0,0.09,"sine",0.14,320);}
+function sndDing(){tone(880,0,0.16,"sine",0.16);tone(1318.5,0.12,0.28,"sine",0.16);}
+function sndYay(){tone(523.25,0,0.12,"triangle",0.15);tone(659.25,0.1,0.12,"triangle",0.15);tone(783.99,0.2,0.2,"triangle",0.15);}
+function sndMagic(){
+  [523.25,659.25,783.99,1046.5,1318.5].forEach(function(f,i){tone(f,i*0.09,0.22,"triangle",0.13);});
+  tone(2093,0.5,0.4,"sine",0.08);
+}
+function sndOops(){tone(392,0,0.14,"sine",0.1);tone(330,0.13,0.2,"sine",0.1);}
+/* ================= TTS (Web Speech API · English) ================= */
+let ttsOn=true;
+try{ttsOn=localStorage.getItem("jenny_tts_on")!=="0";}catch(e){}
+let enVoice=null,voicesReady=false;
+function pickVoice(){
+  if(!("speechSynthesis" in window))return;
+  try{
+    const vs=speechSynthesis.getVoices();
+    if(!vs||!vs.length)return;
+    voicesReady=true;
+    const en=vs.filter(function(v){return /^en([-_]|$)/i.test(v.lang);});
+    const pref=["samantha","karen","moira","tessa","serena","daniel","google uk english female","google us english","enhanced","premium"];
+    for(let i=0;i<pref.length;i++){
+      const hit=en.find(function(v){return v.name.toLowerCase().includes(pref[i]);});
+      if(hit){enVoice=hit;return;}
+    }
+    enVoice=en.find(function(v){return /GB|US|AU/i.test(v.lang);})||en[0]||null;
+  }catch(e){}
+}
+if("speechSynthesis" in window){
+  pickVoice();
+  try{speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}
+}
+function speak(text,opts){
+  opts=opts||{};
+  const done=function(ok){if(opts.onend)opts.onend(ok);};
+  if(!ttsOn||!("speechSynthesis" in window)){done(false);return;}
+  if(!enVoice)pickVoice();
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang=(enVoice&&enVoice.lang)||"en-GB";
+    if(enVoice)u.voice=enVoice;
+    u.rate=opts.rate||0.95;
+    u.pitch=opts.pitch||1.05;
+    let fired=false;
+    u.onend=function(){if(!fired){fired=true;done(true);}};
+    u.onerror=function(){if(!fired){fired=true;done(false);}};
+    speechSynthesis.speak(u);
+  }catch(e){done(false);}
+}
+const CHEERS=["Amazing!","Great job!","You got it!","Super reading!","Wonderful!","High five!","You're a star!"];
+function speakCheer(){speak(CHEERS[Math.floor(Math.random()*CHEERS.length)],{rate:1,pitch:1.15});}
+function toggleTts(){
+  ttsOn=!ttsOn;
+  try{localStorage.setItem("jenny_tts_on",ttsOn?"1":"0");}catch(e){}
+  stopReading();
+  if(!ttsOn&&("speechSynthesis" in window)){try{speechSynthesis.cancel();}catch(e){}}
+  sndPop();
+  const b=document.getElementById("ttsBtn");
+  b.textContent=ttsOn?"🔊":"🔇";
+  b.classList.toggle("off",!ttsOn);
+}
+/* ================= SENTENCE ENGINE (karaoke read-aloud) ================= */
+function splitSentences(txt){
+  const m=txt.match(/[^.!?]*[.!?]+["'”’)]*\s*/g);
+  if(!m||!m.length)return [txt];
+  const joined=m.join("");
+  if(joined.length<txt.length)m.push(txt.slice(joined.length));
+  return m.filter(function(s){return s.trim().length;});
+}
+function plainSent(s){return s.replace(/\{([^}]+)\}/g,"$1");}
+let reader={on:false,idx:0,sents:[],prefix:"",token:0};
+function highlightSent(i){
+  document.querySelectorAll(".sent.karaoke").forEach(function(el){el.classList.remove("karaoke");});
+  if(i>=0){
+    const el=document.getElementById(reader.prefix+i);
+    if(el){el.classList.add("karaoke");
+      try{el.scrollIntoView({block:"center",behavior:"smooth"});}catch(e){}}
+  }
+}
+function startReading(sents,prefix){
+  stopReading();
+  if(!ttsOn){sndOops();return;}
+  reader={on:true,idx:0,sents:sents,prefix:prefix,token:reader.token+1};
+  const btn=document.getElementById("readBtn");
+  if(btn)btn.innerHTML="⏸ Pause";
+  readNext(reader.token);
+}
+function readNext(tok){
+  if(!reader.on||tok!==reader.token)return;
+  if(reader.idx>=reader.sents.length){stopReading();sndDing();return;}
+  const i=reader.idx;
+  highlightSent(i);
+  const text=reader.sents[i];
+  if("speechSynthesis" in window&&ttsOn){
+    speak(text,{onend:function(){
+      if(!reader.on||tok!==reader.token)return;
+      reader.idx++;setTimeout(function(){readNext(tok);},150);
+    }});
+  }else{
+    setTimeout(function(){
+      if(!reader.on||tok!==reader.token)return;
+      reader.idx++;readNext(tok);
+    },Math.max(1200,text.split(" ").length*350));
+  }
+}
+function stopReading(){
+  reader.on=false;reader.token++;
+  highlightSent(-1);
+  const btn=document.getElementById("readBtn");
+  if(btn)btn.innerHTML="▶️ Read to me";
+  if("speechSynthesis" in window){try{speechSynthesis.cancel();}catch(e){}}
+}
+function toggleRead(){
+  if(reader.on)stopReading();
+  else{sndPop();startReading(ART_SENTS.map(plainSent),"sent");}
+}
+function sentTap(i){
+  if(reader.on)return;
+  highlightSent(-1);
+  const el=document.getElementById("sent"+i);
+  if(el){el.classList.add("karaoke");setTimeout(function(){el.classList.remove("karaoke");},2600);}
+  speak(plainSent(ART_SENTS[i]||""));
+}
+/* ================= LIVE DAILY ARTICLES (Daily News Center) =================
+   The ONLY network call in this file: a same-origin relative fetch, wrapped in
+   try/catch with full .catch() — offline it silently falls back to the
+   embedded article bank. Fetched articles are archived in localStorage forever. */
+const FETCH_URL="../data/jenny_daily_articles.json";
+let NEW_IDS={};
+function tryFetchDaily(){
+  try{
+    if(typeof fetch!=="function")return;
+    fetch(FETCH_URL,{cache:"no-store"}).then(function(r){
+      return (r&&r.ok)?r.json():null;
+    }).then(function(json){
+      if(!json)return;
+      const inc=normalizeFetched(json);
+      if(!inc.length)return;
+      const m=mergeFetched(state.fetched,inc);
+      const hadNew=m.newIds.length>0;
+      state.fetched=m.list;
+      m.newIds.forEach(function(id){NEW_IDS[id]=true;});
+      save();
+      if(hadNew&&(currentTab==="home"||currentTab==="lib")){go(currentTab);}
+    }).catch(function(){/* offline — embedded bank takes over, no drama */});
+  }catch(e){/* fetch unavailable — stay fully offline */}
+}
+/* ================= ARTICLE LOOKUP ================= */
+function findArt(id){
+  return STORIES.find(function(a){return a.id===id;})
+    ||NEWS.find(function(a){return a.id===id;})
+    ||state.fetched.find(function(a){return a.id===id;});
+}
+function artKind(a){return a.kind||(a.id[0]==="s"?"fun":"news");}
 /* ================= NAV ================= */
 let currentTab="home";
 function go(tab){
+  stopReading();
   currentTab=tab;
-  ["home","lib","chest","builder"].forEach(t=>{
+  ["home","lib","chest","builder"].forEach(function(t){
     document.getElementById("nav-"+t).classList.toggle("active",t===tab);
   });
   if(tab==="home")renderHome();
@@ -708,8 +1171,10 @@ function go(tab){
 }
 /* ================= TODAY ================= */
 function todaysPicks(){
-  const di=dayIndex();
-  return {fun:STORIES[di%STORIES.length],news:NEWS[di%NEWS.length]};
+  const t=todayStr(),di=dayIndex();
+  const tf=state.fetched.find(function(a){return a.date===t&&a.kind==="fun";});
+  const tn=state.fetched.find(function(a){return a.date===t&&a.kind==="news";});
+  return {fun:tf||STORIES[di%STORIES.length],news:tn||NEWS[di%NEWS.length]};
 }
 function dailyState(){
   const t=todayStr();
@@ -718,86 +1183,133 @@ function dailyState(){
 }
 function ringSVG(pct){
   const r=36,c=2*Math.PI*r;
-  return `<div class="ringwrap"><svg width="88" height="88" viewBox="0 0 88 88">
-   <circle cx="44" cy="44" r="${r}" fill="none" stroke="#dff2f9" stroke-width="9"/>
-   <circle cx="44" cy="44" r="${r}" fill="none" stroke="#4ab8d8" stroke-width="9"
-     stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-pct)}"/>
-  </svg><div class="ringlabel">${Math.round(pct*100)}%<small>today</small></div></div>`;
+  return '<div class="ringwrap"><svg width="88" height="88" viewBox="0 0 88 88">'
+   +'<circle cx="44" cy="44" r="'+r+'" fill="none" stroke="#e6f7f5" stroke-width="9"/>'
+   +'<circle cx="44" cy="44" r="'+r+'" fill="none" stroke="#0abab5" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct))+'"/>'
+   +'</svg><div class="ringlabel">'+Math.round(pct*100)+'%<small>today</small></div></div>';
 }
-function artCardHTML(a,kind,doneFlag){
-  return `<button class="artcard ${doneFlag?"done":""}" onclick="openArticle('${a.id}')">
-    <div class="cover">${a.e}</div>
-    <div class="grow"><span class="tag ${kind}">${kind==="fun"?"✨ Fun Story":"📰 Kids' News"}</span>
-    <div class="t">${a.t}</div>
-    <div class="k">${doneFlag?'<span class="donebadge">✔ Completed — read again any time!</span>':"Tap to dive in!"}</div></div>
-    <div style="font-size:22px;">${doneFlag?"🏅":"➜"}</div></button>`;
+function artCardHTML(a,doneFlag){
+  const kind=artKind(a);
+  const isNew=!!NEW_IDS[a.id];
+  const dateTag=a.date?'<span class="tag date">🗓️ '+a.date+'</span>':"";
+  return '<button class="artcard '+(doneFlag?"done":"")+'" onclick="openArticle(\''+a.id+'\')">'
+    +(isNew?'<span class="newrib">NEW! 🐟</span>':"")
+    +'<div class="cover">'+a.e+'</div>'
+    +'<div class="grow"><span class="tag '+kind+'">'+(kind==="fun"?"✨ Story":"📰 News")+'</span>'+dateTag
+    +'<div class="t">'+a.t+'</div>'
+    +'<div class="k">'+(doneFlag?'<span class="donebadge">✔ Completed — read again any time!</span>':"Tap to dive in!")+'</div></div>'
+    +'<div style="font-size:22px;">'+(doneFlag?"🏅":"➜")+'</div></button>';
 }
 function renderHome(){
   const p=todaysPicks(),d=dailyState();
   const pct=((d.fun?1:0)+(d.news?1:0))/2;
   let greet;
-  if(pct===1)greet="You finished today's dive! Amazing, Jenny! 🎉 Come play in the Story Builder, or explore the Library!";
-  else if(pct>0)greet="One down, one to go! You're swimming beautifully! 🐠";
-  else greet="Hi Jenny! Ready for today's dive? Two treasures are waiting for you below! 💙";
-  document.getElementById("view").innerHTML=`
-  <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">${greet}</div></div>
-  <div class="card"><div class="rowsplit">${ringSVG(pct)}
-    <div class="grow"><h2 style="margin-bottom:4px;">Today's Dive 🌊</h2>
-    <div style="font-size:14px;color:#5b8ba1;line-height:1.6;">Read 1 fun story + 1 news report to fill your ring and keep your streak! 🔥</div></div>
-  </div></div>
-  ${artCardHTML(p.fun,"fun",d.fun)}
-  ${artCardHTML(p.news,"news",d.news)}
-  <div class="card" style="background:#fdf3dd; box-shadow:0 3px 10px rgba(190,150,60,.15);">
-    <h3 style="color:#a4762a;">🐚 Did you know?</h3>
-    <div style="font-size:15px;line-height:1.7;color:#7c5a22;">Tap any <span class="kwspan">dotted word</span> while you read to learn what it means — it goes straight into your Word Chest! 🔍</div>
-  </div>`;
+  if(pct===1)greet="Today's dive is DONE! You magnificent reading fish! 🎉 Go build a story, or raid the Library!";
+  else if(pct>0)greet="One down, one to go! Your reading fins are looking extra shiny today. 🐠";
+  else greet="Hi Jenny! Welcome to your Daily News Center! One fresh news + one splashy story are waiting below. 💙";
+  const fresh=(p.news.date===todayStr()||p.fun.date===todayStr())
+    ?'<div class="card" style="background:var(--lagoon);box-shadow:none;"><div style="font-size:15px;font-weight:800;color:var(--deep);">🐟 Fresh catch! Today\'s articles swam in overnight, just for you!</div></div>':"";
+  document.getElementById("view").innerHTML=
+  '<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">'+greet+'</div></div>'
+  +'<div class="card"><div class="rowsplit">'+ringSVG(pct)
+  +'<div class="grow"><h2 style="margin-bottom:4px;">Today\'s Dive 🌊</h2>'
+  +'<div style="font-size:14px;color:var(--ink-soft);line-height:1.6;">Read 1 news + 1 story (with their quizzes) to fill your ring and feed your streak! 🔥</div></div>'
+  +'</div></div>'
+  +fresh
+  +'<h3 style="margin:4px 0 8px;">📰 Today\'s News</h3>'+artCardHTML(p.news,!!d.news)
+  +'<h3 style="margin:14px 0 8px;">✨ Today\'s Story</h3>'+artCardHTML(p.fun,!!d.fun)
+  +'<div class="card" style="background:var(--sand); box-shadow:0 3px 10px rgba(190,150,60,.15);">'
+  +'<h3 style="color:#a4762a;">🐚 Did you know?</h3>'
+  +'<div style="font-size:15px;line-height:1.7;color:#7c5a22;">Tap <b>▶️ Read to me</b> and I\'ll read aloud while the words light up like little lanterns. Tap any <span class="kwspan">dotted word</span> to catch it for your Word Chest! 🔍</div>'
+  +'</div>';
 }
-/* ================= LIBRARY ================= */
+/* ================= LIBRARY (Daily News Center archive) ================= */
+let libTab="news";
+function setLibTab(t){libTab=t;sndPop();renderLib();}
+function monthName(ym){
+  const M=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const p=ym.split("-");return (M[parseInt(p[1],10)-1]||"?")+" "+p[0];
+}
 function renderLib(){
-  let h=`<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">Welcome to the Lagoon Library! Every story and news report lives here. Read as many as you like! 📚</div></div>`;
-  h+=`<h2>✨ Fun Stories</h2>`;
-  STORIES.forEach(a=>{h+=artCardHTML(a,"fun",!!state.done[a.id]);});
-  h+=`<h2 style="margin-top:18px;">📰 Kids' News</h2>`;
-  NEWS.forEach(a=>{h+=artCardHTML(a,"news",!!state.done[a.id]);});
+  const isNews=libTab==="news";
+  let h='<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">Welcome to the Lagoon Library! Every article ever caught lives here forever — nothing swims away. 📚</div></div>'
+  +'<div class="libtabs">'
+  +'<button class="libtab '+(isNews?"on":"")+'" onclick="setLibTab(\'news\')">📰 News</button>'
+  +'<button class="libtab '+(!isNews?"on":"")+'" onclick="setLibTab(\'fun\')">✨ Story</button>'
+  +'</div>';
+  const kind=isNews?"news":"fun";
+  const fetched=state.fetched.filter(function(a){return a.kind===kind;});
+  if(fetched.length){
+    const byMonth={};
+    fetched.forEach(function(a){
+      const m=a.date?a.date.slice(0,7):"undated";
+      (byMonth[m]=byMonth[m]||[]).push(a);
+    });
+    Object.keys(byMonth).sort().reverse().forEach(function(m){
+      h+='<div class="monthhead">🗓️ '+(m==="undated"?"More catches":monthName(m))+'</div>';
+      byMonth[m].forEach(function(a){h+=artCardHTML(a,!!state.done[a.id]);});
+    });
+  }
+  h+='<div class="monthhead">🐚 Lagoon Classics</div>';
+  (isNews?NEWS:STORIES).forEach(function(a){h+=artCardHTML(a,!!state.done[a.id]);});
   document.getElementById("view").innerHTML=h;
 }
-/* ================= ARTICLE ================= */
-function findArt(id){return STORIES.find(a=>a.id===id)||NEWS.find(a=>a.id===id);}
-function kindOf(id){return id[0]==="s"?"fun":"news";}
-let quizAnswered={};
-function openArticle(id){
-  const a=findArt(id);quizAnswered={};
-  const kind=kindOf(id);
-  const body=a.txt.replace(/\{([^}]+)\}/g,(m,w)=>{
+/* ================= ARTICLE VIEW ================= */
+let quizAnswered={},ART_SENTS=[];
+function kwProcess(sent,id){
+  return sent.replace(/\{([^}]+)\}/g,function(m,w){
     const col=state.words[w.toLowerCase()]?" collected":"";
-    return `<span class="kwspan${col}" onclick="wordTap('${w.replace(/'/g,"\\'")}','${id}')">${w}</span>`;
+    return '<span class="kwspan'+col+'" onclick="event.stopPropagation();wordTap(\''+w.replace(/'/g,"\\'")+'\',\''+id+'\')">'+w+'</span>';
   });
-  let xr=`<div class="xraybox hidden" id="xraybox"><h3>🔬 Sentence X-ray</h3>`;
-  a.xray.forEach(x=>{
-    xr+=`<div class="xr-sent"><span class="xr-who">${x.who}</span> <span class="xr-act">${x.act}</span> <span class="xr-rest">${x.rest}</span></div>
-    <div class="xr-note">${x.note}</div>`;
-  });
-  xr+=`<div class="xr-legend"><span class="xr-who">WHO</span> = who or what does it &nbsp;<span class="xr-act">ACTION</span> = what they do &nbsp;<span class="xr-rest">WHAT / WHERE</span> = the rest of the idea</div></div>`;
-  let quiz=`<h2 style="margin-top:20px;">🐠 Quiz Time! <span style="font-size:13px;color:#6fa3ba;font-weight:600;">(${a.quiz.length} questions)</span></h2><div id="quizArea">`;
-  a.quiz.forEach((q,qi)=>{
-    quiz+=`<div class="qbox" id="q${qi}"><div class="qq">${qi+1}. ${q.q}</div>`;
-    q.o.forEach((o,oi)=>{
-      quiz+=`<button class="opt" id="q${qi}o${oi}" onclick="answer('${id}',${qi},${oi})">${o}</button>`;
+}
+function openArticle(id){
+  const a=findArt(id);
+  if(!a)return;
+  stopReading();
+  quizAnswered={};
+  const kind=artKind(a);
+  ART_SENTS=splitSentences(a.txt);
+  const body=ART_SENTS.map(function(s,i){
+    return '<span class="sent" id="sent'+i+'" onclick="sentTap('+i+')">'+kwProcess(s,id)+'</span>';
+  }).join("");
+  let xr='<div class="xraybox hidden" id="xraybox"><h3>🔬 Sentence X-ray</h3>';
+  if(a.xray&&a.xray.length&&a.xray[0]&&a.xray[0].who!==undefined){
+    a.xray.forEach(function(x){
+      xr+='<div class="xr-sent"><span class="xr-who">'+x.who+'</span> <span class="xr-act">'+x.act+'</span> <span class="xr-rest">'+x.rest+'</span></div>'
+      +'<div class="xr-note">'+x.note+'</div>';
     });
-    quiz+=`<div id="q${qi}model"></div></div>`;
+  }else{
+    const idxs=(a.xrayIdx&&a.xrayIdx.length)?a.xrayIdx:[0];
+    idxs.forEach(function(i){
+      const s=plainSent(ART_SENTS[i]||ART_SENTS[0]||"");
+      xr+='<div class="xr-sent" style="background:var(--card);border-radius:12px;padding:8px 10px;">'+escHTML(s.trim())+'</div>'
+      +'<div class="xr-note">🕵️ Detective time! In this sentence, WHO is it about? What is the ACTION word? And what does the rest tell you — what, where or when?</div>';
+    });
+  }
+  xr+='<div class="xr-legend"><span class="xr-who">WHO</span> = who or what does it &nbsp;<span class="xr-act">ACTION</span> = what they do &nbsp;<span class="xr-rest">WHAT / WHERE</span> = the rest of the idea</div></div>';
+  let quiz='<h2 style="margin-top:20px;">🐠 Quiz Time! <span style="font-size:13px;color:var(--ink-faint);font-weight:600;">('+a.quiz.length+' questions)</span></h2><div id="quizArea">';
+  a.quiz.forEach(function(q,qi){
+    quiz+='<div class="qbox" id="q'+qi+'"><div class="qq">'+(qi+1)+'. '+q.q+'</div>';
+    q.o.forEach(function(o,oi){
+      quiz+='<button class="opt" id="q'+qi+'o'+oi+'" onclick="answer(\''+id+'\','+qi+','+oi+')">'+o+'</button>';
+    });
+    quiz+='<div id="q'+qi+'model"></div></div>';
   });
-  quiz+=`</div><div id="quizDone"></div>`;
-  document.getElementById("view").innerHTML=`
-  <div class="backrow"><button class="btn ghost small" onclick="go(currentTab)">← Back</button></div>
-  <div class="card">
-    <span class="tag ${kind}">${kind==="fun"?"✨ Fun Story":"📰 Kids' News"}</span>
-    <h2 style="font-size:22px;">${a.e} ${a.t}</h2>
-    <div class="readtext">${body}</div>
-    <div style="margin-top:14px;"><button class="btn sand" onclick="document.getElementById('xraybox').classList.toggle('hidden')">🔬 Sentence X-ray</button></div>
-    ${xr}
-  </div>
-  <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">Great reading! Now let's see what you remember. Don't worry about mistakes — I'll always show you the model answer! 💙</div></div>
-  ${quiz}`;
+  quiz+='</div><div id="quizDone"></div>';
+  document.getElementById("view").innerHTML=
+  '<div class="backrow"><button class="btn ghost small" onclick="go(currentTab)">← Back</button>'
+  +'<button class="btn sand small" id="readBtn" onclick="toggleRead()">▶️ Read to me</button></div>'
+  +'<div class="card">'
+  +'<span class="tag '+kind+'">'+(kind==="fun"?"✨ Story":"📰 News")+'</span>'
+  +(a.date?'<span class="tag date">🗓️ '+a.date+'</span>':"")
+  +'<h2 style="font-size:22px;">'+a.e+' '+a.t+'</h2>'
+  +'<div class="readtext">'+body+'</div>'
+  +'<div style="margin-top:14px;font-size:13px;color:var(--ink-faint);">💡 Tap any sentence to hear it. Tap dotted words to collect them!</div>'
+  +'<div style="margin-top:10px;"><button class="btn sand" onclick="sndPop();document.getElementById(\'xraybox\').classList.toggle(\'hidden\')">🔬 Sentence X-ray</button></div>'
+  +xr
+  +'</div>'
+  +'<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">Great reading! Now let\'s see what you remember. Wrong answers are fine — I always show you the model answer! 💙</div></div>'
+  +quiz;
   window.scrollTo(0,0);
 }
 function answer(id,qi,oi){
@@ -812,147 +1324,189 @@ function answer(id,qi,oi){
   }
   const right=oi===q.a;
   document.getElementById("q"+qi+"model").innerHTML=
-    `<div class="model">${right?"🌟 <b>Wonderful!</b>":"💙 <b>Nice try!</b> Let's look at the model answer together:"}<br>
-     <b>Model answer:</b> ${q.o[q.a]}<br><b>Why:</b> ${q.why}</div>`;
-  if(right){addXP(5);miniConfetti();}else addXP(1);
+    '<div class="model">'+(right?"🌟 <b>Wonderful!</b>":"💙 <b>Nice try!</b> Let's look at the model answer together:")+'<br>'
+    +'<b>Model answer:</b> '+q.o[q.a]+'<br><b>Why:</b> '+q.why+'</div>';
+  if(right){addXP(5);sndDing();speakCheer();miniConfetti();}
+  else{addXP(1);sndOops();}
   if(Object.keys(quizAnswered).length===a.quiz.length)finishArticle(id);
 }
 function finishArticle(id){
   const first=!state.done[id];
   state.done[id]=true;
-  const kind=kindOf(id);
+  const kind=artKind(findArt(id));
   const d=dailyState();
   const p=todaysPicks();
-  let daily=false;
-  if((kind==="fun"&&p.fun.id===id&&!d.fun)){d.fun=true;daily=true;}
-  if((kind==="news"&&p.news.id===id&&!d.news)){d.news=true;daily=true;}
-  let msg=`<div class="card center"><div class="big">🎉</div><h2>Article complete!</h2><div style="font-size:16px;line-height:1.7;">You earned XP for every answer.`;
-  if(first){addXP(10);msg+=` <b>+10 bonus XP</b> for a new article!`;}
+  bumpReading(); /* jenny_daily_v1: reading +1 per completed article */
+  if(kind==="fun"&&p.fun.id===id&&!d.fun)d.fun=true;
+  if(kind==="news"&&p.news.id===id&&!d.news)d.news=true;
+  let msg='<div class="card center"><div class="big">🎉</div><h2>Article complete!</h2><div style="font-size:16px;line-height:1.7;">You earned XP for every answer.';
+  if(first){addXP(10);msg+=' <b>+10 bonus XP</b> for a brand-new article!';}
   if(d.fun&&d.news&&state.lastStreakDay!==todayStr()){
     state.streak+=1;state.lastStreakDay=todayStr();
-    msg+=`<br><b style="color:#e67e22;">🔥 Daily dive complete! Streak: ${state.streak}!</b>`;
-    fireworks();
-  }else{confettiBurst();}
-  msg+=`</div><div style="margin-top:14px;"><button class="btn" onclick="go('home')">🌊 Back to Today</button></div></div>`;
+    msg+='<br><b style="color:#e67e22;">🔥 Daily dive complete! Streak: '+state.streak+'!</b>';
+    sndMagic();fireworks();
+  }else{sndYay();confettiBurst();}
+  msg+='</div><div style="margin-top:14px;"><button class="btn" onclick="go(\'home\')">🌊 Back to Today</button></div></div>';
   save();updateHeader();
   document.getElementById("quizDone").innerHTML=msg;
-  if(daily)save();
 }
 /* ================= WORDS ================= */
 function wordTap(w,artId){
+  if(reader.on)stopReading();
   const a=findArt(artId);
+  if(!a)return;
   const key=w.toLowerCase();
-  const kw=a.kw.find(k=>k.w.toLowerCase()===key)||a.kw.find(k=>key.indexOf(k.w.toLowerCase())===0);
+  const kw=a.kw.find(function(k){return k.w.toLowerCase()===key;})||a.kw.find(function(k){return key.indexOf(k.w.toLowerCase())===0;});
   if(!kw)return;
   if(!state.words[key]){
     state.words[key]={w:kw.w,d:kw.d,c:kw.c,ex:kw.ex,art:artId,artT:a.t,artE:a.e};
-    addXP(2);save();
+    addXP(2);save();sndPop();
   }
   showWordPopup(state.words[key],true);
-  document.querySelectorAll(".kwspan").forEach(s=>{
+  document.querySelectorAll(".kwspan").forEach(function(s){
     if(s.textContent.toLowerCase()===w.toLowerCase())s.classList.add("collected");
   });
 }
 function showWordPopup(entry,fromArticle){
-  document.getElementById("popupBox").innerHTML=`
-   <div class="word">🔍 ${entry.w}</div>
-   <div class="cn">${entry.c}</div>
-   <div class="def">${entry.d}</div>
-   <div class="ex">💬 ${entry.ex}</div>
-   <div style="font-size:13px;color:#8fb4c6;margin-top:10px;">From: ${entry.artE} <b>${entry.artT}</b></div>
-   <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
-     ${fromArticle?"":`<button class="btn small" onclick="closePopup();openArticle('${entry.art}')">📖 Open article</button>`}
-     <button class="btn ghost small" onclick="closePopup()">Close</button>
-   </div>`;
+  const hasArt=!!findArt(entry.art);
+  document.getElementById("popupBox").innerHTML=
+   '<div class="word">🔍 '+entry.w+' <button class="btn ghost small" style="vertical-align:middle;" onclick="speak(\''+entry.w.replace(/'/g,"\\'")+'\')">🔊</button></div>'
+   +'<div class="cn">'+entry.c+'</div>'
+   +'<div class="def">'+entry.d+'</div>'
+   +'<div class="ex">💬 '+entry.ex+'</div>'
+   +'<div style="font-size:13px;color:var(--ink-faint);margin-top:10px;">From: '+entry.artE+' <b>'+entry.artT+'</b></div>'
+   +'<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">'
+   +((fromArticle||!hasArt)?"":'<button class="btn small" onclick="closePopup();openArticle(\''+entry.art+'\')">📖 Open article</button>')
+   +'<button class="btn ghost small" onclick="closePopup()">Close</button>'
+   +'</div>';
   document.getElementById("popupBg").classList.add("show");
+  speak(entry.w);
 }
 function closePopup(){document.getElementById("popupBg").classList.remove("show");}
 function renderChest(){
   const words=Object.values(state.words);
-  let h=`<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">${words.length?`Your Word Chest has <b>${words.length}</b> treasure${words.length>1?"s":""}! Tap a word to see it again — and see which article it came from. ✨`:"Your Word Chest is empty for now. Tap the dotted words while reading, and they will appear here like treasures! 💎"}</div></div>`;
-  h+=`<h2>🔍 Word Chest (${words.length})</h2>`;
-  words.sort((a,b)=>a.w.localeCompare(b.w)).forEach((e,i)=>{
-    h+=`<button class="chestword" onclick='showWordPopup(state.words[${JSON.stringify(e.w.toLowerCase())}],false)'>
-     <span class="w">${e.w}</span><span class="from">${e.artE} ${e.artT}<br>${e.c}</span></button>`;
+  let h='<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">'+(words.length?('Your Word Chest has <b>'+words.length+'</b> treasure'+(words.length>1?"s":"")+'! Tap a word to hear it and see it again. ✨'):'Your Word Chest is empty for now. Tap the dotted words while reading, and they will plop in here like pearls! 💎')+'</div></div>';
+  h+='<h2>🔍 Word Chest ('+words.length+')</h2>';
+  words.sort(function(a,b){return a.w.localeCompare(b.w);}).forEach(function(e){
+    h+='<button class="chestword" onclick=\'showWordPopup(state.words['+JSON.stringify(e.w.toLowerCase())+'],false)\'>'
+     +'<span class="w">'+e.w+'</span><span class="from">'+e.artE+' '+e.artT+'<br>'+e.c+'</span></button>';
   });
-  if(!words.length)h+=`<div class="card center"><div class="big">💎</div><div>Words you tap will be collected here!</div></div>`;
+  if(!words.length)h+='<div class="card center"><div class="big">💎</div><div>Words you tap will be collected here!</div></div>';
   document.getElementById("view").innerHTML=h;
 }
-/* ================= STORY BUILDER ================= */
-let sb={step:0,char:null,setting:null,problem:null,slot:0,sentences:[]};
+/* ================= STORY BUILDER v2 ================= */
+let sb={char:null,setting:null,problem:null,slot:0,sentences:[]};
 function renderBuilder(){
-  sb={step:0,char:null,setting:null,problem:null,slot:0,sentences:[]};
-  let h=`<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">Let's build YOUR story! Pick a hero, a place and a problem — then choose each sentence. Every choice makes a different tale! ✍️</div></div>
-  <div class="card"><h2>🧜‍♀️ Story Builder</h2>
-  <h3>1. Pick your hero</h3><div class="chiprow" id="chipC">${SB_CHARS.map((c,i)=>`<button class="chip" id="cC${i}" onclick="sbPick('char',${i})">${c.e} ${c.n}</button>`).join("")}</div>
-  <h3>2. Pick your place</h3><div class="chiprow" id="chipS">${SB_SETTINGS.map((c,i)=>`<button class="chip" id="cS${i}" onclick="sbPick('setting',${i})">${c.e} ${c.n}</button>`).join("")}</div>
-  <h3>3. Pick your problem</h3><div class="chiprow" id="chipP">${SB_PROBLEMS.map((c,i)=>`<button class="chip" id="cP${i}" onclick="sbPick('problem',${i})">${c.e} ${c.n}</button>`).join("")}</div>
-  <button class="btn" id="sbStart" onclick="sbStart()" disabled style="opacity:.5;">🌊 Start building!</button></div>`;
-  h+=`<h2>📖 My Storybook (${state.stories.length})</h2>`;
+  sb={char:null,setting:null,problem:null,slot:0,sentences:[]};
+  let h='<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">Let\'s build YOUR story — the wilder the better! Pick a hero, a place and a problem… or roll the dice and let the sea decide! 🎲</div></div>'
+  +'<div class="card"><h2>🧜‍♀️ Story Builder</h2>'
+  +'<h3>1. Pick your hero</h3><div class="chiprow" id="chipC">'
+  +SB_CHARS.map(function(c,i){return '<button class="chip" id="cC'+i+'" onclick="sbPick(\'char\','+i+')">'+c.e+' '+c.n+'</button>';}).join("")
+  +'<button class="chip dice" onclick="sbSurprise(\'char\')">🎲 Surprise me</button></div>'
+  +'<h3>2. Pick your place</h3><div class="chiprow" id="chipS">'
+  +SB_SETTINGS.map(function(c,i){return '<button class="chip" id="cS'+i+'" onclick="sbPick(\'setting\','+i+')">'+c.e+' '+c.n+'</button>';}).join("")
+  +'<button class="chip dice" onclick="sbSurprise(\'setting\')">🎲 Surprise me</button></div>'
+  +'<h3>3. Pick your problem</h3><div class="chiprow" id="chipP">'
+  +SB_PROBLEMS.map(function(c,i){return '<button class="chip" id="cP'+i+'" onclick="sbPick(\'problem\','+i+')">'+c.e+' '+c.n+'</button>';}).join("")
+  +'<button class="chip dice" onclick="sbSurprise(\'problem\')">🎲 Surprise me</button></div>'
+  +'<div style="display:flex;gap:8px;flex-wrap:wrap;">'
+  +'<button class="btn" id="sbStart" onclick="sbStart()" disabled>🌊 Start building!</button>'
+  +'<button class="btn coral" onclick="sbSurpriseAll()">🎲🎲 Surprise EVERYTHING</button></div></div>';
+  h+='<h2>📖 My Storybook ('+state.stories.length+')</h2>';
   if(state.stories.length){
-    state.stories.forEach((s,i)=>{
-      h+=`<div class="mystory"><div class="st">${s.emoji} ${s.title} <span style="font-weight:600;color:#8fb4c6;font-size:12px;">· ${s.date}</span></div>
-      <div class="sx">${s.text}</div>
-      <div style="margin-top:8px;"><button class="btn ghost small" onclick="readStory(${i})">🔊 Read-aloud view</button></div></div>`;
+    state.stories.forEach(function(s,i){
+      const thumb=s.cover?coverSVG(s.cover,""):null;
+      h+='<div class="mystory">'
+      +(thumb?'<div class="thumb">'+thumb+'</div>':'<div class="thumb" style="font-size:40px;text-align:center;background:var(--lagoon);padding:14px 0;">'+s.emoji+'</div>')
+      +'<div class="grow"><div class="st">'+s.emoji+' '+escHTML(s.title)+'</div>'
+      +'<div style="font-size:12px;color:var(--ink-faint);margin-bottom:6px;">'+s.date+'</div>'
+      +'<button class="btn ghost small" onclick="readStory('+i+')">📖 Open + 🔊 read aloud</button></div></div>';
     });
-  }else h+=`<div class="card center"><div class="big">📖</div><div>Stories you build will be saved here — read them aloud to Mummy!</div></div>`;
+  }else h+='<div class="card center"><div class="big">📖</div><div>Stories you build get their very own picture cover and live here — read them aloud to Mummy!</div></div>';
   document.getElementById("view").innerHTML=h;
 }
 function sbPick(kind,i){
-  if(kind==="char"){sb.char=SB_CHARS[i];SB_CHARS.forEach((_,j)=>document.getElementById("cC"+j).classList.toggle("sel",j===i));}
-  if(kind==="setting"){sb.setting=SB_SETTINGS[i];SB_SETTINGS.forEach((_,j)=>document.getElementById("cS"+j).classList.toggle("sel",j===i));}
-  if(kind==="problem"){sb.problem=SB_PROBLEMS[i];SB_PROBLEMS.forEach((_,j)=>document.getElementById("cP"+j).classList.toggle("sel",j===i));}
+  sndPop();
+  if(kind==="char"){sb.char=SB_CHARS[i];SB_CHARS.forEach(function(_,j){document.getElementById("cC"+j).classList.toggle("sel",j===i);});}
+  if(kind==="setting"){sb.setting=SB_SETTINGS[i];SB_SETTINGS.forEach(function(_,j){document.getElementById("cS"+j).classList.toggle("sel",j===i);});}
+  if(kind==="problem"){sb.problem=SB_PROBLEMS[i];SB_PROBLEMS.forEach(function(_,j){document.getElementById("cP"+j).classList.toggle("sel",j===i);});}
   const ok=sb.char&&sb.setting&&sb.problem;
-  const b=document.getElementById("sbStart");b.disabled=!ok;b.style.opacity=ok?"1":".5";
+  const b=document.getElementById("sbStart");b.disabled=!ok;
+}
+function sbSurprise(kind){
+  const n=kind==="char"?SB_CHARS.length:kind==="setting"?SB_SETTINGS.length:SB_PROBLEMS.length;
+  sbPick(kind,Math.floor(Math.random()*n));
+  sndMagic();
+}
+function sbSurpriseAll(){
+  sbPick("char",Math.floor(Math.random()*SB_CHARS.length));
+  sbPick("setting",Math.floor(Math.random()*SB_SETTINGS.length));
+  sbPick("problem",Math.floor(Math.random()*SB_PROBLEMS.length));
+  sndMagic();
 }
 function fillTpl(t){
   return t.replace(/\{C\}/g,sb.char.n).replace(/\{S\}/g,sb.setting.n).replace(/\{PN\}/g,sb.problem.news);
 }
-function sbStart(){sb.slot=0;sb.sentences=[];renderSlot();}
+function sbStart(){sndYay();sb.slot=0;sb.sentences=[];renderSlot();}
 function renderSlot(){
   const s=SB_SLOTS[sb.slot];
-  const sofar=sb.sentences.length?`<div class="storysofar">📜 <b>Your story so far:</b><br>${sb.sentences.join(" ")}</div>`:"";
-  let h=`<div class="backrow"><button class="btn ghost small" onclick="renderBuilder()">← Start over</button></div>
-  <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">Part ${sb.slot+1} of ${SB_SLOTS.length}: <b>${s.label}</b> Pick the sentence you like best!</div></div>
-  <div class="progressbar"><div style="width:${(sb.slot/SB_SLOTS.length)*100}%"></div></div>
-  ${sofar}<div class="card">`;
-  s.opts.forEach((o,i)=>{
-    h+=`<button class="slotopt" onclick="sbChoose(${i})">${fillTpl(o)}</button>`;
+  const sofar=sb.sentences.length?'<div class="storysofar">📜 <b>Your story so far:</b><br>'+sb.sentences.join(" ")+'</div>':"";
+  let h='<div class="backrow"><button class="btn ghost small" onclick="renderBuilder()">← Start over</button></div>'
+  +'<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">Part '+(sb.slot+1)+' of '+SB_SLOTS.length+': <b>'+s.label+'</b><br><span style="font-size:14px;color:var(--ink-soft);">'+s.hint+'</span></div></div>'
+  +'<div class="progressbar"><div style="width:'+((sb.slot/SB_SLOTS.length)*100)+'%"></div></div>'
+  +sofar+'<div class="card">';
+  s.opts.forEach(function(o,i){
+    h+='<button class="slotopt" onclick="sbChoose('+i+')">'+fillTpl(o)+'</button>';
   });
-  h+=`</div>`;
+  h+='<button class="slotopt dice" onclick="sbChoose(-1)">🎲 Surprise me — pick one for me!</button>';
+  h+='</div>';
   document.getElementById("view").innerHTML=h;window.scrollTo(0,0);
 }
 function sbChoose(i){
-  sb.sentences.push(fillTpl(SB_SLOTS[sb.slot].opts[i]));
+  const s=SB_SLOTS[sb.slot];
+  if(i<0){i=Math.floor(Math.random()*s.opts.length);sndMagic();}else sndPop();
+  sb.sentences.push(fillTpl(s.opts[i]));
   sb.slot++;
   if(sb.slot<SB_SLOTS.length)renderSlot();
   else sbFinish();
 }
 function sbFinish(){
   const title=sb.char.n.split(" ")[0]+" and "+sb.problem.n;
-  const story={title:title,emoji:sb.char.e+sb.problem.e,date:todayStr(),text:sb.sentences.join(" ")};
+  const story={title:title,emoji:sb.char.e+sb.problem.e,date:todayStr(),text:sb.sentences.join(" "),
+    cover:{c:sb.char.id,s:sb.setting.id,p:sb.problem.id}};
   state.stories.push(story);
   addXP(15);save();
-  fireworks();
-  document.getElementById("view").innerHTML=`
-  <div class="card center"><div class="big">🎆</div><h2>You wrote a story!</h2>
-  <div style="font-size:15px;color:#5b8ba1;">+15 XP · Saved to My Storybook</div></div>
-  <div class="card"><h2>${story.emoji} ${story.title}</h2>
-  <div class="readtext">${story.text}</div>
-  <div class="bubble" style="margin-top:16px;">🧜‍♀️ Now read your story aloud, nice and clear — you're the author! 🌟</div>
-  <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-    <button class="btn" onclick="renderBuilder()">✍️ Build another</button>
-    <button class="btn ghost" onclick="go('home')">🌊 Back to Today</button>
-  </div></div>`;
+  sndMagic();fireworks();
+  document.getElementById("view").innerHTML=
+  '<div class="card center"><div class="big">🎆</div><h2>You wrote a book!</h2>'
+  +'<div style="font-size:15px;color:var(--ink-soft);">+15 XP · Saved to My Storybook — with its very own cover!</div></div>'
+  +'<div class="card"><div class="coverbig">'+coverSVG(story.cover,story.title)+'</div>'
+  +'<h2>'+story.emoji+' '+escHTML(story.title)+'</h2>'
+  +'<div class="readtext">'+escHTML(story.text)+'</div>'
+  +'<div class="bubble" style="margin-top:16px;">🧜‍♀️ Look at that cover — a real author AND illustrator! Now read it aloud, or let me read it to you. 🌟</div>'
+  +'<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">'
+  +'<button class="btn sand" onclick="readStory('+(state.stories.length-1)+')">🔊 Read it aloud</button>'
+  +'<button class="btn" onclick="renderBuilder()">✍️ Build another</button>'
+  +'<button class="btn ghost" onclick="go(\'home\')">🌊 Back to Today</button>'
+  +'</div></div>';
   window.scrollTo(0,0);
 }
 function readStory(i){
   const s=state.stories[i];
-  document.getElementById("view").innerHTML=`
-  <div class="backrow"><button class="btn ghost small" onclick="renderBuilder()">← Back</button></div>
-  <div class="card"><h2>${s.emoji} ${s.title}</h2>
-  <div class="readtext" style="font-size:20px;">${s.text}</div>
-  <div class="bubble" style="margin-top:16px;">🧜‍♀️ Read it aloud slowly — pause at every full stop, like a wave rolling in. 🌊</div></div>`;
+  if(!s)return;
+  stopReading();
+  ART_SENTS=splitSentences(s.text);
+  const body=ART_SENTS.map(function(t,j){
+    return '<span class="sent" id="sent'+j+'" onclick="sentTap('+j+')">'+escHTML(t)+'</span>';
+  }).join("");
+  document.getElementById("view").innerHTML=
+  '<div class="backrow"><button class="btn ghost small" onclick="renderBuilder()">← Back</button>'
+  +'<button class="btn sand small" id="readBtn" onclick="toggleRead()">▶️ Read to me</button></div>'
+  +'<div class="card">'
+  +(s.cover?'<div class="coverbig">'+coverSVG(s.cover,s.title)+'</div>':"")
+  +'<h2>'+s.emoji+' '+escHTML(s.title)+'</h2>'
+  +'<div class="readtext" style="font-size:20px;">'+body+'</div>'
+  +'<div class="bubble" style="margin-top:16px;">🧜‍♀️ Read it aloud slowly — pause at every full stop, like a wave rolling in. Or tap ▶️ and read along with me! 🌊</div></div>';
   window.scrollTo(0,0);
 }
 /* ================= EFFECTS ================= */
@@ -961,10 +1515,10 @@ const fxCtx=fxCanvas.getContext("2d");
 let parts=[],fxRunning=false;
 function fxResize(){fxCanvas.width=innerWidth;fxCanvas.height=innerHeight;}
 addEventListener("resize",fxResize);fxResize();
-const FX_COLORS=["#4ab8d8","#ff8a7a","#ffd66b","#8fd7b8","#a5e0ef","#f7a8d8"];
+const FX_COLORS=["#0abab5","#81d8d0","#ff8a7a","#ffd66b","#8fd7b8","#f7a8d8"];
 function spawnConfetti(n,x,y,spread){
   for(let i=0;i<n;i++){
-    parts.push({x:x??Math.random()*fxCanvas.width,y:y??-10,
+    parts.push({x:x!=null?x:Math.random()*fxCanvas.width,y:y!=null?y:-10,
       vx:(Math.random()-.5)*(spread||4),vy:Math.random()*3+2,
       s:Math.random()*7+4,c:FX_COLORS[Math.floor(Math.random()*FX_COLORS.length)],
       r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,life:140});
@@ -984,14 +1538,14 @@ function confettiBurst(){spawnConfetti(90);}
 function fireworks(){
   spawnConfetti(70);
   let count=0;
-  const iv=setInterval(()=>{spawnFirework();runFX();count++;if(count>5)clearInterval(iv);},350);
+  const iv=setInterval(function(){spawnFirework();runFX();count++;if(count>5)clearInterval(iv);},350);
 }
 function runFX(){
   if(fxRunning)return;fxRunning=true;
   function tick(){
     fxCtx.clearRect(0,0,fxCanvas.width,fxCanvas.height);
-    parts=parts.filter(p=>p.life>0&&p.y<fxCanvas.height+20);
-    parts.forEach(p=>{
+    parts=parts.filter(function(p){return p.life>0&&p.y<fxCanvas.height+20;});
+    parts.forEach(function(p){
       p.x+=p.vx;p.y+=p.vy;if(!p.fw)p.vy+=.06;else p.vy+=.03;p.r+=p.vr;p.life--;
       fxCtx.save();fxCtx.translate(p.x,p.y);fxCtx.rotate(p.r);
       fxCtx.globalAlpha=Math.min(1,p.life/40);
@@ -1002,8 +1556,11 @@ function runFX(){
   requestAnimationFrame(tick);
 }
 /* ================= INIT ================= */
+document.getElementById("ttsBtn").textContent=ttsOn?"🔊":"🔇";
+document.getElementById("ttsBtn").classList.toggle("off",!ttsOn);
 updateHeader();
 go("home");
+tryFetchDaily();
 </script>
 </body>
 </html>

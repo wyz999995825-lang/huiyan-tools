@@ -7,105 +7,151 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { height:100%; }
+  :root{ --tiffany:#0abab5; --tiffany-light:#81d8d0; --lagoon:#e6f7f5; --sky:#f4fbfa; --deep:#0a8a86;
+    --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff; --ink:#144644; --ink2:#3d7a76; --ink3:#7aa8a4; }
   body {
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
-    font-size:16px; color:#12475e; background:#f0fafd;
-    background-image:linear-gradient(180deg,#f0fafd 0%,#dff2f9 60%,#cfeef8 100%);
-    min-height:100%;
+    font-size:17px; color:var(--ink); background:var(--sky);
+    background-image:linear-gradient(180deg,#f4fbfa 0%,#e6f7f5 55%,#d8f2ef 100%);
+    min-height:100%; line-height:1.8;
   }
-  #app { max-width:760px; margin:0 auto; padding:14px 14px 90px; }
-  button { font-family:inherit; cursor:pointer; border:none; min-height:48px; }
-  .topbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
-  .chip { background:#fff; border-radius:18px; padding:8px 14px; font-weight:700; font-size:16px;
-    box-shadow:0 3px 10px rgba(26,126,168,.12); display:flex; align-items:center; gap:6px; min-height:44px; }
-  .chip small { font-weight:600; color:#5a92a8; font-size:12px; }
-  .guide { display:flex; align-items:flex-start; gap:10px; margin:10px 0 16px; }
-  .guide .face { font-size:44px; line-height:1; filter:drop-shadow(0 3px 4px rgba(26,126,168,.25)); }
-  .bubble { background:#fff; border-radius:4px 18px 18px 18px; padding:12px 16px; font-size:16px;
-    box-shadow:0 4px 12px rgba(26,126,168,.13); flex:1; border:2px solid #a5e0ef; }
-  .modes { display:grid; gap:14px; grid-template-columns:1fr; }
+  #app { max-width:820px; margin:0 auto; padding:10px 12px 70px; }
+  button { font-family:inherit; cursor:pointer; border:none; min-height:46px; }
+  @keyframes wiggle { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-3deg)} 75%{transform:rotate(3deg)} }
+  @keyframes idlefloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+  @keyframes pop { from{opacity:0; transform:scale(.9);} to{opacity:1; transform:none;} }
+  @keyframes springin { 0%{opacity:0; transform:scale(.7);} 60%{opacity:1; transform:scale(1.06);} 100%{opacity:1; transform:scale(1);} }
+  @keyframes slidein { from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;} }
+  .anim { animation:slidein .45s cubic-bezier(.34,1.56,.64,1); }
+  .topbar { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  .chip { background:var(--card); border-radius:18px; padding:6px 12px; font-weight:700; font-size:16px;
+    box-shadow:0 3px 10px rgba(10,138,134,.13); display:flex; align-items:center; gap:6px; min-height:44px; }
+  .chip small { font-weight:600; color:var(--ink2); font-size:12px; }
+  .chip.title { background:linear-gradient(135deg,#fdf3dd,#ffe9c9); color:#8a6a1c; border:2px solid #f0d9a0; font-size:14px; }
+  .ttsbtn { font-size:21px; border:2px solid var(--tiffany-light); margin-left:auto; }
+  .ttsbtn:active { transform:scale(.88); }
+  .guide { display:flex; align-items:flex-start; gap:10px; margin:8px 0 14px; }
+  .guide .face { font-size:46px; line-height:1; filter:drop-shadow(0 3px 4px rgba(10,138,134,.25)); animation:idlefloat 3s ease-in-out infinite; }
+  .bubble { background:var(--card); border-radius:4px 18px 18px 18px; padding:12px 16px; font-size:17px; line-height:1.75;
+    box-shadow:0 4px 12px rgba(10,138,134,.13); flex:1; border:2px solid var(--tiffany-light); }
+  .modes { display:grid; gap:12px; grid-template-columns:1fr; }
   @media(min-width:540px){ .modes { grid-template-columns:1fr 1fr; } }
-  .modecard { background:#fff; border-radius:20px; padding:22px 18px; text-align:center;
-    box-shadow:0 5px 18px rgba(26,126,168,.14); transition:transform .15s; border:2px solid #a5e0ef; width:100%; }
-  .modecard:active { transform:scale(.97); }
-  .modecard .big { font-size:52px; }
-  .modecard h2 { color:#1a7ea8; font-size:20px; margin:8px 0 4px; }
-  .modecard p { color:#5a92a8; font-size:14px; }
-  .tgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; }
-  .tcard { background:#fff; border-radius:18px; padding:14px; display:flex; align-items:center; gap:10px;
-    box-shadow:0 4px 14px rgba(26,126,168,.13); border:2px solid transparent; min-height:80px; width:100%; text-align:left;}
-  .tcard:active { transform:scale(.97); }
-  .tcard .em { font-size:32px; }
-  .tcard .nm { font-weight:800; font-size:15px; }
-  .tcard .sub { font-size:12px; color:#5a92a8; margin-top:2px; }
+  .modecard { background:var(--card); border-radius:20px; padding:20px 16px; text-align:center;
+    box-shadow:0 5px 18px rgba(10,138,134,.15); transition:transform .25s cubic-bezier(.34,1.56,.64,1); border:2px solid var(--tiffany-light); width:100%; }
+  .modecard:hover { transform:scale(1.03) rotate(-.5deg); }
+  .modecard:active { transform:scale(.94); }
+  .modecard .big { font-size:54px; animation:idlefloat 3.4s ease-in-out infinite; display:inline-block; }
+  .modecard h2 { color:var(--deep); font-size:21px; margin:8px 0 4px; }
+  .modecard p { color:var(--ink2); font-size:15px; line-height:1.6; }
+  .mbadge { display:inline-block; background:var(--coral); color:#fff; font-size:13px; font-weight:800; border-radius:12px; padding:1px 10px; margin-top:6px; }
+  .mbadge.done { background:#2bb673; }
+  .tgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; }
+  .tcard { background:var(--card); border-radius:18px; padding:13px; display:flex; align-items:center; gap:10px;
+    box-shadow:0 4px 14px rgba(10,138,134,.13); border:2px solid var(--lagoon); min-height:78px; width:100%; text-align:left;
+    transition:transform .22s cubic-bezier(.34,1.56,.64,1); }
+  .tcard:hover { transform:scale(1.02); border-color:var(--tiffany-light); }
+  .tcard:active { transform:scale(.95); }
+  .tcard .em { font-size:33px; }
+  .tcard .nm { font-weight:800; font-size:16px; }
+  .tcard .sub { font-size:12px; color:var(--ink2); margin-top:2px; }
   .ring { margin-left:auto; flex:none; }
   .backrow { display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
-  .btn { background:linear-gradient(180deg,#4ab8d8,#2b9cc4); color:#fff; font-weight:800; font-size:17px;
-    border-radius:16px; padding:12px 22px; box-shadow:0 4px 0 #1a7ea8; min-height:52px; }
-  .btn:active { transform:translateY(2px); box-shadow:0 2px 0 #1a7ea8; }
+  .btn { background:linear-gradient(180deg,#19c8c2,#0abab5); color:#fff; font-weight:800; font-size:17px;
+    border-radius:16px; padding:12px 22px; box-shadow:0 4px 0 var(--deep); min-height:50px;
+    transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
+  .btn:hover { animation:wiggle .35s; }
+  .btn:active { transform:translateY(2px) scale(.97); box-shadow:0 2px 0 var(--deep); }
   .btn.sand { background:linear-gradient(180deg,#ffd98e,#f4c35d); color:#7a5a12; box-shadow:0 4px 0 #d9a83f; }
-  .btn.ghost { background:#fff; color:#1a7ea8; border:2px solid #a5e0ef; box-shadow:none; }
+  .btn.sand:active { box-shadow:0 2px 0 #d9a83f; }
+  .btn.coral { background:linear-gradient(180deg,#ff9d8e,#ff8a7a); color:#fff; box-shadow:0 4px 0 #d96a5a; }
+  .btn.ghost { background:var(--card); color:var(--deep); border:2px solid var(--tiffany-light); box-shadow:none; }
   /* flashcard */
-  .flip { perspective:1200px; max-width:460px; margin:0 auto 14px; }
-  .flipinner { position:relative; width:100%; min-height:300px; transition:transform .5s; transform-style:preserve-3d; }
+  .flip { perspective:1200px; max-width:480px; margin:0 auto 14px; }
+  .flipinner { position:relative; width:100%; min-height:310px; transition:transform .5s cubic-bezier(.34,1.4,.64,1); transform-style:preserve-3d; }
   .flip.flipped .flipinner { transform:rotateY(180deg); }
   .face3d { position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
-    background:#fff; border-radius:20px; box-shadow:0 5px 18px rgba(26,126,168,.15); padding:20px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; border:2px solid #a5e0ef; }
+    background:var(--card); border-radius:20px; box-shadow:0 5px 18px rgba(10,138,134,.16); padding:20px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; border:2px solid var(--tiffany-light); }
   .face3d.back { transform:rotateY(180deg); justify-content:flex-start; }
-  .bigem { font-size:72px; }
-  .term { font-size:26px; font-weight:800; color:#1a7ea8; margin-top:8px; }
-  .tapnote { color:#8fb9ca; font-size:13px; margin-top:14px; }
-  .def { font-size:16px; line-height:1.5; margin:10px 0; }
-  .scibox { background:#eaf9ff; border:2px dashed #4ab8d8; border-radius:14px; padding:10px 13px; font-size:15px; margin-top:6px; width:100%; }
-  .scibox .tag { font-weight:800; color:#1a7ea8; font-size:13px; display:block; margin-bottom:3px; }
+  .bigem { font-size:74px; animation:idlefloat 3s ease-in-out infinite; }
+  .term { font-size:28px; font-weight:800; color:var(--deep); margin-top:8px; }
+  .tapnote { color:var(--ink3); font-size:13px; margin-top:14px; }
+  .def { font-size:17px; line-height:1.7; margin:10px 0; }
+  .scibox { background:var(--lagoon); border:2px dashed var(--tiffany); border-radius:14px; padding:10px 13px; font-size:16px; line-height:1.7; margin-top:6px; width:100%; }
+  .scibox .tag { font-weight:800; color:var(--deep); font-size:13px; display:block; margin-bottom:3px; }
   .wordstat { font-size:12px; font-weight:800; border-radius:12px; padding:3px 10px; margin-top:8px; }
   .wordstat.known { background:#e2f7ee; color:#177a55; }
   .wordstat.learning { background:#fdf3dd; color:#a8781a; }
   /* quiz */
-  .qcard { background:#fff; border-radius:20px; padding:20px; box-shadow:0 5px 18px rgba(26,126,168,.14); margin-bottom:14px; }
-  .qtext { font-size:18px; line-height:1.55; font-weight:600; }
+  .qcard { background:var(--card); border-radius:20px; padding:20px; box-shadow:0 5px 18px rgba(10,138,134,.15); margin-bottom:14px; border:2px solid var(--lagoon); }
+  .qtext { font-size:20px; line-height:1.8; font-weight:700; }
   .opts { display:grid; grid-template-columns:1fr; gap:10px; margin-top:16px; }
   .opts.short { grid-template-columns:1fr 1fr; }
-  .opt { background:#f0fafd; border:2px solid #a5e0ef; border-radius:16px; padding:13px 16px; font-size:16px;
-    font-weight:600; color:#12475e; text-align:left; min-height:52px; line-height:1.45; transition:all .15s; }
-  .opt:not(:disabled):active { background:#dff2f9; }
-  .opt.sel-ok, .opt.show-ok { background:#e2f7ee; border-color:#39b98a; color:#177a55; }
-  .opt.sel-no { background:#ffece9; border-color:#ff8a7a; color:#c65a4c; }
-  .fb { border-radius:20px; padding:16px; margin-bottom:14px; animation:pop .3s; }
+  .opt { background:var(--sky); border:2px solid var(--tiffany-light); border-radius:16px; padding:13px 16px; font-size:17px;
+    font-weight:600; color:var(--ink); text-align:left; min-height:52px; line-height:1.7;
+    transition:transform .2s cubic-bezier(.34,1.56,.64,1), background .15s; }
+  .opt:not(:disabled):hover { transform:scale(1.015); background:var(--lagoon); }
+  .opt:not(:disabled):active { transform:scale(.97); background:var(--lagoon); }
+  .opt.sel-ok, .opt.show-ok { background:#e2f7ee; border-color:#2bb673; color:#177a55; animation:springin .45s; }
+  .opt.sel-no { background:#ffece9; border-color:var(--coral); color:#c65a4c; }
+  .fb { border-radius:20px; padding:16px; margin-bottom:14px; animation:springin .4s; }
   .fb.good { background:#e2f7ee; border:2px solid #7fd8b4; }
   .fb.oops { background:#fff4f2; border:2px solid #ffb8ae; }
-  .fb .big { font-size:19px; font-weight:800; }
+  .fb .big { font-size:20px; font-weight:800; }
   .fb.good .big { color:#177a55; } .fb.oops .big { color:#c65a4c; }
-  .model { background:#eaf9ff; border:2px dashed #4ab8d8; border-radius:16px; padding:13px 15px; margin:12px 0; font-size:16px; line-height:1.5; }
-  .model .tag { font-weight:800; color:#1a7ea8; font-size:14px; display:block; margin-bottom:4px; }
-  .diabox { background:#fff; border-radius:20px; padding:16px; box-shadow:0 5px 16px rgba(26,126,168,.13); margin-bottom:14px; }
-  .diabox h4 { color:#1a7ea8; font-size:15px; margin-bottom:8px; }
+  .model { background:var(--lagoon); border:2px dashed var(--tiffany); border-radius:16px; padding:13px 15px; margin:12px 0; font-size:17px; line-height:1.75; }
+  .model .tag { font-weight:800; color:var(--deep); font-size:14px; display:block; margin-bottom:4px; }
+  .diabox { background:var(--card); border-radius:20px; padding:16px; box-shadow:0 5px 16px rgba(10,138,134,.13); margin-bottom:14px; }
+  .diabox h4 { color:var(--deep); font-size:16px; margin-bottom:8px; }
   .whys { margin-top:10px; }
-  .why { font-size:14px; color:#5a92a8; background:#f7fcfe; border-left:4px solid #ffb8ae; border-radius:8px; padding:8px 11px; margin:6px 0; line-height:1.45; }
-  @keyframes pop { from{opacity:0; transform:scale(.92);} to{opacity:1; transform:none;} }
-  @keyframes slidein { from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;} }
-  .anim { animation:slidein .45s; }
+  .why { font-size:15px; color:var(--ink2); background:var(--sky); border-left:4px solid #ffb8ae; border-radius:8px; padding:8px 11px; margin:6px 0; line-height:1.6; }
+  .spk { background:none; border:none; font-size:22px; min-height:auto; min-width:34px; padding:0 4px; vertical-align:middle; cursor:pointer; }
+  .spk:active { transform:scale(.85); }
   /* diagrams */
   .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:8px; }
-  .cell { background:#f0fafd; border:2px solid #a5e0ef; border-radius:14px; padding:9px 6px; text-align:center; }
-  .cell .e { font-size:26px; }
-  .cell .n { font-size:13px; font-weight:800; color:#1a7ea8; }
-  .cell .d { font-size:11px; color:#5a92a8; }
+  .cell { background:var(--sky); border:2px solid var(--tiffany-light); border-radius:14px; padding:9px 6px; text-align:center; }
+  .cell .e { font-size:27px; }
+  .cell .n { font-size:14px; font-weight:800; color:var(--deep); }
+  .cell .d { font-size:12px; color:var(--ink2); line-height:1.45; }
   .vflow { display:flex; flex-direction:column; align-items:center; gap:2px; }
-  .vbox { background:#f0fafd; border:2px solid #4ab8d8; border-radius:12px; padding:8px 14px; font-weight:700; font-size:14px; text-align:center; min-width:220px; }
-  .vbox .d { font-size:12px; color:#5a92a8; font-weight:600; }
-  .varrow { color:#ff8a7a; font-size:18px; font-weight:800; }
-  .cap { font-size:13px; color:#5a92a8; text-align:center; margin-top:6px; }
-  .pbar { height:10px; background:#dff2f9; border-radius:6px; overflow:hidden; margin-top:6px; }
-  .pbar>div { height:100%; background:linear-gradient(90deg,#4ab8d8,#1a7ea8); transition:width .4s; }
-  .badgebox { background:#fff; border-radius:20px; padding:14px 16px; box-shadow:0 5px 16px rgba(26,126,168,.13); margin-top:16px; }
-  .badgebox h3 { color:#1a7ea8; font-size:15px; margin-bottom:8px; }
-  .bdg { display:inline-flex; align-items:center; gap:5px; background:#f0fafd; border:2px solid #a5e0ef;
+  .vbox { background:var(--sky); border:2px solid var(--tiffany); border-radius:12px; padding:8px 14px; font-weight:700; font-size:15px; text-align:center; min-width:230px; }
+  .vbox .d { font-size:12px; color:var(--ink2); font-weight:600; }
+  .varrow { color:var(--coral); font-size:18px; font-weight:800; }
+  .cap { font-size:14px; color:var(--ink2); text-align:center; margin-top:6px; line-height:1.55; }
+  .pbar { height:10px; background:#d5f0ed; border-radius:6px; overflow:hidden; margin-top:6px; }
+  .pbar>div { height:100%; background:linear-gradient(90deg,var(--tiffany-light),var(--tiffany)); transition:width .4s; }
+  .badgebox { background:var(--card); border-radius:20px; padding:14px 16px; box-shadow:0 5px 16px rgba(10,138,134,.13); margin-top:16px; }
+  .badgebox h3 { color:var(--deep); font-size:16px; margin-bottom:8px; }
+  .bdg { display:inline-flex; align-items:center; gap:5px; background:var(--sky); border:2px solid var(--tiffany-light);
     border-radius:14px; padding:5px 11px; margin:3px; font-size:13px; font-weight:700; }
   .bdg.locked { opacity:.38; filter:grayscale(1); }
+  .bdg.gold { background:linear-gradient(135deg,#fdf3dd,#ffe9c9); border-color:#f0d9a0; color:#8a6a1c; }
+  /* mistake shells */
+  .mistst { display:inline-block; font-size:13px; font-weight:800; border-radius:12px; padding:3px 10px; margin-bottom:8px; background:#fff0ee; color:#c65a4c; }
+  .fixedcard { border:2px solid #7fd8b4; }
+  .fixedcard .mistst { background:#e2f7ee; color:#177a55; }
+  .youpicked { font-size:14px; color:#c65a4c; background:#fff6f4; border-radius:10px; padding:8px 11px; margin:8px 0; line-height:1.55; }
+  /* MEGA celebration */
+  .mega { position:fixed; inset:0; z-index:40; overflow:hidden;
+    background:linear-gradient(180deg,#8ce0da 0%,#2cc5c0 40%,#0a8a86 100%); animation:pop .4s; }
+  .megaray { position:absolute; top:-10%; width:14%; height:70%; background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0));
+    transform:skewX(-12deg); animation:raypulse 3s ease-in-out infinite; pointer-events:none; }
+  @keyframes raypulse { 0%,100%{opacity:.4} 50%{opacity:.9} }
+  .pchar { position:absolute; left:-140px; font-size:58px; animation:swim linear infinite; pointer-events:none; }
+  .pchar>span { display:inline-block; animation:idlefloat 2.2s ease-in-out infinite; }
+  @keyframes swim { from{ transform:translateX(0); } to{ transform:translateX(130vw); } }
+  .mbub { position:absolute; bottom:-50px; border-radius:50%; border:2px solid rgba(255,255,255,.65);
+    background:rgba(255,255,255,.12); animation:rise linear infinite; pointer-events:none; }
+  @keyframes rise { to{ transform:translateY(-115vh); } }
+  .megacard { position:absolute; left:50%; top:44%; transform:translate(-50%,-50%); background:rgba(255,255,255,.95);
+    border-radius:26px; padding:24px 30px; text-align:center; box-shadow:0 10px 40px rgba(0,60,58,.4);
+    animation:springin .6s cubic-bezier(.34,1.56,.64,1); max-width:92vw; width:420px; z-index:2; }
+  .megaem { font-size:76px; animation:idlefloat 2.4s ease-in-out infinite; display:inline-block; }
+  .megatitle { color:var(--coral); font-weight:800; letter-spacing:2px; font-size:15px; margin-top:4px; }
+  .meganame { color:var(--deep); font-size:30px; font-weight:800; margin:6px 0; line-height:1.3; }
+  .megasub { color:var(--ink2); font-size:16px; margin-bottom:14px; }
   #fx { position:fixed; inset:0; pointer-events:none; z-index:50; }
-  footer { text-align:center; color:#8fb9ca; font-size:12px; margin-top:22px; }
+  footer { text-align:center; color:var(--ink3); font-size:12px; margin-top:22px; }
 </style>
 </head>
 <body>
@@ -140,7 +186,9 @@ const VOCAB=[
  {t:"lt", term:"survive", e:"💪", def:"To stay alive.", sent:"Animals need air, food and water to survive."},
  {t:"lt", term:"characteristic", e:"⭐", def:"A special feature that helps us describe or group something.", sent:"Having feathers is a characteristic of birds."},
  {t:"lt", term:"classify", e:"🗂️", def:"To sort things into groups by looking at how they are alike.", sent:"Scientists classify animals into groups such as mammals and birds."},
- // Animal Groups (8)
+ {t:"lt", term:"young", e:"🐥", def:"The babies of a living thing. Young grow up to become like their parents.", sent:"A cat's young are called kittens."},
+ {t:"lt", term:"energy", e:"⚡", def:"The power to move, grow and stay alive. Living things get energy from food.", sent:"Animals eat food to get energy to move and grow."},
+ // Animal Groups (8 + 3 new = 11)
  {t:"ag", term:"mammal", e:"🐶", def:"An animal with fur or hair. Its young drink milk from the mother.", sent:"A whale is a mammal because it feeds its young with milk."},
  {t:"ag", term:"bird", e:"🐧", def:"An animal with feathers, two wings and a beak. Most birds can fly.", sent:"A penguin is a bird because it has feathers and a beak."},
  {t:"ag", term:"fish", e:"🐠", def:"An animal that lives in water, has fins and uses gills to take in air.", sent:"A fish uses its gills to take in air from the water."},
@@ -149,14 +197,20 @@ const VOCAB=[
  {t:"ag", term:"reptile", e:"🐢", def:"An animal with dry, scaly skin, like snakes, turtles and crocodiles.", sent:"A crocodile is a reptile because it has dry, scaly skin."},
  {t:"ag", term:"gills", e:"🫧", def:"Body parts that let fish take in air from the water.", sent:"Fish use their gills to take in air from the water."},
  {t:"ag", term:"feathers", e:"🪶", def:"The light, soft covering on a bird's body.", sent:"Feathers keep a bird warm and help it to fly."},
- // Plants, Fungi & Bacteria (6)
+ {t:"ag", term:"fins", e:"🐟", def:"The flat parts on a fish's body that help it swim and steer.", sent:"A fish uses its fins to swim and change direction."},
+ {t:"ag", term:"scales", e:"🐍", def:"Small, hard plates that cover the bodies of fish and reptiles.", sent:"A snake's body is covered with dry scales."},
+ {t:"ag", term:"beak", e:"🦜", def:"The hard, pointed mouth of a bird, used to pick up food.", sent:"A bird uses its beak to pick up seeds and worms."},
+ // Plants, Fungi & Bacteria (6 + 3 new = 9)
  {t:"pl", term:"flowering plant", e:"🌺", def:"A plant that can grow flowers. The flowers may become fruits with seeds.", sent:"A hibiscus is a flowering plant because it can grow flowers."},
  {t:"pl", term:"non-flowering plant", e:"🌿", def:"A plant that never grows flowers, like ferns and mosses.", sent:"A fern is a non-flowering plant because it never grows flowers."},
  {t:"pl", term:"fern", e:"🌿", def:"A non-flowering plant with feathery leaves that likes shady, damp places.", sent:"A fern is a plant that never grows any flowers."},
  {t:"pl", term:"fungus", e:"🍄", def:"A living thing like a mushroom or mould. It is not a plant and cannot make its own food.", sent:"A mushroom is a fungus, so it cannot make its own food."},
  {t:"pl", term:"bacteria", e:"🦠", def:"Very tiny living things. Some are helpful and some can make us sick.", sent:"Bacteria are so small that we need a microscope to see them."},
  {t:"pl", term:"mould", e:"🍞", def:"A fungus that can grow on old food, like a fuzzy patch on bread.", sent:"Mould is a fungus that can grow on old bread."},
- // Materials (10)
+ {t:"pl", term:"moss", e:"🟢", def:"A tiny non-flowering plant that grows like a soft green carpet in damp places.", sent:"Moss is a non-flowering plant that grows in damp, shady places."},
+ {t:"pl", term:"mushroom", e:"🍄", def:"A fungus with a stalk and a cap. It looks like a plant but it is NOT one.", sent:"A mushroom is a fungus, not a plant, because it cannot make its own food."},
+ {t:"pl", term:"microscope", e:"🔬", def:"A tool that makes very tiny things look big enough for us to see.", sent:"We use a microscope to see tiny bacteria."},
+ // Materials (10 + 2 new = 12)
  {t:"ma", term:"wood", e:"🪵", def:"A material that comes from trees. It is hard and floats on water.", sent:"The chair is made of wood because wood is hard and strong."},
  {t:"ma", term:"metal", e:"🥄", def:"A shiny, strong material. Some metals, like iron, can be attracted by magnets.", sent:"The pot is made of metal because metal is strong and does not melt easily."},
  {t:"ma", term:"plastic", e:"🧴", def:"A light, waterproof material that can be made into many shapes.", sent:"The bottle is made of plastic because plastic is light and waterproof."},
@@ -167,7 +221,9 @@ const VOCAB=[
  {t:"ma", term:"flexible", e:"🤸", def:"Can bend easily without breaking.", sent:"A rubber hose is flexible, so we can bend it around corners."},
  {t:"ma", term:"transparent", e:"🔍", def:"Lets light pass through, so we can see through it clearly.", sent:"Glass is transparent, so we can see through the window."},
  {t:"ma", term:"strong", e:"💪", def:"Hard to break, even when a big force presses on it.", sent:"The bridge is made of steel because steel is very strong."},
- // Life Cycles (8)
+ {t:"ma", term:"float", e:"🛟", def:"To stay on top of water and not go under.", sent:"A block of wood can float on water."},
+ {t:"ma", term:"sink", e:"⚓", def:"To go down under the water.", sent:"A metal coin will sink when we drop it into water."},
+ // Life Cycles (8 + 2 new = 10)
  {t:"cy", term:"life cycle", e:"🔄", def:"The stages a living thing goes through as it grows, again and again.", sent:"The life cycle of a butterfly has four stages."},
  {t:"cy", term:"egg", e:"🥚", def:"The first stage of many animals' life cycles.", sent:"A butterfly begins its life as a tiny egg."},
  {t:"cy", term:"larva", e:"🐛", def:"The young of an insect that looks very different from the adult. A caterpillar is a larva.", sent:"The caterpillar is the larva of the butterfly."},
@@ -176,14 +232,18 @@ const VOCAB=[
  {t:"cy", term:"tadpole", e:"🐸", def:"The young of a frog. It lives in water and has a tail.", sent:"A tadpole hatches from a frog's egg and lives in water."},
  {t:"cy", term:"germinate", e:"🌱", def:"When a seed starts to grow into a young plant.", sent:"A seed will germinate when it gets water, air and warmth."},
  {t:"cy", term:"seedling", e:"🪴", def:"A very young plant that has just grown from a seed.", sent:"The seedling grew taller and became a young plant."},
- // Parts of a Plant (6)
+ {t:"cy", term:"hatch", e:"🐣", def:"To break out of an egg.", sent:"A chick will hatch from the egg when it is ready."},
+ {t:"cy", term:"nymph", e:"🦗", def:"The young of some insects, like the grasshopper. It looks like a small adult without wings.", sent:"The young grasshopper is called a nymph."},
+ // Parts of a Plant (6 + 2 new = 8)
  {t:"pp", term:"roots", e:"🥕", def:"The parts of a plant that grow into the soil.", sent:"The roots hold the plant in the soil and take in water."},
  {t:"pp", term:"stem", e:"🎋", def:"The part that holds the plant up and carries water to other parts.", sent:"The stem carries water from the roots to the leaves."},
  {t:"pp", term:"leaf", e:"🍃", def:"The flat green part of a plant.", sent:"The leaf makes food for the plant using sunlight."},
  {t:"pp", term:"flower", e:"🌸", def:"The colourful part of a plant that helps it make seeds.", sent:"The flower helps the plant to reproduce."},
  {t:"pp", term:"fruit", e:"🍎", def:"The part of a plant that holds and protects the seeds.", sent:"The fruit protects the seeds inside it."},
  {t:"pp", term:"seed", e:"🌰", def:"The small part of a plant that can grow into a new plant.", sent:"A seed can grow into a whole new plant."},
- // Digestive System (8)
+ {t:"pp", term:"petal", e:"🌷", def:"One of the colourful parts of a flower.", sent:"The rose has soft red petals."},
+ {t:"pp", term:"wilt", e:"🥀", def:"To droop and become soft because the plant does not have enough water.", sent:"The plant will wilt if it does not get enough water."},
+ // Digestive System (8 + 2 new = 10)
  {t:"dg", term:"digestive system", e:"😋", def:"The body parts that work together to break down our food.", sent:"Food travels through the digestive system to be broken down."},
  {t:"dg", term:"digest", e:"🍽️", def:"To break down food into tiny bits that the body can use.", sent:"Our body must digest food before it can use the food."},
  {t:"dg", term:"mouth", e:"👄", def:"Where digestion starts. Teeth break food into smaller pieces.", sent:"In the mouth, the teeth break food into smaller pieces."},
@@ -192,7 +252,9 @@ const VOCAB=[
  {t:"dg", term:"small intestine", e:"🌀", def:"A long tube where food is fully digested and passes into the blood.", sent:"Digested food passes into the blood in the small intestine."},
  {t:"dg", term:"large intestine", e:"➰", def:"The tube that takes in water from food that is not digested.", sent:"The large intestine takes in water from the undigested food."},
  {t:"dg", term:"swallow", e:"😮", def:"To make food go from your mouth down your gullet.", sent:"We swallow our food after chewing it well."},
- // Magnets (8)
+ {t:"dg", term:"saliva", e:"💧", def:"The watery liquid in our mouth that makes food soft and easier to swallow.", sent:"Saliva in the mouth makes the food soft and easier to swallow."},
+ {t:"dg", term:"chew", e:"🦷", def:"To break food into small pieces with your teeth.", sent:"We chew our food well so that it is easier to digest."},
+ // Magnets (8 + 2 new = 10)
  {t:"mg", term:"magnet", e:"🧲", def:"An object that can pull things made of iron towards it.", sent:"A magnet attracts objects made of iron."},
  {t:"mg", term:"attract", e:"🤝", def:"To pull something towards yourself.", sent:"Unlike poles of two magnets attract each other."},
  {t:"mg", term:"repel", e:"↔️", def:"To push something away.", sent:"Like poles of two magnets repel each other."},
@@ -200,8 +262,12 @@ const VOCAB=[
  {t:"mg", term:"magnetic", e:"🔩", def:"Can be attracted by a magnet. Iron and steel are magnetic.", sent:"Iron is a magnetic material, so a magnet can pull it."},
  {t:"mg", term:"non-magnetic", e:"🪵", def:"Cannot be attracted by a magnet, like plastic, wood and glass.", sent:"Plastic is non-magnetic, so a magnet cannot attract it."},
  {t:"mg", term:"magnetic force", e:"✨", def:"The invisible pulling or pushing power of a magnet.", sent:"The magnetic force can pass through paper and pull a paper clip."},
- {t:"mg", term:"compass", e:"🧭", def:"A tool with a small magnet inside that shows direction.", sent:"A compass uses a magnet to show us direction."}
+ {t:"mg", term:"compass", e:"🧭", def:"A tool with a small magnet inside that shows direction.", sent:"A compass uses a magnet to show us direction."},
+ {t:"mg", term:"iron", e:"⛓️", def:"A metal that magnets can attract. Steel is made from iron.", sent:"The nail is attracted by the magnet because it is made of iron."},
+ {t:"mg", term:"bar magnet", e:"🧲", def:"A straight magnet shaped like a bar, with a North pole at one end and a South pole at the other.", sent:"A bar magnet has a North pole and a South pole."}
 ];
+/* V3 rule: ALWAYS append new words at the END of their topic group. Never reorder or delete —
+   a word's term is its stable id and progress is saved under it. */
 
 /* ================= DIAGRAMS ================= */
 function cell(e,n,d){ return '<div class="cell"><div class="e">'+e+'</div><div class="n">'+n+'</div>'+(d?'<div class="d">'+d+'</div>':'')+'</div>'; }
@@ -221,17 +287,17 @@ function cycleSVG(stages){
   stages.forEach((st,i)=>{
     const a=(i/n)*2*Math.PI-Math.PI/2;
     const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
-    s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="30" fill="#fff" stroke="#4ab8d8" stroke-width="3"/>';
+    s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="30" fill="#fff" stroke="#0abab5" stroke-width="3"/>';
     s+='<text x="'+x.toFixed(1)+'" y="'+(y+7).toFixed(1)+'" text-anchor="middle" font-size="24">'+st.e+'</text>';
-    s+='<text x="'+x.toFixed(1)+'" y="'+(y+48).toFixed(1)+'" text-anchor="middle" font-size="13" font-weight="800" fill="#1a7ea8">'+st.label+'</text>';
+    s+='<text x="'+x.toFixed(1)+'" y="'+(y+48).toFixed(1)+'" text-anchor="middle" font-size="13" font-weight="800" fill="#0a8a86">'+st.label+'</text>';
   });
   return s+'</svg>';
 }
 function magnetSVG(mode){
   const attract = mode==="attract";
   function bar(x,flip){
-    return '<rect x="'+x+'" y="40" width="50" height="34" rx="4" fill="'+(flip?'#4ab8d8':'#ff8a7a')+'"/>'
-      +'<rect x="'+(x+50)+'" y="40" width="50" height="34" rx="4" fill="'+(flip?'#ff8a7a':'#4ab8d8')+'"/>'
+    return '<rect x="'+x+'" y="40" width="50" height="34" rx="4" fill="'+(flip?'#0abab5':'#ff8a7a')+'"/>'
+      +'<rect x="'+(x+50)+'" y="40" width="50" height="34" rx="4" fill="'+(flip?'#ff8a7a':'#0abab5')+'"/>'
       +'<text x="'+(x+25)+'" y="63" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">'+(flip?'S':'N')+'</text>'
       +'<text x="'+(x+75)+'" y="63" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">'+(flip?'N':'S')+'</text>';
   }
@@ -277,9 +343,10 @@ function digestSVG(){
 const DIA={
   livingNeeds: {t:"What living things need & can do", h:'<div class="grid2">'+cell("💨","air","all living things breathe")+cell("💧","water","to survive")+cell("🍎","food","for energy")+cell("🌱","grow","get bigger")+cell("🙌","respond","react to changes")+cell("🐣","reproduce","have young")+'</div><div class="cap">Living things need air, food and water — and they grow, respond and reproduce.</div>'},
   classify: {t:"The 6 animal groups", h:'<div class="grid2">'+cell("🐶🐋","Mammals","fur/hair · milk for young")+cell("🐦🐧","Birds","feathers · beak · wings")+cell("🐠🦈","Fish","gills · fins · live in water")+cell("🐜🦋","Insects","6 legs · 3 body parts")+cell("🐸","Amphibians","moist skin · water and land")+cell("🐢🐍","Reptiles","dry, scaly skin")+'</div>'},
-  insect: {t:"Insect body plan", h:'<svg viewBox="0 0 320 150" style="max-width:320px;display:block;margin:0 auto"><ellipse cx="80" cy="70" rx="26" ry="22" fill="#4ab8d8"/><ellipse cx="140" cy="70" rx="30" ry="24" fill="#7fd8b4"/><ellipse cx="215" cy="70" rx="45" ry="27" fill="#f4c35d"/><circle cx="70" cy="62" r="4" fill="#12475e"/><line x1="70" y1="50" x2="58" y2="30" stroke="#12475e" stroke-width="2"/><line x1="88" y1="50" x2="98" y2="30" stroke="#12475e" stroke-width="2"/>'+[115,140,165].map(x=>'<line x1="'+x+'" y1="90" x2="'+(x-12)+'" y2="125" stroke="#12475e" stroke-width="3"/><line x1="'+x+'" y1="90" x2="'+(x+12)+'" y2="125" stroke="#12475e" stroke-width="3"/>').join("")+'<text x="80" y="115" text-anchor="middle" font-size="12" font-weight="800" fill="#1a7ea8">head</text><text x="140" y="142" text-anchor="middle" font-size="12" font-weight="800" fill="#1a7ea8">thorax</text><text x="215" y="115" text-anchor="middle" font-size="12" font-weight="800" fill="#1a7ea8">abdomen</text><text x="160" y="18" text-anchor="middle" font-size="13" font-weight="800" fill="#c65a4c">3 body parts + 6 legs = insect!</text></svg>'},
+  insect: {t:"Insect body plan", h:'<svg viewBox="0 0 320 150" style="max-width:320px;display:block;margin:0 auto"><ellipse cx="80" cy="70" rx="26" ry="22" fill="#0abab5"/><ellipse cx="140" cy="70" rx="30" ry="24" fill="#7fd8b4"/><ellipse cx="215" cy="70" rx="45" ry="27" fill="#f4c35d"/><circle cx="70" cy="62" r="4" fill="#12475e"/><line x1="70" y1="50" x2="58" y2="30" stroke="#12475e" stroke-width="2"/><line x1="88" y1="50" x2="98" y2="30" stroke="#12475e" stroke-width="2"/>'+[115,140,165].map(x=>'<line x1="'+x+'" y1="90" x2="'+(x-12)+'" y2="125" stroke="#12475e" stroke-width="3"/><line x1="'+x+'" y1="90" x2="'+(x+12)+'" y2="125" stroke="#12475e" stroke-width="3"/>').join("")+'<text x="80" y="115" text-anchor="middle" font-size="12" font-weight="800" fill="#0a8a86">head</text><text x="140" y="142" text-anchor="middle" font-size="12" font-weight="800" fill="#0a8a86">thorax</text><text x="215" y="115" text-anchor="middle" font-size="12" font-weight="800" fill="#0a8a86">abdomen</text><text x="160" y="18" text-anchor="middle" font-size="13" font-weight="800" fill="#c65a4c">3 body parts + 6 legs = insect!</text></svg>'},
   lifecycleB: {t:"Life cycle of a butterfly", h:cycleSVG([{e:"🥚",label:"egg"},{e:"🐛",label:"larva"},{e:"🛡️",label:"pupa"},{e:"🦋",label:"adult"}])+'<div class="cap">The adult lays eggs — and the cycle repeats!</div>'},
   lifecycleF: {t:"Life cycle of a frog", h:cycleSVG([{e:"🥚",label:"eggs"},{e:"🐟",label:"tadpole"},{e:"🐸",label:"young frog"},{e:"🐸",label:"adult frog"}])+'<div class="cap">The tadpole lives in water and looks nothing like its parent!</div>'},
+  lifecycleG: {t:"Life cycle of a grasshopper (3 stages)", h:cycleSVG([{e:"🥚",label:"egg"},{e:"🦗",label:"nymph"},{e:"🦗",label:"adult"}])+'<div class="cap">A nymph looks like a small adult without wings — no pupa stage!</div>'},
   lifecycleP: {t:"Life cycle of a plant", h:cycleSVG([{e:"🌰",label:"seed"},{e:"🌱",label:"seedling"},{e:"🌻",label:"adult plant"},{e:"🌰",label:"new seeds"}])+'<div class="cap">A seed germinates → seedling → adult plant → new seeds.</div>'},
   plantParts: {t:"Parts of a plant", h:plantSVG()+'<div class="cap">roots take in water · stem carries water · leaf makes food · flower → fruit → seeds</div>'},
   digestive: {t:"The journey of food", h:digestSVG()},
@@ -292,7 +359,7 @@ const DIA={
   reproduce: {t:"Reproducing — having young", h:'<div class="grid2">'+cell("🐔➡️🐣","hen → chick","animals have young")+cell("🌻➡️🌰","plant → seeds","plants make seeds")+'</div><div class="cap">Reproducing keeps each kind of living thing from dying out.</div>'}
 };
 
-/* ================= QUIZ (52 questions) ================= */
+/* ================= QUIZ (80 questions) ================= */
 /* Every option is a full OEQ-style sentence. ok:true marks the model answer; n = why the option is wrong. */
 const QUIZ=[
  // ---- Living Things (7) ----
@@ -331,7 +398,22 @@ const QUIZ=[
    {s:"It shows that the seed is a non-living thing.", n:"Non-living things cannot grow by themselves — growing shows it is living."},
    {s:"It shows that trees can walk to new places.", n:"Plants grow but stay rooted in one place."},
    {s:"It shows that all seeds become animals.", n:"Seeds grow into plants, not animals."}]},
- // ---- Animal Groups (8) ----
+ {t:"lt", q:"A robot dog can walk and bark. Which sentence is correct?", dia:"livingNeeds", opts:[
+   {s:"The robot dog is a non-living thing because it does not need air, food and water.", ok:true},
+   {s:"The robot dog is a living thing because it can walk and bark.", n:"Moving and making sounds are not the test — machines can do both."},
+   {s:"The robot dog is a living thing because its battery is like food.", n:"A battery is not food — living things need real food, air and water."},
+   {s:"The robot dog is a living thing because it looks like a real dog.", n:"Its shape does not matter — it cannot grow or reproduce."}]},
+ {t:"lt", q:"Why do living things need food?", dia:"livingNeeds", opts:[
+   {s:"Living things need food to get energy to grow and stay alive.", ok:true},
+   {s:"Living things need food because eating is fun.", n:"Food is about energy for the body, not just fun!"},
+   {s:"Living things only need food when they are babies.", n:"Living things need food at every stage of life."},
+   {s:"Living things need food so they can sleep more.", n:"Food gives ENERGY to move and grow — it is not for sleeping."}]},
+ {t:"lt", q:"Which sentence about the young of living things is correct?", dia:"reproduce", opts:[
+   {s:"Living things produce young so that their own kind will not die out.", ok:true},
+   {s:"Only animals can produce young; plants cannot.", n:"Plants reproduce too — they make seeds that grow into new plants."},
+   {s:"Living things produce young so they can have helpers at home.", n:"Reproducing is about keeping their kind alive, not getting helpers."},
+   {s:"Non-living things can also produce young if we wait long enough.", n:"Non-living things can never reproduce, no matter how long we wait."}]},
+ // ---- Animal Groups (8 + 3 new = 11) ----
  {t:"ag", q:"Why is a whale a mammal and NOT a fish?", dia:"classify", opts:[
    {s:"A whale is a mammal because it breathes with lungs and feeds its young with milk.", ok:true},
    {s:"A whale is a fish because it lives in the sea.", n:"Where an animal lives does not decide its group."},
@@ -372,7 +454,22 @@ const QUIZ=[
    {s:"A spider is an insect because it is small and crawls.", n:"Being small and crawling is not the test — count the legs!"},
    {s:"A spider is an insect because it lives near ants.", n:"Living near insects does not make it one."},
    {s:"A spider is a bird because it can hang high in trees.", n:"Birds have feathers and a beak — a spider has neither."}]},
- // ---- Plants, Fungi & Bacteria (5) ----
+ {t:"ag", q:"What do a fish's fins help it to do?", dia:"classify", opts:[
+   {s:"The fins help the fish to swim and change direction in the water.", ok:true},
+   {s:"The fins help the fish to take in air from the water.", n:"That is the GILLS' job — fins are for swimming."},
+   {s:"The fins help the fish to walk on the sea floor.", n:"Fish swim with their fins — they do not walk."},
+   {s:"The fins keep the fish warm like fur.", n:"Fur belongs to mammals — fins are for moving in water."}]},
+ {t:"ag", q:"A bat can fly. Which sentence about it is correct?", dia:"classify", opts:[
+   {s:"A bat is a mammal because it has fur and feeds its young with milk.", ok:true},
+   {s:"A bat is a bird because it can fly.", n:"Flying is not the test — a bat has fur, not feathers or a beak."},
+   {s:"A bat is an insect because it flies at night.", n:"Insects have six legs and three body parts — a bat does not."},
+   {s:"A bat is a reptile because it hides in dark caves.", n:"Where it hides does not matter — reptiles have dry, scaly skin."}]},
+ {t:"ag", q:"Which body covering matches the animal group correctly?", dia:"classify", opts:[
+   {s:"Reptiles like snakes are covered with dry scales.", ok:true},
+   {s:"Birds are covered with fur to keep warm.", n:"Birds have feathers — fur belongs to mammals."},
+   {s:"Fish are covered with feathers to help them swim.", n:"Fish have wet scales and fins — feathers belong to birds."},
+   {s:"Mammals are covered with dry scales.", n:"Mammals have fur or hair on their bodies."}]},
+ // ---- Plants, Fungi & Bacteria (5 + 4 new = 9) ----
  {t:"pl", q:"Why is a hibiscus called a flowering plant?", dia:"plantSort", opts:[
    {s:"A hibiscus is a flowering plant because it can grow flowers.", ok:true},
    {s:"A hibiscus is a flowering plant because it is red and pretty.", n:"Colour and beauty are not the test — growing flowers is."},
@@ -398,7 +495,27 @@ const QUIZ=[
    {s:"We can sort plants into pretty plants and ugly plants.", n:"Scientists sort by characteristics, not by opinions."},
    {s:"We can sort plants into big plants and small plants.", n:"Size changes as plants grow — flowering or not never changes."},
    {s:"We can sort plants into plants and fungi.", n:"Fungi are NOT plants — they are a different group of living things."}]},
- // ---- Materials (7) ----
+ {t:"pl", q:"Where does moss usually grow?", dia:"plantSort", opts:[
+   {s:"Moss grows like a green carpet in damp and shady places.", ok:true},
+   {s:"Moss grows best in hot, dry deserts.", n:"Moss needs dampness — deserts are far too dry."},
+   {s:"Moss only grows under the sea.", n:"Seaweed lives in the sea — moss grows on damp land."},
+   {s:"Moss grows flowers in the rainy season.", n:"Moss is a non-flowering plant — it never grows flowers."}]},
+ {t:"pl", q:"Bread left out for many days grows fuzzy patches. What are they?", dia:"plantSort", opts:[
+   {s:"The fuzzy patches are mould, a fungus that grows on old food.", ok:true},
+   {s:"The fuzzy patches are baby plants growing from the bread.", n:"Bread is not a seed — the patches are a fungus called mould."},
+   {s:"The fuzzy patches are just dust from the air.", n:"The patches GROW bigger, so they are living — they are mould."},
+   {s:"The fuzzy patches are tiny insects.", n:"Insects have six legs — mould is a fungus, not an animal."}]},
+ {t:"pl", q:"Why do we need a microscope to see bacteria?", dia:"plantSort", opts:[
+   {s:"We need a microscope because bacteria are too small to see with our eyes alone.", ok:true},
+   {s:"We need a microscope because bacteria hide behind things.", n:"Bacteria do not hide — they are simply too tiny for our eyes."},
+   {s:"We need a microscope because bacteria are transparent like glass.", n:"The real reason is their tiny, tiny size."},
+   {s:"We need a microscope because bacteria only come out at night.", n:"Bacteria are around us all the time — day and night."}]},
+ {t:"pl", q:"Which sentence about helpful bacteria is correct?", dia:"plantSort", opts:[
+   {s:"Some bacteria are helpful, like the ones used to make yoghurt.", ok:true},
+   {s:"All bacteria are harmful and make everyone sick.", n:"Many bacteria are helpful — some even live in our body and help us."},
+   {s:"Bacteria are helpful because they are plants that make food.", n:"Bacteria are not plants — they are their own group of living things."},
+   {s:"Bacteria are helpful because we can keep them as pets.", n:"They are far too tiny to be pets — but some do help us in other ways!"}]},
+ // ---- Materials (7 + 3 new = 10) ----
  {t:"ma", q:"Why is glass used to make windows?", dia:"materials", opts:[
    {s:"Glass is used for windows because it is transparent and lets light pass through.", ok:true},
    {s:"Glass is used for windows because it is soft and easy to bend.", n:"Glass is hard and breaks if you bend it — it is not flexible."},
@@ -434,7 +551,22 @@ const QUIZ=[
    {s:"Look at the colour of the material carefully.", n:"Colour tells us nothing about water passing through."},
    {s:"Bend the material to see if it snaps.", n:"Bending tests whether it is flexible, not waterproof."},
    {s:"Shine a torch at it to see if light passes through.", n:"That tests whether it is transparent, not waterproof."}]},
- // ---- Life Cycles (7) ----
+ {t:"ma", q:"A wooden block and a metal coin are dropped into water. What happens?", dia:"materials", opts:[
+   {s:"The wooden block floats on the water, but the metal coin sinks.", ok:true},
+   {s:"Both the wooden block and the coin float.", n:"Metal is heavier than water — the coin sinks."},
+   {s:"Both the wooden block and the coin sink.", n:"Wood floats on water — that is why old boats were made of wood."},
+   {s:"The wooden block sinks, but the metal coin floats.", n:"It is the other way round — wood floats and the coin sinks."}]},
+ {t:"ma", q:"Why are the soles of shoes made of rubber?", dia:"materials", opts:[
+   {s:"Shoe soles are made of rubber because rubber can bend and does not break easily when we walk.", ok:true},
+   {s:"Shoe soles are made of rubber because rubber is transparent.", n:"Being see-through would not help a shoe sole at all."},
+   {s:"Shoe soles are made of glass because glass is hard.", n:"Glass would crack and break when we walk!"},
+   {s:"Shoe soles are made of paper because paper is light.", n:"Paper tears easily and gets soggy in the rain."}]},
+ {t:"ma", q:"Which material should be chosen for an umbrella cover?", dia:"materials", opts:[
+   {s:"A waterproof material should be chosen so that rain cannot pass through.", ok:true},
+   {s:"A transparent material must be chosen so we can watch the rain.", n:"Seeing through is not the key — keeping water out is."},
+   {s:"A magnetic material should be chosen so it sticks to the stand.", n:"Magnetism has nothing to do with keeping us dry."},
+   {s:"A material that soaks up water should be chosen.", n:"That would make the umbrella heavy and drippy — we need waterproof!"}]},
+ // ---- Life Cycles (7 + 4 new = 11) ----
  {t:"cy", q:"What is the correct order of a butterfly's life cycle?", dia:"lifecycleB", opts:[
    {s:"The life cycle of a butterfly is egg, then larva, then pupa, then adult.", ok:true},
    {s:"The life cycle of a butterfly is egg, then pupa, then larva, then adult.", n:"The larva (caterpillar) comes BEFORE the pupa."},
@@ -470,7 +602,27 @@ const QUIZ=[
    {s:"An adult can eat food, but the young cannot.", n:"Young living things eat too — caterpillars eat a LOT."},
    {s:"An adult can grow, but the young cannot.", n:"The young grow the most of all!"},
    {s:"An adult can breathe, but the young cannot.", n:"All living things need air at every stage."}]},
- // ---- Parts of a Plant (6) ----
+ {t:"cy", q:"What does it mean when a chick hatches?", dia:"reproduce", opts:[
+   {s:"When a chick hatches, it breaks out of its egg.", ok:true},
+   {s:"When a chick hatches, it learns to fly for the first time.", n:"Flying comes much later — hatching is coming out of the egg."},
+   {s:"When a chick hatches, it lays an egg of its own.", n:"Only adult hens lay eggs — hatching is the chick coming OUT of one."},
+   {s:"When a chick hatches, it goes to sleep inside the egg.", n:"Hatching means breaking OUT of the egg, not sleeping in it."}]},
+ {t:"cy", q:"How is a grasshopper's life cycle different from a butterfly's?", dia:"lifecycleG", opts:[
+   {s:"A grasshopper has three stages — egg, nymph and adult — with no pupa stage.", ok:true},
+   {s:"A grasshopper has four stages, just like the butterfly.", n:"The grasshopper skips the pupa — it has only three stages."},
+   {s:"A grasshopper starts life as a tadpole in the water.", n:"Tadpoles belong to frogs — a grasshopper starts as an egg."},
+   {s:"A grasshopper has no life cycle because it is small.", n:"Every living thing has a life cycle, big or small."}]},
+ {t:"cy", q:"What does a grasshopper nymph look like?", dia:"lifecycleG", opts:[
+   {s:"A nymph looks like a small adult grasshopper without wings.", ok:true},
+   {s:"A nymph looks like a worm with no legs.", n:"That describes a larva like a caterpillar — a nymph has legs and looks like its parent."},
+   {s:"A nymph looks exactly like a butterfly pupa.", n:"A nymph moves and eats — a pupa rests inside a case."},
+   {s:"A nymph looks like a tiny fish with a tail.", n:"That is a tadpole — a frog's young."}]},
+ {t:"cy", q:"What do a plant's life cycle and a butterfly's life cycle have in common?", dia:"lifecycleP", opts:[
+   {s:"Both cycles repeat, because the adult can make new young again and again.", ok:true},
+   {s:"Both have a pupa stage in the middle.", n:"Only the butterfly has a pupa — plants do not."},
+   {s:"Both start from an egg.", n:"A plant starts from a SEED, not an egg."},
+   {s:"They have nothing in common at all.", n:"They share the big idea of a repeating cycle!"}]},
+ // ---- Parts of a Plant (6 + 3 new = 9) ----
  {t:"pp", q:"What do the roots of a plant do?", dia:"plantParts", opts:[
    {s:"The roots hold the plant firmly in the soil and take in water.", ok:true},
    {s:"The roots make food for the plant using sunlight.", n:"Leaves make the food — roots are underground with no sunlight."},
@@ -501,7 +653,22 @@ const QUIZ=[
    {s:"The flower wilts because it is sleepy at night.", n:"Wilting happens from lack of water, not sleepiness."},
    {s:"The flower wilts because the vase is not pretty enough.", n:"Plants do not care how the vase looks — they need water!"},
    {s:"The flower wilts because it has too much water.", n:"The vase is EMPTY — it has no water at all."}]},
- // ---- Digestive System (5) ----
+ {t:"pp", q:"Which part of the plant grows into a fruit?", dia:"plantParts", opts:[
+   {s:"After flowering, the flower becomes the fruit that holds the seeds.", ok:true},
+   {s:"The root grows into a fruit under the soil.", n:"Roots stay in the soil — fruits come from flowers."},
+   {s:"The leaf rolls up and becomes a fruit.", n:"Leaves make food — they do not become fruits."},
+   {s:"The stem swells up and becomes a fruit.", n:"The stem carries water — the fruit comes from the flower."}]},
+ {t:"pp", q:"A plant kept in a dark cupboard grows weak and pale. Why?", dia:"plantParts", opts:[
+   {s:"The leaves cannot make food without sunlight, so the plant grows weak.", ok:true},
+   {s:"The plant is scared of the dark.", n:"Plants have no feelings — they need light so the leaves can make food."},
+   {s:"The cupboard is too small for the roots.", n:"The real problem is no sunlight for the leaves to make food."},
+   {s:"The plant grows weak because nobody talks to it.", n:"Plants do not need talking — they need light, water and air."}]},
+ {t:"pp", q:"A plant's leaves droop and wilt. What does it most likely need?", dia:"plantParts", opts:[
+   {s:"The plant most likely needs water, which travels up the stem to the leaves.", ok:true},
+   {s:"The plant most likely needs a prettier pot.", n:"Wilting is a sign of thirst, not pot fashion."},
+   {s:"The plant most likely needs to be put in the fridge.", n:"Cold does not fix wilting — water does."},
+   {s:"The plant most likely needs louder music.", n:"Plants need water, air and light — not music."}]},
+ // ---- Digestive System (5 + 4 new = 9) ----
  {t:"dg", q:"What is the correct path food takes through our body?", dia:"digestive", opts:[
    {s:"Food moves from the mouth to the gullet, then the stomach, the small intestine and the large intestine.", ok:true},
    {s:"Food moves from the mouth to the stomach, then the gullet.", n:"The gullet comes BEFORE the stomach — it is the tube going down."},
@@ -527,7 +694,27 @@ const QUIZ=[
    {s:"The large intestine breaks food into pieces with teeth.", n:"Teeth are in the mouth — the large intestine absorbs water."},
    {s:"The large intestine makes food for the body like a leaf.", n:"Only plants make food — our body breaks food down instead."},
    {s:"The large intestine pumps blood around the body.", n:"That is the heart's job, not part of digestion."}]},
- // ---- Magnets (8) ----
+ {t:"dg", q:"What does saliva do to the food in our mouth?", dia:"digestive", opts:[
+   {s:"Saliva makes the food soft and wet so it is easier to swallow and digest.", ok:true},
+   {s:"Saliva freezes the food so it stays fresh.", n:"Saliva softens food — it does not freeze anything."},
+   {s:"Saliva pushes the food down to the stomach.", n:"The GULLET pushes food down — saliva softens it first."},
+   {s:"Saliva takes in water from the food.", n:"That is the large intestine's job, much later in the journey."}]},
+ {t:"dg", q:"Why should we chew our food well?", dia:"digestive", opts:[
+   {s:"Chewing breaks food into small pieces so the body can digest it more easily.", ok:true},
+   {s:"We chew to make mealtimes take longer.", n:"Chewing is about helping digestion, not slowing down dinner!"},
+   {s:"We chew so the stomach can rest and do nothing.", n:"The stomach still churns the food — chewing just gives it a head start."},
+   {s:"We chew to make the food bigger.", n:"Chewing makes pieces SMALLER, not bigger."}]},
+ {t:"dg", q:"After the small intestine, where does the undigested food go?", dia:"digestive", opts:[
+   {s:"The undigested food moves into the large intestine, where water is taken in.", ok:true},
+   {s:"The undigested food goes back up to the stomach.", n:"Food moves one way — down, never back up."},
+   {s:"The undigested food goes straight into the blood.", n:"Only DIGESTED food passes into the blood, in the small intestine."},
+   {s:"The undigested food stays in the small intestine forever.", n:"It keeps moving — into the large intestine next."}]},
+ {t:"dg", q:"Why does our body digest food?", dia:"digestive", opts:[
+   {s:"Our body digests food to break it into tiny bits that can pass into the blood.", ok:true},
+   {s:"Our body digests food to make the food disappear by magic.", n:"It is science, not magic — food is broken into tiny useful bits."},
+   {s:"Our body digests food to keep our mouth busy.", n:"Digestion happens mostly AFTER the mouth — it feeds the whole body."},
+   {s:"Our body digests food to cool the body down.", n:"Digestion is about getting goodness from food, not cooling."}]},
+ // ---- Magnets (8 + 3 new = 11) ----
  {t:"mg", q:"Which objects can a magnet attract?", dia:"magnets", opts:[
    {s:"A magnet attracts objects that are made of iron.", ok:true},
    {s:"A magnet attracts all shiny objects.", n:"Shiny is not the test — a shiny coin of copper is not attracted."},
@@ -567,8 +754,26 @@ const QUIZ=[
    {s:"A compass uses a magnet inside it to show us direction.", ok:true},
    {s:"A magnet shouts out directions when you hold it up.", n:"Magnets are silent — the compass needle POINTS the way."},
    {s:"Magnets glow in the dark to light the path.", n:"Magnets do not glow — they pull and push."},
-   {s:"A magnet attracts your house so you walk towards it.", n:"Houses are not pulled by magnets — the compass needle turns instead."}]}
+   {s:"A magnet attracts your house so you walk towards it.", n:"Houses are not pulled by magnets — the compass needle turns instead."}]},
+ {t:"mg", q:"A magnet picks up a steel paper clip but not a rubber eraser. Why?", dia:"magnets", opts:[
+   {s:"The steel clip is magnetic, but the rubber eraser is non-magnetic.", ok:true},
+   {s:"The clip is lighter than the eraser.", n:"Weight is not the reason — even a heavy iron nail is attracted."},
+   {s:"The eraser is too soft for the magnet to hold.", n:"Softness does not matter — rubber is simply non-magnetic."},
+   {s:"The magnet only works on small objects.", n:"Magnets attract magnetic materials of many sizes."}]},
+ {t:"mg", q:"How can you find the poles of a bar magnet using steel paper clips?", dia:"magnets", opts:[
+   {s:"Dip the magnet into the clips — most clips will stick at the two ends, which are the poles.", ok:true},
+   {s:"The clips will all stick to the middle of the magnet.", n:"The middle is the WEAKEST part — the ends are the strongest."},
+   {s:"The clips will float in the air above the magnet.", n:"The clips are pulled ONTO the magnet — they do not float."},
+   {s:"Paper clips cannot show the poles because paper is non-magnetic.", n:"These clips are made of STEEL, so the magnet attracts them."}]},
+ {t:"mg", q:"Two bar magnets snap together. What does this tell us about the two poles facing each other?", dia:"magAttract", opts:[
+   {s:"The two facing poles are unlike poles, because unlike poles attract.", ok:true},
+   {s:"The two facing poles are like poles, because like poles attract.", n:"Like poles REPEL — attraction means the poles are unlike."},
+   {s:"The two facing poles must both be North poles.", n:"Two North poles would push apart, not snap together."},
+   {s:"The magnets snapped together because they are sticky.", n:"There is no glue — the magnetic force pulls them together."}]}
 ];
+/* V3 rule: ALWAYS append new questions at the END of their topic block. Never reorder or delete —
+   each question's stable id (topic + number) is derived from its position within its topic. */
+(function(){ const c={}; QUIZ.forEach(q=>{ c[q.t]=(c[q.t]||0)+1; q.id=q.t+"-"+c[q.t]; }); })();
 
 /* ================= STATE ================= */
 const KEY="jenny_science_explorer";
@@ -576,6 +781,9 @@ let S=null;
 function loadState(){
   try{ S=JSON.parse(localStorage.getItem(KEY)); }catch(e){ S=null; }
   if(!S) S={xp:0, streak:0, lastDay:"", words:{}, quiz:{}, done:0};
+  /* v3 extensions — never wipe existing progress, only add missing fields */
+  if(!S.mist) S.mist={};   /* mistake shells: id -> {p:pickedSentence, fixed:bool} */
+  if(!S.mega) S.mega={};   /* celebrated milestones: q25/q50/q80/v25/v50/v80 */
   TOPICS.forEach(t=>{ if(!S.quiz[t.id]) S.quiz[t.id]={c:0,t:0}; });
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
@@ -591,29 +799,176 @@ function knownPct(tid){
   return Math.round(k/w.length*100);
 }
 function quizPct(tid){ const m=S.quiz[tid]; return m.t===0?0:Math.round(m.c/m.t*100); }
+function vocabMastered(){ return Object.values(S.words).filter(v=>v===2).length; }
+function quizCorrectTotal(){ return Object.values(S.quiz).reduce((a,m)=>a+m.c,0); }
+function mistUnfixed(){ return Object.values(S.mist).filter(m=>!m.fixed).length; }
+
+/* ================= WebAudio chimes (pure synth, no files) ================= */
+let AC=null;
+function ac(){
+  try{
+    if(!AC && (window.AudioContext||window.webkitAudioContext)) AC=new (window.AudioContext||window.webkitAudioContext)();
+    if(AC && AC.state==="suspended") AC.resume();
+  }catch(e){}
+  return AC;
+}
+function tone(freq,at,dur,type,vol){
+  const a=ac(); if(!a) return;
+  const o=a.createOscillator(), g=a.createGain();
+  o.type=type||"sine"; o.frequency.value=freq;
+  g.gain.setValueAtTime(0.0001,a.currentTime+at);
+  g.gain.exponentialRampToValueAtTime(vol||0.18,a.currentTime+at+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001,a.currentTime+at+dur);
+  o.connect(g); g.connect(a.destination);
+  o.start(a.currentTime+at); o.stop(a.currentTime+at+dur+0.05);
+}
+function sndPop(){ tone(660,0,0.09,"triangle",0.12); }                            /* light "bo" tap */
+function sndDing(){ tone(880,0,0.16,"sine",0.2); tone(1318,0.12,0.22,"sine",0.18); tone(1760,0.26,0.3,"sine",0.12); } /* ding-dong bubble */
+function sndOops(){ tone(320,0,0.18,"sine",0.1); tone(260,0.16,0.24,"sine",0.08); }
+function sndMagic(){ [523,659,784,1047,1319,1568].forEach((f,i)=>tone(f,i*0.09,0.32,"triangle",0.14)); } /* magic arpeggio */
+
+/* ================= TTS (Web Speech API) ================= */
+let ttsOn = true;
+try{ ttsOn = (typeof localStorage!=="undefined") ? localStorage.getItem("jenny_tts_on")!=="0" : true; }catch(e){}
+function speak(text,lang){
+  if(!ttsOn) return;
+  try{
+    if(typeof speechSynthesis==="undefined") return;
+    lang=lang||"en";
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang = lang==="zh" ? "zh-CN" : "en-US";
+    const vs=speechSynthesis.getVoices()||[];
+    const prefs = lang==="zh" ? ["Tingting","Ting-Ting","Meijia","婷婷"] : ["Samantha","Karen"];
+    let v=null;
+    prefs.some(p=>{ v=vs.find(x=>x.name && x.name.indexOf(p)>=0); return !!v; });
+    if(!v) v=vs.find(x=>x.name && /enhanced|premium/i.test(x.name) && x.lang && x.lang.toLowerCase().indexOf(lang==="zh"?"zh":"en")===0);
+    if(!v) v=vs.find(x=>x.lang && x.lang.toLowerCase().indexOf(lang==="zh"?"zh":"en")===0);
+    if(lang==="zh" && !v) return; /* no Chinese voice on device: silent fallback */
+    if(v) u.voice=v;
+    u.rate=0.95; u.pitch=1.05;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }catch(e){}
+}
+function toggleTTS(){
+  ttsOn=!ttsOn;
+  try{ localStorage.setItem("jenny_tts_on", ttsOn?"1":"0"); }catch(e){}
+  if(!ttsOn){ try{ speechSynthesis.cancel(); }catch(e){} } else speak("Voice is on!");
+  const b=$("ttsbtn"); if(b) b.textContent=ttsOn?"🔊":"🔇";
+}
+
+/* ================= Daily quota (jenny_daily_v1, cross-tool) ================= */
+const DKEY="jenny_daily_v1", DGOAL=5;
+function dailyBump(){
+  let d={}; try{ d=JSON.parse(localStorage.getItem(DKEY))||{}; }catch(e){ d={}; }
+  const t=today();
+  if(!d[t]) d[t]={math:0,science:0,reading:0,chinese:0,oral:0};
+  d[t].science=(d[t].science||0)+1;
+  try{ localStorage.setItem(DKEY,JSON.stringify(d)); }catch(e){}
+}
+function dailyCount(){
+  try{ const d=JSON.parse(localStorage.getItem(DKEY))||{}; return (d[today()]&&d[today()].science)||0; }catch(e){ return 0; }
+}
+function dailyChip(){
+  const n=dailyCount(), pct=Math.min(100,Math.round(n/DGOAL*100));
+  return '<div class="chip" title="science goal today">'+ringSVG(pct,40)+'<small>Today '+n+'/'+DGOAL+'</small></div>';
+}
+
+/* ================= Titles & milestone MEGA-surprises ================= */
+const TITLES=[[25,"Reef Recruit","🐠"],[50,"Junior Marine Scientist","🐬"],[80,"Ocean Professor","🐋"]];
+function currentTitle(){
+  const n=Math.max(quizCorrectTotal(), vocabMastered());
+  let t=null; TITLES.forEach(x=>{ if(n>=x[0]) t=x; }); return t;
+}
+function checkMilestones(){
+  const qc=quizCorrectTotal(), vm=vocabMastered();
+  for(const x of TITLES){
+    if(qc>=x[0] && !S.mega["q"+x[0]]){ S.mega["q"+x[0]]=1; save(); megaShow(x,"quiz",qc); return; }
+    if(vm>=x[0] && !S.mega["v"+x[0]]){ S.mega["v"+x[0]]=1; save(); megaShow(x,"vocab",vm); return; }
+  }
+}
+function fishChar(color,size){
+  size=size||64;
+  return '<svg width="'+size+'" height="'+Math.round(size*0.62)+'" viewBox="0 0 70 44">'
+   +'<path d="M6 22 L24 8 L24 36 Z" fill="'+color+'" opacity=".85"/>'
+   +'<ellipse cx="42" cy="22" rx="21" ry="14" fill="'+color+'"/>'
+   +'<path d="M36 10 Q44 2 50 10 Q44 14 36 10" fill="'+color+'" opacity=".8"/>'
+   +'<circle cx="51" cy="18" r="3" fill="#fff"/><circle cx="52" cy="18" r="1.4" fill="#144644"/>'
+   +'<path d="M56 27 Q52 30 48 27" stroke="#144644" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>';
+}
+function turtleChar(){
+  return '<svg width="72" height="50" viewBox="0 0 76 52">'
+   +'<ellipse cx="38" cy="26" rx="22" ry="15" fill="#39b98a"/>'
+   +'<path d="M22 20 Q38 6 54 20 Q56 26 54 32 Q38 44 22 32 Q20 26 22 20" fill="#177a55"/>'
+   +'<circle cx="62" cy="22" r="8" fill="#7fd8b4"/>'
+   +'<circle cx="65" cy="20" r="2" fill="#fff"/><circle cx="65.6" cy="20" r="1" fill="#144644"/>'
+   +'<ellipse cx="22" cy="40" rx="6" ry="3.5" fill="#7fd8b4"/><ellipse cx="50" cy="42" rx="6" ry="3.5" fill="#7fd8b4"/></svg>';
+}
+function megaShow(titleDef,kind,n){
+  sndMagic();
+  const chars=["🐢","🐬","🐙","🧜‍♀️","🦀","🐳","🐡","⭐",
+    fishChar("#ffd98e"), fishChar("#ff8a7a",56), fishChar("#81d8d0",76), turtleChar()];
+  let h='<div class="mega" id="mega">';
+  [8,30,55,78].forEach((l,i)=>{ h+='<div class="megaray" style="left:'+l+'%;animation-delay:'+(i*0.7)+'s"></div>'; });
+  chars.forEach((c,i)=>{
+    const top=6+Math.random()*72, dur=6+Math.random()*7, delay=Math.random()*4;
+    h+='<div class="pchar" style="top:'+top.toFixed(0)+'%;animation-duration:'+dur.toFixed(1)+'s;animation-delay:'+delay.toFixed(1)+'s"><span style="animation-delay:'+(Math.random()*2).toFixed(1)+'s">'+c+'</span></div>';
+  });
+  for(let i=0;i<14;i++){
+    const sz=8+Math.random()*26;
+    h+='<div class="mbub" style="left:'+(Math.random()*96).toFixed(0)+'%;width:'+sz.toFixed(0)+'px;height:'+sz.toFixed(0)+'px;animation-duration:'+(4+Math.random()*6).toFixed(1)+'s;animation-delay:'+(Math.random()*5).toFixed(1)+'s"></div>';
+  }
+  h+='<div class="megacard"><div class="megaem">'+titleDef[2]+'🏆</div>'
+   +'<div class="megatitle">★ NEW TITLE AWARD ★</div>'
+   +'<div class="meganame">'+titleDef[1]+'</div>'
+   +'<div class="megasub">'+(kind==="quiz" ? n+" quiz questions answered correctly!" : n+" scientist words mastered!")+' The whole reef is cheering for you, Jenny! 🎉</div>'
+   +'<button class="btn coral" style="width:100%" onclick="megaClose()">Hooray! Continue 🎉</button></div></div>';
+  const w=document.createElement("div"); w.innerHTML=h; document.body.appendChild(w.firstChild);
+  for(let k=0;k<8;k++){ setTimeout(fireworks, k*700); }
+  speak("Congratulations Jenny! You earned a new title: "+titleDef[1]+"! Amazing work, little scientist!");
+}
+function megaClose(){
+  sndPop();
+  const m=$("mega"); if(m) m.remove();
+  if(lastView==="home") showHome(); /* refresh home so the new title chip appears */
+}
+let lastView="home";
 
 /* ================= UI ================= */
 const $=id=>document.getElementById(id);
 const PRAISE=["Brilliant, little scientist! 🔬✨","Octo-standing! 🐙","You said it like a REAL scientist! 🧪","Splash! Another one right! 🌊","Coral-tastic! 🪸"];
 const GENTLE=["Good try! Scientists learn by looking again 🧜‍♀️","Almost! Let's read the model answer together 💙","No worries — the diagram below will make it clear 🐠"];
+const SPRAISE=["Amazing!","Well done!","Great job!","Super!","You got it!"]; /* short spoken praise */
 function ringSVG(pct,size){
   size=size||50; const r=(size-10)/2, c=2*Math.PI*r;
-  return '<svg class="ring" width="'+size+'" height="'+size+'"><circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="#dff2f9" stroke-width="6"/>'
-   +'<circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="'+(pct>=80?"#39b98a":"#4ab8d8")+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct/100))+'" transform="rotate(-90 '+(size/2)+' '+(size/2)+')"/>'
-   +'<text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="12" font-weight="800" fill="#1a7ea8">'+pct+'%</text></svg>';
+  return '<svg class="ring" width="'+size+'" height="'+size+'"><circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="#d5f0ed" stroke-width="6"/>'
+   +'<circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="'+(pct>=80?"#39b98a":"#0abab5")+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct/100))+'" transform="rotate(-90 '+(size/2)+' '+(size/2)+')"/>'
+   +'<text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="12" font-weight="800" fill="#0a8a86">'+pct+'%</text></svg>';
 }
 function header(){
+  const ti=currentTitle();
   return '<div class="topbar"><div class="chip">⚡ '+S.xp+'<small>XP</small></div>'
    +'<div class="chip">🔥 '+S.streak+'<small>day streak</small></div>'
-   +'<div class="chip">🐚 '+Object.values(S.words).filter(v=>v===2).length+'/'+VOCAB.length+'<small>words known</small></div></div>';
+   +'<div class="chip">🐚 '+vocabMastered()+'/'+VOCAB.length+'<small>words known</small></div>'
+   +(ti?'<div class="chip title">'+ti[2]+' '+ti[1]+'</div>':'')
+   +'<button class="chip ttsbtn" id="ttsbtn" onclick="toggleTTS()" title="voice on / off">'+(ttsOn?"🔊":"🔇")+'</button></div>';
 }
 function showHome(){
+  lastView="home";
+  const ti=currentTitle(), mc=mistUnfixed();
   let h=header();
-  h+='<div class="guide"><div class="face">🧜‍♀️</div><div class="bubble"><b>Marina the Mermaid:</b> Welcome to Science Explorer! Learn the words first, then test yourself in the Quiz Reef 🐠</div></div>';
+  h+='<div class="guide"><div class="face">🧜‍♀️</div><div class="bubble"><b>Marina the Mermaid:</b> Welcome'+(ti?", "+ti[1]:"")+'! Learn the words first, then test yourself in the Quiz Reef 🐠</div></div>';
+  h+='<div class="topbar" style="margin:2px 0 10px">'+dailyChip()
+    +'<div class="chip">🏆 <small>'+(ti?ti[2]+" "+ti[1]:"next title at 25 ⭐")+'</small></div></div>';
   h+='<div class="modes">';
-  h+='<button class="modecard" onclick="showWordTopics()"><div class="big">🧪</div><h2>Word Lab</h2><p>Learn '+VOCAB.length+' scientist words with flashcards</p></button>';
-  h+='<button class="modecard" onclick="showQuizTopics()"><div class="big">🪸</div><h2>Quiz Reef</h2><p>'+QUIZ.length+' questions — every answer teaches you how to write!</p></button>';
+  h+='<button class="modecard" onclick="sndPop();showWordTopics()"><div class="big">🧪</div><h2>Word Lab</h2><p>Learn '+VOCAB.length+' scientist words with flashcards</p></button>';
+  h+='<button class="modecard" onclick="sndPop();showQuizTopics()"><div class="big">🪸</div><h2>Quiz Reef</h2><p>'+QUIZ.length+' questions — every answer teaches you how to write!</p></button>';
+  h+='<button class="modecard" onclick="sndPop();showMistakes()"><div class="big">🐚</div><h2>Mistake Shells</h2><p>Redo tricky questions and turn every shell green!</p>'
+    +(mc?'<span class="mbadge">'+mc+' to fix</span>':'<span class="mbadge done">all clear ✨</span>')+'</button>';
   h+='</div>';
+  h+='<div class="badgebox"><h3>🏆 Title Awards</h3>'
+    +TITLES.map(x=>{ const got=Math.max(quizCorrectTotal(),vocabMastered())>=x[0];
+      return '<span class="bdg gold'+(got?'':' locked')+'">'+x[2]+' '+x[1]+' · '+x[0]+'</span>'; }).join("")
+    +'</div>';
   h+='<div class="badgebox"><h3>🏅 Badges</h3>'+badges()+'</div>';
   h+='<footer>Science Explorer · P3 early prep · made with 💙 for Jenny · works offline</footer>';
   $("app").innerHTML=h; window.scrollTo(0,0);
@@ -622,7 +977,7 @@ function badges(){
   const defs=[["🐚","First Word", Object.keys(S.words).length>=1],
     ["🧪","10 Words Known", Object.values(S.words).filter(v=>v===2).length>=10],
     ["📚","30 Words Known", Object.values(S.words).filter(v=>v===2).length>=30],
-    ["🎓","Word Master (all '+VOCAB.length+')", Object.values(S.words).filter(v=>v===2).length>=VOCAB.length],
+    ["🎓","Word Master (all "+VOCAB.length+")", Object.values(S.words).filter(v=>v===2).length>=VOCAB.length],
     ["🔥","3-Day Streak", S.streak>=3],["⚡","100 XP", S.xp>=100],["🌟","300 XP", S.xp>=300]];
   TOPICS.forEach(t=>defs.push([t.emoji, t.name+" Star", S.quiz[t.id].c>=5]));
   return defs.map(d=>'<span class="bdg'+(d[2]?'':' locked')+'">'+d[0]+' '+d[1]+'</span>').join("");
@@ -631,6 +986,7 @@ function badges(){
 /* ---------- Word Lab ---------- */
 let deck=[], cardIdx=0, curWord=null, phase="card", wordTopic=null;
 function showWordTopics(){
+  lastView="words";
   let h=header()+'<div class="backrow"><button class="btn ghost" onclick="showHome()">🏠 Home</button><div class="chip">🧪 <small>Word Lab — pick a topic</small></div></div>';
   h+='<div class="tgrid">';
   TOPICS.forEach(t=>{
@@ -659,14 +1015,14 @@ function showCard(){
     +'<div class="tapnote">tap the card to flip 🔄</div></div>';
   h+='<div class="face3d back"><div style="font-size:34px">'+curWord.e+'</div><div class="term" style="font-size:20px">'+curWord.term+'</div>'
     +'<div class="def">'+curWord.def+'</div>'
-    +'<div class="scibox"><span class="tag">🔬 Scientist\'s sentence</span>'+curWord.sent+'</div></div>';
+    +'<div class="scibox"><span class="tag">🔬 Scientist\'s sentence <button class="spk" onclick="event.stopPropagation();speakCurWord()">🔊</button></span>'+curWord.sent+'</div></div>';
   h+='</div></div>';
   h+='<div style="display:flex;gap:10px;max-width:460px;margin:0 auto"><button class="btn sand" style="flex:1" onclick="useWord()">Use the word! ✏️</button></div>';
   $("app").innerHTML=h; window.scrollTo(0,0);
 }
-function flipCard(){ $("flip").classList.toggle("flipped"); }
+function flipCard(){ sndPop(); $("flip").classList.toggle("flipped"); }
 function useWord(){
-  phase="mcq";
+  phase="mcq"; sndPop();
   const others=shuffle(wordsOf(curWord.t).filter(w=>w.term!==curWord.term)).slice(0,3).map(w=>w.term);
   const opts=shuffle([curWord.term].concat(others));
   const blanked=curWord.sent.replace(new RegExp(rescape(curWord.term),"i"),"<b style='color:#ff8a7a'>_____</b>");
@@ -678,26 +1034,33 @@ function useWord(){
   $("app").innerHTML=h; window.scrollTo(0,0);
   window._wopts=opts;
 }
+function speakCurWord(){ if(curWord) speak(curWord.term+". "+curWord.sent); }
 function pickWord(i,chosen){
   const ok=chosen===curWord.term;
+  sndPop();
   window._wopts.forEach((o,j)=>{
     const el=$("wopt"+j); el.disabled=true;
     if(o===curWord.term) el.classList.add(ok&&j===i?"sel-ok":"show-ok");
     if(j===i&&!ok) el.classList.add("sel-no");
   });
-  if(ok){ S.words[curWord.term]=2; S.xp+=8; bumpStreak(); confetti(); }
-  else { S.words[curWord.term]=1; }
-  save();
+  if(ok){ S.words[curWord.term]=2; S.xp+=8; bumpStreak(); confetti(); sndDing(); }
+  else { S.words[curWord.term]=1; sndOops(); }
+  dailyBump(); save();
   let h='<div class="fb '+(ok?"good":"oops")+' anim"><div class="big">'+(ok?"✅ "+pick(PRAISE)+" (+8 XP)":"💙 "+pick(GENTLE))+'</div></div>';
-  h+='<div class="model anim"><span class="tag">🔬 Scientist\'s sentence — read it out loud!</span>'+curWord.sent.replace(new RegExp(rescape(curWord.term),"i"),"<b style='color:#1a7ea8'>"+curWord.term+"</b>")+'</div>';
-  h+='<button class="btn" style="width:100%" onclick="cardIdx++;showCard()">Next word 🐚</button>';
+  h+='<div class="model anim"><span class="tag">🔬 Scientist\'s sentence — read it out loud! <button class="spk" onclick="speakCurWord()">🔊</button></span>'+curWord.sent.replace(new RegExp(rescape(curWord.term),"i"),"<b style='color:#0a8a86'>"+curWord.term+"</b>")+'</div>';
+  h+='<button class="btn" style="width:100%" onclick="sndPop();cardIdx++;showCard()">Next word 🐚</button>';
   $("fbzone").innerHTML=h;
+  speak((ok?pick(SPRAISE)+" ":"Let's read it together. ")+curWord.sent);
+  checkMilestones();
 }
 
 /* ---------- Quiz Reef ---------- */
-let qdeck=[], qIdx=0, curQ=null, qopts=[], combo=0, quizTopic=null;
+let qdeck=[], qIdx=0, curQ=null, qopts=[], combo=0, quizTopic=null, redoMode=false;
 function showQuizTopics(){
-  let h=header()+'<div class="backrow"><button class="btn ghost" onclick="showHome()">🏠 Home</button><div class="chip">🪸 <small>Quiz Reef — pick a topic</small></div></div>';
+  lastView="quiz"; redoMode=false;
+  const mc=mistUnfixed();
+  let h=header()+'<div class="backrow"><button class="btn ghost" onclick="showHome()">🏠 Home</button><div class="chip">🪸 <small>Quiz Reef — pick a topic</small></div>'
+    +'<button class="btn coral" style="font-size:15px;padding:8px 14px" onclick="showMistakes()">🐚 Mistake Shells'+(mc?' <span class="mbadge" style="margin:0">'+mc+'</span>':'')+'</button></div>';
   h+='<div class="tgrid">';
   h+='<button class="tcard" onclick="startQuiz(\'mix\')"><span class="em">🌊</span><span><div class="nm">Mix — all topics!</div><div class="sub">'+QUIZ.length+' questions</div></span></button>';
   TOPICS.forEach(t=>{
@@ -708,14 +1071,19 @@ function showQuizTopics(){
   $("app").innerHTML=h; window.scrollTo(0,0);
 }
 function startQuiz(tid){
+  sndPop(); redoMode=false;
   quizTopic = tid==="mix" ? {id:"mix",name:"Mix — all topics",emoji:"🌊"} : TOPICS.find(t=>t.id===tid);
   qdeck = shuffle(tid==="mix" ? QUIZ : QUIZ.filter(q=>q.t===tid));
   qIdx=0; combo=0; showQuiz();
 }
+function quizBack(){ sndPop(); if(redoMode){ redoMode=false; showMistakes(); } else showQuizTopics(); }
 function showQuiz(){
-  if(qIdx>=qdeck.length){ qdeck=shuffle(qdeck); qIdx=0; }
+  if(qIdx>=qdeck.length){
+    if(redoMode){ redoMode=false; showMistakes(); return; }
+    qdeck=shuffle(qdeck); qIdx=0;
+  }
   curQ=qdeck[qIdx]; qopts=shuffle(curQ.opts);
-  let h=header()+'<div class="backrow"><button class="btn ghost" onclick="showQuizTopics()">◀ Topics</button>'
+  let h=header()+'<div class="backrow"><button class="btn ghost" onclick="quizBack()">◀ '+(redoMode?"Shells":"Topics")+'</button>'
     +'<div class="chip">'+quizTopic.emoji+' <small>'+quizTopic.name+'</small></div>'
     +(combo>=2?'<div class="chip" style="color:#ff7a5c">🔥 <small>combo ×'+combo+'</small></div>':'')+'</div>';
   h+='<div class="guide"><div class="face">🐙</div><div class="bubble">Read every sentence carefully — one of them is a perfect model answer! 📝</div></div>';
@@ -724,20 +1092,32 @@ function showQuiz(){
   h+='</div></div><div id="fbzone"></div>';
   $("app").innerHTML=h; window.scrollTo(0,0);
 }
+function speakModel(){ if(curQ) speak(curQ.opts.find(o=>o.ok).s); }
 function pickQ(i){
   const chosen=qopts[i]; const ok=!!chosen.ok;
+  sndPop();
   qopts.forEach((o,j)=>{
     const el=$("qopt"+j); el.disabled=true;
     if(o.ok) el.classList.add(ok&&j===i?"sel-ok":"show-ok");
     if(j===i&&!ok) el.classList.add("sel-no");
   });
-  S.quiz[curQ.t].t++; S.done++;
-  if(ok){ combo++; S.quiz[curQ.t].c++; S.xp+=10+(combo>=3?5:0); bumpStreak(); if(combo>=3) fireworks(); else confetti(); }
-  else combo=0;
-  save();
+  if(!redoMode){ S.quiz[curQ.t].t++; S.done++; }
+  if(ok){
+    combo++; bumpStreak(); sndDing();
+    if(!redoMode){ S.quiz[curQ.t].c++; S.xp+=10+(combo>=3?5:0); } else S.xp+=6;
+    if(S.mist[curQ.id] && !S.mist[curQ.id].fixed) S.mist[curQ.id].fixed=true;  /* shell repaired! */
+    if(combo>=3) fireworks(); else confetti();
+  } else {
+    combo=0; sndOops();
+    S.mist[curQ.id]={p:chosen.s, fixed:false};  /* collect into mistake shells */
+  }
+  dailyBump(); save();
   const model=curQ.opts.find(o=>o.ok).s;
-  let h='<div class="fb '+(ok?"good":"oops")+' anim"><div class="big">'+(ok?"✅ "+pick(PRAISE)+(combo>=3?" 🔥 combo ×"+combo+" (+15 XP)":" (+10 XP)"):"💙 "+pick(GENTLE))+'</div></div>';
-  h+='<div class="model anim"><span class="tag">📝 How to write it in an open-ended question</span><b>'+model+'</b></div>';
+  const bigLine = redoMode&&ok ? "💚 Fixed! The shell turned green! (+6 XP)"
+    : ok ? "✅ "+pick(PRAISE)+(combo>=3?" 🔥 combo ×"+combo+" (+15 XP)":" (+10 XP)")
+    : "💙 "+pick(GENTLE);
+  let h='<div class="fb '+(ok?"good":"oops")+' anim"><div class="big">'+bigLine+'</div></div>';
+  h+='<div class="model anim"><span class="tag">📝 How to write it in an open-ended question <button class="spk" onclick="speakModel()">🔊</button></span><b>'+model+'</b></div>';
   const d=DIA[curQ.dia];
   if(d) h+='<div class="diabox anim"><h4>🔍 '+d.t+'</h4>'+d.h+'</div>';
   const whys=qopts.filter(o=>!o.ok && o.n);
@@ -745,14 +1125,48 @@ function pickQ(i){
     h+='<div class="diabox anim"><h4>🤔 Why the other answers are not quite right</h4><div class="whys">'
       +whys.map(o=>'<div class="why"><b>“'+o.s+'”</b><br>→ '+o.n+'</div>').join("")+'</div></div>';
   }
-  h+='<button class="btn" style="width:100%" onclick="qIdx++;showQuiz()">Next question 🌊</button>';
+  h+='<button class="btn" style="width:100%" onclick="sndPop();qIdx++;showQuiz()">'+(redoMode?"Back to shells 🐚":"Next question 🌊")+'</button>';
   $("fbzone").innerHTML=h;
   $("fbzone").scrollIntoView({behavior:"smooth"});
+  speak((ok?pick(SPRAISE)+" ":"Good try! Here is the model answer. ")+model);
+  checkMilestones();
+}
+
+/* ---------- 🐚 Mistake Shells (review + redo) ---------- */
+function showMistakes(){
+  lastView="shells"; redoMode=false;
+  const ids=Object.keys(S.mist);
+  let h=header()+'<div class="backrow"><button class="btn ghost" onclick="sndPop();showHome()">🏠 Home</button>'
+    +'<div class="chip">🐚 <small>Mistake Shells · '+mistUnfixed()+' to fix</small></div></div>';
+  if(!ids.length){
+    h+='<div class="guide"><div class="face">🧜‍♀️</div><div class="bubble">No mistake shells yet — your reef is sparkling clean! Answer questions in the Quiz Reef and any slips will wash up here. ✨</div></div>';
+  } else {
+    h+='<div class="guide"><div class="face">🧜‍♀️</div><div class="bubble">Read the model answer first, then tap <b>Redo</b>. Answer it right and the shell turns green! 💚</div></div>';
+    ids.forEach(id=>{
+      const q=QUIZ.find(x=>x.id===id); if(!q) return;   /* id-stable: survives question-bank updates */
+      const m=S.mist[id]; const model=q.opts.find(o=>o.ok).s; const d=DIA[q.dia];
+      h+='<div class="qcard anim'+(m.fixed?' fixedcard':'')+'"><span class="mistst">'+(m.fixed?"💚 Fixed!":"🐚 to fix")+'</span>'
+        +'<div class="qtext" style="font-size:19px">'+q.q+'</div>'
+        +'<div class="youpicked">Your pick last time: '+m.p+'</div>'
+        +'<div class="model"><span class="tag">📝 Model answer <button class="spk" onclick="speakMist(\''+id+'\')">🔊</button></span><b>'+model+'</b></div>'
+        +(d?'<div class="diabox" style="box-shadow:none;border:2px solid var(--lagoon);margin-bottom:8px"><h4>🔍 '+d.t+'</h4>'+d.h+'</div>':'')
+        +(m.fixed?'':'<button class="btn coral" style="width:100%" onclick="redoQ(\''+id+'\')">Redo this question 💪</button>')
+        +'</div>';
+    });
+  }
+  $("app").innerHTML=h; window.scrollTo(0,0);
+}
+function speakMist(id){ const q=QUIZ.find(x=>x.id===id); if(q) speak(q.opts.find(o=>o.ok).s); }
+function redoQ(id){
+  const q=QUIZ.find(x=>x.id===id); if(!q) return;
+  sndPop(); redoMode=true;
+  quizTopic={id:"redo",name:"Fix the shell",emoji:"🐚"};
+  qdeck=[q]; qIdx=0; combo=0; showQuiz();
 }
 
 /* ---------- confetti / fireworks ---------- */
 let particles=[], fxRunning=false;
-const FXCOLORS=["#4ab8d8","#ff8a7a","#f4c35d","#7fd8b4","#1a7ea8","#c8a2ff"];
+const FXCOLORS=["#0abab5","#ff8a7a","#f4c35d","#7fd8b4","#0a8a86","#c8a2ff"];
 function fxTick(){
   const cv=$("fx"); if(!cv) return;
   const ctx=cv.getContext("2d");
@@ -782,9 +1196,13 @@ function fireworks(){ for(let k=0;k<4;k++){ setTimeout(()=>burst(innerWidth*(0.2
 /* ---------- boot ---------- */
 if(typeof window!=="undefined" && typeof document!=="undefined" && typeof document.getElementById==="function" && document.getElementById("app")){
   loadState(); save(); showHome();
+  try{ if(typeof speechSynthesis!=="undefined") speechSynthesis.getVoices(); }catch(e){} /* warm up voice list */
   window.showHome=showHome; window.showWordTopics=showWordTopics; window.startWords=startWords;
   window.showCard=showCard; window.flipCard=flipCard; window.useWord=useWord; window.pickWord=pickWord;
   window.showQuizTopics=showQuizTopics; window.startQuiz=startQuiz; window.pickQ=pickQ;
+  window.quizBack=quizBack; window.showMistakes=showMistakes; window.redoQ=redoQ; window.speakMist=speakMist;
+  window.toggleTTS=toggleTTS; window.speak=speak; window.speakModel=speakModel; window.speakCurWord=speakCurWord;
+  window.megaClose=megaClose; window.sndPop=sndPop;
 }
 if(typeof module!=="undefined" && module.exports){ module.exports={VOCAB, QUIZ, TOPICS, DIA}; }
 </script>

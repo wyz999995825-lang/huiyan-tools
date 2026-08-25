@@ -5,69 +5,88 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>华文珊瑚湾 🪸</title>
 <style>
+:root{
+  --tiffany:#0abab5; --tiffany-light:#81d8d0; --lagoon:#e6f7f5; --sky:#f4fbfa;
+  --deep:#0a8a86; --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff;
+  --ink:#144644; --ink-soft:#4d7a77; --gold:#c9922e;
+}
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 body {
   font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,sans-serif;
-  background:#f0fafd; color:#134b63; font-size:16px; padding-bottom:90px;
+  background:linear-gradient(180deg,var(--sky),var(--lagoon) 60%,var(--sky));
+  color:var(--ink); font-size:17px; padding-bottom:92px; min-height:100vh;
 }
 header {
-  background:linear-gradient(160deg,#dff2f9,#a5e0ef);
-  padding:16px 16px 14px; border-radius:0 0 24px 24px;
-  box-shadow:0 4px 14px rgba(26,126,168,.12);
+  background:linear-gradient(160deg,var(--lagoon),var(--tiffany-light));
+  padding:12px 14px 12px; border-radius:0 0 24px 24px;
+  box-shadow:0 4px 14px rgba(10,138,134,.15);
 }
-.hrow { display:flex; align-items:center; gap:12px; max-width:760px; margin:0 auto; }
-.mermaid-big { font-size:44px; line-height:1; }
-.htitle { font-size:22px; font-weight:800; color:#1a7ea8; }
-.hsub { font-size:13px; color:#3d7f9c; margin-top:2px; }
-.stats { display:flex; gap:8px; margin-left:auto; }
-.pill { background:#ffffffcc; border-radius:999px; padding:7px 12px; font-weight:700; font-size:14px; color:#1a7ea8; box-shadow:0 2px 6px rgba(26,126,168,.12); white-space:nowrap; }
+.hrow { display:flex; align-items:center; gap:10px; max-width:760px; margin:0 auto; flex-wrap:wrap; }
+.mermaid-big { font-size:42px; line-height:1; animation:floaty 3s ease-in-out infinite; }
+.htitle { font-size:21px; font-weight:800; color:var(--deep); }
+.hsub { font-size:13px; color:var(--ink-soft); margin-top:2px; }
+.stats { display:flex; gap:7px; margin-left:auto; align-items:center; flex-wrap:wrap; }
+.pill { background:#ffffffd9; border-radius:999px; padding:7px 11px; font-weight:800; font-size:14px; color:var(--deep); box-shadow:0 2px 6px rgba(10,138,134,.14); white-space:nowrap; display:inline-flex; align-items:center; gap:5px; }
+.ringpill svg{ display:block; }
+.ttsbtn { width:46px; height:46px; border-radius:50%; border:none; background:#ffffffd9; font-size:22px; cursor:pointer; box-shadow:0 2px 6px rgba(10,138,134,.16); transition:transform .15s; }
+.ttsbtn:active { transform:scale(.88); }
+.ttsbtn.off { opacity:.55; filter:grayscale(.6); }
 nav {
   position:fixed; bottom:0; left:0; right:0; z-index:50; background:#fff;
-  box-shadow:0 -4px 16px rgba(26,126,168,.15); display:flex; justify-content:space-around;
+  box-shadow:0 -4px 16px rgba(10,138,134,.16); display:flex; justify-content:space-around;
   padding:6px 4px calc(6px + env(safe-area-inset-bottom)); border-radius:20px 20px 0 0;
 }
-.navbtn { border:none; background:none; font-size:13px; font-weight:700; color:#7aa9bd; display:flex; flex-direction:column; align-items:center; gap:2px; min-width:80px; min-height:52px; justify-content:center; border-radius:14px; cursor:pointer; font-family:inherit; }
-.navbtn .ico { font-size:24px; }
-.navbtn.active { color:#1a7ea8; background:#dff2f9; }
-main { max-width:760px; margin:0 auto; padding:16px; }
-.card { background:#fff; border-radius:18px; padding:18px; box-shadow:0 4px 14px rgba(26,126,168,.10); margin-bottom:16px; }
-.bubble { background:#dff2f9; border-radius:18px; padding:12px 16px; position:relative; font-size:16px; line-height:1.7; color:#155e7d; margin:10px 0 16px 14px; }
-.bubble:before { content:""; position:absolute; left:-9px; top:16px; border:9px solid transparent; border-right-color:#dff2f9; border-left:none; }
+.navbtn { border:none; background:none; font-size:12.5px; font-weight:800; color:#77a8a4; display:flex; flex-direction:column; align-items:center; gap:2px; min-width:70px; min-height:52px; justify-content:center; border-radius:14px; cursor:pointer; font-family:inherit; position:relative; transition:transform .15s; }
+.navbtn:active { transform:scale(.9); }
+.navbtn .ico { font-size:23px; }
+.navbtn.active { color:var(--deep); background:var(--lagoon); }
+.navbadge { position:absolute; top:2px; right:8px; background:var(--coral); color:#fff; border-radius:999px; min-width:19px; height:19px; font-size:12px; font-weight:800; display:flex; align-items:center; justify-content:center; padding:0 5px; box-shadow:0 1px 4px rgba(255,138,122,.5); }
+main { max-width:760px; margin:0 auto; padding:14px; }
+.card { background:var(--card); border-radius:18px; padding:16px; box-shadow:0 4px 14px rgba(10,138,134,.10); margin-bottom:14px; }
+.bubble { background:var(--lagoon); border-radius:18px; padding:12px 15px; position:relative; font-size:16px; line-height:1.75; color:var(--ink); margin:8px 0 14px 14px; }
+.bubble:before { content:""; position:absolute; left:-9px; top:16px; border:9px solid transparent; border-right-color:var(--lagoon); border-left:none; }
 .brow { display:flex; align-items:flex-start; gap:4px; }
-.brow .face { font-size:34px; margin-top:6px; }
+.brow .face { font-size:34px; margin-top:6px; animation:floaty 3.4s ease-in-out infinite; }
 .grow { flex:1; }
-h2 { color:#1a7ea8; font-size:19px; margin-bottom:10px; }
-h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
-.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; background:#4ab8d8; color:#fff; border:none; border-radius:16px; padding:12px 20px; font-size:16px; font-weight:800; cursor:pointer; min-height:48px; box-shadow:0 3px 8px rgba(26,126,168,.25); font-family:inherit; }
-.btn:active { transform:scale(.97); }
-.btn.sand { background:#fdf3dd; color:#a4762a; box-shadow:0 3px 8px rgba(190,150,60,.2); }
-.btn.ghost { background:#eaf6fb; color:#1a7ea8; box-shadow:none; }
-.btn.small { padding:8px 14px; min-height:44px; font-size:14px; }
-.tag { display:inline-block; font-size:12px; font-weight:800; border-radius:999px; padding:3px 10px; margin-bottom:6px; background:#fdf3dd; color:#a4762a; }
-.qbox { background:#f2fafd; border-radius:16px; padding:16px; margin-bottom:14px; }
-.qq { font-weight:800; margin-bottom:12px; font-size:19px; line-height:1.8; }
-.opt { display:block; width:100%; text-align:left; background:#fff; border:2px solid #cfe9f4; border-radius:14px; padding:12px 14px; font-size:17px; margin-bottom:8px; cursor:pointer; min-height:48px; color:#134b63; font-family:inherit; }
-.opt.correct { background:#d9f5e5; border-color:#5bc596; font-weight:700; }
-.opt.wrong { background:#ffe9e5; border-color:#ff8a7a; }
-.model { background:#fff; border-left:5px solid #4ab8d8; border-radius:0 12px 12px 0; padding:10px 12px; margin-top:6px; font-size:16px; line-height:1.8; }
-.model b { color:#1a7ea8; }
-.readtext { font-size:19px; line-height:2.2; color:#183f52; }
-.readtext ruby rt { font-size:10px; color:#6fa3ba; font-weight:400; }
-.vword { border-bottom:2px dotted #4ab8d8; background:#dff2f97a; border-radius:4px; padding:0 1px; cursor:pointer; }
-.passcard { display:flex; gap:14px; align-items:center; background:#fff; border-radius:18px; padding:14px; box-shadow:0 4px 12px rgba(26,126,168,.10); margin-bottom:12px; cursor:pointer; border:2px solid transparent; width:100%; text-align:left; font-family:inherit; color:inherit; }
+h2 { color:var(--deep); font-size:19px; margin-bottom:10px; }
+h3 { color:var(--deep); font-size:17px; margin-bottom:8px; }
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--tiffany); color:#fff; border:none; border-radius:16px; padding:12px 20px; font-size:16px; font-weight:800; cursor:pointer; min-height:48px; box-shadow:0 3px 10px rgba(10,186,181,.35); font-family:inherit; transition:transform .15s; }
+.btn:hover { animation:wiggle .45s ease; }
+.btn:active { transform:scale(.92); }
+.btn.sand { background:var(--sand); color:var(--gold); box-shadow:0 3px 8px rgba(201,146,46,.2); }
+.btn.ghost { background:var(--lagoon); color:var(--deep); box-shadow:none; }
+.btn.coral { background:var(--coral); box-shadow:0 3px 10px rgba(255,138,122,.35); }
+.btn.small { padding:8px 14px; min-height:46px; font-size:14px; }
+.tag { display:inline-block; font-size:12px; font-weight:800; border-radius:999px; padding:3px 10px; margin-bottom:6px; background:var(--sand); color:var(--gold); margin-right:5px; }
+.tag.blue { background:var(--lagoon); color:var(--deep); }
+.qbox { background:var(--sky); border:1.5px solid var(--lagoon); border-radius:16px; padding:16px; margin-bottom:14px; }
+.qq { font-weight:800; margin-bottom:12px; font-size:20px; line-height:1.8; }
+.opt { display:block; width:100%; text-align:left; background:#fff; border:2px solid var(--tiffany-light); border-radius:14px; padding:12px 14px; font-size:18px; margin-bottom:8px; cursor:pointer; min-height:48px; color:var(--ink); font-family:inherit; transition:transform .12s; }
+.opt:active { transform:scale(.97); }
+.opt.correct { background:#d9f5e5; border-color:#5bc596; font-weight:700; animation:pop .35s ease; }
+.opt.wrong { background:#ffe9e5; border-color:var(--coral); }
+.model { background:#fff; border-left:5px solid var(--tiffany); border-radius:0 12px 12px 0; padding:10px 12px; margin-top:6px; font-size:16px; line-height:1.8; }
+.model b { color:var(--deep); }
+.readtext { font-size:18px; line-height:1.9; color:var(--ink); }
+.readtext ruby rt { font-size:10px; color:#5aa39f; font-weight:400; }
+.sent { border-radius:6px; cursor:pointer; transition:background .25s; }
+.sent.speaking { background:#aee8e3; box-shadow:0 0 0 3px #aee8e3; }
+.vword { border-bottom:2px dotted var(--tiffany); background:#cdeeea8a; border-radius:4px; padding:0 1px; cursor:pointer; }
+.passcard { display:flex; gap:14px; align-items:center; background:#fff; border-radius:18px; padding:13px; box-shadow:0 4px 12px rgba(10,138,134,.10); margin-bottom:11px; cursor:pointer; border:2px solid transparent; width:100%; text-align:left; font-family:inherit; color:inherit; transition:transform .15s; }
+.passcard:active { transform:scale(.97); }
 .passcard.done { border-color:#8fd7b8; background:#f4fcf8; }
-.passcard .cover { width:56px; height:56px; border-radius:16px; background:#dff2f9; display:flex; align-items:center; justify-content:center; font-size:30px; flex-shrink:0; }
+.passcard .cover { width:54px; height:54px; border-radius:16px; background:var(--lagoon); display:flex; align-items:center; justify-content:center; font-size:29px; flex-shrink:0; }
 .passcard .t { font-weight:800; font-size:17px; }
-.passcard .k { font-size:13px; color:#6fa3ba; margin-top:3px; }
-.popup-bg { position:fixed; inset:0; background:rgba(19,75,99,.45); z-index:100; display:none; align-items:center; justify-content:center; padding:20px; }
+.passcard .k { font-size:13px; color:var(--ink-soft); margin-top:3px; }
+.popup-bg { position:fixed; inset:0; background:rgba(10,70,68,.45); z-index:100; display:none; align-items:center; justify-content:center; padding:20px; }
 .popup-bg.show { display:flex; }
-.popup { background:#fff; border-radius:20px; padding:22px; max-width:420px; width:100%; box-shadow:0 10px 40px rgba(0,0,0,.25); }
-.popup .word { font-size:28px; font-weight:800; color:#1a7ea8; }
+.popup { background:#fff; border-radius:20px; padding:22px; max-width:420px; width:100%; box-shadow:0 10px 40px rgba(0,0,0,.25); animation:pop .3s ease; }
+.popup .word { font-size:28px; font-weight:800; color:var(--deep); }
 .popup .py { font-size:17px; color:#c26a2e; font-weight:700; margin:4px 0 10px; }
 .popup .def { font-size:17px; line-height:1.8; }
-.progressbar { height:10px; background:#dff2f9; border-radius:999px; overflow:hidden; margin:8px 0 14px; }
-.progressbar > div { height:100%; background:linear-gradient(90deg,#4ab8d8,#1a7ea8); border-radius:999px; transition:width .4s; }
-.badge { display:inline-flex; flex-direction:column; align-items:center; width:76px; padding:10px 4px; background:#fff; border-radius:16px; box-shadow:0 2px 8px rgba(26,126,168,.10); margin:4px; font-size:11px; text-align:center; color:#5b8ba1; font-weight:700; }
+.progressbar { height:10px; background:var(--lagoon); border-radius:999px; overflow:hidden; margin:8px 0 14px; }
+.progressbar > div { height:100%; background:linear-gradient(90deg,var(--tiffany-light),var(--tiffany)); border-radius:999px; transition:width .4s; }
+.badge { display:inline-flex; flex-direction:column; align-items:center; width:76px; padding:10px 4px; background:#fff; border-radius:16px; box-shadow:0 2px 8px rgba(10,138,134,.10); margin:4px; font-size:11px; text-align:center; color:var(--ink-soft); font-weight:700; }
 .badge .be { font-size:28px; }
 .badge.locked { opacity:.35; filter:grayscale(1); }
 .center { text-align:center; }
@@ -75,11 +94,23 @@ h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
 #fx { position:fixed; inset:0; pointer-events:none; z-index:200; }
 .backrow { margin-bottom:12px; }
 .combo { font-size:14px; color:#e67e22; font-weight:800; }
-.switchrow { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
-.switch { position:relative; width:54px; height:32px; background:#cfe9f4; border-radius:999px; border:none; cursor:pointer; transition:background .2s; flex-shrink:0; }
-.switch.on { background:#4ab8d8; }
-.switch:after { content:""; position:absolute; top:3px; left:3px; width:26px; height:26px; background:#fff; border-radius:50%; transition:left .2s; box-shadow:0 1px 4px rgba(0,0,0,.2); }
-.switch.on:after { left:25px; }
+.switchrow { display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+.switch { position:relative; width:56px; height:33px; background:#c4e6e2; border-radius:999px; border:none; cursor:pointer; transition:background .2s; flex-shrink:0; }
+.switch.on { background:var(--tiffany); }
+.switch:after { content:""; position:absolute; top:3px; left:3px; width:27px; height:27px; background:#fff; border-radius:50%; transition:left .2s; box-shadow:0 1px 4px rgba(0,0,0,.2); }
+.switch.on:after { left:26px; }
+.mistcard { background:#fff; border-radius:16px; padding:14px; box-shadow:0 3px 10px rgba(10,138,134,.10); margin-bottom:12px; border-left:6px solid var(--coral); }
+.mistcard.fixed { border-left-color:#5bc596; background:#f4fcf8; }
+.chip { display:inline-block; font-size:12px; font-weight:800; border-radius:999px; padding:3px 10px; }
+.chip.todo { background:#ffe9e5; color:#d05b4b; }
+.chip.ok { background:#d9f5e5; color:#2b9268; }
+.myans { color:#d05b4b; font-weight:700; }
+.rightans { color:#2b9268; font-weight:700; }
+.spkline { display:inline-flex; align-items:center; justify-content:center; border:none; background:var(--lagoon); color:var(--deep); border-radius:12px; min-width:46px; min-height:46px; font-size:19px; cursor:pointer; transition:transform .15s; }
+.spkline:active { transform:scale(.88); }
+@keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+@keyframes wiggle { 0%{transform:scale(1) rotate(0)} 30%{transform:scale(1.07) rotate(-2.5deg)} 60%{transform:scale(1.05) rotate(2.5deg)} 100%{transform:scale(1.04) rotate(0)} }
+@keyframes pop { 0%{transform:scale(.85)} 60%{transform:scale(1.05)} 100%{transform:scale(1)} }
 </style>
 </head>
 <body>
@@ -91,8 +122,16 @@ h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
       <div class="hsub">Jenny 的华文小天地</div>
     </div>
     <div class="stats">
+      <div class="pill ringpill" title="今日华文任务">
+        <svg width="26" height="26" viewBox="0 0 40 40">
+          <circle cx="20" cy="20" r="16" fill="none" stroke="#cdeeea" stroke-width="6"/>
+          <circle id="ringArc" cx="20" cy="20" r="16" fill="none" stroke="#ff8a7a" stroke-width="6" stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="100.5" transform="rotate(-90 20 20)"/>
+        </svg>
+        <span id="ringTxt">今日 0/5</span>
+      </div>
       <div class="pill" id="xpPill">⭐ 0</div>
       <div class="pill" id="comboPill">🔥 0</div>
+      <button class="ttsbtn" id="ttsBtn" onclick="toggleTTS()" title="朗读开关">🔊</button>
     </div>
   </div>
 </header>
@@ -101,6 +140,7 @@ h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
   <button class="navbtn active" id="nav-home" onclick="go('home')"><span class="ico">🏝️</span>珊瑚湾</button>
   <button class="navbtn" id="nav-word" onclick="go('word')"><span class="ico">🏖️</span>字词沙滩</button>
   <button class="navbtn" id="nav-read" onclick="go('read')"><span class="ico">🪸</span>阅读珊瑚</button>
+  <button class="navbtn" id="nav-mist" onclick="go('mist')"><span class="ico">🐚</span>错题贝壳<span class="navbadge" id="mistBadge" style="display:none;">0</span></button>
 </nav>
 <div class="popup-bg" id="popupBg" onclick="if(event.target===this)closePopup()">
   <div class="popup" id="popupBox"></div>
@@ -108,60 +148,73 @@ h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
 <canvas id="fx"></canvas>
 <script>
 "use strict";
-/* ============ 字词沙滩题库（44题） ============ */
+/* ============ 字词沙滩题库（56题 · 稳定id · 新题只追加不删除） ============ */
 const WQ=[
-/* —— 量词（12题）—— */
-{tp:"量词",q:"河里有一（　）小鱼。",o:["条","只","头","张"],a:0,model:"河里有一条小鱼。🐟",why:"细长的东西（鱼、蛇、小河）常用「条」。"},
-{tp:"量词",q:"海上开来一（　）大船。",o:["匹","艘","座","把"],a:1,model:"海上开来一艘大船。⛵",why:"船用「艘」，例如：一艘轮船、一艘小艇。"},
-{tp:"量词",q:"花园里开了一（　）红花。",o:["朵","头","件","双"],a:0,model:"花园里开了一朵红花。🌸",why:"花用「朵」，云也可以用「朵」：一朵白云。"},
-{tp:"量词",q:"我家有一（　）小猫。",o:["头","只","条","顶"],a:1,model:"我家有一只小猫。🐱",why:"小动物（猫、鸟、兔子）常用「只」。"},
-{tp:"量词",q:"农场里有一（　）黄牛。",o:["只","匹","头","朵"],a:2,model:"农场里有一头黄牛。🐮",why:"大牲口（牛、猪、大象）常用「头」。"},
-{tp:"量词",q:"下雨了，妈妈递给我一（　）雨伞。",o:["把","条","本","座"],a:0,model:"妈妈递给我一把雨伞。☔",why:"有柄可以拿的东西（伞、扇子、剪刀）用「把」。"},
-{tp:"量词",q:"路上开过一（　）汽车。",o:["艘","辆","匹","架"],a:1,model:"路上开过一辆汽车。🚗",why:"车用「辆」：一辆汽车、一辆脚踏车。"},
-{tp:"量词",q:"我从图书馆借了一（　）故事书。",o:["张","支","本","块"],a:2,model:"我借了一本故事书。📖",why:"书、本子用「本」：一本书、一本作业本。"},
-{tp:"量词",q:"请给我一（　）筷子。",o:["双","只","个","条"],a:0,model:"请给我一双筷子。🥢",why:"成对的东西用「双」：一双筷子、一双鞋。"},
-{tp:"量词",q:"姐姐买了一（　）新衣服。",o:["条","件","顶","双"],a:1,model:"姐姐买了一件新衣服。👕",why:"上衣用「件」；裤子、裙子才用「条」。"},
-{tp:"量词",q:"远处有一（　）大山。",o:["座","条","只","把"],a:0,model:"远处有一座大山。⛰️",why:"高大不动的东西（山、桥、房子）用「座」。"},
-{tp:"量词",q:"草原上跑来一（　）白马。",o:["头","只","匹","艘"],a:2,model:"草原上跑来一匹白马。🐴",why:"马专门用「匹」：一匹马、两匹小马。"},
-/* —— 近义词（5题）—— */
-{tp:"近义词",q:"「高兴」的近义词是（　）。",o:["伤心","快乐","生气","害怕"],a:1,model:"收到礼物，我非常快乐。🎁",why:"「高兴」和「快乐」意思相近，都表示心情好。"},
-{tp:"近义词",q:"「美丽」的近义词是（　）。",o:["漂亮","难看","干净","高大"],a:0,model:"公园里开满了漂亮的花。🌷",why:"「美丽」=「漂亮」，都是说很好看。"},
-{tp:"近义词",q:"「赶快」的近义词是（　）。",o:["慢慢","连忙","休息","站住"],a:1,model:"听到铃声，我连忙跑进教室。🏃",why:"「赶快」和「连忙」都表示动作很快、不拖拉。"},
-{tp:"近义词",q:"「仔细地看」可以说成（　）。",o:["观察","听见","休息","唱歌"],a:0,model:"我们观察小蚂蚁搬食物。🐜",why:"「观察」就是很仔细、很认真地看。"},
-{tp:"近义词",q:"「有名」的近义词是（　）。",o:["无名","出名","名字","报名"],a:1,model:"这家面店非常出名。🍜",why:"「有名」=「出名」，就是很多人都知道。"},
-/* —— 反义词（5题）—— */
-{tp:"反义词",q:"「高」的反义词是（　）。",o:["大","长","矮","远"],a:2,model:"哥哥长得高，弟弟长得矮。📏",why:"高 ↔ 矮，是一对反义词。"},
-{tp:"反义词",q:"「哭」的反义词是（　）。",o:["笑","叫","说","看"],a:0,model:"妹妹不哭了，开心地笑了。😊",why:"哭 ↔ 笑，心情相反。"},
-{tp:"反义词",q:"「冷」的反义词是（　）。",o:["凉","热","冰","雪"],a:1,model:"冬天冷，夏天热。☀️",why:"冷 ↔ 热，是一对反义词。"},
-{tp:"反义词",q:"「安静」的反义词是（　）。",o:["热闹","干净","整齐","轻轻"],a:0,model:"图书馆很安静，市场很热闹。🏮",why:"安静 ↔ 热闹：一个没声音，一个人多声音大。"},
-{tp:"反义词",q:"「勤劳」的反义词是（　）。",o:["努力","认真","懒惰","能干"],a:2,model:"小蜜蜂很勤劳，小懒猪很懒惰。🐝",why:"勤劳 ↔ 懒惰：爱做事和不爱做事。"},
-/* —— 选词填空（12题）—— */
-{tp:"选词填空",q:"天空中（　）着朵朵白云。",o:["跑","飘","坐","躺"],a:1,model:"天空中飘着朵朵白云。☁️",why:"云很轻，在空中慢慢地动，用「飘」。"},
-{tp:"选词填空",q:"妹妹头上（　）着一顶帽子。",o:["穿","拿","戴","披"],a:2,model:"妹妹头上戴着一顶帽子。👒",why:"帽子、眼镜、手表用「戴」；衣服、鞋子才用「穿」。"},
-{tp:"选词填空",q:"我们要（　）小动物，不可以伤害它们。",o:["爱护","讨厌","害怕","打扰"],a:0,model:"我们要爱护小动物。🐰",why:"「爱护」就是关心和保护。"},
-{tp:"选词填空",q:"上课时，我们要（　）听讲。",o:["马虎","认真","大声","随便"],a:1,model:"上课时，我们要认真听讲。📚",why:"「认真」表示用心、不马虎。"},
-{tp:"选词填空",q:"弟弟（　）地爬上楼梯。",o:["慢慢","红红","高高","甜甜"],a:0,model:"弟弟慢慢地爬上楼梯。🪜",why:"小弟弟爬楼梯要小心，所以「慢慢地」爬。"},
-{tp:"选词填空",q:"春天到了，花园里开满了（　）的花。",o:["东倒西歪","五颜六色","又哭又笑","高高兴兴"],a:1,model:"花园里开满了五颜六色的花。🌈",why:"「五颜六色」形容颜色很多、很好看。"},
-{tp:"选词填空",q:"图书馆里，我们说话要（　）的。",o:["轻轻","重重","快快","大大"],a:0,model:"在图书馆里，我们说话要轻轻的。🤫",why:"图书馆要保持安静，所以说话要「轻轻的」。"},
-{tp:"选词填空",q:"妈妈把房间打扫得（　）。",o:["干干净净","歪歪扭扭","吵吵闹闹","咕咕叫"],a:0,model:"妈妈把房间打扫得干干净净。🧹",why:"打扫以后房间很干净，用「干干净净」。"},
-{tp:"选词填空",q:"太阳从东边（　）起来了。",o:["落","掉","升","躲"],a:2,model:"太阳从东边升起来了。🌅",why:"早上太阳往上走，用「升」；傍晚才「落」下去。"},
-{tp:"选词填空",q:"我帮奶奶（　）东西。",o:["提","踢","喝","骑"],a:0,model:"我帮奶奶提东西。🛍️",why:"用手拎着袋子，用「提」。"},
-{tp:"选词填空",q:"风一吹，树叶（　）到地上。",o:["跳","飘","坐","游"],a:1,model:"风一吹，树叶飘到地上。🍂",why:"树叶很轻，慢慢落下来，用「飘」。"},
-{tp:"选词填空",q:"小马在草地上（　）。",o:["飞翔","游泳","奔跑","爬行"],a:2,model:"小马在草地上奔跑。🐎",why:"马有四条腿，跑得快，用「奔跑」。"},
-/* —— 读音辨析（5题）—— */
-{tp:"读音",q:"「长大」的「长」应该读（　）。",o:["cháng","zhǎng","chàng","zàng"],a:1,model:"小树苗慢慢长（zhǎng）大了。🌱",why:"表示长大、生长时读 zhǎng；表示很长时才读 cháng。"},
-{tp:"读音",q:"「音乐」的「乐」应该读（　）。",o:["lè","yào","yuè","luò"],a:2,model:"我们一起上音乐（yuè）课。🎵",why:"音乐、乐器读 yuè；快乐才读 lè。"},
-{tp:"读音",q:"「好奇」的「好」应该读（　）。",o:["hǎo","hào","hē","huó"],a:1,model:"小猫好（hào）奇地看着蝴蝶。🐱",why:"「好奇」「爱好」读 hào；「好人」「好看」读 hǎo。"},
-{tp:"读音",q:"「背书包」的「背」应该读（　）。",o:["bēi","bèi","bǎi","péi"],a:0,model:"我背（bēi）着书包上学去。🎒",why:"用背扛东西读 bēi；「后背」「背课文」读 bèi。"},
-{tp:"读音",q:"「睡觉」的「觉」应该读（　）。",o:["jué","jiǎo","jiào","qiào"],a:2,model:"晚上九点，我上床睡觉（jiào）。😴",why:"睡觉、午觉读 jiào；「觉得」才读 jué。"},
-/* —— 字形辨析（5题）—— */
-{tp:"字形",q:"妈妈在厨房（　）饭。",o:["坐","座","做","作"],a:2,model:"妈妈在厨房做饭。🍚",why:"「做」是动手做事：做饭、做功课。"},
-{tp:"字形",q:"我（　）教室里看书。",o:["在","再","才","住"],a:0,model:"我在教室里看书。🏫",why:"表示地点、正在，用「在」；「再」表示又一次。"},
-{tp:"字形",q:"客人来了，请（　）下喝茶。",o:["做","坐","座","昨"],a:1,model:"请坐下喝茶。🍵",why:"「坐」是坐下的动作；「座」是座位的座。"},
-{tp:"字形",q:"放学了，同学们说：「明天（　）见！」",o:["在","再","是","才"],a:1,model:"明天再见！👋",why:"「再」表示又一次；「再见」就是下次又见面。"},
-{tp:"字形",q:"学校离我家很（　），走路五分钟就到。",o:["进","近","真","这"],a:1,model:"学校离我家很近。🏠",why:"「近」表示距离短；「进」是走进去的进。"}
+/* —— 量词 —— */
+{id:"w1",tp:"量词",q:"河里有一（　）小鱼。",o:["条","只","头","张"],a:0,model:"河里有一条小鱼。🐟",why:"细长的东西（鱼、蛇、小河）常用「条」。"},
+{id:"w2",tp:"量词",q:"海上开来一（　）大船。",o:["匹(pǐ)","艘(sōu)","座","把"],a:1,model:"海上开来一艘(sōu)大船。⛵",why:"船用「艘」，例如：一艘轮船、一艘小艇。"},
+{id:"w3",tp:"量词",q:"花园里开了一（　）红花。",o:["朵","头","件","双"],a:0,model:"花园里开了一朵红花。🌸",why:"花用「朵」，云也可以用「朵」：一朵白云。"},
+{id:"w4",tp:"量词",q:"我家有一（　）小猫。",o:["头","只","条","顶(dǐng)"],a:1,model:"我家有一只小猫。🐱",why:"小动物（猫、鸟、兔子）常用「只」。"},
+{id:"w5",tp:"量词",q:"农场里有一（　）黄牛。",o:["只","匹(pǐ)","头","朵"],a:2,model:"农场里有一头黄牛。🐮",why:"大牲口（牛、猪、大象）常用「头」。"},
+{id:"w6",tp:"量词",q:"下雨了，妈妈递(dì)给我一（　）雨伞。",o:["把","条","本","座"],a:0,model:"妈妈递(dì)给我一把雨伞。☔",why:"有柄可以拿的东西（伞、扇子、剪刀）用「把」。"},
+{id:"w7",tp:"量词",q:"路上开过一（　）汽车。",o:["艘(sōu)","辆","匹(pǐ)","架"],a:1,model:"路上开过一辆汽车。🚗",why:"车用「辆」：一辆汽车、一辆脚踏车。"},
+{id:"w8",tp:"量词",q:"我从图书馆借了一（　）故事书。",o:["张","支","本","块"],a:2,model:"我借了一本故事书。📖",why:"书、本子用「本」：一本书、一本作业本。"},
+{id:"w9",tp:"量词",q:"请给我一（　）筷(kuài)子。",o:["双","只","个","条"],a:0,model:"请给我一双筷(kuài)子。🥢",why:"成对的东西用「双」：一双筷子、一双鞋。"},
+{id:"w10",tp:"量词",q:"姐姐买了一（　）新衣服。",o:["条","件","顶(dǐng)","双"],a:1,model:"姐姐买了一件新衣服。👕",why:"上衣用「件」；裤子、裙子才用「条」。"},
+{id:"w11",tp:"量词",q:"远处有一（　）大山。",o:["座","条","只","把"],a:0,model:"远处有一座大山。⛰️",why:"高大不动的东西（山、桥、房子）用「座」。"},
+{id:"w12",tp:"量词",q:"草原上跑来一（　）白马。",o:["头","只","匹(pǐ)","艘(sōu)"],a:2,model:"草原上跑来一匹(pǐ)白马。🐴",why:"马专门用「匹」：一匹马、两匹小马。"},
+/* —— 近义词 —— */
+{id:"w13",tp:"近义词",q:"「高兴」的近义词是（　）。",o:["伤心","快乐","生气","害怕"],a:1,model:"收到礼物，我非常快乐。🎁",why:"「高兴」和「快乐」意思相近，都表示心情好。"},
+{id:"w14",tp:"近义词",q:"「美丽」的近义词是（　）。",o:["漂亮","难看","干净","高大"],a:0,model:"公园里开满了漂亮的花。🌷",why:"「美丽」=「漂亮」，都是说很好看。"},
+{id:"w15",tp:"近义词",q:"「赶快」的近义词是（　）。",o:["慢慢","连忙","休息","站住"],a:1,model:"听到铃声，我连忙跑进教室。🏃",why:"「赶快」和「连忙」都表示动作很快、不拖拉。"},
+{id:"w16",tp:"近义词",q:"「仔细地看」可以说成（　）。",o:["观察(guān chá)","听见","休息","唱歌"],a:0,model:"我们观察(guān chá)小蚂蚁搬食物。🐜",why:"「观察」就是很仔细、很认真地看。"},
+{id:"w17",tp:"近义词",q:"「有名」的近义词是（　）。",o:["无名","出名","名字","报名"],a:1,model:"这家面店非常出名。🍜",why:"「有名」=「出名」，就是很多人都知道。"},
+/* —— 反义词 —— */
+{id:"w18",tp:"反义词",q:"「高」的反义词是（　）。",o:["大","长","矮","远"],a:2,model:"哥哥长得高，弟弟长得矮。📏",why:"高 ↔ 矮，是一对反义词。"},
+{id:"w19",tp:"反义词",q:"「哭」的反义词是（　）。",o:["笑","叫","说","看"],a:0,model:"妹妹不哭了，开心地笑了。😊",why:"哭 ↔ 笑，心情相反。"},
+{id:"w20",tp:"反义词",q:"「冷」的反义词是（　）。",o:["凉","热","冰","雪"],a:1,model:"冬天冷，夏天热。☀️",why:"冷 ↔ 热，是一对反义词。"},
+{id:"w21",tp:"反义词",q:"「安静」的反义词是（　）。",o:["热闹","干净","整齐","轻轻"],a:0,model:"图书馆很安静，市场很热闹。🏮",why:"安静 ↔ 热闹：一个没声音，一个人多声音大。"},
+{id:"w22",tp:"反义词",q:"「勤劳(qín láo)」的反义词是（　）。",o:["努力","认真","懒惰(lǎn duò)","能干"],a:2,model:"小蜜蜂很勤劳，小懒猪很懒惰。🐝",why:"勤劳 ↔ 懒惰：爱做事和不爱做事。"},
+/* —— 选词填空 —— */
+{id:"w23",tp:"选词填空",q:"天空中（　）着朵朵白云。",o:["跑","飘","坐","躺"],a:1,model:"天空中飘着朵朵白云。☁️",why:"云很轻，在空中慢慢地动，用「飘」。"},
+{id:"w24",tp:"选词填空",q:"妹妹头上（　）着一顶(dǐng)帽子。",o:["穿","拿","戴","披(pī)"],a:2,model:"妹妹头上戴着一顶帽子。👒",why:"帽子、眼镜、手表用「戴」；衣服、鞋子才用「穿」。"},
+{id:"w25",tp:"选词填空",q:"我们要（　）小动物，不可以伤害它们。",o:["爱护","讨厌","害怕","打扰(dǎ rǎo)"],a:0,model:"我们要爱护小动物。🐰",why:"「爱护」就是关心和保护。"},
+{id:"w26",tp:"选词填空",q:"上课时，我们要（　）听讲。",o:["马虎","认真","大声","随便"],a:1,model:"上课时，我们要认真听讲。📚",why:"「认真」表示用心、不马虎。"},
+{id:"w27",tp:"选词填空",q:"弟弟（　）地爬上楼梯。",o:["慢慢","红红","高高","甜甜"],a:0,model:"弟弟慢慢地爬上楼梯。🪜",why:"小弟弟爬楼梯要小心，所以「慢慢地」爬。"},
+{id:"w28",tp:"选词填空",q:"春天到了，花园里开满了（　）的花。",o:["东倒西歪(wāi)","五颜六色","又哭又笑","高高兴兴"],a:1,model:"花园里开满了五颜六色的花。🌈",why:"「五颜六色」形容颜色很多、很好看。"},
+{id:"w29",tp:"选词填空",q:"图书馆里，我们说话要（　）的。",o:["轻轻","重重","快快","大大"],a:0,model:"在图书馆里，我们说话要轻轻的。🤫",why:"图书馆要保持安静，所以说话要「轻轻的」。"},
+{id:"w30",tp:"选词填空",q:"妈妈把房间打扫得（　）。",o:["干干净净","歪歪扭扭(wāi wāi niǔ niǔ)","吵吵闹闹","咕咕叫"],a:0,model:"妈妈把房间打扫得干干净净。🧹",why:"打扫以后房间很干净，用「干干净净」。"},
+{id:"w31",tp:"选词填空",q:"太阳从东边（　）起来了。",o:["落","掉","升","躲"],a:2,model:"太阳从东边升起来了。🌅",why:"早上太阳往上走，用「升」；傍晚才「落」下去。"},
+{id:"w32",tp:"选词填空",q:"我帮奶奶（　）东西。",o:["提","踢","喝","骑(qí)"],a:0,model:"我帮奶奶提东西。🛍️",why:"用手拎着袋子，用「提」。"},
+{id:"w33",tp:"选词填空",q:"风一吹，树叶（　）到地上。",o:["跳","飘","坐","游"],a:1,model:"风一吹，树叶飘到地上。🍂",why:"树叶很轻，慢慢落下来，用「飘」。"},
+{id:"w34",tp:"选词填空",q:"小马在草地上（　）。",o:["飞翔(fēi xiáng)","游泳","奔跑(bēn pǎo)","爬行"],a:2,model:"小马在草地上奔跑。🐎",why:"马有四条腿，跑得快，用「奔跑」。"},
+/* —— 读音辨析 —— */
+{id:"w35",tp:"读音",q:"「长大」的「长」应该读（　）。",o:["cháng","zhǎng","chàng","zàng"],a:1,model:"小树苗慢慢长（zhǎng）大了。🌱",why:"表示长大、生长时读 zhǎng；表示很长时才读 cháng。"},
+{id:"w36",tp:"读音",q:"「音乐」的「乐」应该读（　）。",o:["lè","yào","yuè","luò"],a:2,model:"我们一起上音乐（yuè）课。🎵",why:"音乐、乐器读 yuè；快乐才读 lè。"},
+{id:"w37",tp:"读音",q:"「好奇」的「好」应该读（　）。",o:["hǎo","hào","hē","huó"],a:1,model:"小猫好（hào）奇地看着蝴蝶。🐱",why:"「好奇」「爱好」读 hào；「好人」「好看」读 hǎo。"},
+{id:"w38",tp:"读音",q:"「背书包」的「背」应该读（　）。",o:["bēi","bèi","bǎi","péi"],a:0,model:"我背（bēi）着书包上学去。🎒",why:"用背扛东西读 bēi；「后背」「背课文」读 bèi。"},
+{id:"w39",tp:"读音",q:"「睡觉」的「觉」应该读（　）。",o:["jué","jiǎo","jiào","qiào"],a:2,model:"晚上九点，我上床睡觉（jiào）。😴",why:"睡觉、午觉读 jiào；「觉得」才读 jué。"},
+/* —— 字形辨析 —— */
+{id:"w40",tp:"字形",q:"妈妈在厨房（　）饭。",o:["坐","座","做","作"],a:2,model:"妈妈在厨房做饭。🍚",why:"「做」是动手做事：做饭、做功课。"},
+{id:"w41",tp:"字形",q:"我（　）教室里看书。",o:["在","再","才","住"],a:0,model:"我在教室里看书。🏫",why:"表示地点、正在，用「在」；「再」表示又一次。"},
+{id:"w42",tp:"字形",q:"客人来了，请（　）下喝茶。",o:["做","坐","座","昨"],a:1,model:"请坐下喝茶。🍵",why:"「坐」是坐下的动作；「座」是座位的座。"},
+{id:"w43",tp:"字形",q:"放学了，同学们说：「明天（　）见！」",o:["在","再","是","才"],a:1,model:"明天再见！👋",why:"「再」表示又一次；「再见」就是下次又见面。"},
+{id:"w44",tp:"字形",q:"学校离我家很（　），走路五分钟就到。",o:["进","近","真","这"],a:1,model:"学校离我家很近。🏠",why:"「近」表示距离短；「进」是走进去的进。"},
+/* —— V3 新增（家人 · 学校 · 节日 · 爱护环境 · 健康生活）—— */
+{id:"w45",tp:"量词",q:"墙上挂着一（　）全家福照片。",o:["张","条","只","把"],a:0,model:"墙上挂着一张全家福照片。📷",why:"扁扁平平的东西（纸、照片、床）用「张」。"},
+{id:"w46",tp:"量词",q:"公园里种了一（　）大树。",o:["个","棵","朵","头"],a:1,model:"公园里种了一棵大树。🌳",why:"树用「棵」：一棵大树、一棵小草。"},
+{id:"w47",tp:"量词",q:"我每天早上喝一（　）牛奶。",o:["杯","本","座","辆"],a:0,model:"我每天早上喝一杯牛奶。🥛",why:"用杯子装的饮料用「杯」：一杯水、一杯牛奶。"},
+{id:"w48",tp:"近义词",q:"「开心」的近义词是（　）。",o:["高兴","难过","着急","害羞(hài xiū)"],a:0,model:"生日会上，大家玩得很高兴。🎂",why:"「开心」和「高兴」意思一样，都是心情好。"},
+{id:"w49",tp:"近义词",q:"「立刻」的近义词是（　）。",o:["马上","慢慢","以后","刚才"],a:0,model:"听到妈妈叫我，我马上跑过去。🏃",why:"「立刻」和「马上」都表示很快、不等待。"},
+{id:"w50",tp:"反义词",q:"「多」的反义词是（　）。",o:["大","少","小","短"],a:1,model:"哥哥的书多，我的书少。📚",why:"多 ↔ 少，是一对反义词；大 ↔ 小才是一对。"},
+{id:"w51",tp:"反义词",q:"「早」的反义词是（　）。",o:["晚","快","前","近"],a:0,model:"我们要早睡早起，不要晚睡。🌙",why:"早 ↔ 晚。早睡早起，身体才会好。"},
+{id:"w52",tp:"选词填空",q:"过新年了，我们向爷爷奶奶（　）。",o:["拜年(bài nián)","睡觉","跑步","写字"],a:0,model:"过新年了，我们向爷爷奶奶拜年。🧧",why:"新年时向长辈说吉祥话，就叫「拜年」。"},
+{id:"w53",tp:"选词填空",q:"看见地上的垃圾，我把它（　）起来，丢进垃圾桶。",o:["捡(jiǎn)","踢","画","读"],a:0,model:"我把垃圾捡起来，丢进垃圾桶。🗑️",why:"用手从地上拿起来，用「捡」。爱护环境，人人有责！"},
+{id:"w54",tp:"选词填空",q:"睡觉前，我们要记得（　）牙。",o:["洗","刷","擦","梳(shū)"],a:1,model:"睡觉前，我们要记得刷牙。🪥",why:"牙齿用「刷」：刷牙；头发才用「梳」。"},
+{id:"w55",tp:"字形",q:"我口（　）了，想喝水。",o:["喝","渴","歌","哥"],a:1,model:"我口渴了，想喝水。💧",why:"「渴」是三点水，口渴了想喝水；「喝」是口字旁，用口来喝。"},
+{id:"w56",tp:"读音",q:"「书包很重」的「重」应该读（　）。",o:["chóng","zhòng","dòng","tóng"],a:1,model:"我的书包很重（zhòng）。🎒",why:"表示分量大读 zhòng；「重来一次」才读 chóng。"}
 ];
-/* ============ 阅读珊瑚短文（8篇） ============ */
+/* ============ 阅读珊瑚短文（10篇） ============ */
 /* seg: [汉字, 拼音, 是否生词] */
 const PASSAGES=[
 {id:"p1",t:"小海龟回家",e:"🐢",
@@ -203,23 +256,37 @@ quiz:[
 seg:[["大海","dà hǎi"],["里","lǐ"],["，",""],["小丑鱼","xiǎo chǒu yú"],["和","hé"],["海葵","hǎi kuí",1],["是","shì"],["一对","yí duì"],["好朋友","hǎo péng you"],["。",""],["海葵","hǎi kuí"],["的","de"],["触手","chù shǒu",1],["有毒","yǒu dú"],["，",""],["别的","bié de"],["鱼","yú"],["不敢","bù gǎn"],["靠近","kào jìn"],["，",""],["小丑鱼","xiǎo chǒu yú"],["却","què"],["不怕","bú pà"],["。",""],["它","tā"],["住在","zhù zài"],["海葵","hǎi kuí"],["里","lǐ"],["，",""],["很","hěn"],["安全","ān quán"],["。",""],["它","tā"],["也","yě"],["会","huì"],["帮","bāng"],["海葵","hǎi kuí"],["引来","yǐn lái"],["食物","shí wù"],["。",""],["它们","tā men"],["互相","hù xiāng",1],["帮助","bāng zhù"],["，",""],["谁","shéi"],["也","yě"],["离不开","lí bù kāi"],["谁","shéi"],["。",""]],
 vocab:[{w:"海葵",p:"hǎi kuí",d:"长得像花的海洋动物。"},{w:"触手",p:"chù shǒu",d:"像手一样细长的部分。"},{w:"互相",p:"hù xiāng",d:"你帮我，我也帮你。"}],
 quiz:[
-{q:"小丑鱼的好朋友是谁？",o:["小海龟","海葵","大鲨鱼","小螃蟹"],a:1,model:"小丑鱼和海葵是一对好朋友。",why:"短文第一句告诉我们了。"},
+{q:"小丑鱼的好朋友是谁？",o:["小海龟","海葵","大鲨(shā)鱼","小螃蟹(páng xiè)"],a:1,model:"小丑鱼和海葵是一对好朋友。",why:"短文第一句告诉我们了。"},
 {q:"为什么别的鱼不敢靠近海葵？",o:["海葵太大了","海葵的触手有毒","海葵会咬鱼","海葵游得太快"],a:1,model:"海葵的触手有毒，所以别的鱼不敢靠近。",why:"有毒的触手让别的鱼害怕。"},
 {q:"小丑鱼会帮海葵做什么？",o:["打扫房子","唱歌","引来食物","挡住大浪"],a:2,model:"小丑鱼会帮海葵引来食物。",why:"它们互相帮助，谁也离不开谁。"}]},
 {id:"p7",t:"外婆的汤",e:"🍲",
 seg:[["放学","fàng xué"],["回家","huí jiā"],["，",""],["我","wǒ"],["一进门","yí jìn mén"],["就","jiù"],["闻到","wén dào"],["一阵","yí zhèn"],["香味","xiāng wèi",1],["。",""],["原来","yuán lái"],["外婆","wài pó"],["煮了","zhǔ le"],["我","wǒ"],["最爱","zuì ài"],["喝","hē"],["的","de"],["玉米","yù mǐ",1],["汤","tāng"],["。",""],["我","wǒ"],["喝了","hē le"],["一大碗","yí dà wǎn"],["，",""],["浑身","hún shēn",1],["暖暖的","nuǎn nuǎn de"],["。",""],["外婆","wài pó"],["摸摸","mō mo"],["我的","wǒ de"],["头","tóu"],["说","shuō"],["：",""],["「",""],["慢点","màn diǎn"],["喝","hē"],["，",""],["锅里","guō lǐ"],["还有","hái yǒu"],["呢","ne"],["！",""],["」",""]],
 vocab:[{w:"香味",p:"xiāng wèi",d:"好闻的味道。"},{w:"玉米",p:"yù mǐ",d:"黄色的、一粒一粒的粮食。"},{w:"浑身",p:"hún shēn",d:"全身，整个身体。"}],
 quiz:[
-{q:"外婆煮了什么汤？",o:["鸡汤","鱼汤","玉米汤","蘑菇汤"],a:2,model:"外婆煮了我最爱喝的玉米汤。",why:"短文里写得清清楚楚。"},
+{q:"外婆煮了什么汤？",o:["鸡汤","鱼汤","玉米汤","蘑菇(mó gu)汤"],a:2,model:"外婆煮了我最爱喝的玉米汤。",why:"短文里写得清清楚楚。"},
 {q:"我喝了汤，感觉怎么样？",o:["浑身暖暖的","很困","有点冷","肚子疼"],a:0,model:"我喝了一大碗，浑身暖暖的。",why:"热汤让全身都暖和起来。"},
 {q:"从哪里可以看出外婆很爱我？",o:["外婆很会做饭","外婆煮我最爱喝的汤，还摸摸我的头","外婆家很大","外婆买了玉米"],a:1,model:"外婆煮我最爱喝的汤，还摸摸我的头，叫我慢点喝。",why:"这些小小的动作里，都藏着外婆的爱。"}]},
 {id:"p8",t:"下雨的早晨",e:"☔",
 seg:[["早晨","zǎo chén"],["，",""],["天空","tiān kōng"],["下起了","xià qǐ le"],["大雨","dà yǔ"],["。",""],["小青蛙","xiǎo qīng wā"],["坐在","zuò zài"],["荷叶","hé yè",1],["上","shàng"],["，",""],["把","bǎ"],["荷叶","hé yè"],["当成","dàng chéng"],["小伞","xiǎo sǎn"],["。",""],["小蚂蚁","xiǎo mǎ yǐ"],["躲进","duǒ jìn"],["花朵","huā duǒ"],["里","lǐ"],["，",""],["把","bǎ"],["花瓣","huā bàn",1],["当成","dàng chéng"],["小房子","xiǎo fáng zi"],["。",""],["雨停了","yǔ tíng le"],["，",""],["太阳","tài yáng"],["出来","chū lái"],["，",""],["草地","cǎo dì"],["上","shàng"],["挂满了","guà mǎn le"],["亮晶晶","liàng jīng jīng",1],["的","de"],["水珠","shuǐ zhū"],["。",""]],
 vocab:[{w:"荷叶",p:"hé yè",d:"荷花圆圆的大叶子。"},{w:"花瓣",p:"huā bàn",d:"花朵上一片一片的部分。"},{w:"亮晶晶",p:"liàng jīng jīng",d:"闪闪发光的样子。"}],
 quiz:[
-{q:"小青蛙把什么当成小伞？",o:["花瓣","荷叶","树叶","蘑菇"],a:1,model:"小青蛙把荷叶当成小伞。",why:"荷叶又大又圆，正好挡雨。"},
+{q:"小青蛙把什么当成小伞？",o:["花瓣","荷叶","树叶","蘑菇(mó gu)"],a:1,model:"小青蛙把荷叶当成小伞。",why:"荷叶又大又圆，正好挡雨。"},
 {q:"小蚂蚁躲在哪里？",o:["荷叶下","石头下","花朵里","泥土里"],a:2,model:"小蚂蚁躲进花朵里，把花瓣当成小房子。",why:"小蚂蚁很小，花朵就是它的小房子。"},
-{q:"雨停了，草地上有什么？",o:["亮晶晶的水珠","五颜六色的花","很多小青蛙","一道彩虹"],a:0,model:"草地上挂满了亮晶晶的水珠。",why:"雨后的水珠在太阳下闪闪发光。"}]}
+{q:"雨停了，草地上有什么？",o:["亮晶晶的水珠","五颜六色的花","很多小青蛙","一道彩虹"],a:0,model:"草地上挂满了亮晶晶的水珠。",why:"雨后的水珠在太阳下闪闪发光。"}]},
+{id:"p9",t:"过新年",e:"🧧",
+seg:[["农历","nóng lì",1],["新年","xīn nián"],["到了","dào le"],["，",""],["家家户户","jiā jiā hù hù",1],["挂起了","guà qǐ le"],["红红的","hóng hóng de"],["灯笼","dēng long",1],["。",""],["我","wǒ"],["穿上","chuān shàng"],["新衣服","xīn yī fu"],["，",""],["跟","gēn"],["爸爸","bà ba"],["妈妈","mā ma"],["去","qù"],["外婆家","wài pó jiā"],["拜年","bài nián"],["。",""],["我","wǒ"],["对","duì"],["外婆","wài pó"],["说","shuō"],["：",""],["「",""],["新年","xīn nián"],["快乐","kuài lè"],["，",""],["身体","shēn tǐ"],["健康","jiàn kāng"],["！",""],["」",""],["外婆","wài pó"],["笑眯眯","xiào mī mī"],["地","de"],["给","gěi"],["我","wǒ"],["一个","yí gè"],["红包","hóng bāo"],["。",""],["屋子","wū zi"],["里","lǐ"],["到处","dào chù"],["都是","dōu shì"],["笑声","xiào shēng"],["，",""],["真","zhēn"],["热闹","rè nao"],["！",""]],
+vocab:[{w:"农历",p:"nóng lì",d:"中国传统的日历，农历新年就是华人新年。"},{w:"家家户户",p:"jiā jiā hù hù",d:"每一家、每一户。"},{w:"灯笼",p:"dēng long",d:"红红圆圆、会发光的新年装饰。"}],
+quiz:[
+{q:"新年到了，家家户户挂起了什么？",o:["红红的灯笼","彩色的气球","小星星","风筝(fēng zheng)"],a:0,model:"家家户户挂起了红红的灯笼。",why:"短文第一句告诉我们了。"},
+{q:"我跟爸爸妈妈去外婆家做什么？",o:["吃蛋糕","拜年","游泳","看电视"],a:1,model:"我跟爸爸妈妈去外婆家拜年。",why:"新年去看长辈、说吉祥话，就是拜年。"},
+{q:"我说了祝福的话以后，外婆怎么做？",o:["笑眯眯地给我一个红包","叫我快点回家","送我一本书","带我去公园"],a:0,model:"外婆笑眯眯地给我一个红包。",why:"小朋友说吉祥话，长辈会开心地给红包送祝福。"}]},
+{id:"p10",t:"我爱小公园",e:"🌳",
+seg:[["我家","wǒ jiā"],["楼下","lóu xià"],["有","yǒu"],["一个","yí gè"],["小公园","xiǎo gōng yuán"],["。",""],["公园","gōng yuán"],["里","lǐ"],["有","yǒu"],["绿绿的","lǜ lǜ de"],["草地","cǎo dì"],["，",""],["还有","hái yǒu"],["高高的","gāo gāo de"],["大树","dà shù"],["。",""],["一天","yì tiān"],["早上","zǎo shang"],["，",""],["我","wǒ"],["看见","kàn jiàn"],["草地","cǎo dì"],["上","shàng"],["有","yǒu"],["几个","jǐ gè"],["空瓶子","kōng píng zi",1],["，",""],["就","jiù"],["把","bǎ"],["它们","tā men"],["捡起来","jiǎn qǐ lái"],["，",""],["丢进","diū jìn"],["垃圾桶","lā jī tǒng",1],["。",""],["旁边","páng biān"],["的","de"],["叔叔","shū shu"],["对","duì"],["我","wǒ"],["竖起","shù qǐ",1],["大拇指","dà mǔ zhǐ"],["。",""],["公园","gōng yuán"],["干干净净","gān gān jìng jìng"],["，",""],["大家","dà jiā"],["玩得","wán de"],["更","gèng"],["开心","kāi xīn"],["了","le"],["！",""]],
+vocab:[{w:"空瓶子",p:"kōng píng zi",d:"里面没有水的瓶子。"},{w:"垃圾桶",p:"lā jī tǒng",d:"装垃圾的桶。"},{w:"竖起",p:"shù qǐ",d:"把大拇指立起来，意思是「你真棒」。"}],
+quiz:[
+{q:"我在草地上看见了什么？",o:["几个空瓶子","几只小鸟","很多花","一只小猫"],a:0,model:"我看见草地上有几个空瓶子。",why:"短文告诉我们：草地上有几个空瓶子。"},
+{q:"我把空瓶子丢进哪里？",o:["草地上","垃圾桶","小河里","书包里"],a:1,model:"我把空瓶子捡起来，丢进垃圾桶。",why:"垃圾要丢进垃圾桶，这样才能爱护环境。"},
+{q:"叔叔对我竖起大拇指，是什么意思？",o:["叫我走开","夸我做得好","要跟我握手","让我安静"],a:1,model:"叔叔竖起大拇指，是夸我做得好。",why:"竖起大拇指表示称赞：你真棒！"}]}
 ];
 /* ============ 徽章 ============ */
 const BADGES=[
@@ -228,39 +295,172 @@ const BADGES=[
 {id:"b3",n:"海星之光",e:"⭐",desc:"答对 30 题",check:s=>s.totalCorrect>=30},
 {id:"b4",n:"连击小能手",e:"🔥",desc:"连击达到 5",check:s=>s.bestCombo>=5},
 {id:"b5",n:"阅读小海龟",e:"🐢",desc:"读完 3 篇短文",check:s=>Object.keys(s.passDone).length>=3},
-{id:"b6",n:"珊瑚湾主人",e:"🧜‍♀️",desc:"读完全部 8 篇短文",check:s=>Object.keys(s.passDone).length>=8}
+{id:"b6",n:"珊瑚湾主人",e:"🧜‍♀️",desc:"读完全部 "+PASSAGES.length+" 篇短文",check:s=>Object.keys(s.passDone).length>=PASSAGES.length},
+{id:"b7",n:"贝壳修补匠",e:"🐚",desc:"修补 5 个错题贝壳",check:s=>Object.keys(s.mistakes||{}).filter(k=>s.mistakes[k].fixed).length>=5}
 ];
-/* ============ 状态 ============ */
+/* ============ 状态（沿用 v2 的 jenny_chinese_bay，向后兼容、只扩展不清空） ============ */
 const LS_KEY="jenny_chinese_bay";
-let state={xp:0,combo:0,bestCombo:0,totalCorrect:0,totalAnswered:0,passDone:{},usedQ:[],badges:{},pinyinOn:true};
+let state={xp:0,combo:0,bestCombo:0,totalCorrect:0,totalAnswered:0,passDone:{},usedQ:[],badges:{},pinyinOn:true,mistakes:{}};
 try{const s=localStorage.getItem(LS_KEY);if(s)state=Object.assign(state,JSON.parse(s));}catch(e){}
+if(!state.mistakes)state.mistakes={};
 function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}}
 function addXP(n){state.xp+=n;save();updateHeader();}
 function updateHeader(){
   document.getElementById("xpPill").textContent="⭐ "+state.xp;
   document.getElementById("comboPill").textContent="🔥 "+state.combo;
 }
+/* ============ 每日任务（jenny_daily_v1，跨工具约定：chinese 每答1题 +1） ============ */
+const DKEY="jenny_daily_v1",DAILY_GOAL=5;
+function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function getDailyAll(){let a={};try{a=JSON.parse(localStorage.getItem(DKEY))||{};}catch(e){}return a;}
+function todayCount(){const a=getDailyAll(),t=a[todayStr()];return t?(t.chinese||0):0;}
+function bumpDaily(){
+  const a=getDailyAll(),t=todayStr();
+  if(!a[t])a[t]={math:0,science:0,reading:0,chinese:0,oral:0};
+  if(typeof a[t].chinese!=="number")a[t].chinese=0;
+  a[t].chinese++;
+  try{localStorage.setItem(DKEY,JSON.stringify(a));}catch(e){}
+  renderRing();
+}
+function renderRing(){
+  const n=todayCount(),C=100.5,frac=Math.min(n,DAILY_GOAL)/DAILY_GOAL;
+  const arc=document.getElementById("ringArc");
+  arc.style.strokeDashoffset=String(C*(1-frac));
+  if(frac>=1)arc.setAttribute("stroke","#2b9268");
+  document.getElementById("ringTxt").textContent="今日 "+n+"/"+DAILY_GOAL;
+}
+/* ============ WebAudio 合成音效（无音频文件） ============ */
+let AC=null;
+function ac(){
+  if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){AC=null;}}
+  if(AC&&AC.state==="suspended"){try{AC.resume();}catch(e){}}
+  return AC;
+}
+function tone(freq,delay,dur,type,vol,slideTo){
+  const c=ac();if(!c)return;
+  const t0=c.currentTime+delay;
+  const o=c.createOscillator(),g=c.createGain();
+  o.type=type||"sine";o.frequency.setValueAtTime(freq,t0);
+  if(slideTo)o.frequency.exponentialRampToValueAtTime(slideTo,t0+dur);
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(vol||0.15,t0+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  o.connect(g);g.connect(c.destination);
+  o.start(t0);o.stop(t0+dur+0.05);
+}
+function sfxTap(){tone(620,0,0.08,"sine",0.08,880);}
+function sfxCorrect(){ /* 叮咚 + 小泡泡 */
+  tone(880,0,0.12,"sine",0.14);tone(1318.5,0.09,0.22,"sine",0.14);
+  tone(1760,0.2,0.1,"sine",0.06,2200);
+}
+function sfxWrong(){ /* 温柔的低音，不吓人 */
+  tone(392,0,0.15,"sine",0.08);tone(330,0.13,0.22,"sine",0.07);
+}
+function sfxReward(){ /* 魔法音阶 */
+  [523.25,659.25,783.99,1046.5].forEach((f,i)=>tone(f,i*0.09,0.25,"triangle",0.12));
+  tone(2093,0.4,0.35,"sine",0.05,2794);
+}
+document.addEventListener("click",e=>{
+  if(e.target.closest(".btn,.navbtn,.passcard,.switch,.ttsbtn,.spkline"))sfxTap();
+},true);
+/* ============ TTS 中文朗读（Web Speech API，feature detection 保护） ============ */
+let ttsOn=true;
+try{ttsOn=localStorage.getItem("jenny_tts_on")!=="0";}catch(e){}
+let zhVoice=null;
+function pickVoice(){
+  if(!("speechSynthesis" in window))return;
+  try{
+    const vs=speechSynthesis.getVoices();if(!vs||!vs.length)return;
+    const prefer=["Tingting","Ting-Ting","婷婷","Meijia","美嘉","Sinji","Yue"];
+    zhVoice=vs.find(v=>prefer.some(p=>(v.name||"").includes(p))&&/zh/i.test(v.lang||""))
+      ||vs.find(v=>/^zh[-_]?(CN|Hans)/i.test(v.lang||""))
+      ||vs.find(v=>/^zh/i.test(v.lang||""))
+      ||null;
+  }catch(e){}
+}
+if("speechSynthesis" in window){
+  pickVoice();
+  try{speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}
+}
+function cleanSpeech(t){
+  return String(t).replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{2B00}-\u{2BFF}]/gu,"")
+    .replace(/[「」『』]/g,"").trim();
+}
+function speak(text,handlers){
+  if(!ttsOn||!("speechSynthesis" in window))return null;
+  try{
+    const u=new SpeechSynthesisUtterance(cleanSpeech(text));
+    if(zhVoice)u.voice=zhVoice;
+    u.lang=zhVoice?zhVoice.lang:"zh-CN";
+    u.rate=0.95;u.pitch=1.05;
+    if(handlers){u.onstart=handlers.onstart||null;u.onend=handlers.onend||null;u.onerror=handlers.onend||null;}
+    speechSynthesis.speak(u);
+    return u;
+  }catch(e){return null;}
+}
+function stopSpeak(){
+  readingAll=false;
+  if("speechSynthesis" in window){try{speechSynthesis.cancel();}catch(e){}}
+  document.querySelectorAll(".sent.speaking").forEach(el=>el.classList.remove("speaking"));
+}
+const CHEER_VOICE=["太棒啦！","真厉害！","答对了！","你真棒！","好样的！","太聪明啦！","继续加油哦！"];
+function speakCheer(){
+  if(!ttsOn)return;
+  stopSpeak();
+  speak(CHEER_VOICE[Math.floor(Math.random()*CHEER_VOICE.length)]);
+}
+function toggleTTS(){
+  ttsOn=!ttsOn;
+  try{localStorage.setItem("jenny_tts_on",ttsOn?"1":"0");}catch(e){}
+  if(!ttsOn)stopSpeak();
+  renderTTSBtn();
+  if(ttsOn)speak("朗读打开啦！");
+}
+function renderTTSBtn(){
+  const b=document.getElementById("ttsBtn");
+  b.textContent=ttsOn?"🔊":"🔇";
+  b.classList.toggle("off",!ttsOn);
+}
+/* ============ 错题贝壳 ============ */
+function unfixedCount(){return Object.keys(state.mistakes).filter(k=>!state.mistakes[k].fixed).length;}
+function updateMistBadge(){
+  const n=unfixedCount(),el=document.getElementById("mistBadge");
+  el.style.display=n?"flex":"none";el.textContent=n;
+}
+function recordMistake(qid,src,tp,q,opts,myIdx,aIdx,model,why){
+  state.mistakes[qid]={id:qid,src:src,tp:tp,q:q,o:opts.slice(),my:myIdx,a:aIdx,model:model,why:why,fixed:false,t:Date.now()};
+  save();updateMistBadge();
+}
+function markFixedIfExists(qid){
+  const m=state.mistakes[qid];
+  if(m&&!m.fixed){m.fixed=true;save();updateMistBadge();}
+}
+/* ============ 徽章检查 ============ */
 function checkBadges(){
   let newly=[];
   BADGES.forEach(b=>{if(!state.badges[b.id]&&b.check(state)){state.badges[b.id]=true;newly.push(b);}});
-  if(newly.length){save();fireworks();
+  if(newly.length){save();fireworks();sfxReward();
     setTimeout(()=>{showPopupHTML(`<div class="center"><div class="big">${newly[0].e}</div>
     <div class="word">获得新徽章！</div><div style="font-size:18px;font-weight:800;margin:8px 0;">${newly[0].n}</div>
-    <div style="color:#6fa3ba;">${newly[0].desc}</div>
+    <div style="color:var(--ink-soft);">${newly[0].desc}</div>
     <div style="margin-top:14px;"><button class="btn" onclick="closePopup()">太棒了！</button></div></div>`);},600);}
 }
 /* ============ 导航 ============ */
 let currentTab="home";
 function go(tab){
-  currentTab=tab;
-  ["home","word","read"].forEach(t=>document.getElementById("nav-"+t).classList.toggle("active",t===tab));
-  if(tab==="home")renderHome();else if(tab==="word")renderWordHome();else renderReadHome();
+  currentTab=tab;stopSpeak();
+  ["home","word","read","mist"].forEach(t=>document.getElementById("nav-"+t).classList.toggle("active",t===tab));
+  if(tab==="home")renderHome();
+  else if(tab==="word")renderWordHome();
+  else if(tab==="read")renderReadHome();
+  else renderMistakes();
   window.scrollTo(0,0);
 }
 /* ============ 首页 ============ */
-const CHEERS=["Jenny 你好呀！今天想先去哪里玩？","欢迎回到珊瑚湾！小鱼们都在等你哦！","每天进步一点点，你就是最棒的！"];
+const CHEERS=["Jenny 你好呀！今天想先去哪里玩？","欢迎回到珊瑚湾！小鱼们都在等你哦！","每天进步一点点，你就是最棒的！","今天的海水特别蓝，一起来学华文吧！"];
 function renderHome(){
-  const readDone=Object.keys(state.passDone).length;
+  const readDone=Object.keys(state.passDone).length,mn=unfixedCount();
+  const fixedN=Object.keys(state.mistakes).filter(k=>state.mistakes[k].fixed).length;
   let badgeHtml=BADGES.map(b=>`<div class="badge ${state.badges[b.id]?"":"locked"}"><span class="be">${b.e}</span>${b.n}<span style="font-weight:400;">${b.desc}</span></div>`).join("");
   document.getElementById("view").innerHTML=`
   <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">${CHEERS[Math.floor(Math.random()*CHEERS.length)]}</div></div>
@@ -268,15 +468,19 @@ function renderHome(){
     <div class="grow"><div class="t">字词沙滩</div><div class="k">量词 · 近反义词 · 选词填空 · 读音字形（共 ${WQ.length} 题）</div></div>
     <div style="font-size:22px;">➜</div></button>
   <button class="passcard" onclick="go('read')"><div class="cover">🪸</div>
-    <div class="grow"><div class="t">阅读珊瑚</div><div class="k">${PASSAGES.length} 篇小短文 · 已读完 ${readDone} 篇</div></div>
+    <div class="grow"><div class="t">阅读珊瑚</div><div class="k">${PASSAGES.length} 篇小短文 · 已读完 ${readDone} 篇 · 可以整篇朗读</div></div>
     <div style="font-size:22px;">➜</div></button>
+  <button class="passcard" onclick="go('mist')"><div class="cover">🐚</div>
+    <div class="grow"><div class="t">错题贝壳</div><div class="k">${mn?("有 "+mn+" 个贝壳等你修补"):(fixedN?"贝壳都修补好啦，真棒！":"还没有错题贝壳，太厉害啦！")}</div></div>
+    <div style="font-size:22px;">${mn?"🔧":"✨"}</div></button>
   <div class="card"><h2>🏅 我的徽章</h2><div style="display:flex;flex-wrap:wrap;">${badgeHtml}</div></div>
-  <div class="card" style="background:#fdf3dd;"><h3 style="color:#a4762a;">📊 小成绩单</h3>
-  <div style="font-size:15px;line-height:1.9;color:#7c5a22;">一共答对 <b>${state.totalCorrect}</b> 题 · 最高连击 <b>${state.bestCombo}</b> 🔥 · 总星星 <b>${state.xp}</b> ⭐</div></div>`;
+  <div class="card" style="background:var(--sand);"><h3 style="color:var(--gold);">📊 小成绩单</h3>
+  <div style="font-size:15px;line-height:1.9;color:#7c5a22;">一共答对 <b>${state.totalCorrect}</b> 题 · 最高连击 <b>${state.bestCombo}</b> 🔥 · 总星星 <b>${state.xp}</b> ⭐<br>今日已完成 <b>${todayCount()}</b> / ${DAILY_GOAL} 题华文小任务</div></div>`;
 }
 /* ============ 字词沙滩 ============ */
 const ROUND=8;
 let round={qs:[],idx:0,right:0,answered:false};
+let curWordQ=null;
 function pickRound(){
   let avail=WQ.map((_,i)=>i).filter(i=>!state.usedQ.includes(i));
   if(avail.length<ROUND){state.usedQ=[];avail=WQ.map((_,i)=>i);}
@@ -287,9 +491,9 @@ function renderWordHome(){
   document.getElementById("view").innerHTML=`
   <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">欢迎来到<b>字词沙滩</b>！每一轮有 ${ROUND} 道题。答错也没关系——我每次都会给你看<b>正确的句子</b>，看多了自然就记住啦！💙</div></div>
   <div class="card center">
-    <div class="big">🏖️</div>
+    <div class="big" style="animation:floaty 3s ease-in-out infinite;">🏖️</div>
     <h2>准备好了吗？</h2>
-    <div style="color:#6fa3ba;font-size:14px;margin-bottom:14px;">题目类型：量词 · 近义词 · 反义词 · 选词填空 · 读音 · 字形</div>
+    <div style="color:var(--ink-soft);font-size:14px;margin-bottom:14px;">题目类型：量词 · 近义词 · 反义词 · 选词填空 · 读音 · 字形</div>
     <button class="btn" onclick="startRound()">🌊 开始新一轮（${ROUND} 题）</button>
   </div>`;
 }
@@ -299,16 +503,20 @@ function startRound(){
 }
 function renderQ(){
   const qi=round.qs[round.idx],q=WQ[qi];
-  round.answered=false;
+  curWordQ=q;round.answered=false;
   let opts=q.o.map((o,i)=>`<button class="opt" id="opt${i}" onclick="answerQ(${i})">${["A","B","C","D"][i]}. ${o}</button>`).join("");
   document.getElementById("view").innerHTML=`
   <div class="backrow"><button class="btn ghost small" onclick="go('word')">← 退出本轮</button>
-  <span style="float:right;font-size:14px;color:#6fa3ba;font-weight:700;">第 ${round.idx+1} / ${ROUND} 题 <span class="combo">🔥连击 ${state.combo}</span></span></div>
+  <span style="float:right;font-size:14px;color:var(--ink-soft);font-weight:700;">第 ${round.idx+1} / ${ROUND} 题 <span class="combo">🔥连击 ${state.combo}</span></span></div>
   <div class="progressbar"><div style="width:${(round.idx/ROUND)*100}%"></div></div>
   <div class="qbox"><span class="tag">${q.tp}</span><div class="qq">${q.q}</div>${opts}
   <div id="modelBox"></div></div>
   <div id="nextBox"></div>`;
   window.scrollTo(0,0);
+}
+function speakCurModel(){
+  if(!curWordQ)return;
+  stopSpeak();speak(curWordQ.model+"。"+curWordQ.why);
 }
 function answerQ(i){
   if(round.answered)return;round.answered=true;
@@ -323,26 +531,29 @@ function answerQ(i){
   let head;
   if(right){round.right++;state.combo++;state.totalCorrect++;
     if(state.combo>state.bestCombo)state.bestCombo=state.combo;
-    addXP(5);miniConfetti();
+    addXP(5);miniConfetti();sfxCorrect();speakCheer();
+    markFixedIfExists(q.id);
     head="🌟 <b>答对啦！真棒！</b>";
-  }else{state.combo=0;addXP(1);
+  }else{state.combo=0;addXP(1);sfxWrong();
+    recordMistake(q.id,"字词",q.tp,q.q,q.o,i,q.a,q.model,q.why);
     head="💙 <b>没关系，我们一起看看正确的说法：</b>";
   }
-  document.getElementById("modelBox").innerHTML=`<div class="model">${head}<br><b>规范句子：</b>${q.model}<br><b>小提示：</b>${q.why}</div>`;
+  document.getElementById("modelBox").innerHTML=`<div class="model">${head}<br><b>规范句子：</b>${q.model} <button class="spkline" onclick="speakCurModel()" title="听规范句子">🔊</button><br><b>小提示：</b>${q.why}</div>`;
   document.getElementById("nextBox").innerHTML=`<div class="center"><button class="btn" onclick="nextQ()">${round.idx+1<ROUND?"下一题 →":"看看本轮成绩 🎉"}</button></div>`;
+  bumpDaily();
   save();updateHeader();
 }
 function nextQ(){
-  round.idx++;
+  round.idx++;stopSpeak();
   if(round.idx<ROUND)renderQ();
   else{
     const r=round.right;
     let cheer=r===ROUND?"全对！你是字词沙滩的小冠军！🏆":r>=ROUND*0.7?"太厉害啦！继续保持！🌟":"每道题的规范句子你都看到啦，下一轮一定更棒！💪";
-    if(r>=ROUND*0.7)fireworks();else confettiBurst();
+    if(r>=ROUND*0.7){fireworks();sfxReward();}else{confettiBurst();sfxCorrect();}
     document.getElementById("view").innerHTML=`
     <div class="card center"><div class="big">${r===ROUND?"🏆":"🎉"}</div>
     <h2>本轮完成！</h2>
-    <div style="font-size:18px;margin:10px 0;">答对 <b style="color:#1a7ea8;">${r}</b> / ${ROUND} 题</div>
+    <div style="font-size:18px;margin:10px 0;">答对 <b style="color:var(--deep);">${r}</b> / ${ROUND} 题</div>
     <div class="bubble" style="margin-left:0;text-align:left;">🧜‍♀️ ${cheer}</div>
     <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
       <button class="btn" onclick="startRound()">🌊 再来一轮</button>
@@ -354,7 +565,7 @@ function nextQ(){
 }
 /* ============ 阅读珊瑚 ============ */
 function renderReadHome(){
-  let h=`<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">这里有 ${PASSAGES.length} 篇小短文。看到<span class="vword">虚线的词</span>可以点一点，会有拼音和意思哦！</div></div>`;
+  let h=`<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">这里有 ${PASSAGES.length} 篇小短文。可以<b>🔊 整篇朗读</b>，也可以点任意一句单独听；看到<span class="vword">虚线的词</span>点一点，会有拼音和意思哦！</div></div>`;
   PASSAGES.forEach(p=>{
     const done=!!state.passDone[p.id];
     h+=`<button class="passcard ${done?"done":""}" onclick="openPass('${p.id}')"><div class="cover">${p.e}</div>
@@ -363,34 +574,88 @@ function renderReadHome(){
   });
   document.getElementById("view").innerHTML=h;
 }
-let passAnswered={};
+let passAnswered={},curPassId=null,readingAll=false;
+function getSents(p){
+  if(p._sents)return p._sents;
+  const sents=[];let cur=[];
+  for(let i=0;i<p.seg.length;i++){
+    cur.push(p.seg[i]);
+    if("。！？".includes(p.seg[i][0])){
+      /* 把紧跟的下引号并入本句 */
+      while(i+1<p.seg.length&&"」』".includes(p.seg[i+1][0])){cur.push(p.seg[++i]);}
+      sents.push(cur);cur=[];
+    }
+  }
+  if(cur.length)sents.push(cur);
+  p._sents=sents;
+  return sents;
+}
 function segHTML(p){
-  return p.seg.map(s=>{
-    const h=s[0],py=s[1],isV=s[2]===1;
-    let inner=state.pinyinOn&&py?`<ruby>${h}<rt>${py}</rt></ruby>`:h;
-    if(isV)return `<span class="vword" onclick="vocabTap('${p.id}','${h}')">${inner}</span>`;
-    return inner;
+  const sents=getSents(p);
+  return sents.map((sent,si)=>{
+    const inner=sent.map(s=>{
+      const h=s[0],py=s[1],isV=s[2]===1;
+      let t=state.pinyinOn&&py?`<ruby>${h}<rt>${py}</rt></ruby>`:h;
+      if(isV)return `<span class="vword" onclick="event.stopPropagation();vocabTap('${p.id}','${h}')">${t}</span>`;
+      return t;
+    }).join("");
+    return `<span class="sent" id="sent-${si}" onclick="tapSent('${p.id}',${si})">${inner}</span>`;
   }).join("");
 }
+function sentText(sent){return sent.map(s=>s[0]).join("");}
+function tapSent(pid,si){
+  if(!ttsOn)return;
+  stopSpeak();
+  speakSent(pid,si,false);
+}
+function speakSent(pid,si,chain){
+  const p=PASSAGES.find(x=>x.id===pid);if(!p)return;
+  const sents=getSents(p);
+  if(si>=sents.length){stopSpeak();return;}
+  const u=speak(sentText(sents[si]),{
+    onstart:()=>{
+      document.querySelectorAll(".sent.speaking").forEach(x=>x.classList.remove("speaking"));
+      const el=document.getElementById("sent-"+si);
+      if(el){el.classList.add("speaking");}
+    },
+    onend:()=>{
+      const el=document.getElementById("sent-"+si);
+      if(el)el.classList.remove("speaking");
+      if(chain&&readingAll&&currentTab==="read"&&curPassId===pid)speakSent(pid,si+1,true);
+    }
+  });
+  if(!u)stopSpeak();
+}
+function readAll(pid){
+  if(!ttsOn){showPopupHTML(`<div class="center"><div class="big">🔇</div><div class="def">朗读现在是关闭的。<br>点右上角的小喇叭打开，就能听我读啦！</div><div style="margin-top:14px;"><button class="btn ghost small" onclick="closePopup()">知道啦</button></div></div>`);return;}
+  stopSpeak();
+  readingAll=true;
+  speakSent(pid,0,true);
+}
 function openPass(id){
-  const p=PASSAGES.find(x=>x.id===id);passAnswered={};
+  const p=PASSAGES.find(x=>x.id===id);passAnswered={};curPassId=id;stopSpeak();
   let quiz=p.quiz.map((q,qi)=>{
     let opts=q.o.map((o,oi)=>`<button class="opt" id="pq${qi}o${oi}" onclick="passAnswer('${id}',${qi},${oi})">${o}</button>`).join("");
-    return `<div class="qbox"><div class="qq" style="font-size:17px;">${qi+1}. ${q.q}</div>${opts}<div id="pq${qi}model"></div></div>`;
+    return `<div class="qbox"><div class="qq" style="font-size:19px;">${qi+1}. ${q.q}</div>${opts}<div id="pq${qi}model"></div></div>`;
   }).join("");
   document.getElementById("view").innerHTML=`
   <div class="backrow"><button class="btn ghost small" onclick="go('read')">← 返回</button></div>
   <div class="card">
     <h2 style="font-size:22px;">${p.e} ${p.t}</h2>
-    <div class="switchrow"><button class="switch ${state.pinyinOn?"on":""}" id="pySwitch" onclick="togglePinyin('${id}')"></button><span style="font-size:14px;font-weight:700;color:#5b8ba1;">显示拼音</span></div>
+    <div class="switchrow">
+      <button class="switch ${state.pinyinOn?"on":""}" id="pySwitch" onclick="togglePinyin('${id}')"></button><span style="font-size:14px;font-weight:700;color:var(--ink-soft);">显示拼音</span>
+      <button class="btn small" onclick="readAll('${id}')">🔊 整篇朗读</button>
+      <button class="btn ghost small" onclick="stopSpeak()">⏹ 停</button>
+    </div>
     <div class="readtext" id="passText">${segHTML(p)}</div>
+    <div style="font-size:13px;color:var(--ink-soft);margin-top:8px;">💡 点任何一句话，可以单独听那一句哦。</div>
   </div>
   <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">读完了吗？我们来做几道小题目。别担心，每题我都会给你看<b>规范答案</b>！</div></div>
   ${quiz}<div id="passDoneBox"></div>`;
   window.scrollTo(0,0);
 }
 function togglePinyin(id){
-  state.pinyinOn=!state.pinyinOn;save();
+  state.pinyinOn=!state.pinyinOn;save();stopSpeak();
   document.getElementById("pySwitch").classList.toggle("on",state.pinyinOn);
   document.getElementById("passText").innerHTML=segHTML(PASSAGES.find(x=>x.id===id));
 }
@@ -398,37 +663,116 @@ function vocabTap(pid,w){
   const p=PASSAGES.find(x=>x.id===pid);
   const v=p.vocab.find(x=>x.w===w);
   if(!v)return;
-  showPopupHTML(`<div class="word">${v.w}</div><div class="py">${v.p}</div><div class="def">${v.d}</div>
+  sfxTap();stopSpeak();speak(v.w);
+  showPopupHTML(`<div class="word">${v.w} <button class="spkline" onclick="stopSpeak();speak('${v.w}。${v.d}')" title="听一听">🔊</button></div><div class="py">${v.p}</div><div class="def">${v.d}</div>
   <div style="margin-top:14px;"><button class="btn ghost small" onclick="closePopup()">知道啦</button></div>`);
+}
+function speakPassModel(pid,qi){
+  const p=PASSAGES.find(x=>x.id===pid);if(!p)return;
+  const q=p.quiz[qi];
+  stopSpeak();speak(q.model+"。"+q.why);
 }
 function passAnswer(id,qi,oi){
   if(passAnswered[qi]!==undefined)return;
   const p=PASSAGES.find(x=>x.id===id),q=p.quiz[qi];
+  const qid=id+"_q"+qi;
   passAnswered[qi]=oi;
   q.o.forEach((_,j)=>{
     const b=document.getElementById("pq"+qi+"o"+j);b.disabled=true;
     if(j===q.a)b.classList.add("correct");else if(j===oi)b.classList.add("wrong");
   });
   const right=oi===q.a;
-  if(right){state.combo++;state.totalCorrect++;if(state.combo>state.bestCombo)state.bestCombo=state.combo;addXP(5);miniConfetti();}
-  else{state.combo=0;addXP(1);}
+  if(right){state.combo++;state.totalCorrect++;if(state.combo>state.bestCombo)state.bestCombo=state.combo;addXP(5);miniConfetti();sfxCorrect();speakCheer();markFixedIfExists(qid);}
+  else{state.combo=0;addXP(1);sfxWrong();recordMistake(qid,"阅读·"+p.t,"阅读理解",q.q,q.o,oi,q.a,q.model,q.why);}
   state.totalAnswered++;
-  document.getElementById("pq"+qi+"model").innerHTML=`<div class="model">${right?"🌟 <b>答对啦！</b>":"💙 <b>没关系，看看规范答案：</b>"}<br><b>规范答案：</b>${q.model}<br><b>为什么：</b>${q.why}</div>`;
+  document.getElementById("pq"+qi+"model").innerHTML=`<div class="model">${right?"🌟 <b>答对啦！</b>":"💙 <b>没关系，看看规范答案：</b>"}<br><b>规范答案：</b>${q.model} <button class="spkline" onclick="speakPassModel('${id}',${qi})" title="听规范答案">🔊</button><br><b>为什么：</b>${q.why}</div>`;
+  bumpDaily();
   save();updateHeader();
   if(Object.keys(passAnswered).length===p.quiz.length){
     const first=!state.passDone[id];
     state.passDone[id]=true;
     if(first)addXP(10);
     save();
-    fireworks();
+    fireworks();sfxReward();
     document.getElementById("passDoneBox").innerHTML=`
     <div class="card center"><div class="big">🎆</div><h2>短文读完啦！</h2>
-    <div style="font-size:15px;color:#6fa3ba;">${first?"+10 颗星星奖励！":"温故知新，真棒！"}</div>
+    <div style="font-size:15px;color:var(--ink-soft);">${first?"+10 颗星星奖励！":"温故知新，真棒！"}</div>
     <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;">
     <button class="btn" onclick="go('read')">🪸 读下一篇</button>
     <button class="btn ghost" onclick="go('home')">🏝️ 回珊瑚湾</button></div></div>`;
     checkBadges();
   }
+}
+/* ============ 错题贝壳 ============ */
+function renderMistakes(){
+  const ids=Object.keys(state.mistakes).sort((a,b)=>{
+    const ma=state.mistakes[a],mb=state.mistakes[b];
+    if(ma.fixed!==mb.fixed)return ma.fixed?1:-1;
+    return (mb.t||0)-(ma.t||0);
+  });
+  const n=unfixedCount();
+  if(!ids.length){
+    document.getElementById("view").innerHTML=`
+    <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">这里是<b>错题贝壳</b>。答错的题会变成小贝壳收在这里，重做答对就算「修补」好啦！</div></div>
+    <div class="card center"><div class="big">🐚✨</div><h2>还没有错题贝壳</h2>
+    <div style="color:var(--ink-soft);font-size:15px;margin:8px 0 14px;">你太厉害啦！去做题吧，答错了我会帮你收好。</div>
+    <button class="btn" onclick="go('word')">🏖️ 去字词沙滩</button></div>`;
+    return;
+  }
+  let h=`<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">${n?("有 <b>"+n+"</b> 个贝壳等你修补。先看看<b>规范答案</b>，再点「重做修补」试一试！"):"哇，所有贝壳都修补好啦！你真棒！🌟"}</div></div>`;
+  ids.forEach(k=>{
+    const m=state.mistakes[k];
+    h+=`<div class="mistcard ${m.fixed?"fixed":""}">
+    <div style="margin-bottom:6px;"><span class="tag blue">${m.src}</span><span class="tag">${m.tp}</span>
+    <span class="chip ${m.fixed?"ok":"todo"}" style="float:right;">${m.fixed?"✅ 已修补":"🔧 待修补"}</span></div>
+    <div style="font-weight:800;font-size:18px;line-height:1.8;margin-bottom:8px;">${m.q}</div>
+    <div style="font-size:15px;line-height:1.9;">
+      你选的：<span class="myans">${m.o[m.my]}</span><br>
+      规范答案：<span class="rightans">${m.o[m.a]}</span><br>
+      <b style="color:var(--deep);">范例：</b>${m.model} <button class="spkline" onclick="speakMist('${m.id}')" title="听范例">🔊</button><br>
+      <b style="color:var(--deep);">讲解：</b>${m.why}
+    </div>
+    ${m.fixed?"":`<div style="margin-top:10px;"><button class="btn coral small" onclick="renderFixQ('${m.id}')">🔧 重做修补</button></div>`}
+    </div>`;
+  });
+  document.getElementById("view").innerHTML=h;
+}
+function speakMist(qid){
+  const m=state.mistakes[qid];if(!m)return;
+  stopSpeak();speak(m.model+"。"+m.why);
+}
+function renderFixQ(qid){
+  const m=state.mistakes[qid];if(!m)return;
+  let opts=m.o.map((o,i)=>`<button class="opt" id="fopt${i}" onclick="answerFix('${qid}',${i})">${["A","B","C","D"][i]||""} ${o}</button>`).join("");
+  document.getElementById("view").innerHTML=`
+  <div class="backrow"><button class="btn ghost small" onclick="go('mist')">← 返回错题贝壳</button></div>
+  <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">刚才你已经看过规范答案了，这次一定行！🐚</div></div>
+  <div class="qbox"><span class="tag blue">${m.src}</span><span class="tag">${m.tp}</span>
+  <div class="qq">${m.q}</div>${opts}<div id="fixModel"></div></div>
+  <div id="fixNext"></div>`;
+  window.scrollTo(0,0);
+}
+function answerFix(qid,i){
+  const m=state.mistakes[qid];if(!m)return;
+  const box=document.getElementById("fixModel");
+  if(!box||box.dataset.done)return;
+  box.dataset.done="1";
+  m.o.forEach((_,j)=>{
+    const b=document.getElementById("fopt"+j);b.disabled=true;
+    if(j===m.a)b.classList.add("correct");else if(j===i)b.classList.add("wrong");
+  });
+  const right=i===m.a;
+  if(right){
+    m.fixed=true;addXP(3);miniConfetti();sfxReward();speakCheer();
+    box.innerHTML=`<div class="model">🐚✨ <b>贝壳修补好啦！+3 ⭐</b><br><b>规范答案：</b>${m.model}<br><b>讲解：</b>${m.why}</div>`;
+  }else{
+    sfxWrong();
+    box.innerHTML=`<div class="model">💙 <b>再看一遍规范答案，下次一定行：</b><br><b>规范答案：</b>${m.model} <button class="spkline" onclick="speakMist('${qid}')">🔊</button><br><b>讲解：</b>${m.why}</div>`;
+  }
+  bumpDaily();
+  save();updateHeader();updateMistBadge();
+  document.getElementById("fixNext").innerHTML=`<div class="center"><button class="btn" onclick="go('mist')">回错题贝壳 🐚</button></div>`;
+  if(right)checkBadges();
 }
 /* ============ 弹窗 ============ */
 function showPopupHTML(h){document.getElementById("popupBox").innerHTML=h;document.getElementById("popupBg").classList.add("show");}
@@ -439,7 +783,7 @@ const fxCtx=fxCanvas.getContext("2d");
 let parts=[],fxRunning=false;
 function fxResize(){fxCanvas.width=innerWidth;fxCanvas.height=innerHeight;}
 addEventListener("resize",fxResize);fxResize();
-const FX_COLORS=["#4ab8d8","#ff8a7a","#ffd66b","#8fd7b8","#a5e0ef","#f7a8d8"];
+const FX_COLORS=["#0abab5","#81d8d0","#ff8a7a","#ffd66b","#8fd7b8","#f7a8d8"];
 function spawnConfetti(n,x,y,spread){
   for(let i=0;i<n;i++){
     parts.push({x:x??Math.random()*fxCanvas.width,y:y??-10,
@@ -481,6 +825,9 @@ function runFX(){
 }
 /* ============ 启动 ============ */
 updateHeader();
+renderRing();
+renderTTSBtn();
+updateMistBadge();
 go("home");
 </script>
 </body>
