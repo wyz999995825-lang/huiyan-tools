@@ -1,650 +1,349 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Johnson 提升工具合集</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#087f5b">
+<title>Johnson's Ocean Learning Quest</title>
 <style>
 :root{
-  --bg:#faf5ec;--card:#fff8f0;--border:#e0d5c5;--text:#2c2418;--text2:#7a6e5e;
-  --accent:#1a7a6d;--accent-bg:#e8f5f0;--green:#1a8a5c;--green-bg:#e5f5ec;
-  --blue:#2563eb;--blue-bg:#dbeafe;--orange:#d4790e;--orange-bg:#fdf0dc;
-  --purple:#7c3aed;--purple-bg:#ede9fe;--red:#c0392b;--red-bg:#fce8e6;
-  --gold:#d4a017;--gold-bg:#fdf6e3;
-  --radius:14px;--shadow:0 2px 10px rgba(0,0,0,.06)
+  --sky:#eef9ff;--lagoon:#d9f3ff;--water:#92dcf6;--royal:#1557c0;--royal-dark:#0b3f91;
+  --green:#087f5b;--green-dark:#056349;--mint:#dff8ee;--coral:#ff7b6b;--sun:#ffd45c;
+  --ink:#12304a;--muted:#547088;--line:#b8ddec;--white:#fff;--soft:#f7fcff;
+  --good:#087f5b;--good-bg:#e2f7ee;--try:#b65b26;--try-bg:#fff3df;
+  --shadow:0 6px 18px rgba(20,87,150,.12);--radius:8px;
 }
-@media(prefers-color-scheme:dark){:root{
-  --bg:#1c1a16;--card:#262420;--border:#3e3a32;--text:#e8e2d8;--text2:#a09888;
-  --accent:#3dbfa8;--accent-bg:#1a2e2a;--green-bg:#1a2e22;--blue-bg:#1a2a4a;
-  --orange-bg:#2e2618;--purple-bg:#2a1e3e;--red-bg:#2e1a1a;--gold-bg:#2e2a18
-}}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden}
-
-.topbar{background:linear-gradient(135deg,#1a7a6d 0%,#0d4f46 100%);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0}
-.topbar h1{font-size:20px;font-weight:700}
-.topbar .info{font-size:13px;opacity:.7}
-.topbar .back-btn{background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;display:none}
-.topbar .back-btn:hover{background:rgba(255,255,255,.25)}
-
-/* ===== 全局激励栏 ===== */
-.motiv-bar{background:linear-gradient(90deg,var(--gold-bg) 0%,var(--green-bg) 100%);border-bottom:1.5px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:16px;flex-shrink:0;flex-wrap:wrap;min-height:52px;cursor:pointer;transition:.15s}
-.motiv-bar:hover{filter:brightness(0.97)}
-.mb-streak{display:flex;align-items:center;gap:6px;font-weight:800;font-size:18px;color:var(--gold)}
-.mb-streak .fire{font-size:22px}
-.mb-stat{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--text2);background:var(--card);padding:4px 10px;border-radius:12px;border:1px solid var(--border)}
-.mb-stat .n{font-weight:700;color:var(--accent);font-size:15px}
-.mb-badges{display:flex;gap:2px;font-size:18px}
-.mb-badges .locked{opacity:.2}
-.mb-msg{flex:1;text-align:right;font-size:13px;color:var(--text2);font-style:italic;min-width:120px}
-.mb-add{background:var(--green);color:#fff;border:none;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
-.mb-add:hover{opacity:.9}
-
-/* 快速记录弹窗 */
-.quick-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1000;justify-content:center;align-items:center}
-.quick-modal-overlay.show{display:flex}
-.quick-modal{background:var(--card);border:2px solid var(--accent);border-radius:18px;padding:28px;width:90%;max-width:440px;box-shadow:0 10px 40px rgba(0,0,0,.15);animation:popIn .25s ease}
-@keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
-.qm-title{font-size:20px;font-weight:700;margin-bottom:16px;text-align:center}
-.qm-cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.qm-cat{padding:6px 12px;border-radius:16px;border:1.5px solid var(--border);background:var(--bg);cursor:pointer;font-size:13px;transition:.15s}
-.qm-cat.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.qm-cat:hover{border-color:var(--accent)}
-.qm-quicks{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
-.qm-q{padding:5px 10px;border-radius:12px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:12px}
-.qm-q:hover{background:var(--accent-bg);border-color:var(--accent)}
-.qm-input{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;background:var(--bg);color:var(--text);margin-bottom:12px}
-.qm-input:focus{outline:none;border-color:var(--accent)}
-.qm-btns{display:flex;gap:10px}
-.qm-submit{flex:1;padding:12px;border:none;border-radius:10px;background:var(--green);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
-.qm-submit:hover{opacity:.9}
-.qm-cancel{padding:12px 20px;border:1.5px solid var(--border);border-radius:10px;background:var(--card);color:var(--text2);font-size:15px;cursor:pointer}
-.qm-cancel:hover{background:var(--bg)}
-
-/* 庆祝动画 */
-.confetti{position:fixed;pointer-events:none;z-index:2000;border-radius:50%;transition:all .8s cubic-bezier(.25,.46,.45,.94)}
-.badge-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--card);border:3px solid var(--gold);border-radius:20px;padding:30px 40px;text-align:center;z-index:2001;box-shadow:0 10px 50px rgba(0,0,0,.25);animation:badgePop .5s ease forwards}
-@keyframes badgePop{from{transform:translate(-50%,-50%) scale(0);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
-.badge-popup .bp-icon{font-size:64px}
-.badge-popup .bp-title{font-size:20px;font-weight:800;color:var(--gold);margin-top:8px}
-.badge-popup .bp-desc{font-size:14px;color:var(--text2);margin-top:4px}
-
-.main{display:flex;flex:1;overflow:hidden}
-
-.sidebar{width:240px;background:var(--card);border-right:1.5px solid var(--border);overflow-y:auto;flex-shrink:0;padding:12px 0}
-.sidebar .sec{padding:6px 16px;font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-top:8px}
-.sidebar .item{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;transition:.15s;border-left:3px solid transparent;font-size:14px;line-height:1.3}
-.sidebar .item:hover{background:var(--accent-bg)}
-.sidebar .item.active{background:var(--accent-bg);border-left-color:var(--accent);font-weight:600}
-.sidebar .item .emoji{font-size:20px;flex-shrink:0}
-.sidebar .item .label{flex:1}
-.sidebar .item .tag{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;flex-shrink:0}
-.tag-new{background:var(--green-bg);color:var(--green)}
-.tag-hot{background:var(--red-bg);color:var(--red)}
-
-.content{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.tool-frame{flex:1;border:none;background:#fff}
-
-.home{flex:1;overflow-y:auto;padding:30px}
-.home h2{font-size:22px;margin-bottom:6px}
-.home .sub{color:var(--text2);font-size:14px;margin-bottom:24px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:28px}
-.card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer;transition:.2s;box-shadow:var(--shadow)}
-.card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.1);border-color:var(--accent)}
-.card .c-icon{font-size:28px;margin-bottom:8px}
-.card .c-title{font-size:15px;font-weight:700;margin-bottom:4px}
-.card .c-desc{font-size:13px;color:var(--text2);line-height:1.5}
-.sec-title{font-size:16px;font-weight:700;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-
-/* 首页激励仪表盘 */
-.dash{background:linear-gradient(135deg,var(--gold-bg) 0%,var(--accent-bg) 100%);border:2px solid var(--gold);border-radius:var(--radius);padding:24px;margin-bottom:28px;position:relative;overflow:hidden}
-.dash::after{content:'';position:absolute;top:-20px;right:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(212,160,23,.12) 0%,transparent 70%);border-radius:50%}
-.dash-top{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:16px}
-.dash-streak{text-align:center}
-.dash-streak .ds-icon{font-size:40px}
-.dash-streak .ds-num{font-size:44px;font-weight:900;color:var(--gold);line-height:1}
-.dash-streak .ds-label{font-size:12px;color:var(--text2)}
-.dash-stats{display:flex;gap:16px;flex:1;flex-wrap:wrap}
-.dash-stat{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;text-align:center;min-width:80px;flex:1}
-.dash-stat .ds-n{font-size:22px;font-weight:800;color:var(--accent)}
-.dash-stat .ds-l{font-size:11px;color:var(--text2)}
-.dash-week{display:flex;gap:6px;justify-content:center}
-.dash-dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text2);background:var(--card)}
-.dash-dot.done{background:var(--green);border-color:var(--green);color:#fff;font-size:14px}
-.dash-dot.today{border-color:var(--gold);border-width:3px}
-.dash-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
-.dash-badge{font-size:24px;transition:.2s}
-.dash-badge.locked{opacity:.15;filter:grayscale(1)}
-.dash-badge.earned{animation:badgeBounce 1s ease infinite}
-@keyframes badgeBounce{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-.dash-encourage{text-align:center;font-size:15px;color:var(--text);margin-top:14px;padding:10px;background:var(--card);border-radius:10px;border:1px solid var(--border)}
-.dash-recent{margin-top:16px}
-.dash-recent h4{font-size:13px;color:var(--text2);margin-bottom:8px}
-.recent-list{display:flex;flex-direction:column;gap:6px}
-.recent-item{display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 10px;background:var(--card);border-radius:8px;border:1px solid var(--border)}
-.recent-item .ri-icon{font-size:16px}
-.recent-item .ri-text{flex:1;font-weight:600}
-.recent-item .ri-date{font-size:11px;color:var(--text2)}
-
-@media(max-width:700px){
-  .sidebar{display:none}
-  .topbar .back-btn{display:inline-block}
-  .dash-top{flex-direction:column;align-items:stretch}
-}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--sky);color:var(--ink);min-height:100vh;overflow:hidden}
+button,input,select{font:inherit}
+button{-webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.topbar{height:72px;background:var(--green);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:4px solid #0aa779;position:relative;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;background:transparent;border:0;color:#fff;cursor:pointer;text-align:left;min-width:260px}
+.brand-mark{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--royal);font-size:28px;box-shadow:inset 0 -4px 0 #bfe9fa;animation:float 3.2s ease-in-out infinite}
+.brand strong{display:block;font-size:19px;line-height:1.15}.brand small{display:block;opacity:.82;font-size:12px;margin-top:3px}
+.top-stats{margin-left:auto;display:flex;gap:8px;align-items:center}
+.stat-pill{height:42px;min-width:82px;padding:0 12px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:800}
+.icon-btn{width:42px;height:42px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);color:#fff;border-radius:8px;cursor:pointer;font-size:20px;display:grid;place-items:center}
+.icon-btn:active,.sea-nav:active,.primary:active,.option:active,.tool-card:active{transform:translateY(2px) scale(.98)}
+.app-shell{height:calc(100vh - 72px);height:calc(100dvh - 72px);display:grid;grid-template-columns:minmax(0,1fr) 316px;overflow:hidden}
+.workspace{overflow-y:auto;padding:24px clamp(18px,3vw,38px) 48px;background-color:var(--sky);background-image:radial-gradient(circle at 14px 14px,rgba(21,87,192,.055) 2px,transparent 2px);background-size:28px 28px;scroll-behavior:smooth}
+.screen{max-width:1020px;margin:0 auto;animation:fadeUp .28s ease}
+.control-rail{background:#fff;border-left:2px solid var(--line);overflow-y:auto;padding:16px;position:relative}
+.mentor{display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.neptune{width:70px;height:70px;border:0;border-radius:50%;background:var(--lagoon);font-size:42px;cursor:pointer;box-shadow:inset 0 -5px 0 #9ed8ed;position:relative}
+.neptune::after{content:'✦';position:absolute;right:3px;top:2px;color:var(--sun);font-size:20px;animation:twinkle 1.4s infinite}
+.mentor h2{font-size:16px;color:var(--royal-dark)}.mentor p{font-size:13px;line-height:1.45;color:var(--muted);margin-top:3px}
+.rail-heading{font-size:12px;text-transform:uppercase;color:var(--muted);font-weight:900;margin:16px 0 8px}
+.sea-nav-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sea-nav{min-height:66px;border:2px solid var(--line);border-radius:8px;background:var(--soft);color:var(--ink);cursor:pointer;display:flex;align-items:center;padding:8px;gap:7px;text-align:left;font-weight:800;transition:.18s}
+.sea-nav .animal{font-size:28px;display:block;transition:.18s}.sea-nav span:last-child{font-size:12px;line-height:1.2}
+.sea-nav:hover .animal,.sea-nav.active .animal{transform:translateY(-3px) rotate(-5deg)}
+.sea-nav:hover{border-color:var(--royal);background:var(--lagoon)}
+.sea-nav.active{background:var(--royal);color:#fff;border-color:var(--royal-dark);box-shadow:inset 0 -4px 0 var(--royal-dark)}
+.topic-list{display:flex;flex-direction:column;gap:6px}
+.topic-btn{width:100%;min-height:44px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);text-align:left;padding:8px 10px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:750}
+.topic-btn:hover,.topic-btn.active{background:var(--mint);border-color:#54b894;color:var(--green-dark)}
+.topic-btn .topic-dot{width:9px;height:9px;border-radius:50%;background:var(--water);flex:0 0 auto}.topic-btn.active .topic-dot{background:var(--green)}
+.mission{margin-top:16px;background:var(--mint);border:2px solid #8ed9bd;border-radius:8px;padding:12px}
+.mission-top{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:900;color:var(--green-dark)}
+.progress-track{height:12px;background:#fff;border:1px solid #8ed9bd;border-radius:8px;overflow:hidden;margin:9px 0}.progress-fill{height:100%;background:var(--green);width:0;transition:width .45s ease}
+.reward-btn{width:100%;min-height:44px;border:0;border-radius:8px;background:var(--sun);color:#654a00;padding:9px;font-weight:900;cursor:pointer;box-shadow:inset 0 -3px 0 #e5ae20}.reward-btn:disabled{opacity:.55;cursor:default;box-shadow:none}
+.rail-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
+.rail-action{min-height:42px;border:1px solid var(--line);background:var(--soft);color:var(--royal-dark);border-radius:8px;padding:8px 6px;font-size:12px;font-weight:800;cursor:pointer}
+.welcome{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:24px;align-items:center;background:#fff;border:2px solid var(--line);border-radius:8px;padding:26px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.welcome::after{content:'';position:absolute;left:0;right:0;bottom:0;height:8px;background:linear-gradient(90deg,var(--royal) 0 30%,var(--green) 30% 65%,var(--coral) 65% 82%,var(--sun) 82%)}
+.eyebrow{color:var(--green);font-weight:900;font-size:13px;text-transform:uppercase;margin-bottom:6px}
+h1{font-size:32px;line-height:1.15;color:var(--royal-dark);letter-spacing:0}
+.lead{font-size:16px;color:var(--muted);line-height:1.6;margin:10px 0 16px;max-width:680px}
+.crew-scene{height:168px;background:var(--lagoon);border:2px solid #82cfec;border-radius:8px;position:relative;overflow:hidden;display:grid;place-items:center}
+.crew-scene::before{content:'☀️';position:absolute;top:10px;right:14px;font-size:30px}.crew-scene::after{content:'〰 〰 〰';position:absolute;bottom:5px;left:0;right:0;text-align:center;color:var(--royal);font-size:28px}
+.crew-main{font-size:70px;filter:drop-shadow(0 6px 4px rgba(11,63,145,.18));animation:float 3s ease-in-out infinite}.crew-mini{position:absolute;font-size:32px}.crew-mini.one{left:14px;bottom:24px}.crew-mini.two{right:18px;bottom:30px}.crew-mini.three{left:24px;top:15px;font-size:25px}
+.primary{min-height:44px;border:0;border-radius:8px;background:var(--royal);color:#fff;padding:11px 16px;font-weight:900;cursor:pointer;box-shadow:inset 0 -4px 0 var(--royal-dark);transition:.12s}.primary.green{background:var(--green);box-shadow:inset 0 -4px 0 var(--green-dark)}
+.secondary{min-height:44px;border:2px solid var(--line);border-radius:8px;background:#fff;color:var(--royal-dark);padding:9px 14px;font-weight:850;cursor:pointer}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:28px 0 12px}.section-head h2{font-size:21px;color:var(--royal-dark)}.section-head p{font-size:13px;color:var(--muted)}
+.route-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.route-card{min-height:176px;border:2px solid var(--line);border-radius:8px;background:#fff;padding:16px 16px 40px;text-align:left;cursor:pointer;position:relative;overflow:hidden;transition:.18s;color:var(--ink)}
+.route-card:hover{transform:translateY(-3px);border-color:var(--royal);box-shadow:var(--shadow)}
+.route-card .big-icon{font-size:38px;display:block;margin-bottom:12px}.route-card h3{font-size:16px;color:var(--royal-dark)}.route-card p{font-size:13px;color:var(--muted);line-height:1.45;margin-top:5px}.route-card .go{position:absolute;right:11px;bottom:10px;color:var(--royal);font-weight:900}
+.route-card.math{border-top:6px solid var(--royal)}.route-card.science{border-top:6px solid var(--green)}.route-card.english{border-top:6px solid var(--coral)}.route-card.chinese{border-top:6px solid var(--sun)}
+.ocean-strip{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.animal-chip{min-width:82px;height:50px;border:2px solid var(--line);background:#fff;border-radius:8px;cursor:pointer;font-size:24px;transition:.16s}.animal-chip:hover{transform:translateY(-4px) rotate(-2deg);background:var(--lagoon);border-color:var(--royal)}
+.page-title{display:flex;gap:14px;align-items:center;margin-bottom:20px}.page-icon{width:62px;height:62px;border-radius:8px;background:var(--lagoon);display:grid;place-items:center;font-size:38px;border:2px solid var(--line)}.page-title h1{font-size:28px}.page-title p{font-size:14px;color:var(--muted);margin-top:4px}
+.topic-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}.chip-btn{min-height:44px;border:2px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:8px 11px;font-size:13px;font-weight:850;cursor:pointer}.chip-btn.active{background:var(--royal);color:#fff;border-color:var(--royal-dark)}
+.question-card{background:#fff;border:2px solid var(--line);border-radius:8px;padding:22px;box-shadow:var(--shadow)}
+.question-kicker{display:flex;justify-content:space-between;gap:8px;color:var(--green);font-size:12px;font-weight:900;text-transform:uppercase;margin-bottom:9px}.question{font-size:20px;line-height:1.55;font-weight:800;color:var(--ink)}
+.visual-stage{margin:18px 0;background:var(--soft);border:2px dashed #86cbe6;border-radius:8px;min-height:125px;padding:16px;display:grid;place-items:center;overflow:hidden}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.option{min-height:54px;border:2px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:10px 12px;text-align:left;cursor:pointer;font-weight:750;line-height:1.4;transition:.15s}.option:hover{border-color:var(--royal);background:var(--lagoon)}.option.correct{background:var(--good-bg);border-color:var(--good);color:var(--green-dark)}.option.wrong{background:var(--try-bg);border-color:#e7a569;color:#8b441b}.option:disabled{cursor:default}
+.feedback{margin-top:16px;border-radius:8px;padding:16px;border:2px solid;animation:pop .28s ease}.feedback.good{background:var(--good-bg);border-color:#63c5a0}.feedback.try{background:var(--try-bg);border-color:#e7a569}.feedback h3{font-size:17px;margin-bottom:7px}.feedback p{line-height:1.6;font-size:14px}.model-answer{margin-top:10px;padding-top:10px;border-top:1px solid currentColor}.model-answer strong{display:block;margin-bottom:4px}mark{background:#fff1a7;color:#443400;border-radius:3px;padding:1px 3px}
+.explain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.explain-step{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;font-size:13px;line-height:1.45}.step-no{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--royal);color:#fff;font-weight:900;margin-bottom:6px}
+.bar-model{width:min(560px,100%)}.bar-row{display:flex;height:46px;border:3px solid var(--royal-dark);border-radius:8px;overflow:hidden;margin:7px 0}.bar-part{display:grid;place-items:center;background:var(--water);border-right:2px solid #fff;color:var(--royal-dark);font-weight:900;flex:1}.bar-part:last-child{border-right:0}.bar-part.hot{background:var(--sun)}.bar-part.unknown{background:#fff;border:2px dashed var(--coral);color:var(--coral)}
+.angle-model{width:210px;height:160px;position:relative}.ray{position:absolute;width:96px;height:6px;background:var(--royal);left:50%;top:63%;transform-origin:left center;border-radius:4px}.ray.a{transform:rotate(0)}.ray.b{transform:rotate(205deg)}.ray.c{transform:rotate(110deg)}.angle-dot{position:absolute;width:18px;height:18px;background:var(--coral);border-radius:50%;left:calc(50% - 7px);top:calc(63% - 6px)}.angle-label{position:absolute;font-size:18px;color:var(--royal-dark);font-weight:900}.angle-label.x{left:91px;top:22px;font-size:23px}.angle-label.one{left:111px;top:116px}.angle-label.two{left:30px;top:83px}
+.percent-grid{display:grid;grid-template-columns:repeat(10,17px);gap:2px}.percent-cell{width:17px;height:17px;background:#fff;border:1px solid var(--line)}.percent-cell.on{background:var(--green)}
+.ratio-model{display:flex;gap:28px;align-items:center}.dot-group{display:grid;grid-template-columns:repeat(5,26px);gap:6px;text-align:center}.ratio-dot{width:26px;height:26px;border-radius:50%;background:var(--royal)}.ratio-dot.girl{background:var(--coral)}
+.track-model{width:min(580px,100%);position:relative;padding:12px}.track-line{height:16px;background:var(--water);border:3px solid var(--royal);border-radius:8px;position:relative}.track-line::before{content:'🏁';position:absolute;right:-8px;top:-34px;font-size:30px}.track-car{font-size:35px;position:absolute;left:4%;top:-22px;animation:drive 3s ease-in-out infinite}.track-stats{display:flex;justify-content:space-between;margin-top:12px;font-weight:900;color:var(--royal-dark)}
+.balance{width:250px;height:145px;position:relative}.beam{position:absolute;width:210px;height:8px;background:var(--royal-dark);left:20px;top:48px;border-radius:8px}.stand{position:absolute;width:8px;height:82px;background:var(--green);left:121px;top:48px}.base{position:absolute;width:100px;height:10px;background:var(--green);left:75px;bottom:4px;border-radius:8px}.pan{position:absolute;top:60px;width:82px;height:48px;border-bottom:5px solid var(--coral);border-radius:0 0 42px 42px;text-align:center;padding-top:16px;font-weight:900}.pan.left{left:8px}.pan.right{right:8px}
+.vocab-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.vocab-card{height:132px;border:2px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;padding:14px;text-align:left;position:relative;overflow:hidden}.vocab-card strong{font-size:18px;color:var(--royal-dark)}.vocab-card .meaning{display:none;font-size:13px;line-height:1.5;margin-top:8px;color:var(--muted)}.vocab-card.flipped{background:var(--mint);border-color:#65c29f}.vocab-card.flipped .meaning{display:block}.vocab-card .tap{position:absolute;right:8px;bottom:6px;font-size:11px;color:var(--muted)}
+.cycle{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}.cycle-node{width:74px;height:74px;border-radius:50%;background:#fff;border:3px solid var(--green);display:grid;place-items:center;text-align:center;font-size:12px;font-weight:900}.cycle-arrow{font-size:24px;color:var(--royal)}
+.magnet-stage{display:flex;align-items:center;gap:25px;font-size:45px}.force-lines{color:var(--royal);letter-spacing:5px;animation:pulse 1.4s infinite}
+.reading-layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:16px;align-items:start}.article{background:#fff;border:2px solid var(--line);border-radius:8px;padding:22px;box-shadow:var(--shadow)}.article h2{font-size:24px;color:var(--royal-dark);margin-bottom:4px}.article-meta{font-size:12px;color:var(--muted);margin-bottom:16px}.article p{font-size:17px;line-height:1.9;margin:12px 0}.vocab{border:0;border-bottom:3px solid var(--sun);background:#fffbe7;color:var(--royal-dark);font-weight:800;cursor:pointer;padding:0 2px}.dictionary{background:var(--mint);border:2px solid #8ed9bd;border-radius:8px;padding:14px;position:sticky;top:0}.dictionary h3{font-size:15px;color:var(--green-dark)}.dictionary input{width:100%;border:2px solid #8ed9bd;border-radius:8px;padding:9px;margin:9px 0;background:#fff}.word-result{min-height:90px;font-size:13px;line-height:1.55;color:var(--muted)}.word-result strong{display:block;color:var(--royal-dark);font-size:18px}.syntax-key{display:flex;gap:6px;flex-wrap:wrap;font-size:11px;margin-top:10px}.syntax-key span{padding:3px 6px;border-radius:5px}.key-subject,.syntax-on .syntax-subject{background:#dce9ff}.key-verb,.syntax-on .syntax-verb{background:#dcf8e8}.key-detail,.syntax-on .syntax-detail{background:#fff0c3}.syntax-on .syntax-subject,.syntax-on .syntax-verb,.syntax-on .syntax-detail{padding:2px 3px;border-radius:4px}
+.story-lab{background:#fff;border:2px solid var(--line);border-radius:8px;padding:20px}.builder-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.builder-row label{font-size:12px;font-weight:900;color:var(--muted)}.builder-row select{width:100%;border:2px solid var(--line);border-radius:8px;padding:10px;background:#fff;color:var(--ink);margin-top:5px}.generated-story{margin-top:14px;background:var(--lagoon);border-left:6px solid var(--royal);padding:16px;line-height:1.8;min-height:100px}
+.cn{font-family:"PingFang SC","Microsoft YaHei",sans-serif}.oral-scene{height:230px;background:#dff6ff;border:2px solid #85cde8;border-radius:8px;position:relative;overflow:hidden;margin-bottom:16px}.oral-scene .place{position:absolute;left:0;right:0;bottom:0;height:70px;background:#bfe6aa;border-top:5px solid #8fc67b}.scene-item{position:absolute;font-size:50px}.scene-item.tree{left:8%;bottom:40px;font-size:74px}.scene-item.child{left:38%;bottom:42px}.scene-item.bin{right:14%;bottom:42px}.scene-item.litter{right:32%;bottom:32px;font-size:28px}.scene-item.sun{right:7%;top:12px;font-size:42px}.oral-tools{display:flex;gap:9px;flex-wrap:wrap}.oral-plan{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.plan-block{background:#fff;border:2px solid var(--line);border-radius:8px;padding:12px;min-height:104px}.plan-block strong{color:var(--royal-dark);display:block;margin-bottom:5px}.model-cn{display:none;margin-top:14px;background:var(--mint);border:2px solid #8ed9bd;border-radius:8px;padding:15px;line-height:1.8}.model-cn.show{display:block}.audio-playback{width:100%;margin-top:10px}
+.library-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.tool-card{min-height:120px;border:2px solid var(--line);border-radius:8px;background:#fff;padding:14px;text-align:left;cursor:pointer;color:var(--ink);transition:.16s}.tool-card:hover{border-color:var(--green);transform:translateY(-2px)}.tool-card .tool-icon{font-size:28px}.tool-card h3{font-size:14px;color:var(--royal-dark);margin:7px 0 4px}.tool-card p{font-size:12px;line-height:1.4;color:var(--muted)}
+.tool-overlay{position:fixed;inset:0;background:#fff;z-index:80;display:none;flex-direction:column}.tool-overlay.show{display:flex}.tool-head{height:60px;background:var(--green);color:#fff;display:flex;align-items:center;padding:8px 14px;gap:10px}.tool-head h2{font-size:17px}.tool-head button{border:1px solid rgba(255,255,255,.4);border-radius:8px;background:rgba(255,255,255,.16);color:#fff;padding:9px 12px;cursor:pointer;font-weight:800}.tool-frame{flex:1;border:0;width:100%;background:#fff}
+.toast{position:fixed;left:50%;top:84px;transform:translate(-50%,-18px);background:var(--royal-dark);color:#fff;border:2px solid #fff;border-radius:8px;padding:11px 16px;z-index:120;box-shadow:0 8px 26px rgba(0,0,0,.2);font-weight:850;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:110}
+.empty-note{padding:14px;border:2px dashed var(--line);border-radius:8px;color:var(--muted);text-align:center}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes twinkle{0%,100%{opacity:.3;transform:scale(.7)}50%{opacity:1;transform:scale(1.2)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.97);opacity:.2}100%{transform:scale(1);opacity:1}}
+@keyframes drive{0%,100%{left:4%}50%{left:72%}}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+@media(max-width:1080px){.route-grid{grid-template-columns:1fr 1fr}.library-grid{grid-template-columns:1fr 1fr}.reading-layout{grid-template-columns:1fr}.dictionary{position:static}.vocab-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){body{overflow:auto}.topbar{height:auto;min-height:68px}.brand{min-width:0}.brand small{display:none}.top-stats .stat-pill:nth-child(2){display:none}.app-shell{height:auto;min-height:calc(100dvh - 68px);grid-template-columns:1fr;overflow:visible}.control-rail{order:-1;border-left:0;border-bottom:2px solid var(--line);padding:10px 14px;overflow:visible}.mentor,.topic-list,.mission,.rail-actions,.rail-heading{display:none}.sea-nav-grid{grid-template-columns:repeat(6,1fr);gap:6px}.sea-nav{min-height:58px;justify-content:center;padding:5px;text-align:center}.sea-nav .animal{font-size:25px}.sea-nav span:last-child{display:none}.workspace{overflow:visible;padding:18px 14px 40px}.welcome{grid-template-columns:1fr}.crew-scene{height:130px}.options{grid-template-columns:1fr}.explain-grid{grid-template-columns:1fr}.builder-row,.oral-plan{grid-template-columns:1fr}.library-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.topbar{padding:8px}.brand-mark{width:42px;height:42px}.brand strong{font-size:15px}.top-stats{gap:4px}.stat-pill{min-width:62px;padding:0 6px;font-size:12px}.icon-btn{width:42px;height:42px}.sea-nav-grid{grid-template-columns:repeat(6,1fr)}.welcome{padding:18px}.welcome h1{font-size:26px}.route-grid,.library-grid,.vocab-grid{grid-template-columns:1fr}.page-title h1{font-size:23px}.question-card{padding:16px}.question{font-size:18px}.ratio-model{gap:10px;transform:scale(.82)}.ocean-strip{justify-content:center}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-
-<div class="topbar">
-  <button class="back-btn" onclick="goHome()">← 返回</button>
-  <h1 id="topTitle">Johnson 提升工具合集</h1>
-  <span class="info">P5 · 19 个学习工具</span>
-  <span style="margin-left:auto;display:flex;gap:6px">
-    <button onclick="backupProgress()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">💾 备份进度</button>
-    <button onclick="restoreProgress()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">📥 恢复</button>
-  </span>
-</div>
-
-<!-- 全局激励栏：每一页都可见 -->
-<div class="motiv-bar" id="motivBar" onclick="openQuickModal()">
-  <div class="mb-streak"><span class="fire" id="mbFire">💤</span><span id="mbStreak">0</span>天</div>
-  <div class="mb-stat"><span id="mbTotal" class="n">0</span> 个成就</div>
-  <div class="mb-badges" id="mbBadges"></div>
-  <div class="mb-msg" id="mbMsg"></div>
-  <button class="mb-add" onclick="event.stopPropagation();openQuickModal()">+ 记录小成功</button>
-</div>
-
-<!-- 快速记录弹窗 -->
-<div class="quick-modal-overlay" id="qmOverlay" onclick="if(event.target===this)closeModal()">
-  <div class="quick-modal">
-    <div class="qm-title">🎉 记录今天的小成功</div>
-    <div class="qm-cats" id="qmCats"></div>
-    <div class="qm-quicks" id="qmQuicks"></div>
-    <input class="qm-input" id="qmInput" placeholder="写下你的小成功..." onkeydown="if(event.key==='Enter')submitWin()" />
-    <div class="qm-btns">
-      <button class="qm-submit" onclick="submitWin()">记录 🌟</button>
-      <button class="qm-cancel" onclick="closeModal()">取消</button>
-    </div>
+<header class="topbar">
+  <button class="brand" onclick="openView('home')" aria-label="Go to home">
+    <span class="brand-mark">🔱</span>
+    <span><strong>Johnson's Ocean Quest</strong><small>Small wins. Strong thinking.</small></span>
+  </button>
+  <div class="top-stats" aria-label="Learning progress">
+    <div class="stat-pill" title="Learning streak">🔥 <span id="streakTop">0</span> days</div>
+    <div class="stat-pill" title="Experience points">🫧 <span id="xpTop">0</span> XP</div>
+    <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="Sound on" aria-label="Toggle sound">🔊</button>
   </div>
+</header>
+
+<div class="app-shell">
+  <main class="workspace" id="workspace"><div class="screen" id="screen"></div></main>
+  <aside class="control-rail" aria-label="Learning controls">
+    <div class="mentor">
+      <button class="neptune" onclick="sparkler(this)" title="Tap Neptune's sparkler" aria-label="Neptune's sparkler">🧜‍♂️</button>
+      <div><h2>Captain Neptune</h2><p id="mentorMsg">One brave try starts the voyage.</p></div>
+    </div>
+    <div class="rail-heading">Choose a reef</div>
+    <nav class="sea-nav-grid" id="mainNav">
+      <button class="sea-nav" data-view="home" onclick="openView('home')" aria-label="Today's Route"><span class="animal">🐋</span><span>Today's Route</span></button>
+      <button class="sea-nav" data-view="math" onclick="openView('math')" aria-label="Math Reef"><span class="animal">🐢</span><span>Math Reef</span></button>
+      <button class="sea-nav" data-view="science" onclick="openView('science')" aria-label="Science Cove"><span class="animal">🐬</span><span>Science Cove</span></button>
+      <button class="sea-nav" data-view="english" onclick="openView('english')" aria-label="Reading Bay"><span class="animal">🐙</span><span>Reading Bay</span></button>
+      <button class="sea-nav" data-view="chinese" onclick="openView('chinese')" aria-label="华文海湾"><span class="animal">🦀</span><span>华文海湾</span></button>
+      <button class="sea-nav" data-view="library" onclick="openView('library')" aria-label="Tool Library"><span class="animal">🦈</span><span>Tool Library</span></button>
+    </nav>
+    <div class="rail-heading" id="topicHeading">Today's choices</div>
+    <div class="topic-list" id="topicList"></div>
+    <div class="mission">
+      <div class="mission-top"><span>Daily Dive</span><span id="missionCount">0 / 3</span></div>
+      <div class="progress-track"><div class="progress-fill" id="missionFill"></div></div>
+      <button class="reward-btn" id="rewardBtn" onclick="claimReward()">Open today's pearl +15 XP</button>
+    </div>
+    <div class="rail-actions">
+      <button class="rail-action" onclick="backupProgress()">💾 Backup</button>
+      <button class="rail-action" onclick="restoreProgress()">📥 Restore</button>
+    </div>
+  </aside>
 </div>
 
-<div class="main">
-  <div class="sidebar" id="sidebar">
-    <div class="item active" onclick="goHome()">
-      <span class="emoji">🏠</span><span class="label">主页</span>
-    </div>
-
-    <div class="sec">📘 英语</div>
-    <div class="item" onclick="load('Johnson/tools/Johnson_OE_Comprehension_Training.html','OE 阅读理解 7 天训练',this)">
-      <span class="emoji">🎯</span><span class="label">OE 阅读理解训练</span><span class="tag tag-new">NEW</span>
-    </div>
-    <div class="item" onclick="load('Johnson/tools/johnson_english_hub.html','英语综合学习中心',this)">
-      <span class="emoji">📚</span><span class="label">英语学习中心</span>
-    </div>
-    <div class="item" onclick="load('Johnson/tools/grammar-trainer.html','语法训练器',this)">
-      <span class="emoji">✏️</span><span class="label">语法训练器</span>
-    </div>
-    <div class="item" onclick="load('Johnson/tools/vocab_trainer.html','词汇训练器',this)">
-      <span class="emoji">🔤</span><span class="label">词汇训练器</span>
-    </div>
-    <div class="item" onclick="load('Johnson/tools/rfpd-trainer.html','RFPD 训练器',this)">
-      <span class="emoji">📝</span><span class="label">RFPD 训练器</span>
-    </div>
-    <div class="item" onclick="load('Johnson/tools/PSLE_English_Practice.html','PSLE 英语综合练习',this)">
-      <span class="emoji">🎓</span><span class="label">PSLE 英语练习</span>
-    </div>
-    <div class="item" onclick="load('Johnson/tools/Johnson_PSLE英文作文练习.html','PSLE 英文作文练习',this)">
-      <span class="emoji">🖊️</span><span class="label">英文作文练习</span>
-    </div>
-    <div class="item" onclick="load('Johnson/tools/Johnson_WA2_错题挑战赛.html','WA2 错题挑战赛',this)">
-      <span class="emoji">⚔️</span><span class="label">WA2 错题挑战</span>
-    </div>
-    <div class="item" onclick="load('Johnson/tools/Johnson_WA3_SW_训练器.html','WA3 Situational Writing 训练',this)">
-      <span class="emoji">📝</span><span class="label">WA3 SW 训练器</span><span class="tag tag-new">NEW</span>
-    </div>
-    <div class="item" onclick="openExt('https://writewise-psle-sw-2026.mr-cabbage.chatgpt.site','WriterWise SW 作文训练',this)">
-      <span class="emoji">✍️</span><span class="label">SW 作文训练</span><span class="tag tag-new">NEW</span>
-    </div>
-
-    <div class="sec">📐 数学</div>
-    <div class="item" onclick="load('Johnson/tools/Johnson-P5数学专项训练.html','P5 数学专项训练',this)">
-      <span class="emoji">⚡</span><span class="label">P5 数学专项训练</span><span class="tag tag-new">NEW</span>
-    </div>
-    <div class="item" onclick="load('Johnson/tools/Johnson_P5_T3_Math_批改报告.html','P5 T3 数学批改报告',this)">
-      <span class="emoji">📊</span><span class="label">T3 数学 Paper 2</span>
-    </div>
-
-    <div class="sec">📕 华文</div>
-    <div class="item" onclick="load('Johnson/tools/Johnson_PSLE华文作文练习.html','PSLE 华文作文练习',this)">
-      <span class="emoji">🖌️</span><span class="label">华文作文练习</span>
-    </div>
-    <div class="item" onclick="load('Johnson/tools/Johnson驯龙少年高华阅读理解训练.html','驯龙少年阅读理解',this)">
-      <span class="emoji">🐉</span><span class="label">驯龙少年阅读</span>
-    </div>
-    <div class="item" onclick="load('Johnson/tools/Johnson驯龙少年口试训练.html','驯龙少年口试训练',this)">
-      <span class="emoji">🎤</span><span class="label">驯龙少年口试</span>
-    </div>
-    <div class="item" onclick="load('Johnson/tools/Johnson_高华阅读探险营.html','高华阅读探险营',this)">
-      <span class="emoji">🐾</span><span class="label">高华阅读探险营</span><span class="tag tag-new">NEW</span>
-    </div>
-
-    <div class="sec">📰 阅读</div>
-    <div class="item" onclick="load('Johnson/tools/InsightRead_慧眼家庭早报.html','慧眼家庭早报',this)">
-      <span class="emoji">📰</span><span class="label">慧眼家庭早报</span>
-    </div>
-
-    <div class="sec">🌟 激励</div>
-    <div class="item" onclick="load('Johnson/tools/Johnson小成功墙.html','小成功墙',this)">
-      <span class="emoji">🏆</span><span class="label">小成功墙</span><span class="tag tag-new">NEW</span>
-    </div>
-  </div>
-
-  <div class="content">
-    <div class="home" id="homeView">
-      <!-- 首页激励仪表盘 -->
-      <div class="dash" id="dashboard">
-        <div class="dash-top">
-          <div class="dash-streak">
-            <div class="ds-icon" id="dashIcon">💤</div>
-            <div class="ds-num" id="dashStreak">0</div>
-            <div class="ds-label">天连续学习</div>
-          </div>
-          <div class="dash-stats">
-            <div class="dash-stat"><div class="ds-n" id="dashTotal">0</div><div class="ds-l">总成就</div></div>
-            <div class="dash-stat"><div class="ds-n" id="dashWeek">0</div><div class="ds-l">本周</div></div>
-            <div class="dash-stat"><div class="ds-n" id="dashBest">0</div><div class="ds-l">最佳连击</div></div>
-          </div>
-        </div>
-        <div class="dash-week" id="dashWeekDots"></div>
-        <div class="dash-badges" id="dashBadges"></div>
-        <div class="dash-encourage" id="dashEncourage"></div>
-        <div class="dash-recent" id="dashRecent"></div>
-      </div>
-
-      <h2>👋 Johnson 的学习工具箱</h2>
-      <p class="sub">P5 · 共 18 个工具 · 点击左侧菜单或下方卡片打开</p>
-
-      <div class="sec-title"><span>🔥</span>重点突破</div>
-      <div class="grid">
-        <div class="card" onclick="loadByIndex(1)">
-          <div class="c-icon">🎯</div>
-          <div class="c-title">OE 阅读理解 7 天训练</div>
-          <div class="c-desc">基于 28 道错题定制，每天 1 篇长文 + 5 道题</div>
-        </div>
-        <div class="card" onclick="loadByIndex(8)">
-          <div class="c-icon">⚔️</div>
-          <div class="c-title">WA2 错题挑战赛</div>
-          <div class="c-desc">Weighted Assessment 错题回顾与挑战</div>
-        </div>
-        <div class="card" onclick="loadByName('wa3-sw')">
-          <div class="c-icon">📝</div>
-          <div class="c-title">WA3 SW 训练器</div>
-          <div class="c-desc">11/14 · 说服力+语法提升 · 6个课程+互动练习</div>
-        </div>
-        <div class="card" onclick="loadByIndex(14)">
-          <div class="c-icon">📊</div>
-          <div class="c-title">T3 数学 Paper 2 批改</div>
-          <div class="c-desc">10/20 · 年龄、容器、前后题联动需重点突破</div>
-        </div>
-        <div class="card" onclick="loadByIndex(14)">
-          <div class="c-icon">🏆</div>
-          <div class="c-title">小成功墙</div>
-          <div class="c-desc">记录每一个进步，用正向反馈激励学习！</div>
-        </div>
-      </div>
-
-      <div class="sec-title"><span>📐</span>数学工具</div>
-      <div class="grid">
-        <div class="card" onclick="loadByName('sa2-math')">
-          <div class="c-icon">⚡</div>
-          <div class="c-title">P5 数学专项训练</div>
-          <div class="c-desc">分段时间计算 + 对称偏差·钟 · 无限随机题</div>
-        </div>
-      </div>
-
-      <div class="sec-title"><span>📘</span>英语工具</div>
-      <div class="grid">
-        <div class="card" onclick="loadByIndex(2)">
-          <div class="c-icon">📚</div>
-          <div class="c-title">英语综合学习中心</div>
-          <div class="c-desc">阅读、语法、词汇一站式平台</div>
-        </div>
-        <div class="card" onclick="loadByIndex(3)">
-          <div class="c-icon">✏️</div>
-          <div class="c-title">语法训练器</div>
-          <div class="c-desc">tenses, articles, prepositions</div>
-        </div>
-        <div class="card" onclick="loadByIndex(4)">
-          <div class="c-icon">🔤</div>
-          <div class="c-title">词汇训练器</div>
-          <div class="c-desc">P5 核心词汇记忆与测试</div>
-        </div>
-        <div class="card" onclick="loadByIndex(5)">
-          <div class="c-icon">📝</div>
-          <div class="c-title">RFPD 训练器</div>
-          <div class="c-desc">Reading for Pleasure & Details</div>
-        </div>
-        <div class="card" onclick="loadByIndex(6)">
-          <div class="c-icon">🎓</div>
-          <div class="c-title">PSLE 英语综合练习</div>
-          <div class="c-desc">模拟 PSLE 试卷格式</div>
-        </div>
-        <div class="card" onclick="loadByIndex(7)">
-          <div class="c-icon">🖊️</div>
-          <div class="c-title">英文作文练习</div>
-          <div class="c-desc">Situational & Continuous Writing</div>
-        </div>
-        <div class="card" onclick="openExt('https://writewise-psle-sw-2026.mr-cabbage.chatgpt.site','WriterWise SW 作文训练')">
-          <div class="c-icon">✍️</div>
-          <div class="c-title">WriterWise SW 训练</div>
-          <div class="c-desc">PSLE Situational Writing 专项 · 外部工具</div>
-        </div>
-      </div>
-
-      <div class="sec-title"><span>📰</span>阅读</div>
-      <div class="grid">
-        <div class="card" onclick="loadByIndex(12)">
-          <div class="c-icon">📰</div>
-          <div class="c-title">慧眼家庭早报</div>
-          <div class="c-desc">每日新闻阅读，培养阅读习惯与理解能力</div>
-        </div>
-      </div>
-
-      <div class="sec-title"><span>📕</span>华文工具</div>
-      <div class="grid">
-        <div class="card" onclick="loadByIndex(9)">
-          <div class="c-icon">🖌️</div>
-          <div class="c-title">华文作文练习</div>
-          <div class="c-desc">看图作文、命题作文</div>
-        </div>
-        <div class="card" onclick="loadByIndex(10)">
-          <div class="c-icon">🐉</div>
-          <div class="c-title">驯龙少年阅读理解</div>
-          <div class="c-desc">高级华文阅读训练</div>
-        </div>
-        <div class="card" onclick="loadByIndex(11)">
-          <div class="c-icon">🎤</div>
-          <div class="c-title">驯龙少年口试</div>
-          <div class="c-desc">朗读与看图说话模拟</div>
-        </div>
-        <div class="card" onclick="loadByName('hcl-camp')">
-          <div class="c-icon">🐾</div>
-          <div class="c-title">高华阅读探险营</div>
-          <div class="c-desc">14天训练：短语解释·人物感受·概括·变化原因·道理迁移 · 每天15分钟</div>
-        </div>
-      </div>
-    </div>
-    <iframe class="tool-frame" id="toolFrame" style="display:none"></iframe>
-  </div>
+<div class="tool-overlay" id="toolOverlay">
+  <div class="tool-head"><button onclick="closeTool()">← Ocean Quest</button><h2 id="toolTitle">Learning Tool</h2></div>
+  <iframe class="tool-frame" id="toolFrame" title="Johnson learning tool"></iframe>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas id="fx"></canvas>
 
 <script>
-/* ===== 数据 ===== */
-const CATS = [
-  {id:'english',label:'📘 英语',icon:'📘'},
-  {id:'chinese',label:'📕 华文',icon:'📕'},
-  {id:'math',label:'📐 数学',icon:'📐'},
-  {id:'science',label:'🔬 科学',icon:'🔬'},
-  {id:'habit',label:'💪 习惯',icon:'💪'},
-  {id:'other',label:'⭐ 其他',icon:'⭐'}
+"use strict";
+const $=id=>document.getElementById(id);
+const STORE="johnson_ocean_quest_v1";
+const ENCOURAGE=[
+  "Your effort is visible. One step is still progress.",
+  "Strong thinkers make brave first attempts.",
+  "You do not need to know it yet. You are here to learn it.",
+  "Every model answer adds a tool to your brain.",
+  "Small wins become strong skills when they repeat."
 ];
-const QUICK = [
-  '完成了 OE 阅读训练一天','语法练习全对','背了 10 个新单词',
-  '华文作文写完了','数学作业自己完成','坚持了学习计划',
-  '主动复习了错题','阅读了 30 分钟','考试进步了',
-  '今天没有拖延','帮助了同学','认真听课一整天'
+let state={xp:0,streak:0,best:0,lastActive:"",missionDate:"",mission:0,rewardDate:"",sound:true,answers:{},savedWords:[]};
+let currentView="home",currentTopic="",toastTimer=null,recorder=null,recordChunks=[],audioStream=null;
+
+function localDay(d=new Date()){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function yesterday(){const d=new Date();d.setDate(d.getDate()-1);return localDay(d)}
+function loadState(){try{const s=JSON.parse(localStorage.getItem(STORE));if(s)state=Object.assign(state,s)}catch(e){}if(state.missionDate!==localDay()){state.missionDate=localDay();state.mission=0}saveState()}
+function saveState(){try{localStorage.setItem(STORE,JSON.stringify(state))}catch(e){}}
+function firstActivityToday(){const t=localDay();if(state.lastActive===t)return;state.streak=state.lastActive===yesterday()?state.streak+1:1;state.best=Math.max(state.best,state.streak);state.lastActive=t}
+function award(points,message,celebrate=true,key=""){
+  const answerKey=key?localDay()+":"+key:"";
+  if(answerKey&&state.answers[answerKey]){showToast(message);if(celebrate)sparkBurst(innerWidth/2,110,20,3);return}
+  firstActivityToday();state.xp+=points;state.mission=Math.min(3,state.mission+1);if(answerKey)state.answers[answerKey]=true;saveState();renderChrome();showToast(message+"  +"+points+" XP");
+  if(celebrate){playTone(true);sparkBurst(innerWidth/2,120,55,5)}else playTone(false);
+}
+function renderChrome(){
+  $("streakTop").textContent=state.streak;$("xpTop").textContent=state.xp;$("missionCount").textContent=state.mission+" / 3";$("missionFill").style.width=(state.mission/3*100)+"%";
+  $("soundBtn").textContent=state.sound?"🔊":"🔇";$("soundBtn").title=state.sound?"Sound on":"Sound off";
+  const claimed=state.rewardDate===localDay();$("rewardBtn").disabled=claimed;$("rewardBtn").textContent=claimed?"Today's pearl collected ✓":"Open today's pearl +15 XP";
+  document.querySelectorAll(".sea-nav").forEach(b=>b.classList.toggle("active",b.dataset.view===currentView));
+}
+function claimReward(){if(state.rewardDate===localDay())return;state.rewardDate=localDay();firstActivityToday();state.xp+=15;saveState();renderChrome();fireworks();playTone(true);showToast("A pearl for showing up today!  +15 XP")}
+function toggleSound(){state.sound=!state.sound;saveState();renderChrome();if(state.sound)playTone(true)}
+function playTone(good){if(!state.sound)return;try{const A=window.AudioContext||window.webkitAudioContext;const ac=new A();const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type="sine";o.frequency.setValueAtTime(good?660:330,ac.currentTime);if(good)o.frequency.exponentialRampToValueAtTime(990,ac.currentTime+.14);g.gain.setValueAtTime(.08,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.24);o.start();o.stop(ac.currentTime+.25)}catch(e){}}
+function showToast(msg){clearTimeout(toastTimer);$("toast").textContent=msg;$("toast").classList.add("show");toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2400)}
+
+const TOPICS={
+  home:[{id:"math",label:"🐢 Start with one Math model"},{id:"science",label:"🐬 Learn one Science word"},{id:"english",label:"🐙 Read today's story"},{id:"chinese",label:"🦀 练习口语"}],
+  math:[{id:"mistakes",label:"Mistake Shells"},{id:"angles",label:"Angles"},{id:"percentage",label:"Percentage"},{id:"fractions",label:"Fractions"},{id:"ratio",label:"Ratio"},{id:"average",label:"Average"},{id:"speed",label:"Speed"},{id:"algebra",label:"Algebra"}],
+  science:[{id:"vocab",label:"Science Word Pearls"},{id:"living",label:"Living & Non-living"},{id:"materials",label:"Materials"},{id:"cycles",label:"Life Cycles"},{id:"magnets",label:"Magnets"}],
+  english:[{id:"story",label:"Today's Adventure"},{id:"news",label:"Today's News"},{id:"storylab",label:"Build a Story"}],
+  chinese:[{id:"reading",label:"短文阅读"},{id:"oral",label:"口语训练"}],
+  library:[{id:"english",label:"English Tools"},{id:"math",label:"Math Tools"},{id:"chinese",label:"华文工具"},{id:"progress",label:"Progress Tools"}]
+};
+function setTopic(topic){currentTopic=topic;if(currentView==="math")renderMath(topic);else if(currentView==="science")renderScience(topic);else if(currentView==="english")renderEnglish(topic);else if(currentView==="chinese")renderChinese(topic);else if(currentView==="library")renderLibrary(topic);else openView(topic);renderTopics()}
+function renderTopics(){
+  const list=TOPICS[currentView]||[];$("topicHeading").textContent=currentView==="home"?"Today's choices":"Choose a topic";
+  $("topicList").innerHTML=list.map(t=>`<button class="topic-btn ${currentTopic===t.id?'active':''}" onclick="setTopic('${t.id}')"><span class="topic-dot"></span>${t.label}</button>`).join("");
+}
+function openView(view,topic=""){
+  currentView=view;currentTopic=topic||({math:"angles",science:"vocab",english:"story",chinese:"reading",library:"english"}[view]||"");
+  $("mentorMsg").textContent=ENCOURAGE[(new Date().getDate()+Object.keys(TOPICS).indexOf(view)+1)%ENCOURAGE.length];renderChrome();renderTopics();
+  if(view==="home")renderHome();if(view==="math")renderMath(currentTopic);if(view==="science")renderScience(currentTopic);if(view==="english")renderEnglish(currentTopic);if(view==="chinese")renderChinese(currentTopic);if(view==="library")renderLibrary(currentTopic);
+  $("workspace").scrollTop=0;
+}
+
+function renderHome(){
+  const h=new Date().getHours(),g=h<12?"Good morning":h<18?"Good afternoon":"Good evening";
+  $("screen").innerHTML=`
+    <section class="welcome">
+      <div><div class="eyebrow">Daily Dive · ${localDay()}</div><h1>${g}, Johnson.</h1><p class="lead">Today is not a test of how much you already know. Choose one reef, make one brave try, then study the picture and model answer.</p><button class="primary green" onclick="openView('math','angles')">Begin today's 10-minute dive →</button></div>
+      <div class="crew-scene" aria-label="Neptune and ocean learning crew"><span class="crew-main">🧜‍♂️</span><span class="crew-mini one">🐢</span><span class="crew-mini two">🐬</span><span class="crew-mini three">🐠</span></div>
+    </section>
+    <div class="section-head"><div><h2>Choose today's reef</h2><p>Every answer opens the worked model, even when the first try misses.</p></div><strong>🫧 ${state.xp} XP</strong></div>
+    <section class="route-grid">
+      <button class="route-card math" onclick="openView('math')"><span class="big-icon">🐢</span><h3>Math Model Reef</h3><p>Angles, percentages, fractions, ratio, average, speed and algebra.</p><span class="go">Dive →</span></button>
+      <button class="route-card science" onclick="openView('science')"><span class="big-icon">🐬</span><h3>Science Word Cove</h3><p>Build precise vocabulary, then turn OEQ thinking into friendly MCQ choices.</p><span class="go">Explore →</span></button>
+      <button class="route-card english" onclick="openView('english')"><span class="big-icon">🐙</span><h3>Reading Bay</h3><p>One adventure, one news-style text, clickable words and sentence maps.</p><span class="go">Read →</span></button>
+      <button class="route-card chinese" onclick="openView('chinese')"><span class="big-icon">🦀</span><h3>华文珊瑚湾</h3><p>选择题、小短文与看图口语，先看范例再组织自己的答案。</p><span class="go">出发 →</span></button>
+    </section>
+    <div class="section-head"><div><h2>Meet the study crew</h2><p>Tap a friend for a tiny spark of encouragement.</p></div></div>
+    <div class="ocean-strip">${["🐋","🐢","🐬","🐙","🦈","🐠","🦀","🐡","🦭","🪼","🦞","🧜‍♂️"].map(x=>`<button class="animal-chip" onclick="crewCheer(this)" aria-label="Ocean friend ${x}">${x}</button>`).join("")}</div>`;
+}
+function crewCheer(el){const msgs=["Tiny step, real progress!","Your thinking is getting stronger.","A brave try counts.","You found another clue.","Keep the picture in your mind!"];showToast(msgs[Math.floor(Math.random()*msgs.length)]);sparkler(el)}
+
+const MATH={
+  angles:{title:"Angles",tag:"See the full turn",q:"Three angles meet at a point. Two angles are 110° and 95°. What is the third angle?",opts:["145°","155°","165°","205°"],ans:1,visual:`<div class="angle-model"><div class="ray a"></div><div class="ray b"></div><div class="ray c"></div><div class="angle-dot"></div><div class="angle-label x">x°</div><div class="angle-label one">110°</div><div class="angle-label two">95°</div></div>`,model:"A full turn is 360°. Therefore, x = 360° − 110° − 95° = 155°.",steps:["Start with one full turn: 360°.","Combine the known angles: 110° + 95° = 205°.","Find the missing part: 360° − 205° = 155°."]},
+  percentage:{title:"Percentage",tag:"Find 100% from a known part",q:"A tank is 40% full and contains 24 L of water. What is the tank's full capacity?",opts:["48 L","60 L","64 L","96 L"],ans:1,visual:percentVisual(40),model:"40% is 24 L. So 10% is 6 L, and 100% is 60 L.",steps:["40% → 24 L","Divide both sides by 4: 10% → 6 L","Multiply by 10: 100% → 60 L"]},
+  fractions:{title:"Fractions",tag:"Move from parts to the whole",q:"3/5 of Johnson's stickers are blue. There are 18 blue stickers. How many stickers are there altogether?",opts:["24","30","36","45"],ans:1,visual:`<div class="bar-model"><div class="bar-row">${[1,2,3,4,5].map(i=>`<div class="bar-part ${i<=3?'hot':''}">${i<=3?'6':'?'}</div>`).join("")}</div><div style="text-align:center;font-weight:900">3 parts = 18, so 1 part = 6</div></div>`,model:"3 parts represent 18 stickers. One part is 18 ÷ 3 = 6. Five parts are 6 × 5 = 30 stickers.",steps:["Draw 5 equal parts because the denominator is 5.","The 3 blue parts total 18, so each part is 6.","The whole has 5 parts: 5 × 6 = 30."]},
+  ratio:{title:"Ratio",tag:"Turn units into real amounts",q:"The ratio of boys to girls in a club is 3 : 5. There are 40 children altogether. How many girls are there?",opts:["15","20","24","25"],ans:3,visual:`<div class="ratio-model"><div><div class="dot-group">${Array(3).fill('<span class="ratio-dot"></span>').join('')}</div><b>3 boy units</b></div><div><div class="dot-group">${Array(5).fill('<span class="ratio-dot girl"></span>').join('')}</div><b>5 girl units</b></div></div>`,model:"There are 3 + 5 = 8 units. One unit is 40 ÷ 8 = 5 children. The 5 girl units represent 5 × 5 = 25 girls.",steps:["Add the ratio units: 3 + 5 = 8.","Find one unit: 40 ÷ 8 = 5 children.","Find five girl units: 5 × 5 = 25 girls."]},
+  average:{title:"Average",tag:"Rebuild the total",q:"The average of four numbers is 13. Three of the numbers are 12, 15 and 9. What is the fourth number?",opts:["13","14","15","16"],ans:3,visual:`<div class="bar-model"><div class="bar-row"><div class="bar-part">12</div><div class="bar-part">15</div><div class="bar-part">9</div><div class="bar-part unknown">?</div></div><div style="text-align:center;font-weight:900">4 equal average shares of 13 → total 52</div></div>`,model:"The total of four numbers is 13 × 4 = 52. The known numbers total 12 + 15 + 9 = 36. The fourth number is 52 − 36 = 16.",steps:["Rebuild the total: average × number of items = 13 × 4 = 52.","Add the known numbers: 12 + 15 + 9 = 36.","Find the missing number: 52 − 36 = 16."]},
+  speed:{title:"Speed",tag:"Distance divided by time",q:"A cyclist travels 72 km in 1.5 hours. What is the cyclist's average speed?",opts:["36 km/h","48 km/h","54 km/h","108 km/h"],ans:1,visual:`<div class="track-model"><div class="track-line"><span class="track-car">🚴</span></div><div class="track-stats"><span>72 km</span><span>1.5 h</span></div></div>`,model:"Average speed = total distance ÷ total time = 72 ÷ 1.5 = 48 km/h.",steps:["Use total distance: 72 km.","Use total time: 1.5 h.","Divide distance by time: 72 ÷ 1.5 = 48 km/h."]},
+  algebra:{title:"Algebra",tag:"Keep both sides balanced",q:"A number is multiplied by 4, then 7 is added. The result is 31. What is the number?",opts:["5","6","7","8"],ans:1,visual:`<div class="balance"><div class="beam"></div><div class="stand"></div><div class="base"></div><div class="pan left">4x + 7</div><div class="pan right">31</div></div>`,model:"4x + 7 = 31. Subtract 7 from both sides: 4x = 24. Divide both sides by 4: x = 6.",steps:["Write the relationship: 4x + 7 = 31.","Undo +7 on both sides: 4x = 24.","Share 24 into 4 equal groups: x = 6."]}
+};
+function percentVisual(n){let h='<div><div class="percent-grid">';for(let i=0;i<100;i++)h+=`<span class="percent-cell ${i<n?'on':''}"></span>`;return h+'</div><div style="text-align:center;margin-top:7px;font-weight:900">40 shaded squares = 40%</div></div>'}
+function renderMath(topic){
+  if(topic==="mistakes"){renderMistakes();return}const q=MATH[topic]||MATH.angles;
+  $("screen").innerHTML=`<div class="page-title"><div class="page-icon">🐢</div><div><h1>Math Model Reef</h1><p>Try it, then see the thinking move in pictures.</p></div></div>
+    <div class="topic-chips">${TOPICS.math.filter(t=>t.id!=="mistakes").map(t=>`<button class="chip-btn ${topic===t.id?'active':''}" onclick="setTopic('${t.id}')">${t.label}</button>`).join("")}</div>
+    <section class="question-card"><div class="question-kicker"><span>${q.title}</span><span>Original Singapore-style practice</span></div><div class="question">${q.q}</div><div class="visual-stage">${q.visual}</div><div class="options" id="mathOptions">${q.opts.map((o,i)=>`<button class="option" onclick="answerMath('${topic}',${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join("")}</div><div id="mathFeedback"></div></section>`;
+}
+function answerMath(topic,pick){const q=MATH[topic],buttons=[...document.querySelectorAll("#mathOptions .option")];buttons.forEach((b,i)=>{b.disabled=true;if(i===q.ans)b.classList.add("correct");if(i===pick&&i!==q.ans)b.classList.add("wrong")});const ok=pick===q.ans;$("mathFeedback").innerHTML=feedbackHTML(ok,q.model,q.steps);award(ok?10:5,ok?"Correct thinking!":"Good try. The model is now yours.",ok,"math-"+topic)}
+function feedbackHTML(ok,model,steps){return `<div class="feedback ${ok?'good':'try'}"><h3>${ok?'✅ Clear thinking!':'💙 Brave try. Study the pattern below.'}</h3><div class="model-answer"><strong>Model Answer</strong><p>${model}</p></div><div class="explain-grid">${steps.map((s,i)=>`<div class="explain-step"><span class="step-no">${i+1}</span>${s}</div>`).join("")}</div></div>`}
+function renderMistakes(){$("screen").innerHTML=`<div class="page-title"><div class="page-icon">🐚</div><div><h1>Mistake Shells</h1><p>Old mistakes are clues, not labels.</p></div></div><div class="question-card"><div class="question">Johnson's collected paper-review tools</div><p class="lead">Open the original mistake collections, then return here for topic-by-topic picture models.</p><div class="library-grid" style="margin-top:14px"><button class="tool-card" onclick="openTool('Johnson/tools/Johnson_WA2_错题挑战赛.html','WA2 Mistake Challenge')"><span class="tool-icon">⚔️</span><h3>WA2 Mistake Challenge</h3><p>Review and fix collected questions.</p></button><button class="tool-card" onclick="openTool('Johnson/tools/Johnson_P5_T3_Math_批改报告.html','P5 T3 Math Review')"><span class="tool-icon">📊</span><h3>P5 T3 Paper 2 Review</h3><p>Return to marked-paper learning points.</p></button><button class="tool-card" onclick="setTopic('angles')"><span class="tool-icon">🐢</span><h3>Start a fresh model</h3><p>Practise one visual topic now.</p></button></div></div>`}
+
+const VOCAB=[
+  ["characteristic","a feature that helps us describe or identify something","Living things share characteristics such as growing and reproducing."],
+  ["classify","to sort things into groups using shared characteristics","We classify animals by features we can observe."],
+  ["material","the substance an object is made from","A raincoat may be made from waterproof material."],
+  ["flexible","able to bend without breaking","Rubber is flexible, so it can bend."],
+  ["offspring","a young living thing produced by its parent","A chick is the offspring of a hen."],
+  ["life cycle","the stages a living thing passes through as it grows","A butterfly's life cycle includes egg, larva, pupa and adult."],
+  ["attract","to pull an object closer","A magnet can attract an iron nail."],
+  ["repel","to push another magnet away","Like poles repel each other."],
+  ["magnetic","able to be attracted by a magnet","Iron and steel are magnetic materials."]
 ];
-const BADGES = [
-  {id:'first',name:'第一步',icon:'🌱',need:1},
-  {id:'five',name:'五连胜',icon:'⭐',need:5},
-  {id:'ten',name:'十全十美',icon:'🌟',need:10},
-  {id:'streak3',name:'三日连击',icon:'🔥',type:'streak',val:3},
-  {id:'streak7',name:'一周勇士',icon:'💎',type:'streak',val:7},
-  {id:'twenty',name:'成就满满',icon:'🏆',need:20},
-  {id:'streak14',name:'两周传奇',icon:'👑',type:'streak',val:14},
-  {id:'fifty',name:'半百英雄',icon:'🎖️',need:50}
+const SCIENCE={
+  living:{title:"Living & Non-living Things",q:"A battery-powered toy car can move. Which response best explains why the toy car is non-living?",opts:["It is non-living because it is small.","It is non-living because it cannot grow and reproduce by itself; movement alone is not enough.","It is living because all moving things are alive.","It is living because it uses energy from a battery."],ans:1,model:"The toy car is non-living because it <mark>cannot grow</mark> and <mark>cannot reproduce</mark> by itself. Movement alone is not a characteristic that proves something is living.",visual:`<div style="text-align:center"><div style="font-size:64px">🚗 🔋</div><div style="font-weight:900;margin-top:8px">moves ✓ &nbsp; grows ✕ &nbsp; reproduces ✕</div></div>`},
+  materials:{title:"Diversity of Materials",q:"Mei wants to make a rain cover for her school bag. Which is the best material and reason?",opts:["Paper, because it absorbs water.","Clear plastic, because it is waterproof and flexible.","Cotton, because it is soft and absorbent.","Glass, because it is hard and heavy."],ans:1,model:"Clear plastic is suitable because it is <mark>waterproof</mark>, so water cannot pass through it, and <mark>flexible</mark>, so it can wrap around the bag.",visual:`<div style="display:flex;gap:18px;align-items:center;font-size:52px"><span>🎒</span><span style="color:var(--royal)">＋</span><span>🛍️</span><span style="color:var(--green)">→ dry ✓</span></div>`},
+  cycles:{title:"Life Cycles",q:"Which sequence shows the life cycle of a butterfly in the correct order?",opts:["egg → pupa → larva → adult","egg → larva → pupa → adult","larva → egg → adult → pupa","adult → pupa → egg → larva"],ans:1,model:"The butterfly life cycle is <mark>egg → larva (caterpillar) → pupa → adult</mark>. The adult then lays eggs and the cycle repeats.",visual:`<div class="cycle"><div class="cycle-node">🥚<br>egg</div><span class="cycle-arrow">→</span><div class="cycle-node">🐛<br>larva</div><span class="cycle-arrow">→</span><div class="cycle-node">🟤<br>pupa</div><span class="cycle-arrow">→</span><div class="cycle-node">🦋<br>adult</div></div>`},
+  magnets:{title:"Magnets",q:"A magnet attracts an iron paper clip through a thin sheet of cardboard. Which is the best conclusion?",opts:["Cardboard is a magnetic material.","The paper clip produces magnetic force.","Magnetic force can act through a thin non-magnetic material.","All metals can pass through cardboard."],ans:2,model:"The magnet attracts the iron paper clip because <mark>magnetic force can act through a thin non-magnetic material</mark> such as cardboard.",visual:`<div class="magnet-stage"><span>🧲</span><span class="force-lines">)))</span><span style="border:5px solid #c99554;padding:12px">▯</span><span>📎</span></div>`}
+};
+function renderScience(topic){
+  if(topic==="vocab"){renderVocab();return}const q=SCIENCE[topic]||SCIENCE.living;
+  $("screen").innerHTML=`<div class="page-title"><div class="page-icon">🐬</div><div><h1>P3 Science Word Cove</h1><p>OEQ thinking first appears as complete MCQ answer choices.</p></div></div><div class="topic-chips">${TOPICS.science.map(t=>`<button class="chip-btn ${topic===t.id?'active':''}" onclick="setTopic('${t.id}')">${t.label}</button>`).join("")}</div><section class="question-card"><div class="question-kicker"><span>OEQ preview → MCQ</span><span>MOE-aligned original item</span></div><div class="question">${q.q}</div><div class="visual-stage">${q.visual}</div><div class="options" id="scienceOptions">${q.opts.map((o,i)=>`<button class="option" onclick="answerScience('${topic}',${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join("")}</div><div id="scienceFeedback"></div></section>`;
+}
+function renderVocab(){$("screen").innerHTML=`<div class="page-title"><div class="page-icon">🐬</div><div><h1>Science Word Pearls</h1><p>Precise words make future OEQ answers easier to build.</p></div></div><div class="topic-chips">${TOPICS.science.map(t=>`<button class="chip-btn ${currentTopic===t.id?'active':''}" onclick="setTopic('${t.id}')">${t.label}</button>`).join("")}</div><div class="vocab-grid">${VOCAB.map((v,i)=>`<button class="vocab-card" id="vocab${i}" onclick="flipVocab(${i})"><strong>${v[0]}</strong><div class="meaning"><b>${v[1]}</b><br>${v[2]}</div><span class="tap">tap to reveal</span></button>`).join("")}</div>`}
+function flipVocab(i){const el=$("vocab"+i),first=!el.classList.contains("flipped");el.classList.toggle("flipped");if(first)award(2,"New science word revealed!",false,"vocab-"+i)}
+function answerScience(topic,pick){const q=SCIENCE[topic],buttons=[...document.querySelectorAll("#scienceOptions .option")];buttons.forEach((b,i)=>{b.disabled=true;if(i===q.ans)b.classList.add("correct");if(i===pick&&i!==q.ans)b.classList.add("wrong")});const ok=pick===q.ans;$("scienceFeedback").innerHTML=`<div class="feedback ${ok?'good':'try'}"><h3>${ok?'✅ Scientist language spotted!':'💙 Good observation. Now collect the exact words.'}</h3><div class="model-answer"><strong>Full Model Answer</strong><p>${q.model}</p></div></div>`;award(ok?10:5,ok?"Excellent science wording!":"The correct wording is now visible.",ok,"science-"+topic)}
+
+const WORDS={
+  glimmered:["glimmered","shone with a soft, unsteady light","The wet sand glimmered under the moon."],
+  cautious:["cautious","careful to avoid danger or mistakes","Johnson was cautious as he stepped onto the rocks."],
+  current:["current","a continuous movement of water in one direction","The current carried the leaf towards the shore."],
+  restored:["restored","returned something to a good condition","The class restored the garden after the storm."],
+  absorb:["absorb","to take in a liquid or other substance","Soil and roots absorb rainwater."],
+  volunteers:["volunteers","people who choose to help without being forced","Student volunteers planted native flowers."]
+};
+const READINGS={
+  story:{title:"The Lantern Beneath the Jetty",meta:"Adventure · 5-minute read · Original story",body:`<p><span class="syntax-subject">Johnson</span> <span class="syntax-verb">noticed</span> <span class="syntax-detail">a blue light under the old jetty just as the evening tide began to rise.</span> It <button class="vocab" onclick="lookupWord('glimmered')">glimmered</button> once, disappeared, then flashed again.</p><p>He felt curious, but he was <button class="vocab" onclick="lookupWord('cautious')">cautious</button>. Instead of climbing onto the slippery rocks, he called the coast guard number printed on a nearby sign. Together, they discovered that the “lantern” was a tracking light attached to a young turtle. The turtle had become trapped in a loop of fishing line.</p><p><span class="syntax-subject">The officer</span> <span class="syntax-verb">cut</span> <span class="syntax-detail">the line carefully before the rising <button class="vocab" onclick="lookupWord('current')">current</button> grew stronger.</span> When the turtle finally paddled away, Johnson realised that courage did not always mean rushing forward. Sometimes, courage meant pausing, thinking and choosing the safest useful action.</p>`,q:"What does Johnson learn about courage?",opts:["Courage means acting before thinking.","Courage means avoiding every difficult situation.","Courage can mean pausing and choosing a safe, helpful action.","Courage means solving every problem alone."],ans:2,model:"Johnson learns that courage can mean pausing to think and choosing a safe, helpful action instead of rushing into danger."},
+  news:{title:"Students Build a Rain Garden",meta:"News-style practice · School desk · Original text",body:`<p><span class="syntax-subject">A group of Primary 5 students</span> <span class="syntax-verb">opened</span> <span class="syntax-detail">a small rain garden beside their school field on Friday.</span> The garden was created to slow down rainwater after heavy showers.</p><p>With help from teachers and community <button class="vocab" onclick="lookupWord('volunteers')">volunteers</button>, the students dug shallow channels and planted species whose roots can <button class="vocab" onclick="lookupWord('absorb')">absorb</button> water. They also reused stones from a path that had been <button class="vocab" onclick="lookupWord('restored')">restored</button>.</p><p>The science club will measure how quickly water drains before and after rainfall. The pupils will share the results at assembly next month. Their teacher said the project turns a familiar school problem into a chance to observe, collect evidence and improve the environment.</p>`,q:"Why will the science club measure drainage speed?",opts:["To decide which students worked hardest.","To collect evidence about how the rain garden works.","To make the field receive more rain.","To count the stones in the garden."],ans:1,model:"The science club will measure drainage speed to collect evidence about whether the rain garden slows and absorbs rainwater effectively."}
+};
+function renderEnglish(topic){if(topic==="storylab"){renderStoryLab();return}const a=READINGS[topic]||READINGS.story;$("screen").innerHTML=`<div class="page-title"><div class="page-icon">🐙</div><div><h1>Reading Bay</h1><p>Two daily texts: one adventure and one news-style read.</p></div></div><div class="topic-chips">${TOPICS.english.map(t=>`<button class="chip-btn ${topic===t.id?'active':''}" onclick="setTopic('${t.id}')">${t.label}</button>`).join("")}</div><div class="reading-layout"><article class="article" id="article"><h2>${a.title}</h2><div class="article-meta">${a.meta}</div>${a.body}<button class="secondary" onclick="toggleSyntax()">Show sentence structure</button><div class="syntax-key"><span class="key-subject">subject</span><span class="key-verb">verb</span><span class="key-detail">details</span></div><div class="question-card" style="margin-top:18px;box-shadow:none"><div class="question-kicker"><span>Check the meaning</span><span>1 question</span></div><div class="question" style="font-size:17px">${a.q}</div><div class="options" id="readingOptions">${a.opts.map((o,i)=>`<button class="option" onclick="answerReading('${topic}',${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join("")}</div><div id="readingFeedback"></div></div></article><aside class="dictionary"><h3>🔎 Word Current</h3><input id="wordSearch" placeholder="Type a highlighted word" onkeydown="if(event.key==='Enter')searchWord()"><button class="primary green" style="width:100%" onclick="searchWord()">Look up</button><div class="word-result" id="wordResult">Tap a highlighted word in the text, or type it here.</div></aside></div>`}
+function lookupWord(word){const w=WORDS[word.toLowerCase()],box=$("wordResult");if(!box)return;if(w)box.innerHTML=`<strong>${w[0]}</strong><b>${w[1]}</b><br><br><em>${w[2]}</em>`;else box.textContent="This first offline word bank does not contain that word yet.";const input=$("wordSearch");if(input)input.value=word;award(1,"Word clue opened.",false,"word-"+word)}
+function searchWord(){const input=$("wordSearch");if(input)lookupWord(input.value.trim().toLowerCase())}
+function toggleSyntax(){const a=$("article");a.classList.toggle("syntax-on");showToast(a.classList.contains("syntax-on")?"Blue = subject, green = verb, yellow = details":"Sentence colours hidden")}
+function answerReading(topic,pick){const q=READINGS[topic],buttons=[...document.querySelectorAll("#readingOptions .option")];buttons.forEach((b,i)=>{b.disabled=true;if(i===q.ans)b.classList.add("correct");if(i===pick&&i!==q.ans)b.classList.add("wrong")});const ok=pick===q.ans;$("readingFeedback").innerHTML=`<div class="feedback ${ok?'good':'try'}"><h3>${ok?'✅ You caught the main idea!':'💙 Read the model, then look back for the clue.'}</h3><div class="model-answer"><strong>Model Answer</strong><p>${q.model}</p></div></div>`;award(ok?10:5,ok?"Meaning captured!":"The evidence is now visible.",ok,"reading-"+topic)}
+function renderStoryLab(){$("screen").innerHTML=`<div class="page-title"><div class="page-icon">🪼</div><div><h1>Story Current</h1><p>Choose three building blocks, then study how they connect.</p></div></div><div class="topic-chips">${TOPICS.english.map(t=>`<button class="chip-btn ${currentTopic===t.id?'active':''}" onclick="setTopic('${t.id}')">${t.label}</button>`).join("")}</div><section class="story-lab"><div class="builder-row"><label>Hero<select id="hero"><option>a careful young inventor</option><option>a nervous new goalkeeper</option><option>an observant reef explorer</option></select></label><label>Place<select id="place"><option>on a floating research station</option><option>beside a stormy school field</option><option>inside a silent museum</option></select></label><label>Problem<select id="problem"><option>finds a machine sending a strange signal</option><option>discovers that an important map is missing</option><option>must help a frightened visitor</option></select></label></div><button class="primary" onclick="buildStory()">Build my story →</button><div class="generated-story" id="generatedStory">Your story will flow here.</div></section>`}
+function buildStory(){const hero=$("hero").value,place=$("place").value,problem=$("problem").value;$("generatedStory").innerHTML=`<b>The Signal</b><br><br>One quiet afternoon, ${hero} ${place} ${problem}. At first, the hero wanted to act immediately. However, one small clue suggested that the obvious solution might make matters worse. After asking two careful questions and testing one safe idea, the hero discovered what the signal really meant. The problem was not solved by luck, but by patience, evidence and a brave decision to try again.`;award(5,"A complete story arc!",true,"storylab")}
+
+const CNQ={q:"小杰在公园里看见一名小朋友把饮料瓶留在长椅旁。他先把瓶子投入回收箱，再礼貌地提醒小朋友保持公园清洁。小朋友听后点点头，也捡起了地上的纸屑。",ask:"这段短文主要说明什么？",opts:["小杰喜欢在公园喝饮料。","小杰以行动和礼貌提醒带动别人爱护环境。","公园里没有回收箱。","小朋友不愿意听取提醒。"],ans:1,model:"小杰不但主动把饮料瓶投入回收箱，还礼貌地提醒小朋友，最后带动对方一起捡起纸屑，说明好的行动能影响别人爱护环境。"};
+function renderChinese(topic){if(topic==="oral"){renderOral();return}$("screen").innerHTML=`<div class="page-title cn"><div class="page-icon">🦀</div><div><h1>华文珊瑚湾</h1><p>先读短文、选择完整答案，再看标准作答。</p></div></div><div class="topic-chips cn">${TOPICS.chinese.map(t=>`<button class="chip-btn ${topic===t.id?'active':''}" onclick="setTopic('${t.id}')">${t.label}</button>`).join("")}</div><section class="question-card cn"><div class="question-kicker"><span>短文阅读</span><span>先见范例</span></div><div style="font-size:18px;line-height:1.9;background:var(--soft);padding:14px;border-radius:8px">${CNQ.q}</div><div class="question" style="font-size:18px;margin-top:14px">${CNQ.ask}</div><div class="options" id="cnOptions">${CNQ.opts.map((o,i)=>`<button class="option" onclick="answerChinese(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join("")}</div><div id="cnFeedback"></div></section>`}
+function answerChinese(pick){const buttons=[...document.querySelectorAll("#cnOptions .option")];buttons.forEach((b,i)=>{b.disabled=true;if(i===CNQ.ans)b.classList.add("correct");if(i===pick&&i!==CNQ.ans)b.classList.add("wrong")});const ok=pick===CNQ.ans;$("cnFeedback").innerHTML=`<div class="feedback ${ok?'good':'try'}"><h3>${ok?'✅ 抓住中心思想！':'💙 没关系，先看看完整答案怎样连接证据。'}</h3><div class="model-answer"><strong>标准答案</strong><p>${CNQ.model}</p></div></div>`;award(ok?10:5,ok?"读懂中心思想！":"标准答案已经出现。",ok,"chinese-reading")}
+function renderOral(){$("screen").innerHTML=`<div class="page-title cn"><div class="page-icon">🦭</div><div><h1>口语海湾</h1><p>先观察、先听范例，再录下自己的版本。</p></div></div><div class="topic-chips cn">${TOPICS.chinese.map(t=>`<button class="chip-btn ${currentTopic===t.id?'active':''}" onclick="setTopic('${t.id}')">${t.label}</button>`).join("")}</div><section class="question-card cn"><div class="question-kicker"><span>看图说话</span><span>主题：保持环境清洁</span></div><div class="oral-scene" aria-label="公园里有树木、孩子、回收箱和地上的纸屑"><div class="place"></div><span class="scene-item tree">🌳</span><span class="scene-item child">🧒</span><span class="scene-item litter">🥤</span><span class="scene-item bin">♻️</span><span class="scene-item sun">☀️</span></div><div class="oral-plan"><div class="plan-block"><strong>1. 我看见</strong>人物、地点、正在发生的事</div><div class="plan-block"><strong>2. 我认为</strong>行为是否正确，为什么</div><div class="plan-block"><strong>3. 如果是我</strong>我会怎样做，有什么经验</div></div><div class="oral-tools" style="margin-top:14px"><button class="primary green" onclick="showOralModel()">先听完整范例 🔊</button><button class="secondary" id="recordBtn" onclick="toggleRecording()">开始录音 🎙️</button></div><div class="model-cn" id="oralModel"><strong>口语范例：</strong><br>图中是一座整洁的公园。一名小朋友发现地上有一个饮料瓶，便主动把它捡起来，投入旁边的回收箱。我认为他的行为值得表扬，因为公共环境需要大家一起爱护。如果是我，我也会把垃圾分类处理，并礼貌地提醒身边的人不要乱丢垃圾。这样不但能让公园保持清洁，也能让每个人更舒服地使用公共设施。</div><audio class="audio-playback" id="oralPlayback" controls style="display:none"></audio></section>`}
+function showOralModel(){const m=$("oralModel");m.classList.add("show");speakChinese(m.textContent.replace("口语范例：",""));award(3,"先听范例，再组织自己的答案。",false,"oral-model")}
+function speakChinese(text){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="zh-SG";u.rate=.85;speechSynthesis.speak(u)}catch(e){showToast("朗读功能在这个浏览器中不可用。")}}
+async function toggleRecording(){
+  if(recorder&&recorder.state==="recording"){recorder.stop();return}
+  if(!navigator.mediaDevices||!window.MediaRecorder){showToast("This browser does not support voice recording.");return}
+  try{audioStream=await navigator.mediaDevices.getUserMedia({audio:true});recordChunks=[];recorder=new MediaRecorder(audioStream);recorder.ondataavailable=e=>{if(e.data.size)recordChunks.push(e.data)};recorder.onstop=()=>{const blob=new Blob(recordChunks,{type:recorder.mimeType||"audio/webm"}),audio=$("oralPlayback");audio.src=URL.createObjectURL(blob);audio.style.display="block";$("recordBtn").textContent="重新录音 🎙️";audioStream.getTracks().forEach(t=>t.stop());award(8,"完成一次口语表达！",true,"oral-recording")};recorder.start();$("recordBtn").textContent="停止录音 ⏹";showToast("Recording… speak at a calm pace.")
+  }catch(e){showToast("Microphone permission is needed for recording.")}
+}
+
+const TOOLS=[
+  ["english","🎯","OE Reading 7-Day Training","Johnson/tools/Johnson_OE_Comprehension_Training.html","Long text and OE comprehension"],
+  ["english","📚","English Learning Hub","Johnson/tools/johnson_english_hub.html","Reading, grammar and vocabulary"],
+  ["english","✏️","Grammar Trainer","Johnson/tools/grammar-trainer.html","Tenses, articles and prepositions"],
+  ["english","🔤","Vocabulary Trainer","Johnson/tools/vocab_trainer.html","P5 core vocabulary"],
+  ["english","📝","RFPD Trainer","Johnson/tools/rfpd-trainer.html","Reading for pleasure and details"],
+  ["english","🎓","PSLE English Practice","Johnson/tools/PSLE_English_Practice.html","PSLE-style practice"],
+  ["english","🖊️","English Composition","Johnson/tools/Johnson_PSLE英文作文练习.html","Situational and continuous writing"],
+  ["english","⚔️","WA2 Mistake Challenge","Johnson/tools/Johnson_WA2_错题挑战赛.html","Collected mistake review"],
+  ["english","📝","WA3 SW Trainer","Johnson/tools/Johnson_WA3_SW_训练器.html","Situational writing practice"],
+  ["math","🐢","P5 Math Topic Training","Johnson/tools/Johnson-P5数学专项训练.html","Focused visual practice"],
+  ["math","📊","P5 T3 Math Review","Johnson/tools/Johnson_P5_T3_Math_批改报告.html","Marked-paper feedback"],
+  ["chinese","🖌️","华文作文练习","Johnson/tools/Johnson_PSLE华文作文练习.html","看图作文与命题作文"],
+  ["chinese","🐉","驯龙少年阅读理解","Johnson/tools/Johnson驯龙少年高华阅读理解训练.html","高级华文阅读训练"],
+  ["chinese","🎤","驯龙少年口试","Johnson/tools/Johnson驯龙少年口试训练.html","朗读与看图说话"],
+  ["chinese","🐾","高华阅读探险营","Johnson/tools/Johnson_高华阅读探险营.html","短语、概括与迁移"],
+  ["progress","📰","InsightRead Family News","Johnson/tools/InsightRead_慧眼家庭早报.html","Daily family news reading"],
+  ["progress","🏆","Small Wins Wall","Johnson/tools/Johnson小成功墙.html","Make effort visible"],
+  ["progress","💾","Family Education OS Snapshot","Johnson/tools/Johnson家庭教育OS-snapshot.html","Learning overview"],
+  ["progress","🧭","Home Route","","Return to today's route"]
 ];
-const MSGS = [
-  '今天也是进步的一天！加油 Johnson！💪',
-  '每一个小成功都在让你变得更强！',
-  '坚持就是胜利，你已经在路上了！🚀',
-  '你的努力，我们都看在眼里！❤️',
-  '比昨天的自己进步一点点，就是最大的成功！',
-  '学习是马拉松——你跑得很稳！🏃',
-  '错题不可怕，每道错题都是成长的机会！💡',
-  '今天的你比昨天更厉害了！✨',
-  '小小的进步 × 每一天 = 巨大的飞跃！📈',
-  '你有能力做到的，相信自己！🌈'
-];
+function renderLibrary(topic){const list=TOOLS.filter(t=>t[0]===topic);$("screen").innerHTML=`<div class="page-title"><div class="page-icon">🦈</div><div><h1>Deep-Practice Library</h1><p>All existing Johnson tools remain available.</p></div></div><div class="topic-chips">${TOPICS.library.map(t=>`<button class="chip-btn ${topic===t.id?'active':''}" onclick="setTopic('${t.id}')">${t.label}</button>`).join("")}</div><div class="library-grid">${list.map(t=>`<button class="tool-card" onclick="${t[3]?`openTool('${t[3]}','${t[2].replace(/'/g,"\\'")}')`:`openView('home')`}"><span class="tool-icon">${t[1]}</span><h3>${t[2]}</h3><p>${t[4]}</p></button>`).join("")}</div>`}
+function openTool(url,title){$("toolTitle").textContent=title;$("toolFrame").src=url;$("toolOverlay").classList.add("show")}
+function closeTool(){$("toolOverlay").classList.remove("show");$("toolFrame").src=""}
+function backupProgress(){const d={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);d[k]=localStorage.getItem(k)}const blob=new Blob([JSON.stringify({app:"huiyan-progress",date:new Date().toISOString(),data:d})],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Johnson_Ocean_Quest_"+localDay()+".json";a.click();URL.revokeObjectURL(a.href);showToast("Progress backup created.")}
+function restoreProgress(){const input=document.createElement("input");input.type="file";input.accept=".json,application/json";input.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result),d=j.data||j;Object.keys(d).forEach(k=>localStorage.setItem(k,d[k]));location.reload()}catch(err){showToast("This is not a valid progress backup.")}};r.readAsText(f)};input.click()}
 
-let state = {wins:[],streak:0,bestStreak:0,selectedCat:'english'};
-let prevBadgeCount = 0;
-
-function loadState(){try{const s=localStorage.getItem('johnson_wins');if(s)state=JSON.parse(s)}catch(e){}if(!state.wins)state.wins=[];if(!state.streak)state.streak=0;if(!state.bestStreak)state.bestStreak=0}
-function saveState(){try{localStorage.setItem('johnson_wins',JSON.stringify(state))}catch(e){}}
-
-function today(){return new Date().toISOString().slice(0,10)}
-
-function calcStreak(){
-  const dates=[...new Set(state.wins.map(w=>w.date))].sort().reverse();
-  if(!dates.length){state.streak=0;return}
-  const t=today();let streak=0;let check=new Date(t);
-  if(dates[0]===t){
-    streak=1;check.setDate(check.getDate()-1);
-    for(let i=1;i<dates.length;i++){if(dates[i]===check.toISOString().slice(0,10)){streak++;check.setDate(check.getDate()-1)}else break}
-  } else {
-    const y=new Date(t);y.setDate(y.getDate()-1);
-    if(dates[0]===y.toISOString().slice(0,10)){
-      streak=1;check=new Date(dates[0]);check.setDate(check.getDate()-1);
-      for(let i=1;i<dates.length;i++){if(dates[i]===check.toISOString().slice(0,10)){streak++;check.setDate(check.getDate()-1)}else break}
-    }
-  }
-  state.streak=streak;
-  if(streak>state.bestStreak)state.bestStreak=streak;
-}
-
-function earnedBadges(){
-  return BADGES.filter(b=>{
-    if(b.type==='streak')return state.bestStreak>=b.val;
-    return state.wins.length>=b.need;
-  });
-}
-
-/* ===== 全局激励栏渲染 ===== */
-function renderMotivBar(){
-  calcStreak();
-  const s=state.streak;
-  document.getElementById('mbFire').textContent=s>=7?'💎':s>=3?'🔥':s>=1?'✨':'💤';
-  document.getElementById('mbStreak').textContent=s;
-  document.getElementById('mbTotal').textContent=state.wins.length;
-  document.getElementById('mbMsg').textContent=MSGS[Math.floor(Math.random()*MSGS.length)];
-  const earned=earnedBadges();
-  document.getElementById('mbBadges').innerHTML=BADGES.map(b=>
-    `<span class="${earned.find(e=>e.id===b.id)?'':'locked'}" title="${b.name}">${b.icon}</span>`
-  ).join('');
-}
-
-/* ===== 首页仪表盘渲染 ===== */
-function renderDashboard(){
-  calcStreak();const s=state.streak;
-  document.getElementById('dashIcon').textContent=s>=7?'💎':s>=3?'🔥':s>=1?'✨':'💤';
-  document.getElementById('dashStreak').textContent=s;
-  document.getElementById('dashTotal').textContent=state.wins.length;
-  document.getElementById('dashBest').textContent=state.bestStreak;
-  const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-7);
-  document.getElementById('dashWeek').textContent=state.wins.filter(w=>new Date(w.date)>=weekAgo).length;
-
-  // Week dots
-  const dayNames=['日','一','二','三','四','五','六'];
-  const now=new Date();const dow=now.getDay();
-  let dots='';
-  for(let i=0;i<7;i++){
-    const d=new Date(now);d.setDate(d.getDate()-dow+i);
-    const ds=d.toISOString().slice(0,10);
-    const done=state.wins.some(w=>w.date===ds);
-    const isToday=ds===today();
-    dots+=`<div class="dash-dot${done?' done':''}${isToday?' today':''}">${done?'✓':dayNames[i]}</div>`;
-  }
-  document.getElementById('dashWeekDots').innerHTML=dots;
-
-  // Badges
-  const earned=earnedBadges();
-  document.getElementById('dashBadges').innerHTML=BADGES.map(b=>
-    `<span class="dash-badge${earned.find(e=>e.id===b.id)?' earned':' locked'}" title="${b.name}">${b.icon}</span>`
-  ).join('');
-
-  // Encourage
-  document.getElementById('dashEncourage').textContent=MSGS[Math.floor(Math.random()*MSGS.length)];
-
-  // Recent wins
-  const recent=state.wins.slice(-5).reverse();
-  const rd=document.getElementById('dashRecent');
-  if(!recent.length){
-    rd.innerHTML='<h4>还没有记录，点击上方 "记录小成功" 开始吧！</h4>';
-  } else {
-    let h='<h4>最近的小成功</h4><div class="recent-list">';
-    recent.forEach(w=>{
-      const cat=CATS.find(c=>c.id===w.cat)||CATS[5];
-      h+=`<div class="recent-item"><span class="ri-icon">${cat.icon}</span><span class="ri-text">${esc(w.text)}</span><span class="ri-date">${w.date===today()?'今天':w.date}</span></div>`;
-    });
-    h+='</div>';rd.innerHTML=h;
-  }
-}
-
-function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
-
-/* ===== 快速记录弹窗 ===== */
-function openQuickModal(){
-  document.getElementById('qmOverlay').classList.add('show');
-  document.getElementById('qmInput').value='';
-  document.getElementById('qmInput').focus();
-  // Cats
-  document.getElementById('qmCats').innerHTML=CATS.map(c=>
-    `<div class="qm-cat${state.selectedCat===c.id?' active':''}" onclick="state.selectedCat='${c.id}';renderCats()">${c.label}</div>`
-  ).join('');
-  // Quick options
-  document.getElementById('qmQuicks').innerHTML=QUICK.map(q=>
-    `<div class="qm-q" onclick="document.getElementById('qmInput').value='${q.replace(/'/g,"\\'")}';submitWin()">${q}</div>`
-  ).join('');
-}
-function renderCats(){
-  document.getElementById('qmCats').innerHTML=CATS.map(c=>
-    `<div class="qm-cat${state.selectedCat===c.id?' active':''}" onclick="state.selectedCat='${c.id}';renderCats()">${c.label}</div>`
-  ).join('');
-}
-function closeModal(){document.getElementById('qmOverlay').classList.remove('show')}
-
-function submitWin(){
-  const input=document.getElementById('qmInput');
-  const text=input.value.trim();
-  if(!text)return;
-  prevBadgeCount=earnedBadges().length;
-  state.wins.push({id:Date.now().toString(36),text,cat:state.selectedCat,date:today(),time:new Date().toTimeString().slice(0,5)});
-  input.value='';
-  saveState();
-  closeModal();
-  renderMotivBar();
-  renderDashboard();
-  celebrate();
-  // Check for new badge
-  const newBadges=earnedBadges();
-  if(newBadges.length>prevBadgeCount){
-    const latest=newBadges[newBadges.length-1];
-    setTimeout(()=>showBadgePopup(latest),600);
-  }
-}
-
-/* ===== 庆祝特效 ===== */
-function celebrate(){
-  const colors=['#f0c420','#ff6b6b','#48dbfb','#ff9ff3','#1dd1a1','#feca57','#ee5a24','#0abde3'];
-  for(let i=0;i<30;i++){
-    const c=document.createElement('div');
-    c.className='confetti';
-    const sz=4+Math.random()*6;
-    c.style.cssText=`width:${sz}px;height:${sz}px;background:${colors[i%colors.length]};top:${40+Math.random()*10}%;left:${20+Math.random()*60}%;opacity:1;`;
-    document.body.appendChild(c);
-    requestAnimationFrame(()=>{
-      c.style.top=(5+Math.random()*80)+'%';
-      c.style.left=(5+Math.random()*90)+'%';
-      c.style.opacity='0';
-      c.style.transform=`scale(${1+Math.random()*3}) rotate(${Math.random()*360}deg)`;
-    });
-    setTimeout(()=>c.remove(),1000);
-  }
-}
-
-function showBadgePopup(badge){
-  const p=document.createElement('div');
-  p.className='badge-popup';
-  p.innerHTML=`<div class="bp-icon">${badge.icon}</div><div class="bp-title">🎉 解锁新徽章！</div><div class="bp-desc">${badge.name}</div>`;
-  document.body.appendChild(p);
-  // Extra fireworks
-  celebrate();celebrate();
-  setTimeout(()=>{p.style.transition='all .3s';p.style.opacity='0';p.style.transform='translate(-50%,-50%) scale(1.2)';setTimeout(()=>p.remove(),300)},2500);
-}
-
-/* ===== 导航 ===== */
-const items=document.querySelectorAll('.sidebar .item');
-
-function load(url,title,el){
-  document.getElementById('homeView').style.display='none';
-  const f=document.getElementById('toolFrame');
-  f.style.display='block';f.src=url;
-  document.getElementById('topTitle').textContent=title;
-  items.forEach(i=>i.classList.remove('active'));
-  if(el)el.classList.add('active');
-  document.querySelector('.back-btn').style.display='inline-block';
-}
-function loadByIndex(idx){const item=items[idx];if(item)item.click()}
-function openExt(url,title,el){
-  window.open(url,'_blank');
-  if(el){items.forEach(i=>i.classList.remove('active'));el.classList.add('active')}
-}
-function loadByName(name){
-  const map={'sa2-math':'Johnson/tools/Johnson-P5数学专项训练.html','wa3-sw':'Johnson/tools/Johnson_WA3_SW_训练器.html','hcl-camp':'Johnson/tools/Johnson_高华阅读探险营.html'};
-  if(map[name]){
-    const titles={'sa2-math':'P5 数学专项训练','wa3-sw':'WA3 Situational Writing 训练','hcl-camp':'高华阅读探险营'};
-    load(map[name],titles[name]||name);
-  }
-}
-function goHome(){
-  document.getElementById('homeView').style.display='block';
-  document.getElementById('toolFrame').style.display='none';
-  document.getElementById('toolFrame').src='';
-  document.getElementById('topTitle').textContent='Johnson 提升工具合集';
-  items.forEach(i=>i.classList.remove('active'));
-  items[0].classList.add('active');
-  document.querySelector('.back-btn').style.display=window.innerWidth<=700?'inline-block':'none';
-  renderDashboard();
-}
-
-/* ===== 初始化 ===== */
-loadState();
-renderMotivBar();
-renderDashboard();
-// 监听 iframe 里的小成功墙可能的数据变化
-window.addEventListener('storage',()=>{loadState();renderMotivBar();renderDashboard()});
-
-/* ===== 进度备份/恢复（覆盖本站所有工具的localStorage进度）===== */
-function backupProgress(){
-  const d={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);d[k]=localStorage.getItem(k)}
-  const payload=JSON.stringify({app:'huiyan-progress',date:new Date().toISOString(),count:Object.keys(d).length,data:d});
-  const blob=new Blob([payload],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='慧眼进度备份_'+new Date().toISOString().slice(0,10)+'.json';
-  document.body.appendChild(a);a.click();a.remove();
-  alert('💾 已导出进度备份文件！\n建议存到 iCloud云盘（文件App里选存储位置），换设备时用"恢复"选这个文件即可。');
-}
-function restoreProgress(){
-  const inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';
-  inp.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
-    r.onload=()=>{try{const j=JSON.parse(r.result);const d=j.data||j;let n=0;
-      for(const k in d){localStorage.setItem(k,d[k]);n++}
-      alert('✅ 已恢复 '+n+' 项进度！');location.reload();
-    }catch(err){alert('❌ 这不是有效的进度备份文件')}};
-    r.readAsText(f)};
-  inp.click();
-}
+let particles=[],fxActive=false;
+const FX=["#1557c0","#0aa779","#ff7b6b","#ffd45c","#92dcf6","#ffffff"];
+function sparkBurst(x,y,n=40,speed=4){for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,v=(.35+Math.random())*speed;particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1.5,g:.09,life:45+Math.random()*30,size:2+Math.random()*4,color:FX[i%FX.length],rot:Math.random()*6})}if(!fxActive){fxActive=true;requestAnimationFrame(drawFX)}}
+function drawFX(){const c=$("fx"),ctx=c.getContext("2d"),dpr=Math.min(devicePixelRatio||1,2);c.width=innerWidth*dpr;c.height=innerHeight*dpr;c.style.width=innerWidth+"px";c.style.height=innerHeight+"px";ctx.scale(dpr,dpr);particles=particles.filter(p=>p.life>0);particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.life--;p.rot+=.1;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.globalAlpha=Math.min(1,p.life/24);ctx.fillStyle=p.color;ctx.fillRect(-p.size,-p.size/2,p.size*2,p.size);ctx.restore()});if(particles.length)requestAnimationFrame(drawFX);else{fxActive=false;ctx.clearRect(0,0,innerWidth,innerHeight)}}
+function sparkler(el){const r=el.getBoundingClientRect();for(let i=0;i<5;i++)setTimeout(()=>sparkBurst(r.left+r.width/2,r.top+r.height/2,18,3.5),i*120);playTone(true);showToast("Neptune says: effort creates the sparkle.")}
+function fireworks(){for(let i=0;i<5;i++)setTimeout(()=>sparkBurst(innerWidth*(.18+Math.random()*.64),innerHeight*(.18+Math.random()*.4),70,6),i*180)}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("toolOverlay").classList.contains("show"))closeTool()});
+loadState();openView("home");
 </script>
 </body>
 </html>
