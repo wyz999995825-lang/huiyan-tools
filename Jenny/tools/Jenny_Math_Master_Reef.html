@@ -227,13 +227,13 @@
 <script>
 "use strict";
 /* ============ utils ============ */
-function ri(a,b){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){} return a + Math.floor(Math.random()*(b-a+1)); }
-function pick(arr){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){} return arr[Math.floor(Math.random()*arr.length)]; }
-function shuffle(arr){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){} const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-function fmtMoney(c){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){} return "$" + (c/100).toFixed(2); }
-function fmtTime(mins){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){} mins=((mins%720)+720)%720; let h=Math.floor(mins/60); if(h===0)h=12; const m=mins%60; return h + ":" + String(m).padStart(2,"0"); }
-function qid(topic,tpl,parts){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){} return topic+":"+tpl+":"+parts.join("_"); }
-function stripTags(s){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){} return String(s).replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim(); }
+function ri(a,b){ return a + Math.floor(Math.random()*(b-a+1)); }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function fmtMoney(c){ return "$" + (c/100).toFixed(2); }
+function fmtTime(mins){ mins=((mins%720)+720)%720; let h=Math.floor(mins/60); if(h===0)h=12; const m=mins%60; return h + ":" + String(m).padStart(2,"0"); }
+function qid(topic,tpl,parts){ return topic+":"+tpl+":"+parts.join("_"); }
+function stripTags(s){ return String(s).replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim(); }
 
 /* ============ WebAudio synth (no audio files) ============ */
 let AC=null;

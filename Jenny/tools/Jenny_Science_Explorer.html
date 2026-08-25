@@ -788,20 +788,20 @@ function loadState(){
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 function today(){ return new Date().toISOString().slice(0,10); }
-function bumpStreak(){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){}
+function bumpStreak(){
   const t=today(); if(S.lastDay===t) return;
   const y=new Date(Date.now()-86400000).toISOString().slice(0,10);
   S.streak=(S.lastDay===y)?S.streak+1:1; S.lastDay=t;
 }
-function wordsOf(tid){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){} return VOCAB.filter(v=>v.t===tid); }
-function knownPct(tid){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){}
+function wordsOf(tid){ return VOCAB.filter(v=>v.t===tid); }
+function knownPct(tid){
   const w=wordsOf(tid); const k=w.filter(x=>S.words[x.term]===2).length;
   return Math.round(k/w.length*100);
 }
-function quizPct(tid){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){} const m=S.quiz[tid]; return m.t===0?0:Math.round(m.c/m.t*100); }
-function vocabMastered(){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){} return Object.values(S.words).filter(v=>v===2).length; }
-function quizCorrectTotal(){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){} return Object.values(S.quiz).reduce((a,m)=>a+m.c,0); }
-function mistUnfixed(){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){} return Object.values(S.mist).filter(m=>!m.fixed).length; }
+function quizPct(tid){ const m=S.quiz[tid]; return m.t===0?0:Math.round(m.c/m.t*100); }
+function vocabMastered(){ return Object.values(S.words).filter(v=>v===2).length; }
+function quizCorrectTotal(){ return Object.values(S.quiz).reduce((a,m)=>a+m.c,0); }
+function mistUnfixed(){ return Object.values(S.mist).filter(m=>!m.fixed).length; }
 
 /* ================= WebAudio chimes (pure synth, no files) ================= */
 let AC=null;

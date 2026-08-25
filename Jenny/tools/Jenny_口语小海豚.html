@@ -294,7 +294,7 @@ function bumpOral(){
   try{localStorage.setItem(DAILY_KEY,JSON.stringify(d));}catch(e){}
   updateHeader();
 }
-function updateHeader(){try{if(localStorage.getItem("jenny_tts_on")==="0")return;}catch(e){}
+function updateHeader(){
   document.getElementById("xpPill").textContent="⭐ "+state.xp;
   const n=todayOral(),pct=Math.min(1,n/ORAL_GOAL);
   const R=20,C=2*Math.PI*R;
