@@ -3,121 +3,149 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jenny 提升工具合集</title>
+<title>Jenny 的海洋学习乐园</title>
 <style>
 :root{
-  --bg:#fdf5f8;--card:#fff8fa;--border:#e8d0d8;--text:#2c1820;--text2:#8a6e78;
-  --accent:#b83280;--accent-bg:#fce7f3;--green:#1a8a5c;--green-bg:#e5f5ec;
-  --pink:#db2777;--pink-bg:#fce7f3;--purple:#7c3aed;--purple-bg:#ede9fe;
-  --gold:#d4a017;--gold-bg:#fdf6e3;--blue:#2563eb;--blue-bg:#dbeafe;
-  --orange:#d4790e;--orange-bg:#fdf0dc;--red:#e74c3c;
-  --radius:14px;--shadow:0 2px 10px rgba(0,0,0,.06)
+  --sky:#f0fafd;--lagoon-light:#dff2f9;--lagoon:#a5e0ef;--ocean:#4ab8d8;--deep:#1a7ea8;
+  --sand:#fdf3dd;--coral:#ff8a7a;--card:#ffffff;
+  --bg:var(--sky);--border:#c9e8f2;--text:#164a5e;--text2:#5b8ba0;
+  --accent:var(--ocean);--accent-deep:var(--deep);--accent-bg:var(--lagoon-light);
+  --green:#1a8a5c;--green-bg:#e0f5ea;--gold:#e0a72e;--gold-bg:var(--sand);
+  --radius:16px;--shadow:0 3px 12px rgba(26,126,168,.10)
 }
 @media(prefers-color-scheme:dark){:root{
-  --bg:#1c161a;--card:#262022;--border:#3e3236;--text:#e8dce0;--text2:#a08890;
-  --accent:#f472b6;--accent-bg:#2e1a28;--green-bg:#1a2e22;--pink-bg:#2e1a28;
-  --purple-bg:#2a1e3e;--gold-bg:#2e2a18;--blue-bg:#1a2a4a;--orange-bg:#2e2618
+  --bg:#0e2230;--card:#16303f;--border:#28495c;--text:#d8eef7;--text2:#8fb5c6;
+  --accent-bg:#1b3a4c;--green-bg:#153529;--gold-bg:#3a3320;--sand:#3a3320;
+  --lagoon-light:#1b3a4c;--shadow:0 3px 12px rgba(0,0,0,.3)
 }}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;font-size:15px}
 
-.topbar{background:linear-gradient(135deg,#b83280 0%,#831843 100%);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0}
-.topbar h1{font-size:20px;font-weight:700}
-.topbar .info{font-size:13px;opacity:.7}
-.topbar .back-btn{background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 14px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;display:none}
-.topbar .back-btn:hover{background:rgba(255,255,255,.25)}
+.topbar{background:linear-gradient(135deg,#4ab8d8 0%,#1a7ea8 100%);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-shrink:0;position:relative;z-index:5}
+.topbar h1{font-size:20px;font-weight:800;text-shadow:0 1px 3px rgba(0,40,60,.2)}
+.topbar .info{font-size:13px;opacity:.85}
+.topbar .back-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:700;display:none;min-height:44px}
+.topbar .back-btn:hover{background:rgba(255,255,255,.3)}
+.topbar .tb-btn{background:rgba(255,255,255,.2);border:none;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;min-height:44px}
+.topbar .tb-btn:hover{background:rgba(255,255,255,.3)}
 
 /* 全局激励栏 */
-.motiv-bar{background:linear-gradient(90deg,var(--gold-bg) 0%,var(--accent-bg) 100%);border-bottom:1.5px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:16px;flex-shrink:0;flex-wrap:wrap;min-height:52px;cursor:pointer;transition:.15s}
+.motiv-bar{background:linear-gradient(90deg,var(--sand) 0%,var(--lagoon-light) 100%);border-bottom:1.5px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:16px;flex-shrink:0;flex-wrap:wrap;min-height:52px;cursor:pointer;transition:.15s}
 .motiv-bar:hover{filter:brightness(.97)}
-.mb-streak{display:flex;align-items:center;gap:6px;font-weight:800;font-size:18px;color:var(--gold)}
+.mb-streak{display:flex;align-items:center;gap:6px;font-weight:800;font-size:18px;color:var(--deep)}
 .mb-streak .fire{font-size:22px}
-.mb-stat{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--text2);background:var(--card);padding:4px 10px;border-radius:12px;border:1px solid var(--border)}
-.mb-stat .n{font-weight:700;color:var(--accent);font-size:15px}
+.mb-stat{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--text2);background:var(--card);padding:6px 12px;border-radius:14px;border:1px solid var(--border)}
+.mb-stat .n{font-weight:700;color:var(--accent-deep);font-size:15px}
 .mb-badges{display:flex;gap:2px;font-size:18px}
 .mb-badges .locked{opacity:.2}
 .mb-msg{flex:1;text-align:right;font-size:13px;color:var(--text2);font-style:italic;min-width:120px}
-.mb-add{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.mb-add{background:var(--coral);color:#fff;border:none;padding:10px 16px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;min-height:44px;box-shadow:0 2px 6px rgba(255,138,122,.4)}
 .mb-add:hover{opacity:.9}
 
 /* 快速记录弹窗 */
-.quick-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1000;justify-content:center;align-items:center}
+.quick-modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,50,70,.4);z-index:1000;justify-content:center;align-items:center}
 .quick-modal-overlay.show{display:flex}
-.quick-modal{background:var(--card);border:2px solid var(--accent);border-radius:18px;padding:28px;width:90%;max-width:440px;box-shadow:0 10px 40px rgba(0,0,0,.15);animation:popIn .25s ease}
+.quick-modal{background:var(--card);border:2.5px solid var(--ocean);border-radius:20px;padding:28px;width:90%;max-width:440px;box-shadow:0 10px 40px rgba(10,60,90,.25);animation:popIn .25s ease}
 @keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
-.qm-title{font-size:20px;font-weight:700;margin-bottom:16px;text-align:center}
+.qm-title{font-size:20px;font-weight:800;margin-bottom:16px;text-align:center}
 .qm-cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.qm-cat{padding:6px 12px;border-radius:16px;border:1.5px solid var(--border);background:var(--bg);cursor:pointer;font-size:13px;transition:.15s}
-.qm-cat.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.qm-cat:hover{border-color:var(--accent)}
-.qm-quicks{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
-.qm-q{padding:5px 10px;border-radius:12px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:12px}
-.qm-q:hover{background:var(--accent-bg);border-color:var(--accent)}
-.qm-input{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;background:var(--bg);color:var(--text);margin-bottom:12px}
-.qm-input:focus{outline:none;border-color:var(--accent)}
+.qm-cat{padding:9px 14px;border-radius:18px;border:1.5px solid var(--border);background:var(--bg);cursor:pointer;font-size:13px;transition:.15s;min-height:38px}
+.qm-cat.active{background:var(--ocean);color:#fff;border-color:var(--ocean)}
+.qm-cat:hover{border-color:var(--ocean)}
+.qm-quicks{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.qm-q{padding:8px 12px;border-radius:14px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-size:12px}
+.qm-q:hover{background:var(--accent-bg);border-color:var(--ocean)}
+.qm-input{width:100%;padding:13px;border:1.5px solid var(--border);border-radius:12px;font-size:15px;background:var(--bg);color:var(--text);margin-bottom:12px;min-height:48px}
+.qm-input:focus{outline:none;border-color:var(--ocean)}
 .qm-btns{display:flex;gap:10px}
-.qm-submit{flex:1;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
-.qm-submit:hover{opacity:.9}
-.qm-cancel{padding:12px 20px;border:1.5px solid var(--border);border-radius:10px;background:var(--card);color:var(--text2);font-size:15px;cursor:pointer}
+.qm-submit{flex:1;padding:13px;border:none;border-radius:12px;background:var(--ocean);color:#fff;font-size:15px;font-weight:700;cursor:pointer;min-height:48px}
+.qm-submit:hover{background:var(--deep)}
+.qm-cancel{padding:13px 20px;border:1.5px solid var(--border);border-radius:12px;background:var(--card);color:var(--text2);font-size:15px;cursor:pointer;min-height:48px}
 
 .confetti{position:fixed;pointer-events:none;z-index:2000;border-radius:50%;transition:all .8s cubic-bezier(.25,.46,.45,.94)}
-.badge-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--card);border:3px solid var(--gold);border-radius:20px;padding:30px 40px;text-align:center;z-index:2001;box-shadow:0 10px 50px rgba(0,0,0,.25);animation:badgePop .5s ease forwards}
+.badge-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:var(--card);border:3px solid var(--gold);border-radius:22px;padding:30px 40px;text-align:center;z-index:2001;box-shadow:0 10px 50px rgba(10,60,90,.3);animation:badgePop .5s ease forwards}
 @keyframes badgePop{from{transform:translate(-50%,-50%) scale(0);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
 .badge-popup .bp-icon{font-size:64px}
 .badge-popup .bp-title{font-size:20px;font-weight:800;color:var(--gold);margin-top:8px}
 .badge-popup .bp-desc{font-size:14px;color:var(--text2);margin-top:4px}
 
-.main{display:flex;flex:1;overflow:hidden}
+/* 每日小激励：美人鱼弹窗 */
+.mermaid-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);background:linear-gradient(180deg,var(--card) 0%,var(--lagoon-light) 100%);border:3px solid var(--ocean);border-radius:24px;padding:32px 36px;text-align:center;z-index:2002;box-shadow:0 12px 50px rgba(10,60,90,.35);animation:badgePop .5s ease forwards;max-width:360px;width:88%}
+.mermaid-popup .mp-icon{font-size:70px;animation:mFloat 2.5s ease-in-out infinite}
+@keyframes mFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.mermaid-popup .mp-title{font-size:18px;font-weight:800;color:var(--deep);margin-top:10px}
+.mermaid-popup .mp-msg{font-size:15px;color:var(--text);margin-top:8px;line-height:1.7}
+.mermaid-popup .mp-btn{margin-top:16px;background:var(--ocean);color:#fff;border:none;padding:12px 30px;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;min-height:48px}
+.mermaid-popup .mp-btn:hover{background:var(--deep)}
 
-.sidebar{width:240px;background:var(--card);border-right:1.5px solid var(--border);overflow-y:auto;flex-shrink:0;padding:12px 0}
-.sidebar .sec{padding:6px 16px;font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-top:8px}
-.sidebar .item{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;transition:.15s;border-left:3px solid transparent;font-size:14px;line-height:1.3}
+/* 烟花棒按钮 + 粒子 */
+.sparkler-btn{position:fixed;left:16px;bottom:16px;z-index:900;width:56px;height:56px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--coral) 0%,#ffb37a 100%);font-size:26px;cursor:pointer;box-shadow:0 4px 14px rgba(255,138,122,.5);transition:transform .15s}
+.sparkler-btn:active{transform:scale(.88)}
+.spark{position:fixed;pointer-events:none;z-index:2100;border-radius:50%}
+
+/* 漂浮泡泡 */
+.bubbles{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.bubble{position:absolute;bottom:-60px;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),rgba(165,224,239,.25) 60%,rgba(74,184,216,.12));border:1px solid rgba(255,255,255,.5);border-radius:50%;animation:rise linear infinite;opacity:.55}
+@keyframes rise{0%{transform:translateY(0) translateX(0);opacity:.55}50%{transform:translateY(-55vh) translateX(18px)}100%{transform:translateY(-110vh) translateX(-12px);opacity:0}}
+
+.main{display:flex;flex-direction:row-reverse;flex:1;overflow:hidden;position:relative;z-index:2}
+
+/* 控制栏在右侧 */
+.sidebar{width:242px;background:var(--card);border-left:1.5px solid var(--border);overflow-y:auto;flex-shrink:0;padding:12px 0}
+.sidebar .sec{padding:8px 16px;font-size:12px;font-weight:800;color:var(--text2);letter-spacing:.5px;margin-top:8px}
+.sidebar .item{display:flex;align-items:center;gap:10px;padding:12px 16px;min-height:46px;cursor:pointer;transition:.15s;border-right:3px solid transparent;font-size:14px;line-height:1.3}
 .sidebar .item:hover{background:var(--accent-bg)}
-.sidebar .item.active{background:var(--accent-bg);border-left-color:var(--accent);font-weight:600}
+.sidebar .item.active{background:var(--accent-bg);border-right-color:var(--ocean);font-weight:700}
 .sidebar .item .emoji{font-size:20px;flex-shrink:0}
 .sidebar .item .label{flex:1}
-.sidebar .item .tag{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600;flex-shrink:0}
+.sidebar .item .tag{font-size:10px;padding:2px 6px;border-radius:5px;font-weight:700;flex-shrink:0}
 .tag-new{background:var(--green-bg);color:var(--green)}
 
 .content{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .tool-frame{flex:1;border:none;background:#fff}
 
-.home{flex:1;overflow-y:auto;padding:30px}
-.home h2{font-size:22px;margin-bottom:6px}
-.home .sub{color:var(--text2);font-size:14px;margin-bottom:24px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-bottom:28px}
-.card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:22px;cursor:pointer;transition:.2s;box-shadow:var(--shadow)}
-.card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.1);border-color:var(--accent)}
-.card .c-icon{font-size:36px;margin-bottom:10px}
-.card .c-title{font-size:17px;font-weight:700;margin-bottom:6px}
+.home{flex:1;overflow-y:auto;padding:28px 30px}
+.home h2{font-size:23px;margin-bottom:6px}
+.home .sub{color:var(--text2);font-size:14px;margin-bottom:20px}
+.subject-sec{margin-bottom:26px}
+.subject-title{font-size:18px;font-weight:800;color:var(--deep);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.card{background:var(--card);border:2px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:.2s;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;bottom:-14px;right:-14px;width:70px;height:70px;background:radial-gradient(circle,var(--lagoon) 0%,transparent 70%);border-radius:50%;opacity:.5}
+.card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(26,126,168,.18);border-color:var(--ocean)}
+.card .c-icon{font-size:40px;margin-bottom:10px}
+.card .c-title{font-size:17px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .card .c-desc{font-size:14px;color:var(--text2);line-height:1.6}
 
-/* 首页仪表盘 */
-.dash{background:linear-gradient(135deg,var(--gold-bg) 0%,var(--accent-bg) 100%);border:2px solid var(--gold);border-radius:var(--radius);padding:24px;margin-bottom:28px;position:relative;overflow:hidden}
-.dash::after{content:'';position:absolute;top:-20px;right:-20px;width:120px;height:120px;background:radial-gradient(circle,rgba(184,50,128,.1) 0%,transparent 70%);border-radius:50%}
+.wave-divider{display:block;width:100%;height:34px;margin:4px 0 20px}
+
+/* 潜水日志（首页仪表盘） */
+.dash{background:linear-gradient(160deg,var(--lagoon-light) 0%,var(--sand) 100%);border:2px solid var(--lagoon);border-radius:var(--radius);padding:24px;margin-bottom:24px;position:relative;overflow:hidden}
+.dash::after{content:'🐳';position:absolute;bottom:6px;right:14px;font-size:44px;opacity:.18}
+.dash-title{font-size:17px;font-weight:800;color:var(--deep);margin-bottom:14px}
 .dash-top{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:16px}
 .dash-streak{text-align:center}
 .dash-streak .ds-icon{font-size:40px}
-.dash-streak .ds-num{font-size:44px;font-weight:900;color:var(--gold);line-height:1}
+.dash-streak .ds-num{font-size:44px;font-weight:900;color:var(--deep);line-height:1}
 .dash-streak .ds-label{font-size:12px;color:var(--text2)}
-.dash-stats{display:flex;gap:16px;flex:1;flex-wrap:wrap}
-.dash-stat{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;text-align:center;min-width:80px;flex:1}
-.dash-stat .ds-n{font-size:22px;font-weight:800;color:var(--accent)}
+.dash-stats{display:flex;gap:14px;flex:1;flex-wrap:wrap}
+.dash-stat{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:12px 16px;text-align:center;min-width:80px;flex:1}
+.dash-stat .ds-n{font-size:22px;font-weight:800;color:var(--ocean)}
 .dash-stat .ds-l{font-size:11px;color:var(--text2)}
 .dash-week{display:flex;gap:6px;justify-content:center}
-.dash-dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text2);background:var(--card)}
-.dash-dot.done{background:var(--accent);border-color:var(--accent);color:#fff;font-size:14px}
-.dash-dot.today{border-color:var(--gold);border-width:3px}
+.dash-dot{width:36px;height:36px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text2);background:var(--card)}
+.dash-dot.done{background:var(--ocean);border-color:var(--ocean);color:#fff;font-size:14px}
+.dash-dot.today{border-color:var(--coral);border-width:3px}
 .dash-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px}
 .dash-badge{font-size:24px;transition:.2s}
 .dash-badge.locked{opacity:.15;filter:grayscale(1)}
 .dash-badge.earned{animation:bb 1s ease infinite}
 @keyframes bb{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-.dash-encourage{text-align:center;font-size:15px;color:var(--text);margin-top:14px;padding:10px;background:var(--card);border-radius:10px;border:1px solid var(--border)}
+.dash-encourage{text-align:center;font-size:15px;color:var(--text);margin-top:14px;padding:11px;background:var(--card);border-radius:12px;border:1px solid var(--border)}
 .dash-recent{margin-top:16px}
 .dash-recent h4{font-size:13px;color:var(--text2);margin-bottom:8px}
 .recent-list{display:flex;flex-direction:column;gap:6px}
-.recent-item{display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 10px;background:var(--card);border-radius:8px;border:1px solid var(--border)}
+.recent-item{display:flex;align-items:center;gap:8px;font-size:13px;padding:7px 10px;background:var(--card);border-radius:10px;border:1px solid var(--border)}
 .recent-item .ri-icon{font-size:16px}
 .recent-item .ri-text{flex:1;font-weight:600}
 .recent-item .ri-date{font-size:11px;color:var(--text2)}
@@ -126,18 +154,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
   .sidebar{display:none}
   .topbar .back-btn{display:inline-block}
   .dash-top{flex-direction:column;align-items:stretch}
+  .home{padding:20px 16px}
 }
 </style>
 </head>
 <body>
 
+<!-- 漂浮泡泡背景 -->
+<div class="bubbles" id="bubbles"></div>
+
 <div class="topbar">
   <button class="back-btn" onclick="goHome()">← 返回</button>
-  <h1 id="topTitle">Jenny 提升工具合集</h1>
-  <span class="info">P2 · 5 个学习工具</span>
+  <h1 id="topTitle">🧜‍♀️ Jenny 的海洋学习乐园</h1>
+  <span class="info">P2 · 10 个学习工具</span>
   <span style="margin-left:auto;display:flex;gap:6px">
-    <button onclick="backupProgress()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">💾 备份进度</button>
-    <button onclick="restoreProgress()" style="background:rgba(255,255,255,.15);border:none;color:#fff;padding:7px 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">📥 恢复</button>
+    <button class="tb-btn" onclick="backupProgress()">💾 备份进度</button>
+    <button class="tb-btn" onclick="restoreProgress()">📥 恢复</button>
   </span>
 </div>
 
@@ -153,7 +185,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
 <!-- 快速记录弹窗 -->
 <div class="quick-modal-overlay" id="qmOverlay" onclick="if(event.target===this)closeModal()">
   <div class="quick-modal">
-    <div class="qm-title">🎉 记录今天的小成功</div>
+    <div class="qm-title">🌊 记录今天的小成功</div>
     <div class="qm-cats" id="qmCats"></div>
     <div class="qm-quicks" id="qmQuicks"></div>
     <input class="qm-input" id="qmInput" placeholder="写下你的小成功..." onkeydown="if(event.key==='Enter')submitWin()" />
@@ -165,40 +197,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
 </div>
 
 <div class="main">
-  <div class="sidebar" id="sidebar">
-    <div class="item active" onclick="goHome()">
-      <span class="emoji">🏠</span><span class="label">主页</span>
-    </div>
-    <div class="sec">🎮 互动学习</div>
-    <div class="item" onclick="load('Jenny/tools/Jenny-Animal-Kingdom-Math.html','动物王国数学',this)">
-      <span class="emoji">🦁</span><span class="label">动物王国数学</span>
-    </div>
-    <div class="item" onclick="load('Jenny/tools/Jenny-Values-Adventure.html','价值观大冒险',this)">
-      <span class="emoji">🌟</span><span class="label">价值观大冒险</span>
-    </div>
-    <div class="sec">📰 阅读</div>
-    <div class="item" onclick="load('Jenny/tools/InsightRead_慧眼家庭早报.html','慧眼家庭早报',this)">
-      <span class="emoji">📰</span><span class="label">慧眼家庭早报</span>
-    </div>
-    <div class="sec">🧠 思维训练</div>
-    <div class="item" onclick="load('Jenny/tools/Jenny_MindMap侦探社.html','MindMap侦探社',this)">
-      <span class="emoji">🕵️</span><span class="label">MindMap侦探社</span><span class="tag tag-new">NEW</span>
-    </div>
-    <div class="sec">🌟 激励</div>
-    <div class="item" onclick="load('Jenny/tools/Jenny小成功墙.html','小成功墙',this)">
-      <span class="emoji">🏆</span><span class="label">小成功墙</span>
-    </div>
-  </div>
-
+  <!-- 内容区（左） -->
   <div class="content">
     <div class="home" id="homeView">
-      <!-- 首页仪表盘 -->
+      <!-- 潜水日志 -->
       <div class="dash" id="dashboard">
+        <div class="dash-title">🤿 潜水日志 · Jenny 的深海探险记录</div>
         <div class="dash-top">
           <div class="dash-streak">
             <div class="ds-icon" id="dashIcon">💤</div>
             <div class="ds-num" id="dashStreak">0</div>
-            <div class="ds-label">天连续学习</div>
+            <div class="ds-label">天连续潜水学习</div>
           </div>
           <div class="dash-stats">
             <div class="dash-stat"><div class="ds-n" id="dashTotal">0</div><div class="ds-l">总成就</div></div>
@@ -212,40 +221,146 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
         <div class="dash-recent" id="dashRecent"></div>
       </div>
 
-      <h2>👋 Jenny 的学习工具箱</h2>
-      <p class="sub">P2 · 共 5 个工具 · 点击下方卡片开始学习</p>
+      <h2>🐚 欢迎来到海洋学习乐园</h2>
+      <p class="sub">P2 · 共 10 个工具 · 点击下方的礁湖小岛开始探险</p>
 
-      <div class="grid">
-        <div class="card" onclick="loadByIndex(1)">
-          <div class="c-icon">🦁</div>
-          <div class="c-title">动物王国数学</div>
-          <div class="c-desc">在动物世界里学数学！加减乘除、比大小，用可爱的动物场景让学习变有趣。</div>
+      <svg class="wave-divider" viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C150,40 300,0 450,20 C600,40 750,0 900,20 C1050,40 1150,10 1200,20 L1200,40 L0,40 Z" fill="#a5e0ef" opacity="0.55"/><path d="M0,26 C150,10 350,38 550,24 C750,10 950,38 1200,24 L1200,40 L0,40 Z" fill="#4ab8d8" opacity="0.35"/></svg>
+
+      <div class="subject-sec">
+        <div class="subject-title">🧮 Maths 数学</div>
+        <div class="grid">
+          <div class="card" onclick="loadByName('mathreef')">
+            <div class="c-icon">🐬</div>
+            <div class="c-title">Math Master Reef <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc">跟着小海豚在珊瑚礁里闯关练数学，一步一步变成数学小高手！</div>
+          </div>
+          <div class="card" onclick="loadByName('animalmath')">
+            <div class="c-icon">🦁</div>
+            <div class="c-title">动物王国数学</div>
+            <div class="c-desc">在动物世界里学数学！加减乘除、比大小，用可爱的动物场景让学习变有趣。</div>
+          </div>
         </div>
-        <div class="card" onclick="loadByIndex(2)">
-          <div class="c-icon">🌟</div>
-          <div class="c-title">价值观大冒险</div>
-          <div class="c-desc">通过互动故事和选择题，培养正面价值观和品格——友善、勇气、诚实。</div>
+      </div>
+
+      <div class="subject-sec">
+        <div class="subject-title">🔬 Science 科学</div>
+        <div class="grid">
+          <div class="card" onclick="loadByName('science')">
+            <div class="c-icon">🐠</div>
+            <div class="c-title">Science Explorer <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc">和小丑鱼一起探索科学世界，做小实验、学新知识！</div>
+          </div>
         </div>
-        <div class="card" onclick="loadByIndex(3)">
-          <div class="c-icon">📰</div>
-          <div class="c-title">慧眼家庭早报</div>
-          <div class="c-desc">每日新闻阅读，培养阅读习惯与理解能力。</div>
+      </div>
+
+      <div class="subject-sec">
+        <div class="subject-title">📖 English 英语</div>
+        <div class="grid">
+          <div class="card" onclick="loadByName('reading')">
+            <div class="c-icon">🐢</div>
+            <div class="c-title">Reading Lagoon <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc">跟着小海龟在礁湖里读故事、学单词，英语阅读越来越棒！</div>
+          </div>
         </div>
-        <div class="card" onclick="loadByName('mindmap')">
-          <div class="c-icon">🕵️</div>
-          <div class="c-title">MindMap侦探社</div>
-          <div class="c-desc">化身小侦探，把知识整理成思维导图——分类、分层、连线、破案！</div>
+      </div>
+
+      <div class="subject-sec">
+        <div class="subject-title">📕 华文</div>
+        <div class="grid">
+          <div class="card" onclick="loadByName('huawen')">
+            <div class="c-icon">🪸</div>
+            <div class="c-title">华文珊瑚湾 <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc">在美丽的珊瑚湾里认字、组词、读句子，华文越学越好玩！</div>
+          </div>
+          <div class="card" onclick="loadByName('kouyu')">
+            <div class="c-icon">🐙</div>
+            <div class="c-title">口语小海豚 <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc">开口说华文！和小海豚一起练口语，说得越来越流利。</div>
+          </div>
         </div>
-        <div class="card" onclick="loadByIndex(5)">
-          <div class="c-icon">🏆</div>
-          <div class="c-title">小成功墙</div>
-          <div class="c-desc">记录每一个小进步，用正向反馈让学习更开心！</div>
+      </div>
+
+      <div class="subject-sec">
+        <div class="subject-title">🧠 思维</div>
+        <div class="grid">
+          <div class="card" onclick="loadByName('mindmap')">
+            <div class="c-icon">🕵️</div>
+            <div class="c-title">MindMap侦探社</div>
+            <div class="c-desc">化身小侦探，把知识整理成思维导图——分类、分层、连线、破案！</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subject-sec">
+        <div class="subject-title">🌟 成长</div>
+        <div class="grid">
+          <div class="card" onclick="loadByName('values')">
+            <div class="c-icon">⭐</div>
+            <div class="c-title">价值观大冒险</div>
+            <div class="c-desc">通过互动故事和选择题，培养正面价值观和品格——友善、勇气、诚实。</div>
+          </div>
+          <div class="card" onclick="loadByName('zaobao')">
+            <div class="c-icon">📰</div>
+            <div class="c-title">慧眼家庭早报</div>
+            <div class="c-desc">每日新闻阅读，培养阅读习惯与理解能力。</div>
+          </div>
+          <div class="card" onclick="loadByName('wins')">
+            <div class="c-icon">🏆</div>
+            <div class="c-title">小成功墙</div>
+            <div class="c-desc">记录每一个小进步，用正向反馈让学习更开心！</div>
+          </div>
         </div>
       </div>
     </div>
     <iframe class="tool-frame" id="toolFrame" style="display:none"></iframe>
   </div>
+
+  <!-- 控制栏（右侧） -->
+  <div class="sidebar" id="sidebar">
+    <div class="item active" onclick="goHome()">
+      <span class="emoji">🏠</span><span class="label">主页</span>
+    </div>
+    <div class="sec">🧮 Maths</div>
+    <div class="item" onclick="load('Jenny/tools/Jenny_Math_Master_Reef.html','Math Master Reef',this)">
+      <span class="emoji">🐬</span><span class="label">Math Master Reef</span><span class="tag tag-new">NEW</span>
+    </div>
+    <div class="item" onclick="load('Jenny/tools/Jenny-Animal-Kingdom-Math.html','动物王国数学',this)">
+      <span class="emoji">🦁</span><span class="label">动物王国数学</span>
+    </div>
+    <div class="sec">🔬 Science</div>
+    <div class="item" onclick="load('Jenny/tools/Jenny_Science_Explorer.html','Science Explorer',this)">
+      <span class="emoji">🐠</span><span class="label">Science Explorer</span><span class="tag tag-new">NEW</span>
+    </div>
+    <div class="sec">📖 English</div>
+    <div class="item" onclick="load('Jenny/tools/Jenny_Reading_Lagoon.html','Reading Lagoon',this)">
+      <span class="emoji">🐢</span><span class="label">Reading Lagoon</span><span class="tag tag-new">NEW</span>
+    </div>
+    <div class="sec">📕 华文</div>
+    <div class="item" onclick="load('Jenny/tools/Jenny_华文珊瑚湾.html','华文珊瑚湾',this)">
+      <span class="emoji">🪸</span><span class="label">华文珊瑚湾</span><span class="tag tag-new">NEW</span>
+    </div>
+    <div class="item" onclick="load('Jenny/tools/Jenny_口语小海豚.html','口语小海豚',this)">
+      <span class="emoji">🐙</span><span class="label">口语小海豚</span><span class="tag tag-new">NEW</span>
+    </div>
+    <div class="sec">🧠 思维</div>
+    <div class="item" onclick="load('Jenny/tools/Jenny_MindMap侦探社.html','MindMap侦探社',this)">
+      <span class="emoji">🕵️</span><span class="label">MindMap侦探社</span>
+    </div>
+    <div class="sec">🌟 成长</div>
+    <div class="item" onclick="load('Jenny/tools/Jenny-Values-Adventure.html','价值观大冒险',this)">
+      <span class="emoji">⭐</span><span class="label">价值观大冒险</span>
+    </div>
+    <div class="item" onclick="load('Jenny/tools/InsightRead_慧眼家庭早报.html','慧眼家庭早报',this)">
+      <span class="emoji">📰</span><span class="label">慧眼家庭早报</span>
+    </div>
+    <div class="item" onclick="load('Jenny/tools/Jenny小成功墙.html','小成功墙',this)">
+      <span class="emoji">🏆</span><span class="label">小成功墙</span>
+    </div>
+  </div>
 </div>
+
+<!-- 烟花棒 -->
+<button class="sparkler-btn" onclick="fireworks()" title="放烟花！">🎆</button>
 
 <script>
 const CATS=[
@@ -283,6 +398,20 @@ const MSGS=[
   '今天的 Jenny 比昨天更厉害啦！🌻',
   '每天一小步，未来一大步！🚀',
   '你真的很了不起，继续保持！🌟'
+];
+const DAILY_MSGS=[
+  '早安小美人鱼！今天的海洋世界在等你探险哦！🐚',
+  '欢迎回到海洋乐园！小海豚们都想你啦！🐬',
+  '今天也要像小海龟一样，一步一步慢慢进步哦！🐢',
+  '哇，Jenny 来啦！珊瑚湾今天特别漂亮，就像你的笑容！🪸',
+  '深呼吸，潜入知识的大海吧！你一定可以的！🌊',
+  '小丑鱼说：Jenny 是全海洋最爱学习的小朋友！🐠',
+  '今天学一点点，明天就会更厉害一点点！加油！⭐',
+  '海星送你五个角的祝福：开心、勇敢、努力、聪明、可爱！🌟',
+  '章鱼老师说：用八只手也数不完 Jenny 的优点！🐙',
+  '大鲸鱼喷出一朵水花，欢迎 Jenny 回来学习！🐳',
+  '今天的你比昨天更棒，明天的你会比今天更闪亮！✨',
+  '小螃蟹横着走也要来给 Jenny 加油！你最棒！🦀'
 ];
 
 let state={wins:[],streak:0,bestStreak:0,selectedCat:'math'};
@@ -349,13 +478,13 @@ function submitWin(){
   const input=document.getElementById('qmInput');const text=input.value.trim();if(!text)return;
   prevBadgeCount=earnedBadges().length;
   state.wins.push({id:Date.now().toString(36),text,cat:state.selectedCat,date:today(),time:new Date().toTimeString().slice(0,5)});
-  input.value='';saveState();closeModal();renderMotivBar();renderDashboard();celebrate();
+  input.value='';saveState();closeModal();renderMotivBar();renderDashboard();celebrate();fireworks();
   const newBadges=earnedBadges();
   if(newBadges.length>prevBadgeCount){setTimeout(()=>showBadgePopup(newBadges[newBadges.length-1]),600)}
 }
 
 function celebrate(){
-  const colors=['#ff69b4','#ff6b6b','#48dbfb','#ff9ff3','#1dd1a1','#feca57','#f368e0','#0abde3'];
+  const colors=['#4ab8d8','#1a7ea8','#ff8a7a','#48dbfb','#1dd1a1','#feca57','#a5e0ef','#0abde3'];
   for(let i=0;i<30;i++){const c=document.createElement('div');c.className='confetti';const sz=4+Math.random()*6;c.style.cssText=`width:${sz}px;height:${sz}px;background:${colors[i%colors.length]};top:${40+Math.random()*10}%;left:${20+Math.random()*60}%;opacity:1;`;document.body.appendChild(c);requestAnimationFrame(()=>{c.style.top=(5+Math.random()*80)+'%';c.style.left=(5+Math.random()*90)+'%';c.style.opacity='0';c.style.transform=`scale(${1+Math.random()*3}) rotate(${Math.random()*360}deg)`});setTimeout(()=>c.remove(),1000)}
 }
 function showBadgePopup(badge){
@@ -363,6 +492,56 @@ function showBadgePopup(badge){
   p.innerHTML=`<div class="bp-icon">${badge.icon}</div><div class="bp-title">🎉 解锁新徽章！</div><div class="bp-desc">${badge.name}</div>`;
   document.body.appendChild(p);celebrate();celebrate();
   setTimeout(()=>{p.style.transition='all .3s';p.style.opacity='0';p.style.transform='translate(-50%,-50%) scale(1.2)';setTimeout(()=>p.remove(),300)},2500);
+}
+
+/* ===== 烟花棒 🎆 ===== */
+function fireworks(){
+  const colors=['#ff8a7a','#feca57','#4ab8d8','#f368e0','#1dd1a1','#a55eea','#fd9644','#fff'];
+  const bursts=3;
+  for(let b=0;b<bursts;b++){
+    const cx=15+Math.random()*70, cy=20+Math.random()*50;
+    setTimeout(()=>{
+      for(let i=0;i<26;i++){
+        const p=document.createElement('div');p.className='spark';
+        const sz=3+Math.random()*5;
+        p.style.cssText=`width:${sz}px;height:${sz}px;background:${colors[i%colors.length]};left:${cx}%;top:${cy}%;opacity:1;box-shadow:0 0 6px ${colors[i%colors.length]};transition:all ${0.7+Math.random()*0.4}s cubic-bezier(.15,.85,.35,1)`;
+        document.body.appendChild(p);
+        const ang=(i/26)*Math.PI*2, dist=6+Math.random()*14;
+        requestAnimationFrame(()=>{requestAnimationFrame(()=>{
+          p.style.left=(cx+Math.cos(ang)*dist)+'%';
+          p.style.top=(cy+Math.sin(ang)*dist+4)+'%';
+          p.style.opacity='0';
+          p.style.transform=`scale(${0.2+Math.random()*0.5})`;
+        })});
+        setTimeout(()=>p.remove(),1300);
+      }
+    },b*180);
+  }
+}
+
+/* ===== 每日小激励 🧜‍♀️ ===== */
+function dailyHello(){
+  let last=null;
+  try{last=localStorage.getItem('jenny_daily_hello')}catch(e){}
+  if(last===today())return;
+  try{localStorage.setItem('jenny_daily_hello',today())}catch(e){}
+  const msg=DAILY_MSGS[Math.floor(Math.random()*DAILY_MSGS.length)];
+  const p=document.createElement('div');p.className='mermaid-popup';
+  p.innerHTML=`<div class="mp-icon">🧜‍♀️</div><div class="mp-title">每日小激励</div><div class="mp-msg">${msg}</div><button class="mp-btn">开始探险 🌊</button>`;
+  p.querySelector('.mp-btn').onclick=()=>{p.style.transition='all .3s';p.style.opacity='0';p.style.transform='translate(-50%,-50%) scale(1.15)';setTimeout(()=>p.remove(),300)};
+  document.body.appendChild(p);
+  setTimeout(celebrate,350);
+}
+
+/* ===== 漂浮泡泡 ===== */
+function makeBubbles(){
+  const box=document.getElementById('bubbles');
+  for(let i=0;i<14;i++){
+    const b=document.createElement('div');b.className='bubble';
+    const sz=8+Math.random()*26;
+    b.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;animation-duration:${9+Math.random()*12}s;animation-delay:${-Math.random()*15}s`;
+    box.appendChild(b);
+  }
 }
 
 const items=document.querySelectorAll('.sidebar .item');
@@ -373,19 +552,34 @@ function load(url,title,el){
   items.forEach(i=>i.classList.remove('active'));if(el)el.classList.add('active');
   document.querySelector('.back-btn').style.display='inline-block';
 }
-function loadByIndex(idx){const item=items[idx];if(item)item.click()}
-const nameMap={'mindmap':'Jenny/tools/Jenny_MindMap侦探社.html'};
-function loadByName(name){const url=nameMap[name];if(url){load(url,name,null)}}
+const nameMap={
+  'mathreef':  {url:'Jenny/tools/Jenny_Math_Master_Reef.html',      title:'Math Master Reef'},
+  'animalmath':{url:'Jenny/tools/Jenny-Animal-Kingdom-Math.html',   title:'动物王国数学'},
+  'science':   {url:'Jenny/tools/Jenny_Science_Explorer.html',      title:'Science Explorer'},
+  'reading':   {url:'Jenny/tools/Jenny_Reading_Lagoon.html',        title:'Reading Lagoon'},
+  'huawen':    {url:'Jenny/tools/Jenny_华文珊瑚湾.html',             title:'华文珊瑚湾'},
+  'kouyu':     {url:'Jenny/tools/Jenny_口语小海豚.html',             title:'口语小海豚'},
+  'mindmap':   {url:'Jenny/tools/Jenny_MindMap侦探社.html',          title:'MindMap侦探社'},
+  'values':    {url:'Jenny/tools/Jenny-Values-Adventure.html',      title:'价值观大冒险'},
+  'zaobao':    {url:'Jenny/tools/InsightRead_慧眼家庭早报.html',      title:'慧眼家庭早报'},
+  'wins':      {url:'Jenny/tools/Jenny小成功墙.html',                title:'小成功墙'}
+};
+function loadByName(name){
+  const t=nameMap[name];if(!t)return;
+  let el=null;
+  items.forEach(i=>{const oc=i.getAttribute('onclick')||'';if(oc.indexOf("'"+t.url+"'")>=0)el=i});
+  load(t.url,t.title,el);
+}
 function goHome(){
   document.getElementById('homeView').style.display='block';
   document.getElementById('toolFrame').style.display='none';document.getElementById('toolFrame').src='';
-  document.getElementById('topTitle').textContent='Jenny 提升工具合集';
+  document.getElementById('topTitle').textContent='🧜‍♀️ Jenny 的海洋学习乐园';
   items.forEach(i=>i.classList.remove('active'));items[0].classList.add('active');
   document.querySelector('.back-btn').style.display=window.innerWidth<=700?'inline-block':'none';
   renderDashboard();
 }
 
-loadState();renderMotivBar();renderDashboard();
+loadState();renderMotivBar();renderDashboard();makeBubbles();dailyHello();
 window.addEventListener('storage',()=>{loadState();renderMotivBar();renderDashboard()});
 
 /* ===== 进度备份/恢复（覆盖本站所有工具的localStorage进度）===== */

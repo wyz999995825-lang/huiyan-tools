@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>华文珊瑚湾 🪸</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body {
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,sans-serif;
+  background:#f0fafd; color:#134b63; font-size:16px; padding-bottom:90px;
+}
+header {
+  background:linear-gradient(160deg,#dff2f9,#a5e0ef);
+  padding:16px 16px 14px; border-radius:0 0 24px 24px;
+  box-shadow:0 4px 14px rgba(26,126,168,.12);
+}
+.hrow { display:flex; align-items:center; gap:12px; max-width:760px; margin:0 auto; }
+.mermaid-big { font-size:44px; line-height:1; }
+.htitle { font-size:22px; font-weight:800; color:#1a7ea8; }
+.hsub { font-size:13px; color:#3d7f9c; margin-top:2px; }
+.stats { display:flex; gap:8px; margin-left:auto; }
+.pill { background:#ffffffcc; border-radius:999px; padding:7px 12px; font-weight:700; font-size:14px; color:#1a7ea8; box-shadow:0 2px 6px rgba(26,126,168,.12); white-space:nowrap; }
+nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:50; background:#fff;
+  box-shadow:0 -4px 16px rgba(26,126,168,.15); display:flex; justify-content:space-around;
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom)); border-radius:20px 20px 0 0;
+}
+.navbtn { border:none; background:none; font-size:13px; font-weight:700; color:#7aa9bd; display:flex; flex-direction:column; align-items:center; gap:2px; min-width:80px; min-height:52px; justify-content:center; border-radius:14px; cursor:pointer; font-family:inherit; }
+.navbtn .ico { font-size:24px; }
+.navbtn.active { color:#1a7ea8; background:#dff2f9; }
+main { max-width:760px; margin:0 auto; padding:16px; }
+.card { background:#fff; border-radius:18px; padding:18px; box-shadow:0 4px 14px rgba(26,126,168,.10); margin-bottom:16px; }
+.bubble { background:#dff2f9; border-radius:18px; padding:12px 16px; position:relative; font-size:16px; line-height:1.7; color:#155e7d; margin:10px 0 16px 14px; }
+.bubble:before { content:""; position:absolute; left:-9px; top:16px; border:9px solid transparent; border-right-color:#dff2f9; border-left:none; }
+.brow { display:flex; align-items:flex-start; gap:4px; }
+.brow .face { font-size:34px; margin-top:6px; }
+.grow { flex:1; }
+h2 { color:#1a7ea8; font-size:19px; margin-bottom:10px; }
+h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; background:#4ab8d8; color:#fff; border:none; border-radius:16px; padding:12px 20px; font-size:16px; font-weight:800; cursor:pointer; min-height:48px; box-shadow:0 3px 8px rgba(26,126,168,.25); font-family:inherit; }
+.btn:active { transform:scale(.97); }
+.btn.sand { background:#fdf3dd; color:#a4762a; box-shadow:0 3px 8px rgba(190,150,60,.2); }
+.btn.ghost { background:#eaf6fb; color:#1a7ea8; box-shadow:none; }
+.btn.small { padding:8px 14px; min-height:44px; font-size:14px; }
+.tag { display:inline-block; font-size:12px; font-weight:800; border-radius:999px; padding:3px 10px; margin-bottom:6px; background:#fdf3dd; color:#a4762a; }
+.qbox { background:#f2fafd; border-radius:16px; padding:16px; margin-bottom:14px; }
+.qq { font-weight:800; margin-bottom:12px; font-size:19px; line-height:1.8; }
+.opt { display:block; width:100%; text-align:left; background:#fff; border:2px solid #cfe9f4; border-radius:14px; padding:12px 14px; font-size:17px; margin-bottom:8px; cursor:pointer; min-height:48px; color:#134b63; font-family:inherit; }
+.opt.correct { background:#d9f5e5; border-color:#5bc596; font-weight:700; }
+.opt.wrong { background:#ffe9e5; border-color:#ff8a7a; }
+.model { background:#fff; border-left:5px solid #4ab8d8; border-radius:0 12px 12px 0; padding:10px 12px; margin-top:6px; font-size:16px; line-height:1.8; }
+.model b { color:#1a7ea8; }
+.readtext { font-size:19px; line-height:2.2; color:#183f52; }
+.readtext ruby rt { font-size:10px; color:#6fa3ba; font-weight:400; }
+.vword { border-bottom:2px dotted #4ab8d8; background:#dff2f97a; border-radius:4px; padding:0 1px; cursor:pointer; }
+.passcard { display:flex; gap:14px; align-items:center; background:#fff; border-radius:18px; padding:14px; box-shadow:0 4px 12px rgba(26,126,168,.10); margin-bottom:12px; cursor:pointer; border:2px solid transparent; width:100%; text-align:left; font-family:inherit; color:inherit; }
+.passcard.done { border-color:#8fd7b8; background:#f4fcf8; }
+.passcard .cover { width:56px; height:56px; border-radius:16px; background:#dff2f9; display:flex; align-items:center; justify-content:center; font-size:30px; flex-shrink:0; }
+.passcard .t { font-weight:800; font-size:17px; }
+.passcard .k { font-size:13px; color:#6fa3ba; margin-top:3px; }
+.popup-bg { position:fixed; inset:0; background:rgba(19,75,99,.45); z-index:100; display:none; align-items:center; justify-content:center; padding:20px; }
+.popup-bg.show { display:flex; }
+.popup { background:#fff; border-radius:20px; padding:22px; max-width:420px; width:100%; box-shadow:0 10px 40px rgba(0,0,0,.25); }
+.popup .word { font-size:28px; font-weight:800; color:#1a7ea8; }
+.popup .py { font-size:17px; color:#c26a2e; font-weight:700; margin:4px 0 10px; }
+.popup .def { font-size:17px; line-height:1.8; }
+.progressbar { height:10px; background:#dff2f9; border-radius:999px; overflow:hidden; margin:8px 0 14px; }
+.progressbar > div { height:100%; background:linear-gradient(90deg,#4ab8d8,#1a7ea8); border-radius:999px; transition:width .4s; }
+.badge { display:inline-flex; flex-direction:column; align-items:center; width:76px; padding:10px 4px; background:#fff; border-radius:16px; box-shadow:0 2px 8px rgba(26,126,168,.10); margin:4px; font-size:11px; text-align:center; color:#5b8ba1; font-weight:700; }
+.badge .be { font-size:28px; }
+.badge.locked { opacity:.35; filter:grayscale(1); }
+.center { text-align:center; }
+.big { font-size:52px; }
+#fx { position:fixed; inset:0; pointer-events:none; z-index:200; }
+.backrow { margin-bottom:12px; }
+.combo { font-size:14px; color:#e67e22; font-weight:800; }
+.switchrow { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.switch { position:relative; width:54px; height:32px; background:#cfe9f4; border-radius:999px; border:none; cursor:pointer; transition:background .2s; flex-shrink:0; }
+.switch.on { background:#4ab8d8; }
+.switch:after { content:""; position:absolute; top:3px; left:3px; width:26px; height:26px; background:#fff; border-radius:50%; transition:left .2s; box-shadow:0 1px 4px rgba(0,0,0,.2); }
+.switch.on:after { left:25px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div class="mermaid-big">🧜‍♀️</div>
+    <div>
+      <div class="htitle">华文珊瑚湾 🪸</div>
+      <div class="hsub">Jenny 的华文小天地</div>
+    </div>
+    <div class="stats">
+      <div class="pill" id="xpPill">⭐ 0</div>
+      <div class="pill" id="comboPill">🔥 0</div>
+    </div>
+  </div>
+</header>
+<main id="view"></main>
+<nav>
+  <button class="navbtn active" id="nav-home" onclick="go('home')"><span class="ico">🏝️</span>珊瑚湾</button>
+  <button class="navbtn" id="nav-word" onclick="go('word')"><span class="ico">🏖️</span>字词沙滩</button>
+  <button class="navbtn" id="nav-read" onclick="go('read')"><span class="ico">🪸</span>阅读珊瑚</button>
+</nav>
+<div class="popup-bg" id="popupBg" onclick="if(event.target===this)closePopup()">
+  <div class="popup" id="popupBox"></div>
+</div>
+<canvas id="fx"></canvas>
+<script>
+"use strict";
+/* ============ 字词沙滩题库（44题） ============ */
+const WQ=[
+/* —— 量词（12题）—— */
+{tp:"量词",q:"河里有一（　）小鱼。",o:["条","只","头","张"],a:0,model:"河里有一条小鱼。🐟",why:"细长的东西（鱼、蛇、小河）常用「条」。"},
+{tp:"量词",q:"海上开来一（　）大船。",o:["匹","艘","座","把"],a:1,model:"海上开来一艘大船。⛵",why:"船用「艘」，例如：一艘轮船、一艘小艇。"},
+{tp:"量词",q:"花园里开了一（　）红花。",o:["朵","头","件","双"],a:0,model:"花园里开了一朵红花。🌸",why:"花用「朵」，云也可以用「朵」：一朵白云。"},
+{tp:"量词",q:"我家有一（　）小猫。",o:["头","只","条","顶"],a:1,model:"我家有一只小猫。🐱",why:"小动物（猫、鸟、兔子）常用「只」。"},
+{tp:"量词",q:"农场里有一（　）黄牛。",o:["只","匹","头","朵"],a:2,model:"农场里有一头黄牛。🐮",why:"大牲口（牛、猪、大象）常用「头」。"},
+{tp:"量词",q:"下雨了，妈妈递给我一（　）雨伞。",o:["把","条","本","座"],a:0,model:"妈妈递给我一把雨伞。☔",why:"有柄可以拿的东西（伞、扇子、剪刀）用「把」。"},
+{tp:"量词",q:"路上开过一（　）汽车。",o:["艘","辆","匹","架"],a:1,model:"路上开过一辆汽车。🚗",why:"车用「辆」：一辆汽车、一辆脚踏车。"},
+{tp:"量词",q:"我从图书馆借了一（　）故事书。",o:["张","支","本","块"],a:2,model:"我借了一本故事书。📖",why:"书、本子用「本」：一本书、一本作业本。"},
+{tp:"量词",q:"请给我一（　）筷子。",o:["双","只","个","条"],a:0,model:"请给我一双筷子。🥢",why:"成对的东西用「双」：一双筷子、一双鞋。"},
+{tp:"量词",q:"姐姐买了一（　）新衣服。",o:["条","件","顶","双"],a:1,model:"姐姐买了一件新衣服。👕",why:"上衣用「件」；裤子、裙子才用「条」。"},
+{tp:"量词",q:"远处有一（　）大山。",o:["座","条","只","把"],a:0,model:"远处有一座大山。⛰️",why:"高大不动的东西（山、桥、房子）用「座」。"},
+{tp:"量词",q:"草原上跑来一（　）白马。",o:["头","只","匹","艘"],a:2,model:"草原上跑来一匹白马。🐴",why:"马专门用「匹」：一匹马、两匹小马。"},
+/* —— 近义词（5题）—— */
+{tp:"近义词",q:"「高兴」的近义词是（　）。",o:["伤心","快乐","生气","害怕"],a:1,model:"收到礼物，我非常快乐。🎁",why:"「高兴」和「快乐」意思相近，都表示心情好。"},
+{tp:"近义词",q:"「美丽」的近义词是（　）。",o:["漂亮","难看","干净","高大"],a:0,model:"公园里开满了漂亮的花。🌷",why:"「美丽」=「漂亮」，都是说很好看。"},
+{tp:"近义词",q:"「赶快」的近义词是（　）。",o:["慢慢","连忙","休息","站住"],a:1,model:"听到铃声，我连忙跑进教室。🏃",why:"「赶快」和「连忙」都表示动作很快、不拖拉。"},
+{tp:"近义词",q:"「仔细地看」可以说成（　）。",o:["观察","听见","休息","唱歌"],a:0,model:"我们观察小蚂蚁搬食物。🐜",why:"「观察」就是很仔细、很认真地看。"},
+{tp:"近义词",q:"「有名」的近义词是（　）。",o:["无名","出名","名字","报名"],a:1,model:"这家面店非常出名。🍜",why:"「有名」=「出名」，就是很多人都知道。"},
+/* —— 反义词（5题）—— */
+{tp:"反义词",q:"「高」的反义词是（　）。",o:["大","长","矮","远"],a:2,model:"哥哥长得高，弟弟长得矮。📏",why:"高 ↔ 矮，是一对反义词。"},
+{tp:"反义词",q:"「哭」的反义词是（　）。",o:["笑","叫","说","看"],a:0,model:"妹妹不哭了，开心地笑了。😊",why:"哭 ↔ 笑，心情相反。"},
+{tp:"反义词",q:"「冷」的反义词是（　）。",o:["凉","热","冰","雪"],a:1,model:"冬天冷，夏天热。☀️",why:"冷 ↔ 热，是一对反义词。"},
+{tp:"反义词",q:"「安静」的反义词是（　）。",o:["热闹","干净","整齐","轻轻"],a:0,model:"图书馆很安静，市场很热闹。🏮",why:"安静 ↔ 热闹：一个没声音，一个人多声音大。"},
+{tp:"反义词",q:"「勤劳」的反义词是（　）。",o:["努力","认真","懒惰","能干"],a:2,model:"小蜜蜂很勤劳，小懒猪很懒惰。🐝",why:"勤劳 ↔ 懒惰：爱做事和不爱做事。"},
+/* —— 选词填空（12题）—— */
+{tp:"选词填空",q:"天空中（　）着朵朵白云。",o:["跑","飘","坐","躺"],a:1,model:"天空中飘着朵朵白云。☁️",why:"云很轻，在空中慢慢地动，用「飘」。"},
+{tp:"选词填空",q:"妹妹头上（　）着一顶帽子。",o:["穿","拿","戴","披"],a:2,model:"妹妹头上戴着一顶帽子。👒",why:"帽子、眼镜、手表用「戴」；衣服、鞋子才用「穿」。"},
+{tp:"选词填空",q:"我们要（　）小动物，不可以伤害它们。",o:["爱护","讨厌","害怕","打扰"],a:0,model:"我们要爱护小动物。🐰",why:"「爱护」就是关心和保护。"},
+{tp:"选词填空",q:"上课时，我们要（　）听讲。",o:["马虎","认真","大声","随便"],a:1,model:"上课时，我们要认真听讲。📚",why:"「认真」表示用心、不马虎。"},
+{tp:"选词填空",q:"弟弟（　）地爬上楼梯。",o:["慢慢","红红","高高","甜甜"],a:0,model:"弟弟慢慢地爬上楼梯。🪜",why:"小弟弟爬楼梯要小心，所以「慢慢地」爬。"},
+{tp:"选词填空",q:"春天到了，花园里开满了（　）的花。",o:["东倒西歪","五颜六色","又哭又笑","高高兴兴"],a:1,model:"花园里开满了五颜六色的花。🌈",why:"「五颜六色」形容颜色很多、很好看。"},
+{tp:"选词填空",q:"图书馆里，我们说话要（　）的。",o:["轻轻","重重","快快","大大"],a:0,model:"在图书馆里，我们说话要轻轻的。🤫",why:"图书馆要保持安静，所以说话要「轻轻的」。"},
+{tp:"选词填空",q:"妈妈把房间打扫得（　）。",o:["干干净净","歪歪扭扭","吵吵闹闹","咕咕叫"],a:0,model:"妈妈把房间打扫得干干净净。🧹",why:"打扫以后房间很干净，用「干干净净」。"},
+{tp:"选词填空",q:"太阳从东边（　）起来了。",o:["落","掉","升","躲"],a:2,model:"太阳从东边升起来了。🌅",why:"早上太阳往上走，用「升」；傍晚才「落」下去。"},
+{tp:"选词填空",q:"我帮奶奶（　）东西。",o:["提","踢","喝","骑"],a:0,model:"我帮奶奶提东西。🛍️",why:"用手拎着袋子，用「提」。"},
+{tp:"选词填空",q:"风一吹，树叶（　）到地上。",o:["跳","飘","坐","游"],a:1,model:"风一吹，树叶飘到地上。🍂",why:"树叶很轻，慢慢落下来，用「飘」。"},
+{tp:"选词填空",q:"小马在草地上（　）。",o:["飞翔","游泳","奔跑","爬行"],a:2,model:"小马在草地上奔跑。🐎",why:"马有四条腿，跑得快，用「奔跑」。"},
+/* —— 读音辨析（5题）—— */
+{tp:"读音",q:"「长大」的「长」应该读（　）。",o:["cháng","zhǎng","chàng","zàng"],a:1,model:"小树苗慢慢长（zhǎng）大了。🌱",why:"表示长大、生长时读 zhǎng；表示很长时才读 cháng。"},
+{tp:"读音",q:"「音乐」的「乐」应该读（　）。",o:["lè","yào","yuè","luò"],a:2,model:"我们一起上音乐（yuè）课。🎵",why:"音乐、乐器读 yuè；快乐才读 lè。"},
+{tp:"读音",q:"「好奇」的「好」应该读（　）。",o:["hǎo","hào","hē","huó"],a:1,model:"小猫好（hào）奇地看着蝴蝶。🐱",why:"「好奇」「爱好」读 hào；「好人」「好看」读 hǎo。"},
+{tp:"读音",q:"「背书包」的「背」应该读（　）。",o:["bēi","bèi","bǎi","péi"],a:0,model:"我背（bēi）着书包上学去。🎒",why:"用背扛东西读 bēi；「后背」「背课文」读 bèi。"},
+{tp:"读音",q:"「睡觉」的「觉」应该读（　）。",o:["jué","jiǎo","jiào","qiào"],a:2,model:"晚上九点，我上床睡觉（jiào）。😴",why:"睡觉、午觉读 jiào；「觉得」才读 jué。"},
+/* —— 字形辨析（5题）—— */
+{tp:"字形",q:"妈妈在厨房（　）饭。",o:["坐","座","做","作"],a:2,model:"妈妈在厨房做饭。🍚",why:"「做」是动手做事：做饭、做功课。"},
+{tp:"字形",q:"我（　）教室里看书。",o:["在","再","才","住"],a:0,model:"我在教室里看书。🏫",why:"表示地点、正在，用「在」；「再」表示又一次。"},
+{tp:"字形",q:"客人来了，请（　）下喝茶。",o:["做","坐","座","昨"],a:1,model:"请坐下喝茶。🍵",why:"「坐」是坐下的动作；「座」是座位的座。"},
+{tp:"字形",q:"放学了，同学们说：「明天（　）见！」",o:["在","再","是","才"],a:1,model:"明天再见！👋",why:"「再」表示又一次；「再见」就是下次又见面。"},
+{tp:"字形",q:"学校离我家很（　），走路五分钟就到。",o:["进","近","真","这"],a:1,model:"学校离我家很近。🏠",why:"「近」表示距离短；「进」是走进去的进。"}
+];
+/* ============ 阅读珊瑚短文（8篇） ============ */
+/* seg: [汉字, 拼音, 是否生词] */
+const PASSAGES=[
+{id:"p1",t:"小海龟回家",e:"🐢",
+seg:[["傍晚","bàng wǎn"],["，",""],["沙滩","shā tān"],["上","shàng"],["的","de"],["小海龟","xiǎo hǎi guī"],["从","cóng"],["蛋","dàn"],["里","lǐ"],["爬","pá"],["出来","chū lái"],["。",""],["它们","tā men"],["摇摇摆摆","yáo yáo bǎi bǎi",1],["地","de"],["爬向","pá xiàng"],["大海","dà hǎi"],["。",""],["海浪","hǎi làng",1],["轻轻地","qīng qīng de"],["把","bǎ"],["它们","tā men"],["抱进","bào jìn"],["怀里","huái lǐ",1],["。",""],["小海龟们","xiǎo hǎi guī men"],["会","huì"],["游到","yóu dào"],["很远","hěn yuǎn"],["的","de"],["地方","dì fang"],["，",""],["长大","zhǎng dà"],["以后","yǐ hòu"],["，",""],["再","zài"],["回到","huí dào"],["这片","zhè piàn"],["沙滩","shā tān"],["。",""]],
+vocab:[{w:"摇摇摆摆",p:"yáo yáo bǎi bǎi",d:"走路左右晃动的样子。"},{w:"海浪",p:"hǎi làng",d:"海里一起一伏的水。"},{w:"怀里",p:"huái lǐ",d:"胸前抱着的地方。"}],
+quiz:[
+{q:"小海龟是从哪里爬出来的？",o:["石头下","蛋里","船上","树上"],a:1,model:"小海龟是从蛋里爬出来的。",why:"短文说：小海龟从蛋里爬出来。"},
+{q:"谁把小海龟「抱进怀里」？",o:["妈妈","渔夫","海浪","海鸟"],a:2,model:"海浪轻轻地把小海龟抱进怀里。",why:"这里把海浪当成人来写，很温柔哦。"},
+{q:"小海龟长大以后会做什么？",o:["回到这片沙滩","住在船上","飞上天空","再也不回来"],a:0,model:"小海龟长大以后，会再回到这片沙滩。",why:"短文最后一句告诉我们答案。"}]},
+{id:"p2",t:"我的弟弟",e:"👶",
+seg:[["我的","wǒ de"],["弟弟","dì di"],["今年","jīn nián"],["三岁","sān suì"],["，",""],["胖乎乎","pàng hū hū",1],["的","de"],["，",""],["非常","fēi cháng"],["可爱","kě ài"],["。",""],["他","tā"],["最","zuì"],["喜欢","xǐ huan"],["搭","dā"],["积木","jī mù",1],["，",""],["搭了","dā le"],["一座","yí zuò"],["高高的","gāo gāo de"],["塔","tǎ"],["。",""],["塔","tǎ"],["倒了","dǎo le"],["，",""],["他","tā"],["不哭","bù kū"],["，",""],["笑着","xiào zhe"],["说","shuō"],["：",""],["「",""],["我","wǒ"],["再","zài"],["搭","dā"],["一座","yí zuò"],["更高的","gèng gāo de"],["！",""],["」",""],["妈妈","mā ma"],["说","shuō"],["弟弟","dì di"],["是","shì"],["个","gè"],["不怕","bú pà"],["困难","kùn nan",1],["的","de"],["孩子","hái zi"],["。",""]],
+vocab:[{w:"胖乎乎",p:"pàng hū hū",d:"形容小孩胖胖的、很可爱。"},{w:"积木",p:"jī mù",d:"可以搭房子、搭塔的玩具方块。"},{w:"困难",p:"kùn nan",d:"不容易做的事。"}],
+quiz:[
+{q:"弟弟今年几岁？",o:["两岁","三岁","五岁","八岁"],a:1,model:"弟弟今年三岁。",why:"短文第一句就告诉我们了。"},
+{q:"塔倒了，弟弟怎么做？",o:["大声哭","生气地走开","笑着说要再搭一座更高的","叫妈妈帮忙"],a:2,model:"塔倒了，他不哭，笑着说：「我再搭一座更高的！」",why:"弟弟没有哭，反而想再试一次。"},
+{q:"妈妈觉得弟弟是个怎样的孩子？",o:["爱哭的孩子","不怕困难的孩子","很懒的孩子","很吵的孩子"],a:1,model:"妈妈说弟弟是个不怕困难的孩子。",why:"因为塔倒了他也不放弃，还想搭得更高。"}]},
+{id:"p3",t:"图书馆的一角",e:"📚",
+seg:[["学校","xué xiào"],["的","de"],["图书馆","tú shū guǎn"],["里","lǐ"],["有","yǒu"],["一个","yí gè"],["漂亮","piào liang"],["的","de"],["阅读角","yuè dú jiǎo"],["。",""],["那里","nà lǐ"],["有","yǒu"],["软软的","ruǎn ruǎn de"],["坐垫","zuò diàn",1],["和","hé"],["许多","xǔ duō"],["图书","tú shū"],["。",""],["每到","měi dào"],["休息","xiū xi"],["时间","shí jiān"],["，",""],["同学们","tóng xué men"],["就","jiù"],["安安静静","ān ān jìng jìng",1],["地","de"],["坐在","zuò zài"],["那里","nà lǐ"],["看书","kàn shū"],["。",""],["书本","shū běn"],["带","dài"],["我们","wǒ men"],["去","qù"],["很远很远","hěn yuǎn hěn yuǎn"],["的","de"],["地方","dì fang"],["旅行","lǚ xíng",1],["。",""]],
+vocab:[{w:"坐垫",p:"zuò diàn",d:"放在座位上，软软的垫子。"},{w:"安安静静",p:"ān ān jìng jìng",d:"一点声音也没有，很安静。"},{w:"旅行",p:"lǚ xíng",d:"到别的地方去玩、去看看。"}],
+quiz:[
+{q:"阅读角在哪里？",o:["教室里","学校的图书馆里","公园里","家里"],a:1,model:"阅读角在学校的图书馆里。",why:"短文第一句告诉我们地点。"},
+{q:"休息时间，同学们在阅读角做什么？",o:["安安静静地看书","大声唱歌","跑来跑去","睡觉"],a:0,model:"同学们安安静静地坐在那里看书。",why:"看书的时候要安静，不打扰别人。"},
+{q:"「书本带我们去很远很远的地方旅行」是什么意思？",o:["看书可以坐飞机","书里藏着地图","看书能让我们知道很远的地方的事","书可以飞"],a:2,model:"看书就像旅行，能让我们知道很远的地方的事。",why:"这是打比方：书里有全世界的故事和知识。"}]},
+{id:"p4",t:"海边捡贝壳",e:"🐚",
+seg:[["星期天","xīng qī tiān"],["，",""],["我","wǒ"],["和","hé"],["妈妈","mā ma"],["去","qù"],["海边","hǎi biān"],["捡","jiǎn"],["贝壳","bèi ké",1],["。",""],["贝壳","bèi ké"],["有的","yǒu de"],["像","xiàng"],["扇子","shàn zi",1],["，",""],["有的","yǒu de"],["像","xiàng"],["小星星","xiǎo xīng xing"],["。",""],["我","wǒ"],["把","bǎ"],["最","zuì"],["漂亮","piào liang"],["的","de"],["一个","yí gè"],["送给","sòng gěi"],["妈妈","mā ma"],["。",""],["妈妈","mā ma"],["笑得","xiào de"],["眼睛","yǎn jing"],["弯弯的","wān wān de"],["，",""],["像","xiàng"],["天上","tiān shàng"],["的","de"],["月牙","yuè yá",1],["。",""]],
+vocab:[{w:"贝壳",p:"bèi ké",d:"海里贝类动物硬硬的外壳。"},{w:"扇子",p:"shàn zi",d:"扇风用的用具。"},{w:"月牙",p:"yuè yá",d:"弯弯的、细细的月亮。"}],
+quiz:[
+{q:"星期天，我和妈妈去海边做什么？",o:["游泳","捡贝壳","堆沙堡","钓鱼"],a:1,model:"我和妈妈去海边捡贝壳。",why:"短文第一句告诉我们了。"},
+{q:"贝壳像什么？",o:["像扇子和小星星","像月亮和太阳","像小鱼和小虾","像花朵和叶子"],a:0,model:"贝壳有的像扇子，有的像小星星。",why:"短文用「有的……有的……」告诉我们贝壳的样子。"},
+{q:"妈妈为什么笑得眼睛弯弯的？",o:["因为天气很好","因为我把最漂亮的贝壳送给她","因为看见了月牙","因为捡到很多鱼"],a:1,model:"因为我把最漂亮的贝壳送给妈妈，她开心得笑了。",why:"收到礼物，妈妈心里很开心。"}]},
+{id:"p5",t:"我当值日生",e:"🧹",
+seg:[["今天","jīn tiān"],["我","wǒ"],["当","dāng"],["值日生","zhí rì shēng",1],["。",""],["我","wǒ"],["先","xiān"],["把","bǎ"],["黑板","hēi bǎn"],["擦","cā"],["干净","gān jìng"],["，",""],["再","zài"],["把","bǎ"],["桌椅","zhuō yǐ"],["排","pái"],["整齐","zhěng qí"],["。",""],["老师","lǎo shī"],["走进","zǒu jìn"],["教室","jiào shì"],["，",""],["看见","kàn jiàn"],["地上","dì shàng"],["一点儿","yì diǎnr"],["纸屑","zhǐ xiè",1],["也","yě"],["没有","méi yǒu"],["，",""],["夸","kuā"],["我","wǒ"],["是","shì"],["爱劳动","ài láo dòng"],["的","de"],["好孩子","hǎo hái zi"],["。",""],["我","wǒ"],["心里","xīn lǐ"],["美滋滋","měi zī zī",1],["的","de"],["。",""]],
+vocab:[{w:"值日生",p:"zhí rì shēng",d:"轮流帮忙打扫教室的学生。"},{w:"纸屑",p:"zhǐ xiè",d:"小小的碎纸片。"},{w:"美滋滋",p:"měi zī zī",d:"心里很开心、很得意的样子。"}],
+quiz:[
+{q:"我先做什么？",o:["把桌椅排整齐","把黑板擦干净","扫地","关窗"],a:1,model:"我先把黑板擦干净，再把桌椅排整齐。",why:"注意「先……再……」的顺序。"},
+{q:"老师为什么夸我？",o:["因为我唱歌好听","因为地上一点儿纸屑也没有","因为我跑得快","因为我画画漂亮"],a:1,model:"老师看见地上一点儿纸屑也没有，夸我是爱劳动的好孩子。",why:"教室打扫得干干净净，老师很满意。"},
+{q:"「心里美滋滋的」是什么感觉？",o:["很难过","很生气","很开心、很得意","很害怕"],a:2,model:"被老师夸奖，我心里美滋滋的，非常开心。",why:"「美滋滋」形容心里甜甜的、开心的感觉。"}]},
+{id:"p6",t:"小丑鱼和海葵",e:"🐠",
+seg:[["大海","dà hǎi"],["里","lǐ"],["，",""],["小丑鱼","xiǎo chǒu yú"],["和","hé"],["海葵","hǎi kuí",1],["是","shì"],["一对","yí duì"],["好朋友","hǎo péng you"],["。",""],["海葵","hǎi kuí"],["的","de"],["触手","chù shǒu",1],["有毒","yǒu dú"],["，",""],["别的","bié de"],["鱼","yú"],["不敢","bù gǎn"],["靠近","kào jìn"],["，",""],["小丑鱼","xiǎo chǒu yú"],["却","què"],["不怕","bú pà"],["。",""],["它","tā"],["住在","zhù zài"],["海葵","hǎi kuí"],["里","lǐ"],["，",""],["很","hěn"],["安全","ān quán"],["。",""],["它","tā"],["也","yě"],["会","huì"],["帮","bāng"],["海葵","hǎi kuí"],["引来","yǐn lái"],["食物","shí wù"],["。",""],["它们","tā men"],["互相","hù xiāng",1],["帮助","bāng zhù"],["，",""],["谁","shéi"],["也","yě"],["离不开","lí bù kāi"],["谁","shéi"],["。",""]],
+vocab:[{w:"海葵",p:"hǎi kuí",d:"长得像花的海洋动物。"},{w:"触手",p:"chù shǒu",d:"像手一样细长的部分。"},{w:"互相",p:"hù xiāng",d:"你帮我，我也帮你。"}],
+quiz:[
+{q:"小丑鱼的好朋友是谁？",o:["小海龟","海葵","大鲨鱼","小螃蟹"],a:1,model:"小丑鱼和海葵是一对好朋友。",why:"短文第一句告诉我们了。"},
+{q:"为什么别的鱼不敢靠近海葵？",o:["海葵太大了","海葵的触手有毒","海葵会咬鱼","海葵游得太快"],a:1,model:"海葵的触手有毒，所以别的鱼不敢靠近。",why:"有毒的触手让别的鱼害怕。"},
+{q:"小丑鱼会帮海葵做什么？",o:["打扫房子","唱歌","引来食物","挡住大浪"],a:2,model:"小丑鱼会帮海葵引来食物。",why:"它们互相帮助，谁也离不开谁。"}]},
+{id:"p7",t:"外婆的汤",e:"🍲",
+seg:[["放学","fàng xué"],["回家","huí jiā"],["，",""],["我","wǒ"],["一进门","yí jìn mén"],["就","jiù"],["闻到","wén dào"],["一阵","yí zhèn"],["香味","xiāng wèi",1],["。",""],["原来","yuán lái"],["外婆","wài pó"],["煮了","zhǔ le"],["我","wǒ"],["最爱","zuì ài"],["喝","hē"],["的","de"],["玉米","yù mǐ",1],["汤","tāng"],["。",""],["我","wǒ"],["喝了","hē le"],["一大碗","yí dà wǎn"],["，",""],["浑身","hún shēn",1],["暖暖的","nuǎn nuǎn de"],["。",""],["外婆","wài pó"],["摸摸","mō mo"],["我的","wǒ de"],["头","tóu"],["说","shuō"],["：",""],["「",""],["慢点","màn diǎn"],["喝","hē"],["，",""],["锅里","guō lǐ"],["还有","hái yǒu"],["呢","ne"],["！",""],["」",""]],
+vocab:[{w:"香味",p:"xiāng wèi",d:"好闻的味道。"},{w:"玉米",p:"yù mǐ",d:"黄色的、一粒一粒的粮食。"},{w:"浑身",p:"hún shēn",d:"全身，整个身体。"}],
+quiz:[
+{q:"外婆煮了什么汤？",o:["鸡汤","鱼汤","玉米汤","蘑菇汤"],a:2,model:"外婆煮了我最爱喝的玉米汤。",why:"短文里写得清清楚楚。"},
+{q:"我喝了汤，感觉怎么样？",o:["浑身暖暖的","很困","有点冷","肚子疼"],a:0,model:"我喝了一大碗，浑身暖暖的。",why:"热汤让全身都暖和起来。"},
+{q:"从哪里可以看出外婆很爱我？",o:["外婆很会做饭","外婆煮我最爱喝的汤，还摸摸我的头","外婆家很大","外婆买了玉米"],a:1,model:"外婆煮我最爱喝的汤，还摸摸我的头，叫我慢点喝。",why:"这些小小的动作里，都藏着外婆的爱。"}]},
+{id:"p8",t:"下雨的早晨",e:"☔",
+seg:[["早晨","zǎo chén"],["，",""],["天空","tiān kōng"],["下起了","xià qǐ le"],["大雨","dà yǔ"],["。",""],["小青蛙","xiǎo qīng wā"],["坐在","zuò zài"],["荷叶","hé yè",1],["上","shàng"],["，",""],["把","bǎ"],["荷叶","hé yè"],["当成","dàng chéng"],["小伞","xiǎo sǎn"],["。",""],["小蚂蚁","xiǎo mǎ yǐ"],["躲进","duǒ jìn"],["花朵","huā duǒ"],["里","lǐ"],["，",""],["把","bǎ"],["花瓣","huā bàn",1],["当成","dàng chéng"],["小房子","xiǎo fáng zi"],["。",""],["雨停了","yǔ tíng le"],["，",""],["太阳","tài yáng"],["出来","chū lái"],["，",""],["草地","cǎo dì"],["上","shàng"],["挂满了","guà mǎn le"],["亮晶晶","liàng jīng jīng",1],["的","de"],["水珠","shuǐ zhū"],["。",""]],
+vocab:[{w:"荷叶",p:"hé yè",d:"荷花圆圆的大叶子。"},{w:"花瓣",p:"huā bàn",d:"花朵上一片一片的部分。"},{w:"亮晶晶",p:"liàng jīng jīng",d:"闪闪发光的样子。"}],
+quiz:[
+{q:"小青蛙把什么当成小伞？",o:["花瓣","荷叶","树叶","蘑菇"],a:1,model:"小青蛙把荷叶当成小伞。",why:"荷叶又大又圆，正好挡雨。"},
+{q:"小蚂蚁躲在哪里？",o:["荷叶下","石头下","花朵里","泥土里"],a:2,model:"小蚂蚁躲进花朵里，把花瓣当成小房子。",why:"小蚂蚁很小，花朵就是它的小房子。"},
+{q:"雨停了，草地上有什么？",o:["亮晶晶的水珠","五颜六色的花","很多小青蛙","一道彩虹"],a:0,model:"草地上挂满了亮晶晶的水珠。",why:"雨后的水珠在太阳下闪闪发光。"}]}
+];
+/* ============ 徽章 ============ */
+const BADGES=[
+{id:"b1",n:"初级潜水员",e:"🤿",desc:"答对 5 题",check:s=>s.totalCorrect>=5},
+{id:"b2",n:"珍珠收藏家",e:"🦪",desc:"答对 15 题",check:s=>s.totalCorrect>=15},
+{id:"b3",n:"海星之光",e:"⭐",desc:"答对 30 题",check:s=>s.totalCorrect>=30},
+{id:"b4",n:"连击小能手",e:"🔥",desc:"连击达到 5",check:s=>s.bestCombo>=5},
+{id:"b5",n:"阅读小海龟",e:"🐢",desc:"读完 3 篇短文",check:s=>Object.keys(s.passDone).length>=3},
+{id:"b6",n:"珊瑚湾主人",e:"🧜‍♀️",desc:"读完全部 8 篇短文",check:s=>Object.keys(s.passDone).length>=8}
+];
+/* ============ 状态 ============ */
+const LS_KEY="jenny_chinese_bay";
+let state={xp:0,combo:0,bestCombo:0,totalCorrect:0,totalAnswered:0,passDone:{},usedQ:[],badges:{},pinyinOn:true};
+try{const s=localStorage.getItem(LS_KEY);if(s)state=Object.assign(state,JSON.parse(s));}catch(e){}
+function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}}
+function addXP(n){state.xp+=n;save();updateHeader();}
+function updateHeader(){
+  document.getElementById("xpPill").textContent="⭐ "+state.xp;
+  document.getElementById("comboPill").textContent="🔥 "+state.combo;
+}
+function checkBadges(){
+  let newly=[];
+  BADGES.forEach(b=>{if(!state.badges[b.id]&&b.check(state)){state.badges[b.id]=true;newly.push(b);}});
+  if(newly.length){save();fireworks();
+    setTimeout(()=>{showPopupHTML(`<div class="center"><div class="big">${newly[0].e}</div>
+    <div class="word">获得新徽章！</div><div style="font-size:18px;font-weight:800;margin:8px 0;">${newly[0].n}</div>
+    <div style="color:#6fa3ba;">${newly[0].desc}</div>
+    <div style="margin-top:14px;"><button class="btn" onclick="closePopup()">太棒了！</button></div></div>`);},600);}
+}
+/* ============ 导航 ============ */
+let currentTab="home";
+function go(tab){
+  currentTab=tab;
+  ["home","word","read"].forEach(t=>document.getElementById("nav-"+t).classList.toggle("active",t===tab));
+  if(tab==="home")renderHome();else if(tab==="word")renderWordHome();else renderReadHome();
+  window.scrollTo(0,0);
+}
+/* ============ 首页 ============ */
+const CHEERS=["Jenny 你好呀！今天想先去哪里玩？","欢迎回到珊瑚湾！小鱼们都在等你哦！","每天进步一点点，你就是最棒的！"];
+function renderHome(){
+  const readDone=Object.keys(state.passDone).length;
+  let badgeHtml=BADGES.map(b=>`<div class="badge ${state.badges[b.id]?"":"locked"}"><span class="be">${b.e}</span>${b.n}<span style="font-weight:400;">${b.desc}</span></div>`).join("");
+  document.getElementById("view").innerHTML=`
+  <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">${CHEERS[Math.floor(Math.random()*CHEERS.length)]}</div></div>
+  <button class="passcard" onclick="go('word')"><div class="cover">🏖️</div>
+    <div class="grow"><div class="t">字词沙滩</div><div class="k">量词 · 近反义词 · 选词填空 · 读音字形（共 ${WQ.length} 题）</div></div>
+    <div style="font-size:22px;">➜</div></button>
+  <button class="passcard" onclick="go('read')"><div class="cover">🪸</div>
+    <div class="grow"><div class="t">阅读珊瑚</div><div class="k">${PASSAGES.length} 篇小短文 · 已读完 ${readDone} 篇</div></div>
+    <div style="font-size:22px;">➜</div></button>
+  <div class="card"><h2>🏅 我的徽章</h2><div style="display:flex;flex-wrap:wrap;">${badgeHtml}</div></div>
+  <div class="card" style="background:#fdf3dd;"><h3 style="color:#a4762a;">📊 小成绩单</h3>
+  <div style="font-size:15px;line-height:1.9;color:#7c5a22;">一共答对 <b>${state.totalCorrect}</b> 题 · 最高连击 <b>${state.bestCombo}</b> 🔥 · 总星星 <b>${state.xp}</b> ⭐</div></div>`;
+}
+/* ============ 字词沙滩 ============ */
+const ROUND=8;
+let round={qs:[],idx:0,right:0,answered:false};
+function pickRound(){
+  let avail=WQ.map((_,i)=>i).filter(i=>!state.usedQ.includes(i));
+  if(avail.length<ROUND){state.usedQ=[];avail=WQ.map((_,i)=>i);}
+  for(let i=avail.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[avail[i],avail[j]]=[avail[j],avail[i]];}
+  return avail.slice(0,ROUND);
+}
+function renderWordHome(){
+  document.getElementById("view").innerHTML=`
+  <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">欢迎来到<b>字词沙滩</b>！每一轮有 ${ROUND} 道题。答错也没关系——我每次都会给你看<b>正确的句子</b>，看多了自然就记住啦！💙</div></div>
+  <div class="card center">
+    <div class="big">🏖️</div>
+    <h2>准备好了吗？</h2>
+    <div style="color:#6fa3ba;font-size:14px;margin-bottom:14px;">题目类型：量词 · 近义词 · 反义词 · 选词填空 · 读音 · 字形</div>
+    <button class="btn" onclick="startRound()">🌊 开始新一轮（${ROUND} 题）</button>
+  </div>`;
+}
+function startRound(){
+  round={qs:pickRound(),idx:0,right:0,answered:false};
+  renderQ();
+}
+function renderQ(){
+  const qi=round.qs[round.idx],q=WQ[qi];
+  round.answered=false;
+  let opts=q.o.map((o,i)=>`<button class="opt" id="opt${i}" onclick="answerQ(${i})">${["A","B","C","D"][i]}. ${o}</button>`).join("");
+  document.getElementById("view").innerHTML=`
+  <div class="backrow"><button class="btn ghost small" onclick="go('word')">← 退出本轮</button>
+  <span style="float:right;font-size:14px;color:#6fa3ba;font-weight:700;">第 ${round.idx+1} / ${ROUND} 题 <span class="combo">🔥连击 ${state.combo}</span></span></div>
+  <div class="progressbar"><div style="width:${(round.idx/ROUND)*100}%"></div></div>
+  <div class="qbox"><span class="tag">${q.tp}</span><div class="qq">${q.q}</div>${opts}
+  <div id="modelBox"></div></div>
+  <div id="nextBox"></div>`;
+  window.scrollTo(0,0);
+}
+function answerQ(i){
+  if(round.answered)return;round.answered=true;
+  const qi=round.qs[round.idx],q=WQ[qi];
+  if(!state.usedQ.includes(qi))state.usedQ.push(qi);
+  state.totalAnswered++;
+  q.o.forEach((_,j)=>{
+    const b=document.getElementById("opt"+j);b.disabled=true;
+    if(j===q.a)b.classList.add("correct");else if(j===i)b.classList.add("wrong");
+  });
+  const right=i===q.a;
+  let head;
+  if(right){round.right++;state.combo++;state.totalCorrect++;
+    if(state.combo>state.bestCombo)state.bestCombo=state.combo;
+    addXP(5);miniConfetti();
+    head="🌟 <b>答对啦！真棒！</b>";
+  }else{state.combo=0;addXP(1);
+    head="💙 <b>没关系，我们一起看看正确的说法：</b>";
+  }
+  document.getElementById("modelBox").innerHTML=`<div class="model">${head}<br><b>规范句子：</b>${q.model}<br><b>小提示：</b>${q.why}</div>`;
+  document.getElementById("nextBox").innerHTML=`<div class="center"><button class="btn" onclick="nextQ()">${round.idx+1<ROUND?"下一题 →":"看看本轮成绩 🎉"}</button></div>`;
+  save();updateHeader();
+}
+function nextQ(){
+  round.idx++;
+  if(round.idx<ROUND)renderQ();
+  else{
+    const r=round.right;
+    let cheer=r===ROUND?"全对！你是字词沙滩的小冠军！🏆":r>=ROUND*0.7?"太厉害啦！继续保持！🌟":"每道题的规范句子你都看到啦，下一轮一定更棒！💪";
+    if(r>=ROUND*0.7)fireworks();else confettiBurst();
+    document.getElementById("view").innerHTML=`
+    <div class="card center"><div class="big">${r===ROUND?"🏆":"🎉"}</div>
+    <h2>本轮完成！</h2>
+    <div style="font-size:18px;margin:10px 0;">答对 <b style="color:#1a7ea8;">${r}</b> / ${ROUND} 题</div>
+    <div class="bubble" style="margin-left:0;text-align:left;">🧜‍♀️ ${cheer}</div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
+      <button class="btn" onclick="startRound()">🌊 再来一轮</button>
+      <button class="btn ghost" onclick="go('home')">🏝️ 回珊瑚湾</button>
+    </div></div>`;
+    checkBadges();
+  }
+  window.scrollTo(0,0);
+}
+/* ============ 阅读珊瑚 ============ */
+function renderReadHome(){
+  let h=`<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">这里有 ${PASSAGES.length} 篇小短文。看到<span class="vword">虚线的词</span>可以点一点，会有拼音和意思哦！</div></div>`;
+  PASSAGES.forEach(p=>{
+    const done=!!state.passDone[p.id];
+    h+=`<button class="passcard ${done?"done":""}" onclick="openPass('${p.id}')"><div class="cover">${p.e}</div>
+    <div class="grow"><div class="t">${p.t}</div><div class="k">${done?"✔ 已读完 · 可以再读一遍！":"点我开始阅读"}</div></div>
+    <div style="font-size:22px;">${done?"🏅":"➜"}</div></button>`;
+  });
+  document.getElementById("view").innerHTML=h;
+}
+let passAnswered={};
+function segHTML(p){
+  return p.seg.map(s=>{
+    const h=s[0],py=s[1],isV=s[2]===1;
+    let inner=state.pinyinOn&&py?`<ruby>${h}<rt>${py}</rt></ruby>`:h;
+    if(isV)return `<span class="vword" onclick="vocabTap('${p.id}','${h}')">${inner}</span>`;
+    return inner;
+  }).join("");
+}
+function openPass(id){
+  const p=PASSAGES.find(x=>x.id===id);passAnswered={};
+  let quiz=p.quiz.map((q,qi)=>{
+    let opts=q.o.map((o,oi)=>`<button class="opt" id="pq${qi}o${oi}" onclick="passAnswer('${id}',${qi},${oi})">${o}</button>`).join("");
+    return `<div class="qbox"><div class="qq" style="font-size:17px;">${qi+1}. ${q.q}</div>${opts}<div id="pq${qi}model"></div></div>`;
+  }).join("");
+  document.getElementById("view").innerHTML=`
+  <div class="backrow"><button class="btn ghost small" onclick="go('read')">← 返回</button></div>
+  <div class="card">
+    <h2 style="font-size:22px;">${p.e} ${p.t}</h2>
+    <div class="switchrow"><button class="switch ${state.pinyinOn?"on":""}" id="pySwitch" onclick="togglePinyin('${id}')"></button><span style="font-size:14px;font-weight:700;color:#5b8ba1;">显示拼音</span></div>
+    <div class="readtext" id="passText">${segHTML(p)}</div>
+  </div>
+  <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">读完了吗？我们来做几道小题目。别担心，每题我都会给你看<b>规范答案</b>！</div></div>
+  ${quiz}<div id="passDoneBox"></div>`;
+  window.scrollTo(0,0);
+}
+function togglePinyin(id){
+  state.pinyinOn=!state.pinyinOn;save();
+  document.getElementById("pySwitch").classList.toggle("on",state.pinyinOn);
+  document.getElementById("passText").innerHTML=segHTML(PASSAGES.find(x=>x.id===id));
+}
+function vocabTap(pid,w){
+  const p=PASSAGES.find(x=>x.id===pid);
+  const v=p.vocab.find(x=>x.w===w);
+  if(!v)return;
+  showPopupHTML(`<div class="word">${v.w}</div><div class="py">${v.p}</div><div class="def">${v.d}</div>
+  <div style="margin-top:14px;"><button class="btn ghost small" onclick="closePopup()">知道啦</button></div>`);
+}
+function passAnswer(id,qi,oi){
+  if(passAnswered[qi]!==undefined)return;
+  const p=PASSAGES.find(x=>x.id===id),q=p.quiz[qi];
+  passAnswered[qi]=oi;
+  q.o.forEach((_,j)=>{
+    const b=document.getElementById("pq"+qi+"o"+j);b.disabled=true;
+    if(j===q.a)b.classList.add("correct");else if(j===oi)b.classList.add("wrong");
+  });
+  const right=oi===q.a;
+  if(right){state.combo++;state.totalCorrect++;if(state.combo>state.bestCombo)state.bestCombo=state.combo;addXP(5);miniConfetti();}
+  else{state.combo=0;addXP(1);}
+  state.totalAnswered++;
+  document.getElementById("pq"+qi+"model").innerHTML=`<div class="model">${right?"🌟 <b>答对啦！</b>":"💙 <b>没关系，看看规范答案：</b>"}<br><b>规范答案：</b>${q.model}<br><b>为什么：</b>${q.why}</div>`;
+  save();updateHeader();
+  if(Object.keys(passAnswered).length===p.quiz.length){
+    const first=!state.passDone[id];
+    state.passDone[id]=true;
+    if(first)addXP(10);
+    save();
+    fireworks();
+    document.getElementById("passDoneBox").innerHTML=`
+    <div class="card center"><div class="big">🎆</div><h2>短文读完啦！</h2>
+    <div style="font-size:15px;color:#6fa3ba;">${first?"+10 颗星星奖励！":"温故知新，真棒！"}</div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;">
+    <button class="btn" onclick="go('read')">🪸 读下一篇</button>
+    <button class="btn ghost" onclick="go('home')">🏝️ 回珊瑚湾</button></div></div>`;
+    checkBadges();
+  }
+}
+/* ============ 弹窗 ============ */
+function showPopupHTML(h){document.getElementById("popupBox").innerHTML=h;document.getElementById("popupBg").classList.add("show");}
+function closePopup(){document.getElementById("popupBg").classList.remove("show");}
+/* ============ 特效 ============ */
+const fxCanvas=document.getElementById("fx");
+const fxCtx=fxCanvas.getContext("2d");
+let parts=[],fxRunning=false;
+function fxResize(){fxCanvas.width=innerWidth;fxCanvas.height=innerHeight;}
+addEventListener("resize",fxResize);fxResize();
+const FX_COLORS=["#4ab8d8","#ff8a7a","#ffd66b","#8fd7b8","#a5e0ef","#f7a8d8"];
+function spawnConfetti(n,x,y,spread){
+  for(let i=0;i<n;i++){
+    parts.push({x:x??Math.random()*fxCanvas.width,y:y??-10,
+      vx:(Math.random()-.5)*(spread||4),vy:Math.random()*3+2,
+      s:Math.random()*7+4,c:FX_COLORS[Math.floor(Math.random()*FX_COLORS.length)],
+      r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,life:140});
+  }
+  runFX();
+}
+function spawnFirework(){
+  const x=Math.random()*fxCanvas.width,y=Math.random()*fxCanvas.height*.5+50;
+  const c=FX_COLORS[Math.floor(Math.random()*FX_COLORS.length)];
+  for(let i=0;i<28;i++){
+    const a=(i/28)*Math.PI*2,sp=Math.random()*3+2;
+    parts.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,s:4,c:c,r:0,vr:0,life:60,fw:true});
+  }
+}
+function miniConfetti(){spawnConfetti(24,fxCanvas.width/2,fxCanvas.height*.35,8);}
+function confettiBurst(){spawnConfetti(90);}
+function fireworks(){
+  spawnConfetti(70);
+  let count=0;
+  const iv=setInterval(()=>{spawnFirework();runFX();count++;if(count>5)clearInterval(iv);},350);
+}
+function runFX(){
+  if(fxRunning)return;fxRunning=true;
+  function tick(){
+    fxCtx.clearRect(0,0,fxCanvas.width,fxCanvas.height);
+    parts=parts.filter(p=>p.life>0&&p.y<fxCanvas.height+20);
+    parts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;if(!p.fw)p.vy+=.06;else p.vy+=.03;p.r+=p.vr;p.life--;
+      fxCtx.save();fxCtx.translate(p.x,p.y);fxCtx.rotate(p.r);
+      fxCtx.globalAlpha=Math.min(1,p.life/40);
+      fxCtx.fillStyle=p.c;fxCtx.fillRect(-p.s/2,-p.s/2,p.s,p.s);fxCtx.restore();
+    });
+    if(parts.length){requestAnimationFrame(tick);}else{fxRunning=false;fxCtx.clearRect(0,0,fxCanvas.width,fxCanvas.height);}
+  }
+  requestAnimationFrame(tick);
+}
+/* ============ 启动 ============ */
+updateHeader();
+go("home");
+</script>
+</body>
+</html>

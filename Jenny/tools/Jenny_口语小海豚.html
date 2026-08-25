@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>口语小海豚 🐬</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body {
+  font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,sans-serif;
+  background:#f0fafd; color:#134b63; font-size:16px; padding-bottom:90px;
+}
+header {
+  background:linear-gradient(160deg,#dff2f9,#a5e0ef);
+  padding:16px 16px 14px; border-radius:0 0 24px 24px;
+  box-shadow:0 4px 14px rgba(26,126,168,.12);
+}
+.hrow { display:flex; align-items:center; gap:12px; max-width:760px; margin:0 auto; }
+.mermaid-big { font-size:44px; line-height:1; }
+.htitle { font-size:22px; font-weight:800; color:#1a7ea8; }
+.hsub { font-size:13px; color:#3d7f9c; margin-top:2px; }
+.stats { display:flex; gap:8px; margin-left:auto; }
+.pill { background:#ffffffcc; border-radius:999px; padding:7px 12px; font-weight:700; font-size:14px; color:#1a7ea8; box-shadow:0 2px 6px rgba(26,126,168,.12); white-space:nowrap; }
+nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:50; background:#fff;
+  box-shadow:0 -4px 16px rgba(26,126,168,.15); display:flex; justify-content:space-around;
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom)); border-radius:20px 20px 0 0;
+}
+.navbtn { border:none; background:none; font-size:13px; font-weight:700; color:#7aa9bd; display:flex; flex-direction:column; align-items:center; gap:2px; min-width:72px; min-height:52px; justify-content:center; border-radius:14px; cursor:pointer; font-family:inherit; }
+.navbtn .ico { font-size:24px; }
+.navbtn.active { color:#1a7ea8; background:#dff2f9; }
+main { max-width:760px; margin:0 auto; padding:16px; }
+.card { background:#fff; border-radius:18px; padding:18px; box-shadow:0 4px 14px rgba(26,126,168,.10); margin-bottom:16px; }
+.bubble { background:#dff2f9; border-radius:18px; padding:12px 16px; position:relative; font-size:16px; line-height:1.7; color:#155e7d; margin:10px 0 16px 14px; }
+.bubble:before { content:""; position:absolute; left:-9px; top:16px; border:9px solid transparent; border-right-color:#dff2f9; border-left:none; }
+.brow { display:flex; align-items:flex-start; gap:4px; }
+.brow .face { font-size:34px; margin-top:6px; }
+.grow { flex:1; }
+h2 { color:#1a7ea8; font-size:19px; margin-bottom:10px; }
+h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:8px; background:#4ab8d8; color:#fff; border:none; border-radius:16px; padding:12px 20px; font-size:16px; font-weight:800; cursor:pointer; min-height:48px; box-shadow:0 3px 8px rgba(26,126,168,.25); font-family:inherit; }
+.btn:active { transform:scale(.97); }
+.btn.sand { background:#fdf3dd; color:#a4762a; box-shadow:0 3px 8px rgba(190,150,60,.2); }
+.btn.coral { background:#ff8a7a; }
+.btn.ghost { background:#eaf6fb; color:#1a7ea8; box-shadow:none; }
+.btn.small { padding:8px 14px; min-height:44px; font-size:14px; }
+.itemcard { display:flex; gap:14px; align-items:center; background:#fff; border-radius:18px; padding:14px; box-shadow:0 4px 12px rgba(26,126,168,.10); margin-bottom:12px; cursor:pointer; border:2px solid transparent; width:100%; text-align:left; font-family:inherit; color:inherit; }
+.itemcard.done { border-color:#8fd7b8; background:#f4fcf8; }
+.itemcard .cover { width:56px; height:56px; border-radius:16px; background:#dff2f9; display:flex; align-items:center; justify-content:center; font-size:30px; flex-shrink:0; }
+.itemcard .t { font-weight:800; font-size:17px; }
+.itemcard .k { font-size:13px; color:#6fa3ba; margin-top:3px; }
+.readtext { font-size:20px; line-height:2.3; color:#183f52; }
+.readtext ruby rt { font-size:10px; color:#6fa3ba; font-weight:400; }
+.sentline { border-radius:12px; padding:6px 10px; margin:4px 0; display:block; transition:background .3s; }
+.sentline.now { background:#fdf3dd; box-shadow:inset 0 0 0 2px #f0d9a5; }
+.sentline.done { color:#9fc2d2; }
+.switchrow { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.switch { position:relative; width:54px; height:32px; background:#cfe9f4; border-radius:999px; border:none; cursor:pointer; transition:background .2s; flex-shrink:0; }
+.switch.on { background:#4ab8d8; }
+.switch:after { content:""; position:absolute; top:3px; left:3px; width:26px; height:26px; background:#fff; border-radius:50%; transition:left .2s; box-shadow:0 1px 4px rgba(0,0,0,.2); }
+.switch.on:after { left:25px; }
+.tipbox { background:#fdf3dd; border-radius:16px; padding:14px; margin-top:14px; }
+.tipbox h3 { color:#a4762a; }
+.tipword { display:inline-block; background:#fff; border-radius:12px; padding:6px 12px; margin:4px 4px 4px 0; font-size:16px; }
+.tipword b { color:#c26a2e; }
+.selfbtn { font-size:34px; background:#fff; border:2px solid #cfe9f4; border-radius:18px; padding:10px 16px; cursor:pointer; min-width:88px; min-height:76px; font-family:inherit; }
+.selfbtn small { display:block; font-size:13px; font-weight:700; color:#5b8ba1; margin-top:4px; }
+.selfbtn:active { background:#dff2f9; }
+.scene { background:linear-gradient(180deg,#bfe6f5 55%,#fdf3dd 55%); border-radius:16px; margin-bottom:14px; overflow:hidden; }
+.scene svg { display:block; width:100%; height:auto; }
+.qchip { background:#eef7fb; border-radius:14px; padding:10px 14px; margin-bottom:8px; font-size:16px; line-height:1.7; }
+.qchip b { color:#1a7ea8; }
+.samplebox { background:#f4fcf8; border:2px solid #bde7d2; border-radius:16px; padding:16px; font-size:18px; line-height:2.1; }
+.goodword { background:#ffe9a8; border-radius:6px; padding:0 3px; font-weight:700; color:#8a6410; }
+.lvl { border-radius:14px; padding:12px 14px; margin-bottom:10px; font-size:17px; line-height:1.9; }
+.lvl1 { background:#eef7fb; }
+.lvl2 { background:#e3f4ec; }
+.lvl3 { background:#fdf3dd; box-shadow:inset 0 0 0 2px #f0d9a5; }
+.lvl .lab { font-size:13px; font-weight:800; display:block; margin-bottom:4px; }
+.lvl1 .lab { color:#4ab8d8; } .lvl2 .lab { color:#2e9c6b; } .lvl3 .lab { color:#c2903a; }
+.progressbar { height:10px; background:#dff2f9; border-radius:999px; overflow:hidden; margin:8px 0 14px; }
+.progressbar > div { height:100%; background:linear-gradient(90deg,#4ab8d8,#1a7ea8); border-radius:999px; transition:width .4s; }
+.center { text-align:center; }
+.big { font-size:52px; }
+#fx { position:fixed; inset:0; pointer-events:none; z-index:200; }
+.backrow { margin-bottom:12px; }
+.hidden { display:none; }
+.stepnote { font-size:14px; color:#6fa3ba; font-weight:700; margin-bottom:8px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div class="mermaid-big">🐬</div>
+    <div>
+      <div class="htitle">口语小海豚 🐬</div>
+      <div class="hsub">大声说，大胆说，越说越棒！</div>
+    </div>
+    <div class="stats">
+      <div class="pill" id="xpPill">⭐ 0</div>
+      <div class="pill" id="donePill">✅ 0</div>
+    </div>
+  </div>
+</header>
+<main id="view"></main>
+<nav>
+  <button class="navbtn active" id="nav-home" onclick="go('home')"><span class="ico">🏝️</span>首页</button>
+  <button class="navbtn" id="nav-read" onclick="go('read')"><span class="ico">🌊</span>朗读小浪花</button>
+  <button class="navbtn" id="nav-pic" onclick="go('pic')"><span class="ico">🖼️</span>看图说话</button>
+  <button class="navbtn" id="nav-qa" onclick="go('qa')"><span class="ico">🐚</span>问答小贝壳</button>
+</nav>
+<canvas id="fx"></canvas>
+<script>
+"use strict";
+/* ============ 朗读小浪花（8段） ============ */
+/* sent: 每句是 [汉字,拼音] 词块数组 */
+const READS=[
+{id:"r1",t:"小浪花",e:"🌊",
+sent:[
+ [["大海","dà hǎi"],["是","shì"],["小浪花","xiǎo làng huā"],["的","de"],["家","jiā"],["。",""]],
+ [["白天","bái tiān"],["，",""],["小浪花","xiǎo làng huā"],["追着","zhuī zhe"],["沙滩","shā tān"],["跑","pǎo"],["，",""],["哗啦哗啦","huā lā huā lā"],["，",""],["像","xiàng"],["在","zài"],["唱歌","chàng gē"],["。",""]],
+ [["晚上","wǎn shang"],["，",""],["月亮","yuè liang"],["出来","chū lái"],["了","le"],["，",""],["小浪花","xiǎo làng huā"],["靠在","kào zài"],["礁石","jiāo shí"],["边","biān"],["，",""],["轻轻地","qīng qīng de"],["睡着","shuì zháo"],["了","le"],["。",""]]],
+tips:{words:[{w:"礁石",p:"jiāo shí",note:"不要读成「qiáo」哦"},{w:"睡着了",p:"shuì zháo le",note:"这里的「着」读 zháo"}],
+pause:"逗号停一拍，句号停两拍。「哗啦哗啦」要读得轻快，像浪花在跳舞。"}},
+{id:"r2",t:"早晨的公园",e:"🌳",
+sent:[
+ [["早晨","zǎo chén"],["，",""],["公园","gōng yuán"],["里","lǐ"],["真","zhēn"],["热闹","rè nao"],["。",""]],
+ [["爷爷","yé ye"],["奶奶","nǎi nai"],["在","zài"],["打","dǎ"],["太极","tài jí"],["，",""],["动作","dòng zuò"],["又慢又稳","yòu màn yòu wěn"],["。",""]],
+ [["小鸟","xiǎo niǎo"],["在","zài"],["树上","shù shàng"],["唱歌","chàng gē"],["，",""],["小狗","xiǎo gǒu"],["在","zài"],["草地上","cǎo dì shàng"],["打滚","dǎ gǔn"],["。",""]],
+ [["我","wǒ"],["深深地","shēn shēn de"],["吸了","xī le"],["一口气","yì kǒu qì"],["，",""],["空气","kōng qì"],["真","zhēn"],["新鲜","xīn xiān"],["！",""]]],
+tips:{words:[{w:"太极",p:"tài jí",note:"两个字都要读清楚"},{w:"新鲜",p:"xīn xiān",note:"「鲜」是第一声"}],
+pause:"最后一句有感叹号，要读出开心、惊喜的语气！"}},
+{id:"r3",t:"彩虹",e:"🌈",
+sent:[
+ [["雨","yǔ"],["停","tíng"],["了","le"],["，",""],["天空","tiān kōng"],["挂出","guà chū"],["一道","yí dào"],["彩虹","cǎi hóng"],["。",""]],
+ [["红","hóng"],["、",""],["橙","chéng"],["、",""],["黄","huáng"],["、",""],["绿","lǜ"],["、",""],["蓝","lán"],["、",""],["紫","zǐ"],["，",""],["颜色","yán sè"],["真","zhēn"],["好看","hǎo kàn"],["。",""]],
+ [["彩虹","cǎi hóng"],["像","xiàng"],["一座","yí zuò"],["弯弯的","wān wān de"],["桥","qiáo"],["。",""]],
+ [["我","wǒ"],["真想","zhēn xiǎng"],["走上去","zǒu shàng qù"],["，",""],["到","dào"],["云朵","yún duǒ"],["上","shàng"],["看一看","kàn yi kàn"],["。",""]]],
+tips:{words:[{w:"橙",p:"chéng",note:"不要读成「chén」"},{w:"一道彩虹",p:"yí dào cǎi hóng",note:"彩虹用「道」作量词"}],
+pause:"读颜色的时候，一个一个读清楚，中间稍微停一停，像数宝石一样。"}},
+{id:"r4",t:"小闹钟",e:"⏰",
+sent:[
+ [["我","wǒ"],["有","yǒu"],["一个","yí gè"],["小闹钟","xiǎo nào zhōng"],["，",""],["圆圆的","yuán yuán de"],["脸","liǎn"],["，",""],["长长的","cháng cháng de"],["针","zhēn"],["。",""]],
+ [["每天","měi tiān"],["早上","zǎo shang"],["，",""],["它","tā"],["「",""],["丁零零","dīng líng líng"],["」",""],["地","de"],["叫","jiào"],["我","wǒ"],["起床","qǐ chuáng"],["。",""]],
+ [["有了","yǒu le"],["它","tā"],["的","de"],["帮忙","bāng máng"],["，",""],["我","wǒ"],["上学","shàng xué"],["再也不","zài yě bù"],["迟到","chí dào"],["了","le"],["。",""]],
+ [["谢谢","xiè xie"],["你","nǐ"],["，",""],["小闹钟","xiǎo nào zhōng"],["！",""]]],
+tips:{words:[{w:"丁零零",p:"dīng líng líng",note:"模仿闹钟的声音，读得清脆一点"},{w:"迟到",p:"chí dào",note:"「迟」是翘舌音 chí"}],
+pause:"最后一句要读出感谢的语气，声音甜甜的。"}},
+{id:"r5",t:"去动物园",e:"🐘",
+sent:[
+ [["星期六","xīng qī liù"],["，",""],["爸爸","bà ba"],["带","dài"],["我","wǒ"],["去","qù"],["动物园","dòng wù yuán"],["。",""]],
+ [["大象","dà xiàng"],["用","yòng"],["长鼻子","cháng bí zi"],["喷水","pēn shuǐ"],["，",""],["猴子","hóu zi"],["在","zài"],["树上","shù shàng"],["荡秋千","dàng qiū qiān"],["。",""]],
+ [["最","zuì"],["有趣","yǒu qù"],["的","de"],["是","shì"],["小企鹅","xiǎo qǐ é"],["，",""],["走起路来","zǒu qǐ lù lái"],["摇摇摆摆","yáo yáo bǎi bǎi"],["，",""],["像","xiàng"],["个","gè"],["小绅士","xiǎo shēn shì"],["。",""]],
+ [["我","wǒ"],["今天","jīn tiān"],["玩","wán"],["得","de"],["真","zhēn"],["开心","kāi xīn"],["！",""]]],
+tips:{words:[{w:"企鹅",p:"qǐ é",note:"「企」是第三声，不要读成 qì"},{w:"绅士",p:"shēn shì",note:"翘舌音要到位"}],
+pause:"「摇摇摆摆」可以读得慢一点，好像学小企鹅走路。"}},
+{id:"r6",t:"帮妈妈做家务",e:"🧺",
+sent:[
+ [["今天","jīn tiān"],["我","wǒ"],["帮","bāng"],["妈妈","mā ma"],["做","zuò"],["家务","jiā wù"],["。",""]],
+ [["我","wǒ"],["把","bǎ"],["袜子","wà zi"],["叠得","dié de"],["整整齐齐","zhěng zhěng qí qí"],["，",""],["把","bǎ"],["地板","dì bǎn"],["擦得","cā de"],["亮亮的","liàng liàng de"],["。",""]],
+ [["妈妈","mā ma"],["竖起","shù qǐ"],["大拇指","dà mǔ zhǐ"],["说","shuō"],["：",""],["「",""],["我的","wǒ de"],["女儿","nǚ ér"],["长大","zhǎng dà"],["了","le"],["！",""],["」",""]],
+ [["我","wǒ"],["心里","xīn lǐ"],["比","bǐ"],["吃了","chī le"],["糖","táng"],["还","hái"],["甜","tián"],["。",""]]],
+tips:{words:[{w:"大拇指",p:"dà mǔ zhǐ",note:"「拇」是第三声"},{w:"长大",p:"zhǎng dà",note:"这里的「长」读 zhǎng"}],
+pause:"妈妈说的话要读出高兴、夸奖的语气，可以把声音提高一点。"}},
+{id:"r7",t:"月亮和星星",e:"🌙",
+sent:[
+ [["夜晚","yè wǎn"],["，",""],["月亮","yuè liang"],["姐姐","jiě jie"],["出来","chū lái"],["值班","zhí bān"],["。",""]],
+ [["小星星们","xiǎo xīng xing men"],["眨着","zhǎ zhe"],["眼睛","yǎn jing"],["，",""],["围在","wéi zài"],["她","tā"],["身边","shēn biān"],["。",""]],
+ [["风儿","fēng ér"],["轻轻","qīng qīng"],["吹","chuī"],["，",""],["云朵","yún duǒ"],["慢慢","màn màn"],["飘","piāo"],["。",""]],
+ [["月亮","yuè liang"],["姐姐","jiě jie"],["给","gěi"],["大地","dà dì"],["盖上","gài shàng"],["银色的","yín sè de"],["被子","bèi zi"],["，",""],["说","shuō"],["：",""],["「",""],["晚安","wǎn ān"],["，",""],["做个","zuò gè"],["好梦","hǎo mèng"],["。",""],["」",""]]],
+tips:{words:[{w:"值班",p:"zhí bān",note:"「值」是第二声"},{w:"眨着眼睛",p:"zhǎ zhe yǎn jing",note:"「眨」是第三声"}],
+pause:"整段要读得轻轻的、柔柔的，像在说悄悄话，别把小星星吵醒啦。"}},
+{id:"r8",t:"我爱吃水果",e:"🍉",
+sent:[
+ [["我","wǒ"],["爱","ài"],["吃","chī"],["的","de"],["水果","shuǐ guǒ"],["可多了","kě duō le"],["。",""]],
+ [["西瓜","xī guā"],["甜甜的","tián tián de"],["，",""],["草莓","cǎo méi"],["酸酸的","suān suān de"],["，",""],["榴梿","liú lián"],["香香的","xiāng xiāng de"],["。",""]],
+ [["妈妈","mā ma"],["说","shuō"],["，",""],["水果","shuǐ guǒ"],["里","lǐ"],["有","yǒu"],["很多","hěn duō"],["维生素","wéi shēng sù"],["，",""],["多吃","duō chī"],["身体","shēn tǐ"],["好","hǎo"],["。",""]],
+ [["我","wǒ"],["每天","měi tiān"],["都","dōu"],["要","yào"],["吃","chī"],["一份","yí fèn"],["水果","shuǐ guǒ"],["，",""],["你","nǐ"],["呢","ne"],["？",""]]],
+tips:{words:[{w:"榴梿",p:"liú lián",note:"两个字都是第二声"},{w:"维生素",p:"wéi shēng sù",note:"三个字连起来读顺一点"}],
+pause:"最后的「你呢？」是问句，声音要往上扬，像在邀请朋友回答。"}}
+];
+/* ============ 看图说话（6个场景） ============ */
+const SCENES=[
+{id:"v1",t:"海滩遛狗",e:"🏖️",
+svg:`<svg viewBox="0 0 320 170"><rect width="320" height="95" fill="#aee3f5"/><circle cx="272" cy="32" r="20" fill="#ffd66b"/><rect y="95" width="320" height="30" fill="#7fd0e8"/><rect y="125" width="320" height="45" fill="#fdf3dd"/><text x="30" y="60" font-size="30">☁️</text><text x="120" y="45" font-size="24">🕊️</text><text x="45" y="150" font-size="34">👧</text><text x="105" y="155" font-size="32">🐕</text><text x="200" y="150" font-size="36">⛱️</text><text x="255" y="118" font-size="26">🌊</text><text x="150" y="163" font-size="18">🐚</text></svg>`,
+qs:["图中有<b>谁</b>？","他们在<b>哪里</b>？","他们在<b>做什么</b>？","他们的<b>心情</b>怎么样？"],
+sample:`星期天的早上，小美带着小狗来到【阳光灿烂】的海边散步。海浪【一层一层】地涌上沙滩，发出哗啦哗啦的声音。小狗一会儿追海浪，一会儿用爪子刨沙子，玩得【开心极了】。小美看着它，笑得【合不拢嘴】，大声说："大海，你好呀！"`},
+{id:"v2",t:"课室大扫除",e:"🏫",
+svg:`<svg viewBox="0 0 320 170"><rect width="320" height="170" fill="#eaf6fb"/><rect x="20" y="20" width="120" height="60" rx="6" fill="#2f7d4f"/><text x="38" y="58" font-size="20" fill="#ffffff">大扫除</text><rect y="140" width="320" height="30" fill="#d8c9a8"/><text x="40" y="135" font-size="34">🧒</text><text x="110" y="138" font-size="30">🧹</text><text x="160" y="132" font-size="34">👧</text><text x="215" y="136" font-size="28">🪣</text><text x="265" y="130" font-size="30">🧽</text><text x="255" y="60" font-size="26">🪟</text></svg>`,
+qs:["图中有<b>谁</b>？","他们在<b>哪里</b>？","他们在<b>做什么</b>？","教室后来变得<b>怎么样</b>？"],
+sample:`放学后，同学们留下来给教室大扫除。小明拿起扫把，【认认真真】地扫地；小丽用抹布把窗户擦得【一尘不染】。大家【分工合作】，谁也不偷懒。不一会儿，教室变得【干干净净】，同学们看着自己的劳动成果，都露出了满意的笑容。`},
+{id:"v3",t:"生日会",e:"🎂",
+svg:`<svg viewBox="0 0 320 170"><rect width="320" height="170" fill="#fff2f5"/><text x="20" y="40" font-size="28">🎈</text><text x="270" y="40" font-size="28">🎈</text><text x="140" y="38" font-size="26">🎉</text><rect x="60" y="110" width="200" height="40" rx="8" fill="#f7d9b0"/><text x="140" y="105" font-size="36">🎂</text><text x="35" y="150" font-size="32">👧</text><text x="255" y="150" font-size="32">🧒</text><text x="90" y="88" font-size="24">🎁</text><text x="210" y="88" font-size="24">🎁</text></svg>`,
+qs:["这是什么<b>场合</b>？","有<b>谁</b>来了？","大家在<b>做什么</b>？","小寿星的<b>心情</b>怎么样？"],
+sample:`今天是小云的生日，家里挂满了【五颜六色】的气球。好朋友们都带着礼物来了。大家围着插满蜡烛的生日蛋糕，【齐声】唱起生日歌。小云闭上眼睛许了一个愿望，然后一口气吹灭了蜡烛。大家拍手欢呼，小云的心里【甜滋滋】的，这真是【难忘】的一天。`},
+{id:"v4",t:"公园放风筝",e:"🪁",
+svg:`<svg viewBox="0 0 320 170"><rect width="320" height="130" fill="#bfe9f8"/><rect y="130" width="320" height="40" fill="#bfe3a8"/><circle cx="40" cy="30" r="16" fill="#ffd66b"/><text x="200" y="50" font-size="34">🪁</text><text x="90" y="60" font-size="26">☁️</text><text x="150" y="152" font-size="32">🧒</text><text x="210" y="156" font-size="30">👧</text><text x="40" y="150" font-size="28">🌳</text><text x="280" y="150" font-size="28">🌳</text><path d="M165 135 Q190 90 212 55" stroke="#888888" fill="none" stroke-width="1.5"/></svg>`,
+qs:["图中有<b>谁</b>？","天气<b>怎么样</b>？","他们在<b>做什么</b>？","风筝飞得<b>怎么样</b>？"],
+sample:`星期天下午，【风和日丽】，哥哥带妹妹到公园放风筝。哥哥【迎着风】向前跑，一边跑一边放线，蝴蝶风筝就【摇摇摆摆】地飞上了天空。风筝越飞越高，好像要和白云做朋友。妹妹在草地上拍着手喊："飞起来啦！飞起来啦！"两个人玩得【满头大汗】，也舍不得回家。`},
+{id:"v5",t:"雨中的小雨伞",e:"☔",
+svg:`<svg viewBox="0 0 320 170"><rect width="320" height="170" fill="#dfeaf2"/><text x="30" y="35" font-size="26">🌧️</text><text x="140" y="30" font-size="26">🌧️</text><text x="255" y="35" font-size="26">🌧️</text><rect y="145" width="320" height="25" fill="#b7c6cf"/><text x="115" y="95" font-size="42">☂️</text><text x="105" y="140" font-size="32">👧</text><text x="150" y="142" font-size="30">🧒</text><text x="230" y="138" font-size="26">🎒</text><text x="60" y="140" font-size="22">💧</text></svg>`,
+qs:["天气<b>怎么样</b>？","图中发生了<b>什么事</b>？","小女孩是<b>怎么做</b>的？","你觉得她是个<b>怎样</b>的孩子？"],
+sample:`放学的时候，天空【突然】下起了大雨。小刚没有带伞，站在校门口【急得直跺脚】。这时，小兰撑着雨伞走过来，【热情地】说："我们一起走吧！"两个人挤在一把小雨伞下，【有说有笑】地走回家。雨点打在伞上啪嗒啪嗒响，小刚的心里却暖暖的。`},
+{id:"v6",t:"图书馆里",e:"📚",
+svg:`<svg viewBox="0 0 320 170"><rect width="320" height="170" fill="#f6f1e7"/><rect x="15" y="20" width="90" height="100" rx="6" fill="#c9a877"/><rect x="25" y="30" width="70" height="18" fill="#8fd7b8"/><rect x="25" y="55" width="70" height="18" fill="#f7a8a8"/><rect x="25" y="80" width="70" height="18" fill="#a5c8ef"/><text x="150" y="70" font-size="26">🤫</text><rect x="130" y="120" width="170" height="14" rx="6" fill="#d8c9a8"/><text x="150" y="115" font-size="30">👧</text><text x="205" y="112" font-size="26">📖</text><text x="250" y="115" font-size="30">🧒</text></svg>`,
+qs:["他们在<b>哪里</b>？","他们在<b>做什么</b>？","图书馆里要注意<b>什么</b>？","看书给他们带来了<b>什么</b>？"],
+sample:`星期六，我和同学一起到图书馆看书。图书馆里【安安静静】的，大家都不说话。我挑了一本关于海洋动物的书，【津津有味】地读了起来。原来海豚是用声音来聊天的，真【神奇】！离开的时候，我们把书【轻轻地】放回书架，还借了两本书回家慢慢看。`},
+];
+/* ============ 问答小贝壳（10题） ============ */
+const QAS=[
+{q:"你最喜欢的动物是什么？",l1:"我最喜欢小兔子。",l2:"我最喜欢小兔子，因为它毛茸茸的，很可爱。",l3:"我最喜欢小兔子，因为它毛茸茸的，很可爱。它有长长的耳朵和红红的眼睛，吃胡萝卜的时候嘴巴一动一动的，有趣极了。我希望以后可以养一只小兔子。"},
+{q:"周末你做了什么？",l1:"周末我去了公园。",l2:"周末我和爸爸妈妈去了公园，因为天气很好。",l3:"周末天气很好，我和爸爸妈妈一起去公园野餐。我们铺上垫子，吃了三明治和水果，还一起放风筝。风筝飞得很高，我玩得非常开心，希望下个周末还能再去。"},
+{q:"你最喜欢吃什么食物？",l1:"我最喜欢吃鸡饭。",l2:"我最喜欢吃鸡饭，因为鸡肉很嫩，饭很香。",l3:"我最喜欢吃鸡饭，因为鸡肉很嫩，饭粒香喷喷的。每个星期六，妈妈都会带我去楼下的小贩中心吃鸡饭，再配一碗热汤。每次我都把饭吃得干干净净，一粒也不剩。"},
+{q:"你最喜欢什么颜色？",l1:"我最喜欢蓝色。",l2:"我最喜欢蓝色，因为大海和天空都是蓝色的。",l3:"我最喜欢蓝色，因为大海和天空都是蓝色的，看起来很舒服。我的书包、水壶和铅笔盒都是蓝色的。看到蓝色，我就会想起去海边玩的快乐时光。"},
+{q:"你在学校最喜欢上什么课？",l1:"我最喜欢上美术课。",l2:"我最喜欢上美术课，因为我可以画画。",l3:"我最喜欢上美术课，因为我可以画出心里想的东西。上个星期，我画了一条彩虹色的鱼，老师还把它贴在墙上展览呢！每次上美术课，我都觉得时间过得特别快。"},
+{q:"你的好朋友是谁？",l1:"我的好朋友是小恩。",l2:"我的好朋友是小恩，因为她对我很好。",l3:"我的好朋友是小恩，她坐在我旁边。她很善良，我忘记带尺的时候，她会借给我。下课时，我们常常一起跳绳、聊天。有好朋友的感觉，真好！"},
+{q:"下雨天你喜欢做什么？",l1:"下雨天我喜欢在家看书。",l2:"下雨天我喜欢在家看书，因为不能出去玩。",l3:"下雨天不能出去玩，我就坐在窗边看故事书。听着雨点打在窗户上的滴答声，看着有趣的故事，很舒服。有时候我还会和妹妹一起搭积木，下雨天也可以很快乐。"},
+{q:"你长大以后想做什么？",l1:"我长大以后想当老师。",l2:"我长大以后想当老师，因为我想教小朋友读书。",l3:"我长大以后想当老师，因为老师可以教小朋友很多本领。我要像我的老师一样，温柔又有耐心，把有趣的故事讲给学生听。从现在开始，我要好好学习，实现我的梦想。"},
+{q:"你最喜欢的节日是什么？",l1:"我最喜欢过新年。",l2:"我最喜欢过新年，因为可以拿红包。",l3:"我最喜欢过农历新年，因为全家人会聚在一起吃团圆饭。我可以穿新衣服，向长辈拜年，还能拿到红包。家家户户都挂上红灯笼，到处热热闹闹的，我觉得特别幸福。"},
+{q:"放学后你通常做什么？",l1:"放学后我先做功课。",l2:"放学后我先做功课，因为做完功课才可以玩。",l3:"放学后，我先吃点心休息一下，然后认真做功课。做完功课，妈妈检查以后，我就可以下楼骑脚踏车或者看故事书。先做完该做的事再玩，玩起来才安心。"}
+];
+/* ============ 状态 ============ */
+const LS_KEY="jenny_oral_dolphin";
+let state={xp:0,read:{},pic:{},qa:{},pinyinOn:true};
+try{const s=localStorage.getItem(LS_KEY);if(s)state=Object.assign(state,JSON.parse(s));}catch(e){}
+function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}}
+function addXP(n){state.xp+=n;save();updateHeader();}
+function doneCount(){return Object.keys(state.read).length+Object.keys(state.pic).length+Object.keys(state.qa).length;}
+function updateHeader(){
+  document.getElementById("xpPill").textContent="⭐ "+state.xp;
+  document.getElementById("donePill").textContent="✅ "+doneCount();
+}
+/* ============ 导航 ============ */
+let currentTab="home";
+function go(tab){
+  currentTab=tab;
+  ["home","read","pic","qa"].forEach(t=>document.getElementById("nav-"+t).classList.toggle("active",t===tab));
+  if(tab==="home")renderHome();
+  else if(tab==="read")renderReadList();
+  else if(tab==="pic")renderPicList();
+  else renderQaList();
+  window.scrollTo(0,0);
+}
+/* ============ 首页 ============ */
+function renderHome(){
+  const r=Object.keys(state.read).length,p=Object.keys(state.pic).length,q=Object.keys(state.qa).length;
+  document.getElementById("view").innerHTML=`
+  <div class="brow"><div class="face">🐬</div><div class="bubble grow">Jenny 你好！我是小海豚。华文口语最重要的是<b>敢开口、多开口</b>！每天练一点点，你会说得越来越好听。今天想练哪一个？</div></div>
+  <button class="itemcard" onclick="go('read')"><div class="cover">🌊</div>
+  <div class="grow"><div class="t">朗读小浪花</div><div class="k">${READS.length} 段朗读练习 · 已完成 ${r} 段</div></div><div style="font-size:22px;">➜</div></button>
+  <button class="itemcard" onclick="go('pic')"><div class="cover">🖼️</div>
+  <div class="grow"><div class="t">看图说话</div><div class="k">${SCENES.length} 个场景 · 已练 ${p} 个 · 先说一说，再看范例</div></div><div style="font-size:22px;">➜</div></button>
+  <button class="itemcard" onclick="go('qa')"><div class="cover">🐚</div>
+  <div class="grow"><div class="t">问答小贝壳</div><div class="k">${QAS.length} 个口试问答 · 已练 ${q} 个 · 学最完整的说法</div></div><div style="font-size:22px;">➜</div></button>
+  <div class="card" style="background:#fdf3dd;"><h3 style="color:#a4762a;">🐚 小海豚的悄悄话</h3>
+  <div style="font-size:15px;line-height:1.9;color:#7c5a22;">说错了完全没关系！大声说出来，就已经赢了一半。可以请妈妈当你的小听众哦。🎤</div></div>`;
+}
+/* ============ 朗读小浪花 ============ */
+function renderReadList(){
+  let h=`<div class="brow"><div class="face">🐬</div><div class="bubble grow">选一段来朗读吧！先在心里<b>默读一遍</b>，再跟着<b>黄色亮光</b>一句一句大声读。</div></div>`;
+  READS.forEach(r=>{
+    const d=state.read[r.id];
+    h+=`<button class="itemcard ${d?"done":""}" onclick="openRead('${r.id}')"><div class="cover">${r.e}</div>
+    <div class="grow"><div class="t">${r.t}</div><div class="k">${d?"✔ 已练过（自评："+d+"）· 可以再练！":r.sent.length+" 句 · 点我开始"}</div></div>
+    <div style="font-size:22px;">${d?"🏅":"➜"}</div></button>`;
+  });
+  document.getElementById("view").innerHTML=h;
+}
+let rd={id:null,phase:0,cur:0};
+function sentHTML(sentence){
+  return sentence.map(c=>{
+    if(state.pinyinOn&&c[1])return `<ruby>${c[0]}<rt>${c[1]}</rt></ruby>`;
+    return c[0];
+  }).join("");
+}
+function openRead(id){rd={id:id,phase:0,cur:0};renderRead();}
+function renderRead(){
+  const r=READS.find(x=>x.id===rd.id);
+  let inner="";
+  if(rd.phase===0){
+    inner=`<div class="stepnote">第一步 · 先在心里默读一遍 👀</div>
+    <div class="readtext">${r.sent.map(s=>`<span class="sentline">${sentHTML(s)}</span>`).join("")}</div>
+    <div class="center" style="margin-top:16px;"><button class="btn" onclick="rd.phase=1;rd.cur=0;renderRead()">🎤 开始朗读</button></div>`;
+  }else if(rd.phase===1){
+    inner=`<div class="stepnote">第二步 · 大声读出<b>黄色亮光</b>的那一句 🎤（第 ${rd.cur+1} / ${r.sent.length} 句）</div>
+    <div class="readtext">${r.sent.map((s,i)=>`<span class="sentline ${i===rd.cur?"now":(i<rd.cur?"done":"")}">${sentHTML(s)}</span>`).join("")}</div>
+    <div class="center" style="margin-top:16px;">
+    <button class="btn" onclick="nextSent()">${rd.cur+1<r.sent.length?"读好了，下一句 →":"读完啦！🎉"}</button></div>`;
+  }else{
+    inner=`<div class="stepnote">第三步 · 自己评一评：刚才读得怎么样？（没有对错，说真话就好）</div>
+    <div class="center" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px;">
+      <button class="selfbtn" onclick="selfRate('😄')">😄<small>很流利！</small></button>
+      <button class="selfbtn" onclick="selfRate('🙂')">🙂<small>还不错</small></button>
+      <button class="selfbtn" onclick="selfRate('😅')">😅<small>想再练一次</small></button>
+    </div>`;
+  }
+  const tips=`<div class="tipbox"><h3>💡 朗读小贴士</h3>
+  <div>${r.tips.words.map(w=>`<span class="tipword"><b>${w.w}</b> ${w.p} — ${w.note}</span>`).join("")}</div>
+  <div style="font-size:15px;line-height:1.8;color:#7c5a22;margin-top:8px;">⏸ <b>停顿建议：</b>${r.tips.pause}</div></div>`;
+  document.getElementById("view").innerHTML=`
+  <div class="backrow"><button class="btn ghost small" onclick="go('read')">← 返回</button></div>
+  <div class="card"><h2 style="font-size:22px;">${r.e} ${r.t}</h2>
+  <div class="switchrow"><button class="switch ${state.pinyinOn?"on":""}" onclick="state.pinyinOn=!state.pinyinOn;save();renderRead()"></button><span style="font-size:14px;font-weight:700;color:#5b8ba1;">显示拼音</span></div>
+  ${inner}</div>${rd.phase===2?tips:""}
+  <div id="rateBox"></div>`;
+  window.scrollTo(0,0);
+}
+function nextSent(){
+  const r=READS.find(x=>x.id===rd.id);
+  if(rd.cur+1<r.sent.length){rd.cur++;renderRead();}
+  else{rd.phase=2;renderRead();}
+}
+function selfRate(face){
+  const first=!state.read[rd.id];
+  state.read[rd.id]=face;
+  if(first)addXP(10);else addXP(3);
+  save();updateHeader();
+  let msg,btns;
+  if(face==="😅"){
+    msg="想再练一次？太棒了！好的朗读都是练出来的。这次先看看下面的小贴士，再来一遍吧！💪";
+    btns=`<button class="btn" onclick="rd.phase=1;rd.cur=0;renderRead()">🎤 再读一遍</button>
+    <button class="btn ghost" onclick="go('read')">先休息一下</button>`;
+    confettiBurst();
+  }else{
+    msg=face==="😄"?"哇，读得很流利！你的声音一定很好听！记得也看看小贴士，下次读得更棒！🌟":"不错不错！多读几遍会越来越顺哦。看看小贴士里的小秘密吧！✨";
+    btns=`<button class="btn" onclick="go('read')">🌊 练下一段</button>
+    <button class="btn ghost" onclick="rd.phase=1;rd.cur=0;renderRead()">再读一遍</button>`;
+    fireworks();
+  }
+  document.getElementById("rateBox").innerHTML=`
+  <div class="brow"><div class="face">🐬</div><div class="bubble grow">${msg}</div></div>
+  <div class="center" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">${btns}</div>`;
+}
+/* ============ 看图说话 ============ */
+function renderPicList(){
+  let h=`<div class="brow"><div class="face">🐬</div><div class="bubble grow">看图说话的小秘诀：先想清楚<b>谁？在哪里？做什么？心情怎样？</b>自己先说一遍，再看范例。范例要<b>多看几遍</b>，好句子看多了，自然就会说啦！</div></div>`;
+  SCENES.forEach(s=>{
+    const d=state.pic[s.id];
+    h+=`<button class="itemcard ${d?"done":""}" onclick="openScene('${s.id}')"><div class="cover">${s.e}</div>
+    <div class="grow"><div class="t">${s.t}</div><div class="k">${d?"✔ 已练过 · 再看看范例！":"点我开始"}</div></div>
+    <div style="font-size:22px;">${d?"🏅":"➜"}</div></button>`;
+  });
+  document.getElementById("view").innerHTML=h;
+}
+function openScene(id){
+  const s=SCENES.find(x=>x.id===id);
+  const qs=s.qs.map((q,i)=>`<div class="qchip">${["1️⃣","2️⃣","3️⃣","4️⃣"][i]} ${q}</div>`).join("");
+  document.getElementById("view").innerHTML=`
+  <div class="backrow"><button class="btn ghost small" onclick="go('pic')">← 返回</button></div>
+  <div class="card"><h2 style="font-size:22px;">${s.e} ${s.t}</h2>
+  <div class="scene">${s.svg}</div>
+  <div class="stepnote">第一步 · 看着图，想一想这些问题：</div>${qs}
+  <div class="stepnote" style="margin-top:12px;">第二步 · 自己大声说一说（可以说给妈妈听）🎤</div>
+  <div class="center" style="margin-top:12px;"><button class="btn sand" onclick="showSample('${id}')">👀 我说完了，看看范例</button></div>
+  <div id="sampleBox"></div></div>`;
+  window.scrollTo(0,0);
+}
+function showSample(id){
+  const s=SCENES.find(x=>x.id===id);
+  const first=!state.pic[id];
+  state.pic[id]=true;
+  if(first)addXP(10);else addXP(3);
+  save();updateHeader();fireworks();
+  const text=s.sample.replace(/【([^】]+)】/g,'<span class="goodword">$1</span>');
+  document.getElementById("sampleBox").innerHTML=`
+  <div class="stepnote" style="margin-top:16px;">第三步 · 范例来啦！<span class="goodword">黄色</span>的是好词好句，跟着读一读：</div>
+  <div class="samplebox">${text}</div>
+  <div class="brow" style="margin-top:12px;"><div class="face">🐬</div><div class="bubble grow">把范例<b>大声读两遍</b>，再试着不看范例，用自己的话说一遍。每次都会比上一次说得好！🌟</div></div>
+  <div class="center" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+  <button class="btn" onclick="go('pic')">🖼️ 练下一个场景</button></div>`;
+}
+/* ============ 问答小贝壳 ============ */
+function renderQaList(){
+  let h=`<div class="brow"><div class="face">🐬</div><div class="bubble grow">口试问答有个小魔法：<b>回答 + 原因 + 小细节</b>，三步说出最完整的答案！每题都有三个等级，照着<b>金色的完整版</b>多说几遍。</div></div>`;
+  QAS.forEach((qa,i)=>{
+    const d=state.qa["q"+i];
+    h+=`<button class="itemcard ${d?"done":""}" onclick="openQa(${i})"><div class="cover">🐚</div>
+    <div class="grow"><div class="t">${qa.q}</div><div class="k">${d?"✔ 已练过 · 温故知新！":"点我练一练"}</div></div>
+    <div style="font-size:22px;">${d?"🏅":"➜"}</div></button>`;
+  });
+  document.getElementById("view").innerHTML=h;
+}
+function openQa(i){
+  const qa=QAS[i];
+  document.getElementById("view").innerHTML=`
+  <div class="backrow"><button class="btn ghost small" onclick="go('qa')">← 返回</button></div>
+  <div class="card"><h2 style="font-size:21px;">🐚 ${qa.q}</h2>
+  <div class="stepnote">第一步 · 先自己回答一遍 🎤</div>
+  <div class="stepnote" style="margin-top:10px;">第二步 · 看看回答的三个等级，一级比一级棒：</div>
+  <div class="lvl lvl1"><span class="lab">🌱 简单回答</span>${qa.l1}</div>
+  <div class="lvl lvl2"><span class="lab">🌿 加上原因</span>${qa.l2}</div>
+  <div class="lvl lvl3"><span class="lab">🌟 加上细节（照着这个说！）</span>${qa.l3}</div>
+  <div class="stepnote" style="margin-top:10px;">第三步 · 跟着 🌟 金色完整版，大声说两遍！</div>
+  <div class="center" style="margin-top:12px;"><button class="btn" onclick="finishQa(${i})">✅ 我说完啦！</button></div>
+  <div id="qaDoneBox"></div></div>`;
+  window.scrollTo(0,0);
+}
+function finishQa(i){
+  const first=!state.qa["q"+i];
+  state.qa["q"+i]=true;
+  if(first)addXP(10);else addXP(3);
+  save();updateHeader();fireworks();
+  document.getElementById("qaDoneBox").innerHTML=`
+  <div class="brow" style="margin-top:14px;"><div class="face">🐬</div><div class="bubble grow">太棒了！${first?"+10 颗星星！":"温故知新，+3 颗星星！"}记住这个魔法：<b>回答 + 原因 + 细节</b>。考试的时候也要这样说完整的句子哦！🌟</div></div>
+  <div class="center"><button class="btn" onclick="go('qa')">🐚 练下一题</button></div>`;
+}
+/* ============ 特效 ============ */
+const fxCanvas=document.getElementById("fx");
+const fxCtx=fxCanvas.getContext("2d");
+let parts=[],fxRunning=false;
+function fxResize(){fxCanvas.width=innerWidth;fxCanvas.height=innerHeight;}
+addEventListener("resize",fxResize);fxResize();
+const FX_COLORS=["#4ab8d8","#ff8a7a","#ffd66b","#8fd7b8","#a5e0ef","#f7a8d8"];
+function spawnConfetti(n,x,y,spread){
+  for(let i=0;i<n;i++){
+    parts.push({x:x??Math.random()*fxCanvas.width,y:y??-10,
+      vx:(Math.random()-.5)*(spread||4),vy:Math.random()*3+2,
+      s:Math.random()*7+4,c:FX_COLORS[Math.floor(Math.random()*FX_COLORS.length)],
+      r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,life:140});
+  }
+  runFX();
+}
+function spawnFirework(){
+  const x=Math.random()*fxCanvas.width,y=Math.random()*fxCanvas.height*.5+50;
+  const c=FX_COLORS[Math.floor(Math.random()*FX_COLORS.length)];
+  for(let i=0;i<28;i++){
+    const a=(i/28)*Math.PI*2,sp=Math.random()*3+2;
+    parts.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,s:4,c:c,r:0,vr:0,life:60,fw:true});
+  }
+}
+function confettiBurst(){spawnConfetti(90);}
+function fireworks(){
+  spawnConfetti(70);
+  let count=0;
+  const iv=setInterval(()=>{spawnFirework();runFX();count++;if(count>5)clearInterval(iv);},350);
+}
+function runFX(){
+  if(fxRunning)return;fxRunning=true;
+  function tick(){
+    fxCtx.clearRect(0,0,fxCanvas.width,fxCanvas.height);
+    parts=parts.filter(p=>p.life>0&&p.y<fxCanvas.height+20);
+    parts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;if(!p.fw)p.vy+=.06;else p.vy+=.03;p.r+=p.vr;p.life--;
+      fxCtx.save();fxCtx.translate(p.x,p.y);fxCtx.rotate(p.r);
+      fxCtx.globalAlpha=Math.min(1,p.life/40);
+      fxCtx.fillStyle=p.c;fxCtx.fillRect(-p.s/2,-p.s/2,p.s,p.s);fxCtx.restore();
+    });
+    if(parts.length){requestAnimationFrame(tick);}else{fxRunning=false;fxCtx.clearRect(0,0,fxCanvas.width,fxCanvas.height);}
+  }
+  requestAnimationFrame(tick);
+}
+/* ============ 启动 ============ */
+updateHeader();
+go("home");
+</script>
+</body>
+</html>

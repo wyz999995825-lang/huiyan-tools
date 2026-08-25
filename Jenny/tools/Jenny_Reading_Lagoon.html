@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Reading Lagoon 🐢</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { height:100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background:#f0fafd; color:#134b63; font-size:16px;
+  padding-bottom:90px;
+}
+header {
+  background:linear-gradient(160deg,#dff2f9,#a5e0ef);
+  padding:16px 16px 14px; border-radius:0 0 24px 24px;
+  box-shadow:0 4px 14px rgba(26,126,168,.12);
+}
+.hrow { display:flex; align-items:center; gap:12px; max-width:760px; margin:0 auto; }
+.mermaid-big { font-size:44px; line-height:1; filter:drop-shadow(0 2px 3px rgba(26,126,168,.25)); }
+.htitle { font-size:22px; font-weight:800; color:#1a7ea8; }
+.hsub { font-size:13px; color:#3d7f9c; margin-top:2px; }
+.stats { display:flex; gap:8px; margin-left:auto; align-items:center; }
+.pill {
+  background:#ffffffcc; border-radius:999px; padding:7px 12px; font-weight:700;
+  font-size:14px; color:#1a7ea8; box-shadow:0 2px 6px rgba(26,126,168,.12);
+  white-space:nowrap;
+}
+nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:50;
+  background:#ffffff; box-shadow:0 -4px 16px rgba(26,126,168,.15);
+  display:flex; justify-content:space-around; padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  border-radius:20px 20px 0 0;
+}
+.navbtn {
+  border:none; background:none; font-size:12px; font-weight:700; color:#7aa9bd;
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  min-width:64px; min-height:52px; justify-content:center; border-radius:14px; cursor:pointer;
+}
+.navbtn .ico { font-size:24px; }
+.navbtn.active { color:#1a7ea8; background:#dff2f9; }
+main { max-width:760px; margin:0 auto; padding:16px; }
+.card {
+  background:#fff; border-radius:18px; padding:18px;
+  box-shadow:0 4px 14px rgba(26,126,168,.10); margin-bottom:16px;
+}
+.bubble {
+  background:#dff2f9; border-radius:18px; padding:12px 16px; position:relative;
+  font-size:16px; line-height:1.6; color:#155e7d; margin:10px 0 16px 14px;
+}
+.bubble:before {
+  content:""; position:absolute; left:-9px; top:16px;
+  border:9px solid transparent; border-right-color:#dff2f9; border-left:none;
+}
+.brow { display:flex; align-items:flex-start; gap:4px; }
+.brow .face { font-size:34px; margin-top:6px; }
+h2 { color:#1a7ea8; font-size:19px; margin-bottom:10px; }
+h3 { color:#1a7ea8; font-size:17px; margin-bottom:8px; }
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  background:#4ab8d8; color:#fff; border:none; border-radius:16px;
+  padding:12px 20px; font-size:16px; font-weight:800; cursor:pointer;
+  min-height:48px; box-shadow:0 3px 8px rgba(26,126,168,.25);
+}
+.btn:active { transform:scale(.97); }
+.btn.sand { background:#fdf3dd; color:#a4762a; box-shadow:0 3px 8px rgba(190,150,60,.2); }
+.btn.coral { background:#ff8a7a; }
+.btn.ghost { background:#eaf6fb; color:#1a7ea8; box-shadow:none; }
+.btn.small { padding:8px 14px; min-height:44px; font-size:14px; }
+.artcard {
+  display:flex; gap:14px; align-items:center; background:#fff; border-radius:18px;
+  padding:14px; box-shadow:0 4px 12px rgba(26,126,168,.10); margin-bottom:12px;
+  cursor:pointer; border:2px solid transparent; width:100%; text-align:left;
+  font-family:inherit; color:inherit;
+}
+.artcard.done { border-color:#8fd7b8; background:#f4fcf8; }
+.artcard .cover {
+  width:58px; height:58px; border-radius:16px; background:#dff2f9;
+  display:flex; align-items:center; justify-content:center; font-size:32px; flex-shrink:0;
+}
+.artcard .t { font-weight:800; font-size:16px; color:#134b63; }
+.artcard .k { font-size:13px; color:#6fa3ba; margin-top:3px; }
+.tag { display:inline-block; font-size:11px; font-weight:800; border-radius:999px; padding:3px 9px; margin-bottom:4px; }
+.tag.fun { background:#fdf3dd; color:#a4762a; }
+.tag.news { background:#e5e9fb; color:#4a5bbd; }
+.readtext { font-size:18px; line-height:1.9; color:#183f52; }
+.kwspan {
+  border-bottom:2px dotted #4ab8d8; background:#dff2f97a; border-radius:4px;
+  padding:0 2px; cursor:pointer; font-weight:600;
+}
+.kwspan.collected { background:#fdf3dd; border-bottom-color:#e0b25c; }
+.ringwrap { position:relative; width:88px; height:88px; flex-shrink:0; }
+.ringwrap svg { transform:rotate(-90deg); }
+.ringlabel {
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; font-weight:800; color:#1a7ea8; font-size:15px;
+}
+.ringlabel small { font-weight:600; font-size:10px; color:#6fa3ba; }
+.qbox { background:#f2fafd; border-radius:16px; padding:14px; margin-bottom:14px; }
+.qq { font-weight:800; margin-bottom:10px; font-size:16px; }
+.opt {
+  display:block; width:100%; text-align:left; background:#fff; border:2px solid #cfe9f4;
+  border-radius:14px; padding:12px 14px; font-size:16px; margin-bottom:8px; cursor:pointer;
+  min-height:48px; color:#134b63; font-family:inherit;
+}
+.opt.correct { background:#d9f5e5; border-color:#5bc596; font-weight:700; }
+.opt.wrong { background:#ffe9e5; border-color:#ff8a7a; }
+.opt:disabled { opacity:1; }
+.model {
+  background:#fff; border-left:5px solid #4ab8d8; border-radius:0 12px 12px 0;
+  padding:10px 12px; margin-top:6px; font-size:15px; line-height:1.6;
+}
+.model b { color:#1a7ea8; }
+.xraybox { background:#eef7fb; border-radius:16px; padding:14px; margin:12px 0; }
+.xr-sent { font-size:18px; line-height:2; margin:8px 0; }
+.xr-who { background:#d6e6ff; color:#2b5bb7; border-radius:8px; padding:2px 6px; font-weight:700; }
+.xr-act { background:#ffe1dc; color:#d1543f; border-radius:8px; padding:2px 6px; font-weight:700; }
+.xr-rest { background:#dcf3e3; color:#237a4d; border-radius:8px; padding:2px 6px; font-weight:700; }
+.xr-legend { font-size:13px; color:#5b8ba1; margin-top:6px; }
+.xr-note { font-size:14px; color:#155e7d; margin-top:8px; background:#fff; border-radius:10px; padding:8px 10px; line-height:1.6; }
+.popup-bg {
+  position:fixed; inset:0; background:rgba(19,75,99,.45); z-index:100;
+  display:none; align-items:center; justify-content:center; padding:20px;
+}
+.popup-bg.show { display:flex; }
+.popup {
+  background:#fff; border-radius:20px; padding:22px; max-width:420px; width:100%;
+  box-shadow:0 10px 40px rgba(0,0,0,.25); max-height:80vh; overflow:auto;
+}
+.popup .word { font-size:26px; font-weight:800; color:#1a7ea8; }
+.popup .cn { font-size:17px; color:#c26a2e; font-weight:700; margin:4px 0 10px; }
+.popup .def { font-size:16px; line-height:1.7; }
+.popup .ex { background:#f2fafd; border-radius:12px; padding:10px 12px; margin-top:10px; font-size:15px; line-height:1.7; font-style:italic; }
+.chestword {
+  display:flex; justify-content:space-between; align-items:center; background:#fff;
+  border-radius:14px; padding:12px 14px; margin-bottom:8px; cursor:pointer;
+  box-shadow:0 2px 8px rgba(26,126,168,.08); border:none; width:100%; font-family:inherit; font-size:16px;
+}
+.chestword .w { font-weight:800; color:#1a7ea8; font-size:17px; }
+.chestword .from { font-size:12px; color:#8fb4c6; text-align:right; }
+.chip {
+  border:2px solid #cfe9f4; background:#fff; border-radius:16px; padding:10px 14px;
+  font-size:15px; font-weight:700; color:#134b63; cursor:pointer; min-height:48px;
+  display:inline-flex; align-items:center; gap:6px; font-family:inherit;
+}
+.chip.sel { background:#4ab8d8; color:#fff; border-color:#4ab8d8; }
+.chiprow { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 16px; }
+.slotopt {
+  display:block; width:100%; text-align:left; background:#fff; border:2px solid #cfe9f4;
+  border-radius:14px; padding:12px 14px; font-size:16px; line-height:1.6; margin-bottom:8px;
+  cursor:pointer; min-height:48px; font-family:inherit; color:#134b63;
+}
+.slotopt:active { background:#dff2f9; }
+.storysofar { background:#fdf3dd; border-radius:16px; padding:14px; font-size:17px; line-height:1.9; margin-bottom:14px; }
+.mystory { background:#fff; border-radius:16px; padding:14px; margin-bottom:10px; box-shadow:0 2px 8px rgba(26,126,168,.08); }
+.mystory .st { font-weight:800; color:#1a7ea8; margin-bottom:6px; }
+.mystory .sx { font-size:16px; line-height:1.9; }
+.progressbar { height:10px; background:#dff2f9; border-radius:999px; overflow:hidden; margin:8px 0 14px; }
+.progressbar > div { height:100%; background:linear-gradient(90deg,#4ab8d8,#1a7ea8); border-radius:999px; transition:width .4s; }
+.donebadge { font-size:13px; font-weight:800; color:#2e9c6b; }
+.center { text-align:center; }
+.big { font-size:52px; }
+#fx { position:fixed; inset:0; pointer-events:none; z-index:200; }
+.backrow { margin-bottom:12px; }
+.hidden { display:none; }
+.rowsplit { display:flex; gap:12px; align-items:center; }
+.grow { flex:1; }
+@media (min-width:700px){ .htitle{font-size:26px;} }
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div class="mermaid-big">🧜‍♀️</div>
+    <div>
+      <div class="htitle">Reading Lagoon 🐢</div>
+      <div class="hsub">Dive into two stories every day!</div>
+    </div>
+    <div class="stats">
+      <div class="pill" id="xpPill">⭐ 0 XP</div>
+      <div class="pill" id="streakPill">🔥 0</div>
+    </div>
+  </div>
+</header>
+<main id="view"></main>
+<nav>
+  <button class="navbtn active" id="nav-home" onclick="go('home')"><span class="ico">🌊</span>Today</button>
+  <button class="navbtn" id="nav-lib" onclick="go('lib')"><span class="ico">📚</span>Library</button>
+  <button class="navbtn" id="nav-chest" onclick="go('chest')"><span class="ico">🔍</span>Word Chest</button>
+  <button class="navbtn" id="nav-builder" onclick="go('builder')"><span class="ico">🧜‍♀️</span>Story Builder</button>
+</nav>
+<div class="popup-bg" id="popupBg" onclick="if(event.target===this)closePopup()">
+  <div class="popup" id="popupBox"></div>
+</div>
+<canvas id="fx"></canvas>
+<script>
+"use strict";
+/* ================= DATA: FUN STORIES ================= */
+const STORIES = [
+{id:"s1",t:"Toby's Big Wave",e:"🐢",
+txt:`Toby the turtle lived in a calm blue {lagoon}. Every morning he watched the big kids surf the waves. "I am too small," he sighed. One day, a huge wave rolled toward the beach. Toby took a deep breath, climbed on a piece of {driftwood}, and {paddled} hard. Up, up, up he went! The wave lifted him like a feather. "Woohoo!" he shouted. He {wobbled}, he slipped, but he did not fall. When he glided back to shore, the big kids clapped their flippers. "You are small," said an old sea lion, "but your {courage} is {enormous}." Toby smiled all the way home.`,
+kw:[
+ {w:"lagoon",d:"a small, calm area of sea water near the beach",c:"潟湖；礁湖",ex:"The little fish like to hide in the quiet lagoon."},
+ {w:"driftwood",d:"wood floating on the sea or washed up on the beach",c:"浮木",ex:"We found a long piece of driftwood on the sand."},
+ {w:"paddled",d:"moved through water using arms, legs or flippers",c:"划水",ex:"The duck paddled across the pond."},
+ {w:"wobbled",d:"moved from side to side in a shaky way",c:"摇晃",ex:"The jelly wobbled on the plate."},
+ {w:"courage",d:"being brave even when you feel scared",c:"勇气",ex:"It takes courage to try something new."},
+ {w:"enormous",d:"very, very big",c:"巨大的",ex:"The whale is an enormous animal."}],
+xray:[
+ {who:"Toby",act:"climbed",rest:"on a piece of driftwood.",note:"WHO did it? Toby. What was the ACTION? He climbed. WHAT did he climb on? A piece of driftwood."},
+ {who:"The wave",act:"lifted",rest:"him like a feather.",note:"The wave is the WHO here — things can do actions too! The ACTION is lifted, and 'him like a feather' tells us WHAT happened."}],
+quiz:[
+ {q:"Where did Toby live?",o:["In a deep dark cave","In a calm blue lagoon","On a big ship","In a fish tank"],a:1,why:"The story starts: 'Toby the turtle lived in a calm blue lagoon.'"},
+ {q:"Why did Toby sigh at first?",o:["He was hungry","He lost his driftwood","He thought he was too small to surf","He did not like water"],a:2,why:"Toby said 'I am too small' while watching the big kids surf."},
+ {q:"How did Toby most likely feel at the end?",o:["Proud and happy","Angry","Bored","Sleepy"],a:0,why:"He smiled all the way home after everyone clapped — that shows he felt proud and happy."},
+ {q:"In this story, 'enormous' means…",o:["very small","very big","very wet","very slow"],a:1,why:"The sea lion means Toby's courage is very BIG, even though his body is small."}]},
+{id:"s2",t:"The Crab Who Lost His Shell",e:"🦀",
+txt:`Carlo the crab woke up and — oh no! — his shell was gone. "A crab without a shell is like ice cream without a cone!" he cried. He {searched} under rocks. He {searched} in the seaweed. He asked Ollie the octopus, who was always {curious} about everything. "I saw a tiny hermit crab carrying it away," said Ollie. Carlo hurried over and found the little crab using his shell as a {cradle} for her sleepy baby snail. Carlo's heart went soft. "Keep it," he smiled. That afternoon, Ollie helped him find a new shell — bigger, rounder, and {gleaming} like a pearl. It fit perfectly.`,
+kw:[
+ {w:"searched",d:"looked very carefully to find something",c:"寻找",ex:"I searched everywhere for my missing sock."},
+ {w:"curious",d:"wanting to know or learn about things",c:"好奇的",ex:"The curious kitten looked inside the box."},
+ {w:"cradle",d:"a small bed for a baby",c:"摇篮",ex:"The baby slept softly in her cradle."},
+ {w:"gleaming",d:"shining brightly",c:"闪闪发光",ex:"The clean car was gleaming in the sun."}],
+xray:[
+ {who:"Carlo",act:"searched",rest:"under rocks.",note:"WHO? Carlo. ACTION? Searched. WHERE did he search? Under rocks."},
+ {who:"Ollie",act:"helped",rest:"him find a new shell.",note:"Ollie is the WHO, helped is the ACTION, and the rest tells us WHAT he helped to do."}],
+quiz:[
+ {q:"What did Carlo lose?",o:["His hat","His shell","His lunch","His friend"],a:1,why:"The first line says his shell was gone when he woke up."},
+ {q:"Who told Carlo where his shell went?",o:["A sea lion","The baby snail","Ollie the octopus","A dolphin"],a:2,why:"Ollie the octopus said, 'I saw a tiny hermit crab carrying it away.'"},
+ {q:"Why did Carlo let the hermit crab keep the shell?",o:["The shell was broken","He saw it was a cradle for a sleepy baby snail","He had two shells","He was scared of her"],a:1,why:"When Carlo saw the shell being used as a cradle for the baby snail, his heart went soft — he felt kind."},
+ {q:"'Gleaming like a pearl' tells us the new shell was…",o:["dirty","shiny","tiny","heavy"],a:1,why:"'Gleaming' means shining brightly, so the shell was shiny like a pearl."}]},
+{id:"s3",t:"Momo's Banana Plan",e:"🐒",
+txt:`High on the tallest tree hung the biggest, yellowest banana Momo had ever seen. "It shall be mine!" said Momo. Plan One: jump! He jumped and missed. Plan Two: poke it with a stick! The stick was too short to {reach}. Plan Three: a monkey tower! Momo's three cousins stood on each other's shoulders. The tower {balanced}... then {toppled} into the mud with a great SPLAT. Just then, Gina the giraffe walked past. Momo had one plan left. "Excuse me, Gina," he asked {politely}, "could you help me, please?" Gina smiled, stretched her long neck, and picked the banana. It was the most {delicious} banana ever — and they shared it.`,
+kw:[
+ {w:"reach",d:"to stretch out and touch or get something",c:"够到",ex:"I cannot reach the top shelf."},
+ {w:"balanced",d:"stayed steady without falling",c:"保持平衡",ex:"She balanced on one leg like a flamingo."},
+ {w:"toppled",d:"became unsteady and fell over",c:"倒下",ex:"The tower of blocks toppled to the floor."},
+ {w:"politely",d:"in a kind way, with good manners",c:"有礼貌地",ex:"He politely said thank you to the bus driver."},
+ {w:"delicious",d:"very yummy to eat",c:"美味的",ex:"The mango cake was delicious."}],
+xray:[
+ {who:"Momo's three cousins",act:"stood",rest:"on each other's shoulders.",note:"WHO? Momo's three cousins. ACTION? Stood. WHERE? On each other's shoulders."},
+ {who:"Gina",act:"picked",rest:"the banana.",note:"Gina is the WHO, picked is the ACTION, and the banana is WHAT she picked."}],
+quiz:[
+ {q:"What did Momo want?",o:["The biggest banana","A new stick","A tall tree","Gina's neck"],a:0,why:"The story begins with the biggest, yellowest banana Momo had ever seen — 'It shall be mine!'"},
+ {q:"What happened to the monkey tower?",o:["It reached the banana","It toppled into the mud","It turned into a ladder","It flew away"],a:1,why:"The story says the tower 'toppled into the mud with a great SPLAT.'"},
+ {q:"Which plan finally worked?",o:["Jumping high","Poking with a stick","Building a tower","Asking Gina politely"],a:3,why:"When Momo asked Gina politely, she stretched her long neck and picked the banana."},
+ {q:"What lesson does this story teach?",o:["Never share bananas","Asking nicely for help works well","Giraffes are scary","Mud is fun"],a:1,why:"All the tricky plans failed, but asking politely for help solved the problem — and sharing made it sweeter."}]},
+{id:"s4",t:"The Littlest Firefly",e:"🌟",
+txt:`Faye was the littlest firefly in the meadow, and she had a funny secret: she was afraid of the dark! Every evening, when the sky turned purple, her light would {flicker} nervously. "How can a firefly fear the dark?" the crickets would {whisper}. One night, a baby beetle got lost in the long grass. "Help! I can't see!" he cried. Faye's wings trembled, but she flew into the {shadow} anyway. Her little light began to {glow} — brighter and brighter, until the whole path shone gold. The beetle followed her home safely. "You were so {brave}!" he said. Faye beamed. The dark, she discovered, was where her light shone best.`,
+kw:[
+ {w:"flicker",d:"to shine on and off, not steadily",c:"闪烁",ex:"The candle began to flicker in the wind."},
+ {w:"whisper",d:"to speak very softly and quietly",c:"低声说",ex:"Please whisper in the library."},
+ {w:"shadow",d:"a dark shape or dark place where light is blocked",c:"阴影",ex:"The tree made a cool shadow on the grass."},
+ {w:"glow",d:"to give out a soft, steady light",c:"发光",ex:"The night light gives a warm glow."},
+ {w:"brave",d:"not giving up even when you feel afraid",c:"勇敢的",ex:"The brave girl spoke in front of the whole class."}],
+xray:[
+ {who:"A baby beetle",act:"got lost",rest:"in the long grass.",note:"WHO? A baby beetle. ACTION? Got lost. WHERE? In the long grass."},
+ {who:"The beetle",act:"followed",rest:"her home safely.",note:"The beetle is the WHO, followed is the ACTION, and 'her home safely' tells us where and how."}],
+quiz:[
+ {q:"What was Faye's funny secret?",o:["She could not fly","She was afraid of the dark","She had no light","She loved crickets"],a:1,why:"The story says she had a funny secret: she was afraid of the dark!"},
+ {q:"Who needed help in the story?",o:["A cricket","A baby beetle","Faye's mother","A moth"],a:1,why:"A baby beetle got lost in the long grass and cried, 'Help! I can't see!'"},
+ {q:"What did Faye discover at the end?",o:["The dark was where her light shone best","Beetles cannot walk","Crickets sing badly","The grass was short"],a:0,why:"The last line says the dark was where her light shone best."},
+ {q:"In the story, 'flicker' means her light…",o:["turned red","went on and off","became a star","made a sound"],a:1,why:"Flicker means to shine on and off, not steadily — her light flickered because she was nervous."}]},
+{id:"s5",t:"Captain Whiskers and the Missing Sock",e:"🐱",
+txt:`Captain Whiskers was a house cat who believed he was a pirate. His ship was the sofa. His {crew} was one goldfish and two dust bunnies. One morning, disaster struck: Grandpa's favourite red sock had vanished! "All paws on deck!" meowed the Captain. "We must find the {treasure}!" He {sniffed} behind the curtains. Nothing. He peeked into the laundry basket. Only boring blue socks. Then he heard a {giggle} from the garden. There was Biscuit the puppy, wearing the red sock — on his ear, like a floppy hat! Grandpa laughed so hard he cried. "Welcome {aboard}, Biscuit," said Captain Whiskers. "Every pirate ship needs a silly first mate."`,
+kw:[
+ {w:"crew",d:"the team that works on a ship",c:"船员；团队",ex:"The captain thanked his crew for their hard work."},
+ {w:"treasure",d:"something very special and valuable",c:"宝藏",ex:"The pirates buried their treasure on the island."},
+ {w:"sniffed",d:"smelled something by breathing in through the nose",c:"嗅；闻",ex:"The dog sniffed the yummy bread."},
+ {w:"giggle",d:"a small, silly laugh",c:"咯咯笑",ex:"The joke made everyone giggle."},
+ {w:"aboard",d:"on a ship, train or plane",c:"上船；登上",ex:"The sailors climbed aboard the boat."}],
+xray:[
+ {who:"He",act:"peeked",rest:"into the laundry basket.",note:"WHO? He (Captain Whiskers). ACTION? Peeked. WHERE? Into the laundry basket."},
+ {who:"Biscuit the puppy",act:"was wearing",rest:"the red sock on his ear.",note:"Biscuit is the WHO, was wearing is the ACTION, and the red sock is WHAT he wore."}],
+quiz:[
+ {q:"What did Captain Whiskers think he was?",o:["A doctor","A pirate","A chef","A teacher"],a:1,why:"The story says he was a house cat who believed he was a pirate."},
+ {q:"What was the missing 'treasure'?",o:["A gold coin","Grandpa's red sock","A fish bone","A blue hat"],a:1,why:"Grandpa's favourite red sock had vanished, and the Captain called it the treasure."},
+ {q:"Where was the sock found?",o:["Behind the curtains","In the laundry basket","On Biscuit's ear","Under the sofa"],a:2,why:"Biscuit the puppy was wearing the red sock on his ear, like a floppy hat!"},
+ {q:"How do we know Grandpa was not angry?",o:["He hid the sock","He laughed so hard he cried","He walked away","He bought new socks"],a:1,why:"Laughing so hard he cried shows Grandpa found it funny, not upsetting."}]},
+{id:"s6",t:"The Upside-Down Penguin",e:"🐧",
+txt:`Pip the penguin did everything upside-down. He slid down icy hills on his head. He ate fish flapping his feet in the air. The other penguins {tumbled} about laughing. "Pip, you silly bird!" At the Great Ice Games, every penguin lined up for the {slippery} slide race. Whoosh! Off they went on their tummies. But halfway down, Pip hit a bump, flipped over, and finished the race sliding on his head — beak-first through the finish line! The crowd {cheered} louder than ever. The judges gave Pip a shiny medal that read: "Most {creative} Slider." Pip felt very {proud}. He wore the medal upside-down, of course.`,
+kw:[
+ {w:"tumbled",d:"fell or rolled over and over",c:"翻滚；跌倒",ex:"The puppies tumbled around on the grass."},
+ {w:"slippery",d:"smooth and easy to slip on",c:"滑的",ex:"Be careful, the wet floor is slippery!"},
+ {w:"cheered",d:"shouted happily to support someone",c:"欢呼",ex:"We cheered when our team scored a goal."},
+ {w:"creative",d:"full of new and different ideas",c:"有创意的",ex:"Her creative painting used seven colours."},
+ {w:"proud",d:"feeling happy about something you did",c:"自豪的",ex:"I felt proud when I finished the puzzle."}],
+xray:[
+ {who:"Pip",act:"hit",rest:"a bump halfway down.",note:"WHO? Pip. ACTION? Hit. WHAT did he hit? A bump."},
+ {who:"The judges",act:"gave",rest:"Pip a shiny medal.",note:"The judges are the WHO, gave is the ACTION, and 'Pip a shiny medal' tells us who got what."}],
+quiz:[
+ {q:"What was special about Pip?",o:["He did everything upside-down","He could not swim","He was the biggest penguin","He hated ice"],a:0,why:"The first line says Pip the penguin did everything upside-down."},
+ {q:"What happened halfway down the slide?",o:["Pip stopped","Pip hit a bump and flipped over","Pip fell asleep","Pip lost his medal"],a:1,why:"The story says he hit a bump, flipped over, and slid on his head."},
+ {q:"What did Pip's medal say?",o:["Fastest Slider","Most Creative Slider","Best Fisher","Silliest Bird"],a:1,why:"The judges gave him a medal that read 'Most Creative Slider.'"},
+ {q:"How did Pip feel about his medal?",o:["Ashamed","Proud","Angry","Frightened"],a:1,why:"The story says Pip felt very proud — he even wore the medal his own special way!"}]},
+{id:"s7",t:"Rosie's Red Rain Boots",e:"🌧️",
+txt:`Rain! Rain! Rosie pulled on her red rain boots and marched outside. She {splashed} in the small puddle by the gate. She {splashed} in the medium puddle near the mango tree. Then she saw it: a {gigantic} puddle, as wide as a swimming pool, right in the middle of the field. Rosie ran, jumped — and stopped in mid-air. Well, almost. A small green frog sat in the middle of the puddle. "Please don't splash my pond," he croaked. "It's the best puddle I've ever had." Rosie landed {gently} on the grass instead. "I {promise}," she said. From then on, they shared it: the frog got the middle, and Rosie got the edges. Splash!`,
+kw:[
+ {w:"splashed",d:"made water fly about with a jump or hit",c:"溅起水花",ex:"The kids splashed water at the pool."},
+ {w:"gigantic",d:"extremely big; giant-sized",c:"巨大的",ex:"A gigantic balloon floated over the park."},
+ {w:"gently",d:"softly and carefully",c:"轻轻地",ex:"She gently patted the baby rabbit."},
+ {w:"promise",d:"to say you will really do something",c:"承诺；保证",ex:"I promise to feed the fish every day."}],
+xray:[
+ {who:"Rosie",act:"splashed",rest:"in the small puddle by the gate.",note:"WHO? Rosie. ACTION? Splashed. WHERE? In the small puddle by the gate."},
+ {who:"A small green frog",act:"sat",rest:"in the middle of the puddle.",note:"The frog is the WHO, sat is the ACTION, and the rest tells us WHERE he sat."}],
+quiz:[
+ {q:"What did Rosie put on first?",o:["A raincoat","Red rain boots","A sun hat","Blue slippers"],a:1,why:"The story says Rosie pulled on her red rain boots and marched outside."},
+ {q:"Who was in the gigantic puddle?",o:["A fish","A duck","A small green frog","A turtle"],a:2,why:"A small green frog sat in the middle of the puddle."},
+ {q:"Why did Rosie not jump into the big puddle?",o:["It was too cold","The frog asked her not to splash his pond","Her boots broke","It started to snow"],a:1,why:"The frog said, 'Please don't splash my pond,' so Rosie landed gently on the grass."},
+ {q:"'Gigantic' means…",o:["muddy","very big","green","noisy"],a:1,why:"Gigantic means extremely big — the puddle was as wide as a swimming pool!"}]},
+{id:"s8",t:"The Dragon Who Sneezed Bubbles",e:"🐉",
+txt:`Dax was a young dragon with a problem. When other dragons sneezed, out came fire. When Dax sneezed — out {floated} bubbles! Big wobbly rainbow bubbles. Dax felt {ashamed}. "What use is a bubble dragon?" he sighed. One breezy day at the village picnic, a little girl's kite string snapped. The kite spun away over the river, and she began to cry. Dax looked at the sky, took an enormous breath, and — AH-CHOO! A stream of bubbles {chased} the kite, wrapped around it like soft hands, and carried it safely back down. The whole village clapped. "Fire is common," said Grandmother Dragon. "But bubbles that {rescue} kites? That is truly {special}."`,
+kw:[
+ {w:"floated",d:"moved lightly in air or water without sinking",c:"漂浮",ex:"The leaf floated down the stream."},
+ {w:"ashamed",d:"feeling bad or shy about yourself",c:"惭愧的",ex:"He felt ashamed after breaking the vase."},
+ {w:"chased",d:"ran or moved after something to catch it",c:"追赶",ex:"The kitten chased the rolling ball."},
+ {w:"rescue",d:"to save someone or something from danger",c:"救援；拯救",ex:"The firefighter came to rescue the cat in the tree."},
+ {w:"special",d:"different from others in a wonderful way",c:"特别的",ex:"Grandma's cookies have a special taste."}],
+xray:[
+ {who:"The kite",act:"spun",rest:"away over the river.",note:"WHO (what)? The kite. ACTION? Spun. WHERE? Away over the river."},
+ {who:"A stream of bubbles",act:"carried",rest:"it safely back down.",note:"The bubbles are the WHO, carried is the ACTION, and 'it safely back down' tells us WHAT they carried and how."}],
+quiz:[
+ {q:"What came out when Dax sneezed?",o:["Fire","Smoke","Bubbles","Snow"],a:2,why:"The story says when Dax sneezed, out floated bubbles!"},
+ {q:"Why did Dax feel ashamed at first?",o:["He was too big","His sneezes made bubbles, not fire","He lost the picnic","He broke a kite"],a:1,why:"Other dragons sneezed fire, so Dax thought a bubble dragon was useless."},
+ {q:"How did Dax save the kite?",o:["He flew after it","His bubbles wrapped around it and carried it down","He blew fire at it","He pulled the string"],a:1,why:"His bubbles chased the kite, wrapped around it like soft hands, and carried it safely down."},
+ {q:"What did Grandmother Dragon mean by 'Fire is common'?",o:["Fire is dangerous","Many dragons have fire, but Dax's gift is rare and special","Fire is cold","Dragons should not sneeze"],a:1,why:"She meant lots of dragons breathe fire, but bubbles that rescue kites make Dax one of a kind."}]},
+{id:"s9",t:"Benny's Bouncy Bed",e:"🛏️",
+txt:`Benny hated mornings. Every day he {grumbled}, "Five more minutes!" So Grandpa built him a very special bed. On Monday at seven o'clock, the bed went BOING! Benny {bounced} up, up, and gently bumped the {ceiling}. "HEY!" he shouted — but he was awake. On Tuesday, BOING! Benny landed right in his school uniform. On Wednesday, BOING! He bounced down the stairs and landed in his chair just as the pancakes arrived. Warm, sweet, banana pancakes. Benny {yawned}, then grinned. On Thursday morning, something strange happened. At seven o'clock, Benny was already up, dressed, and waiting by the bed. "Come on, bed," he whispered. "BOING me to the pancakes. It's the best {surprise} of the day."`,
+kw:[
+ {w:"grumbled",d:"complained in a low, grumpy voice",c:"抱怨；嘟囔",ex:"He grumbled about doing his chores."},
+ {w:"bounced",d:"sprang up and down like a ball",c:"弹跳",ex:"The ball bounced over the fence."},
+ {w:"ceiling",d:"the top part of a room, above your head",c:"天花板",ex:"A fan hangs from the ceiling."},
+ {w:"yawned",d:"opened the mouth wide when sleepy",c:"打哈欠",ex:"She yawned and went to bed."},
+ {w:"surprise",d:"something you did not expect",c:"惊喜",ex:"The party was a wonderful surprise."}],
+xray:[
+ {who:"Grandpa",act:"built",rest:"him a very special bed.",note:"WHO? Grandpa. ACTION? Built. WHAT? A very special bed for Benny."},
+ {who:"Benny",act:"landed",rest:"right in his school uniform.",note:"Benny is the WHO, landed is the ACTION, and the rest tells us WHERE he landed — how funny!"}],
+quiz:[
+ {q:"What did Benny say every morning at first?",o:["Good morning!","Five more minutes!","Where are my socks?","BOING!"],a:1,why:"The story says every day he grumbled, 'Five more minutes!'"},
+ {q:"Who built the bouncy bed?",o:["Benny","His teacher","Grandpa","The pancake chef"],a:2,why:"Grandpa built him a very special bed."},
+ {q:"What happened on Wednesday?",o:["Benny bounced into his chair just as pancakes arrived","The bed broke","Benny slept all day","It rained pancakes"],a:0,why:"On Wednesday, BOING! He bounced down the stairs and landed in his chair just as the pancakes arrived."},
+ {q:"Why was Benny waiting by the bed on Thursday?",o:["He was scared of it","He wanted the bed to bounce him to the pancakes","He wanted to sleep more","He was hiding from Grandpa"],a:1,why:"Benny whispered, 'BOING me to the pancakes' — he had started to love his bouncy mornings."}]},
+{id:"s10",t:"The Secret Door in the Garden",e:"🚪",
+txt:`Behind the bean plants, at the bottom of the garden wall, Mia found a {tiny} door. It was no taller than her hand, painted blue, with a doorknob the size of a peppercorn. She knocked softly. No answer. So Mia left a {secret} gift: one small cookie on a leaf plate. The next morning, the cookie was gone! In its place lay a {note}, written in the smallest letters she had ever seen: "Thank you. Please plant me. — Your neighbour." Beside the note sat one striped seed. Mia planted it and was very {patient}. She watered it every day for weeks. When at last it {bloomed}, it was a sunflower — with a tiny blue door painted on its pot? No. Something better: it was the tallest, sunniest flower on the whole street.`,
+kw:[
+ {w:"tiny",d:"very, very small",c:"极小的",ex:"A tiny ant walked across the table."},
+ {w:"secret",d:"kept hidden; not told to others",c:"秘密的",ex:"They built a secret hideout in the tree."},
+ {w:"note",d:"a short written message",c:"便条",ex:"Mum left a note on the fridge."},
+ {w:"patient",d:"able to wait calmly without getting upset",c:"有耐心的",ex:"Be patient — the cookies need ten more minutes."},
+ {w:"bloomed",d:"opened into a flower",c:"开花",ex:"The roses bloomed in the warm sun."}],
+xray:[
+ {who:"Mia",act:"left",rest:"a secret gift on a leaf plate.",note:"WHO? Mia. ACTION? Left. WHAT? A secret gift — one small cookie."},
+ {who:"She",act:"watered",rest:"it every day for weeks.",note:"She (Mia) is the WHO, watered is the ACTION, and the rest tells us WHAT she watered and for how long."}],
+quiz:[
+ {q:"Where did Mia find the tiny door?",o:["On the roof","At the bottom of the garden wall","In her bedroom","On a tree trunk"],a:1,why:"The story says the tiny door was at the bottom of the garden wall, behind the bean plants."},
+ {q:"What gift did Mia leave?",o:["A seed","A small cookie","A blue door","A flower"],a:1,why:"Mia left one small cookie on a leaf plate."},
+ {q:"What did the note ask Mia to do?",o:["Knock louder","Plant the seed","Bake more cookies","Paint the door"],a:1,why:"The note said, 'Thank you. Please plant me,' and beside it sat one striped seed."},
+ {q:"Which word tells us Mia waited calmly for weeks?",o:["tiny","secret","patient","striped"],a:2,why:"'Patient' means able to wait calmly — Mia watered the seed every day without giving up."}]},
+{id:"s11",t:"Slow and Steady Lila",e:"🐌",
+txt:`On the day of the Great Garden Race, Lila the snail lined up beside Rabbit, Beetle and Grasshopper. Everyone {giggled}. "A snail? In a race?" Lila just smiled and repeated her favourite words: "Slow and {steady}." BANG! Off they zoomed. Rabbit sprinted ahead. Grasshopper bounced past the tomatoes. Then — plip, plop — rain began to fall. Big, fat, cold drops! Rabbit dashed under a flowerpot for {shelter}. Grasshopper hid inside a watering can. Beetle stopped to fix his umbrella. But rain never bothers a snail. Lila glided on, smooth and calm, right across the {finish} line. Her prize was a golden {trophy} shaped like a lettuce leaf. It took her three days to carry it home — slow and steady, of course.`,
+kw:[
+ {w:"giggled",d:"laughed in a light, silly way",c:"咯咯笑",ex:"The twins giggled at the clown."},
+ {w:"steady",d:"keeping the same calm speed; not stopping",c:"稳定的；不慌不忙的",ex:"He climbed the ladder with slow, steady steps."},
+ {w:"shelter",d:"a place that keeps you safe from rain or sun",c:"躲避处",ex:"We found shelter under the big tree."},
+ {w:"finish",d:"the end point of a race",c:"终点",ex:"She was first to cross the finish line."},
+ {w:"trophy",d:"a prize cup for winning",c:"奖杯",ex:"The team lifted the shiny trophy."}],
+xray:[
+ {who:"Rabbit",act:"dashed",rest:"under a flowerpot for shelter.",note:"WHO? Rabbit. ACTION? Dashed. WHERE and WHY? Under a flowerpot, for shelter from the rain."},
+ {who:"Lila",act:"glided",rest:"right across the finish line.",note:"Lila is the WHO, glided is the ACTION, and the rest tells us WHERE she went — to victory!"}],
+quiz:[
+ {q:"Why did everyone giggle at the start?",o:["Lila told a joke","They thought a snail could not race","The rain was funny","Rabbit fell over"],a:1,why:"They laughed, 'A snail? In a race?' because they thought Lila was too slow."},
+ {q:"What made the other racers stop?",o:["They were tired","The rain","A big wall","They got lost"],a:1,why:"When the rain fell, Rabbit, Grasshopper and Beetle all stopped to hide — but rain never bothers a snail."},
+ {q:"What was Lila's prize?",o:["A golden trophy shaped like a lettuce leaf","A new shell","An umbrella","A flowerpot"],a:0,why:"Her prize was a golden trophy shaped like a lettuce leaf."},
+ {q:"What is the lesson of this story?",o:["Rain spoils everything","Keep going calmly and you can win","Snails hate racing","Always bring an umbrella"],a:1,why:"'Slow and steady' — Lila kept going calmly and steadily while others stopped, so she won."}]},
+{id:"s12",t:"The Parrot's Big Secret",e:"🦜",
+txt:`Pablo the parrot could not keep a {secret}. Whatever he heard, he {repeated} — loudly. So when the animals planned a secret party, they were very worried. "Saturday! Cake! Shhh!" Pablo {squawked} from his branch, all week long. "Saturday! Cake! Shhh!" The mice rolled their eyes. The tortoise groaned. "Pablo will spoil the {surprise}!" On Saturday, Pablo flew to the big mango tree, where balloons and paper {decorations} hung from every branch. "SURPRISE!" shouted all the animals. Pablo blinked. The banner said: HAPPY BIRTHDAY, PABLO! The party was for him — and he had been announcing his own surprise party all week without knowing it. "Cake!" said Pablo happily. That part, at least, he had got exactly right.`,
+kw:[
+ {w:"secret",d:"something you must not tell others",c:"秘密",ex:"Can you keep a secret?"},
+ {w:"repeated",d:"said again and again",c:"重复",ex:"The teacher repeated the question slowly."},
+ {w:"squawked",d:"made a loud, harsh bird cry",c:"（鸟）尖叫",ex:"The seagull squawked over the chips."},
+ {w:"surprise",d:"something you did not expect",c:"惊喜",ex:"What a lovely surprise to see you!"},
+ {w:"decorations",d:"pretty things put up for a party",c:"装饰",ex:"We hung decorations for the new year."}],
+xray:[
+ {who:"The animals",act:"planned",rest:"a secret party.",note:"WHO? The animals. ACTION? Planned. WHAT? A secret party."},
+ {who:"Pablo",act:"flew",rest:"to the big mango tree.",note:"Pablo is the WHO, flew is the ACTION, and the rest tells us WHERE he flew."}],
+quiz:[
+ {q:"What could Pablo not do?",o:["Fly","Keep a secret","Eat cake","Sing"],a:1,why:"The first line says Pablo the parrot could not keep a secret."},
+ {q:"What did Pablo squawk all week?",o:["'Sunday! Juice!'","'Saturday! Cake! Shhh!'","'Happy Birthday!'","'Mango tree!'"],a:1,why:"He squawked 'Saturday! Cake! Shhh!' from his branch all week long."},
+ {q:"What was the big twist at the end?",o:["The party was cancelled","The party was for Pablo himself","There was no cake","The tortoise hid the balloons"],a:1,why:"The banner said HAPPY BIRTHDAY, PABLO — he had been announcing his own surprise party!"},
+ {q:"Why is the ending funny?",o:["Pablo spoiled a secret that was about him, without knowing","The mice ate all the cake","Parrots hate parties","The banner fell down"],a:0,why:"It is funny because the one secret Pablo kept telling everyone was his own surprise — and he never guessed it."}]},
+{id:"s13",t:"The Mooncake Mouse",e:"🐭",
+txt:`Every year, when the round moon rose and paper {lanterns} glowed in the garden, Mini the mouse smelled something wonderful: mooncakes! On the night of the {festival}, the family laid golden mooncakes on the table. Mini crept along the windowsill, whiskers trembling. She {nibbled} one fallen crumb. Then another. Lotus paste! Sweet as a dream! Suddenly the lights came on. A little girl stood at the door — and Mini froze. But the girl did not shout. She smiled, broke off a small piece of mooncake, and placed it on the windowsill. "Happy festival, little mouse," she whispered. Now, every year, Mini finds a tiny mooncake waiting by the window, because the sweetest things are the ones we have {shared}. Even the {crumbs}.`,
+kw:[
+ {w:"lanterns",d:"lights inside paper or glass covers",c:"灯笼",ex:"Red lanterns hung along the street."},
+ {w:"festival",d:"a special day when people celebrate together",c:"节日",ex:"We eat mooncakes at the Mid-Autumn Festival."},
+ {w:"nibbled",d:"ate with small, quick bites",c:"小口咬",ex:"The rabbit nibbled the carrot."},
+ {w:"shared",d:"gave part of something to someone else",c:"分享",ex:"She shared her umbrella with her friend."},
+ {w:"crumbs",d:"tiny bits of bread, cake or biscuit",c:"碎屑",ex:"The birds pecked at the bread crumbs."}],
+xray:[
+ {who:"Mini",act:"crept",rest:"along the windowsill.",note:"WHO? Mini the mouse. ACTION? Crept — moved slowly and quietly. WHERE? Along the windowsill."},
+ {who:"The girl",act:"placed",rest:"it on the windowsill.",note:"The girl is the WHO, placed is the ACTION, and the rest tells us WHAT she put WHERE — a piece of mooncake for Mini."}],
+quiz:[
+ {q:"What did Mini smell every year at festival time?",o:["Noodles","Mooncakes","Cheese","Dumplings"],a:1,why:"When the lanterns glowed, Mini smelled something wonderful: mooncakes!"},
+ {q:"What did the little girl do when she saw Mini?",o:["She shouted","She smiled and shared a piece of mooncake","She closed the window","She chased Mini away"],a:1,why:"The girl smiled, broke off a small piece, and placed it on the windowsill for Mini."},
+ {q:"What happens every year now?",o:["Mini hides all year","A tiny mooncake waits by the window for Mini","The family moves house","The lanterns stay off"],a:1,why:"The story says every year Mini finds a tiny mooncake waiting by the window."},
+ {q:"'Nibbled' means Mini ate…",o:["with big bites","with small, quick bites","very loudly","with a spoon"],a:1,why:"To nibble is to eat with small, quick bites — just how a mouse eats a crumb."}]},
+{id:"s14",t:"Splash the Bath-Loving Dog",e:"🐶",
+txt:`Most dogs run away from bath time. Not Splash. Splash LOVED baths. He loved bubbles, buckets, hoses, rain, and especially the garden sprinkler. If water was anywhere, Splash {leaped} into it. One Saturday was the Neighbourhood Pet Show. Halfway through, Splash spotted the judges' table — and beside it, a big {soapy} bucket for washing muddy paws. You can guess what happened. SPLASH! Water flew everywhere. The judges' papers went {dripping} wet. Splash {shook} himself dry all over the mayor's shoes. Everyone gasped… then burst out laughing. That day, Splash won a special blue {ribbon}: "Cleanest Dog in Town." His family bought him a paddling pool the very next morning. Best. Prize. Ever.`,
+kw:[
+ {w:"leaped",d:"jumped high or far",c:"跳跃",ex:"The frog leaped over the log."},
+ {w:"soapy",d:"full of soap and bubbles",c:"肥皂泡的",ex:"She washed the dishes in soapy water."},
+ {w:"dripping",d:"so wet that water falls off in drops",c:"湿淋淋的",ex:"His raincoat was dripping by the door."},
+ {w:"shook",d:"moved quickly from side to side",c:"抖动",ex:"The wet dog shook water everywhere."},
+ {w:"ribbon",d:"a strip of pretty cloth, often given as a prize",c:"绶带；丝带",ex:"She won a red ribbon at the fair."}],
+xray:[
+ {who:"Splash",act:"spotted",rest:"the judges' table.",note:"WHO? Splash. ACTION? Spotted — that means he suddenly saw it. WHAT? The judges' table."},
+ {who:"His family",act:"bought",rest:"him a paddling pool.",note:"His family is the WHO, bought is the ACTION, and the paddling pool is WHAT they bought for him."}],
+quiz:[
+ {q:"How was Splash different from most dogs?",o:["He hated walks","He loved baths and water","He could not bark","He disliked bubbles"],a:1,why:"Most dogs run away from bath time — but Splash LOVED baths and anything with water."},
+ {q:"What did Splash jump into at the pet show?",o:["A pond","The soapy bucket by the judges' table","A swimming pool","A puddle"],a:1,why:"He spotted the big soapy bucket for washing muddy paws — SPLASH!"},
+ {q:"What prize did Splash win?",o:["Fastest Dog","Cleanest Dog in Town","Loudest Bark","Muddiest Paws"],a:1,why:"He won a special blue ribbon that said 'Cleanest Dog in Town.'"},
+ {q:"How did people feel after the big splash?",o:["Angry all day","First shocked, then they laughed","Bored","Sleepy"],a:1,why:"Everyone gasped… then burst out laughing — the shock turned into fun."}]}
+];
+/* ================= DATA: NEWS ARTICLES ================= */
+const NEWS = [
+{id:"n1",t:"Panda Twins Turn One!",e:"🐼",
+txt:`It was a big day at the city zoo this week. The panda {twins} turned one year old! Zoo {keepers} made them a special birthday cake — not a sweet one, but a frosty ice cake decorated with apples, carrots and their favourite {bamboo}. Hundreds of visitors sang a birthday song as the cubs rolled, tumbled and munched. The keepers say both cubs are strong and {healthy}. They now weigh about as much as a big dog! The zoo will hold more fun days this year so families can watch the twins grow. Many visitors said it was the cutest party they had ever seen — and the guests of honour ate every last bite.`,
+kw:[
+ {w:"twins",d:"two babies born together to the same mother",c:"双胞胎",ex:"The twins wear matching hats."},
+ {w:"keepers",d:"people whose job is to care for zoo animals",c:"饲养员",ex:"The keepers feed the elephants every morning."},
+ {w:"bamboo",d:"a tall green plant that pandas love to eat",c:"竹子",ex:"Pandas can eat bamboo all day long."},
+ {w:"healthy",d:"strong and well, not sick",c:"健康的",ex:"Eating fruit helps you stay healthy."}],
+xray:[
+ {who:"Zoo keepers",act:"made",rest:"them a special birthday cake.",note:"WHO? The zoo keepers. ACTION? Made. WHAT? A special birthday cake for the panda twins."},
+ {who:"Hundreds of visitors",act:"sang",rest:"a birthday song.",note:"The visitors are the WHO, sang is the ACTION, and a birthday song is WHAT they sang."}],
+quiz:[
+ {q:"How old did the panda twins turn?",o:["Two years old","One year old","Five years old","Six months old"],a:1,why:"The report says the panda twins turned one year old."},
+ {q:"What was the birthday cake made of?",o:["Chocolate and cream","Ice with apples, carrots and bamboo","Bread and honey","Rice and beans"],a:1,why:"It was a frosty ice cake decorated with apples, carrots and bamboo."},
+ {q:"What does the report tell us about the cubs' health?",o:["They are strong and healthy","They are often sick","They sleep too much","They do not eat"],a:0,why:"The keepers say both cubs are strong and healthy."},
+ {q:"In this report, 'keepers' are…",o:["visitors who sing","people who care for zoo animals","the panda parents","cake makers"],a:1,why:"Zoo keepers are the people whose job is to look after the animals."}]},
+{id:"n2",t:"New Telescope Spots Baby Stars",e:"🔭",
+txt:`Exciting news from space! {Scientists} have shared new pictures taken by a powerful space {telescope}. The pictures show "baby stars" being born inside giant clouds of dust and gas, very far away in the {universe}. The clouds look like glowing orange mountains floating in the dark. One scientist said, "Every new picture helps us {discover} how stars like our Sun began." The telescope flies high above Earth, where the sky is always clear. It will keep sending photos of {distant} planets, stars and galaxies for many years. Who knows what it will find next? Maybe one day, a child reading this news will become a scientist and find out!`,
+kw:[
+ {w:"Scientists",d:"people who study how the world and space work",c:"科学家",ex:"Scientists ask questions and do experiments."},
+ {w:"telescope",d:"a tool that makes far-away things look bigger",c:"望远镜",ex:"We saw the moon's craters through a telescope."},
+ {w:"universe",d:"everything that exists — all of space",c:"宇宙",ex:"The universe is bigger than we can imagine."},
+ {w:"discover",d:"to find or learn something new",c:"发现",ex:"Did you discover any shells at the beach?"},
+ {w:"distant",d:"very far away",c:"遥远的",ex:"The ship sailed to a distant island."}],
+xray:[
+ {who:"Scientists",act:"have shared",rest:"new pictures from the telescope.",note:"WHO? Scientists. ACTION? Have shared. WHAT? New pictures taken by the space telescope."},
+ {who:"The telescope",act:"flies",rest:"high above Earth.",note:"The telescope is the WHO (a thing can do actions!), flies is the ACTION, and 'high above Earth' tells us WHERE."}],
+quiz:[
+ {q:"What do the new pictures show?",o:["Baby stars being born","New oceans","A big rainbow","Aliens waving"],a:0,why:"The pictures show 'baby stars' being born inside giant clouds of dust and gas."},
+ {q:"What do the glowing clouds look like?",o:["Blue rivers","Orange mountains floating in the dark","White snowflakes","Green forests"],a:1,why:"The report says the clouds look like glowing orange mountains floating in the dark."},
+ {q:"Why does the telescope fly above Earth?",o:["To stay warm","Because the sky there is always clear","To visit the Moon","To catch clouds"],a:1,why:"High above Earth, the sky is always clear, so the telescope gets perfect pictures."},
+ {q:"'Distant' planets are planets that are…",o:["very close","very far away","very small","very hot"],a:1,why:"Distant means very far away."}]},
+{id:"n3",t:"Old Bottles Become Amazing Art",e:"♻️",
+txt:`A primary school has found a clever way to {recycle}. Instead of throwing away old {plastic} bottles, pupils collected more than one thousand of them! Then, with help from their art teacher, they used the bottles to {create} a giant, colourful fish sculpture for the school garden. Its shiny scales are made of bottle caps in every colour of the rainbow. "We wanted to show that rubbish can become something beautiful," said one pupil. The school hopes the big fish will remind everyone to throw less away. Teachers say the pupils are very {proud} of their {artwork} — and the school bins are much emptier now!`,
+kw:[
+ {w:"recycle",d:"to use old things again instead of throwing them away",c:"回收利用",ex:"We recycle paper, cans and bottles at home."},
+ {w:"plastic",d:"a light, strong material used for bottles and toys",c:"塑料",ex:"This water bottle is made of plastic."},
+ {w:"create",d:"to make something new",c:"创作；创造",ex:"Let's create a card for Teacher's Day."},
+ {w:"artwork",d:"a piece of art, like a painting or sculpture",c:"艺术作品",ex:"Her artwork hangs on the classroom wall."},
+ {w:"proud",d:"feeling happy about something you did",c:"自豪的",ex:"They felt proud of their tidy classroom."}],
+xray:[
+ {who:"Pupils",act:"collected",rest:"more than one thousand bottles.",note:"WHO? The pupils. ACTION? Collected. WHAT? More than one thousand old bottles!"},
+ {who:"They",act:"used",rest:"the bottles to create a giant fish sculpture.",note:"They (the pupils) are the WHO, used is the ACTION, and the rest tells WHAT they used and WHY."}],
+quiz:[
+ {q:"What did the pupils collect?",o:["Old plastic bottles","Leaves","Toy fish","Paint brushes"],a:0,why:"Pupils collected more than one thousand old plastic bottles."},
+ {q:"What did they make with the bottles?",o:["A rocket","A giant fish sculpture","A playground","A boat"],a:1,why:"They created a giant, colourful fish sculpture for the school garden."},
+ {q:"What are the fish's scales made of?",o:["Real fish scales","Bottle caps","Paper","Buttons"],a:1,why:"Its shiny scales are made of bottle caps in every colour of the rainbow."},
+ {q:"What is the big fish meant to remind everyone?",o:["To eat more fish","To throw less away","To paint every day","To drink more water"],a:1,why:"The school hopes it will remind everyone to throw less away — that is why recycling matters."}]},
+{id:"n4",t:"Robot Reads with Children at the Library",e:"🤖",
+txt:`Meet the newest helper at the town library: a small, friendly {robot} that loves story time! Every Saturday morning, the robot sits with children in the reading corner. It can read picture books aloud, sing counting songs, and even tell jokes. When a child reads to the robot, it listens carefully and its eyes light up blue for "great job!" The head {librarian} says the robot is very {patient} — it never minds reading the same book five times. Children can also {borrow} books the robot recommends. One young reader said, "Reading to the robot is fun because it never laughs at my mistakes." The library says more story-time robots may {arrive} next year.`,
+kw:[
+ {w:"robot",d:"a machine that can do jobs and tasks",c:"机器人",ex:"The robot can pick up blocks with its arm."},
+ {w:"librarian",d:"a person who works in a library",c:"图书管理员",ex:"The librarian helped me find a dinosaur book."},
+ {w:"patient",d:"able to wait or repeat calmly, without getting upset",c:"有耐心的",ex:"Our teacher is patient when we ask questions."},
+ {w:"borrow",d:"to take something and give it back later",c:"借",ex:"You may borrow six books at a time."},
+ {w:"arrive",d:"to come to a place",c:"到达",ex:"The bus will arrive at nine o'clock."}],
+xray:[
+ {who:"The robot",act:"sits",rest:"with children in the reading corner.",note:"WHO? The robot. ACTION? Sits. WHERE? With children in the reading corner."},
+ {who:"It",act:"listens",rest:"carefully when a child reads.",note:"It (the robot) is the WHO, listens is the ACTION, and 'carefully' tells us HOW it listens."}],
+quiz:[
+ {q:"When does the robot join story time?",o:["Every Saturday morning","Every night","On rainy days","Once a year"],a:0,why:"Every Saturday morning, the robot sits with children in the reading corner."},
+ {q:"What happens when a child reads well to the robot?",o:["It falls asleep","Its eyes light up blue","It runs away","It rings a bell"],a:1,why:"Its eyes light up blue for 'great job!'"},
+ {q:"Why do children like reading to the robot?",o:["It gives out sweets","It never laughs at their mistakes","It does their homework","It is very loud"],a:1,why:"One reader said it is fun 'because it never laughs at my mistakes.'"},
+ {q:"'Patient' in this report means the robot…",o:["reads very fast","does not mind repeating calmly","is in hospital","only reads one book"],a:1,why:"Being patient means staying calm even when repeating — it never minds reading the same book five times."}]},
+{id:"n5",t:"Sports Day Fun Under the Sun",e:"🏃",
+txt:`What a morning at the school field! Yesterday was Sports Day, and pupils from every class came dressed in their house colours — red, blue, green and yellow. The loudest event was the {relay} race, where runners passed a baton and friends {cheered} from the side. There were also sack races, hurdles, and a very funny teachers' race (the maths teacher tripped over a cone, stood up, and finished with a bow). The blue house took home the shiny {medal} for first place. But the principal reminded everyone, "The real winners are all who showed {teamwork} and gave their best {effort}." Then every pupil got an ice-cold drink — the perfect ending to a hot, happy day.`,
+kw:[
+ {w:"relay",d:"a race where team members take turns to run",c:"接力赛",ex:"Our team won the relay by one second."},
+ {w:"cheered",d:"shouted happily to support someone",c:"欢呼",ex:"The crowd cheered for every runner."},
+ {w:"medal",d:"a metal prize worn around the neck",c:"奖牌",ex:"She wore her gold medal proudly."},
+ {w:"teamwork",d:"working together to reach a goal",c:"团队合作",ex:"Good teamwork helped us finish the project."},
+ {w:"effort",d:"the hard work you put into something",c:"努力",ex:"He put a lot of effort into his drawing."}],
+xray:[
+ {who:"Runners",act:"passed",rest:"a baton in the relay race.",note:"WHO? The runners. ACTION? Passed. WHAT? A baton — the stick relay teams hand to each other."},
+ {who:"The maths teacher",act:"tripped",rest:"over a cone.",note:"The maths teacher is the WHO, tripped is the ACTION, and 'over a cone' tells us WHAT he tripped on. Then he took a bow!"}],
+quiz:[
+ {q:"Which was the loudest event?",o:["The sack race","The relay race","The hurdles","The lunch break"],a:1,why:"The report says the loudest event was the relay race, with friends cheering from the side."},
+ {q:"What funny thing happened in the teachers' race?",o:["A teacher won a medal","The maths teacher tripped over a cone and finished with a bow","It started raining","The baton broke"],a:1,why:"The maths teacher tripped, stood up, and finished with a bow — everyone loved it."},
+ {q:"Who won first place?",o:["Red house","Blue house","Green house","Yellow house"],a:1,why:"The blue house took home the shiny medal for first place."},
+ {q:"According to the principal, who were the real winners?",o:["Only the fastest runners","All who showed teamwork and gave their best effort","The teachers","The drink sellers"],a:1,why:"The principal said the real winners are all who showed teamwork and effort — trying your best matters most."}]},
+{id:"n6",t:"Why We Love Hawker Food",e:"🍜",
+txt:`Follow your nose! At a busy {hawker} centre, delicious smells float from every {stall}: chicken rice, laksa, satay, roti prata and sweet ice desserts. This week, a food club asked one hundred children to name their favourite hawker {dishes}. Chicken rice came first, noodles came second, and ice kacang won "best dessert." Many hawkers learnt their recipes from their parents and grandparents, which makes the food part of our {tradition}. "My grandfather sold noodles from a pushcart long ago," one hawker shared. "I still use his special sauce." So next time you enjoy your {favourite} plate, remember: you are tasting a little piece of history, cooked with love.`,
+kw:[
+ {w:"hawker",d:"a person who sells cooked food at a food centre",c:"小贩",ex:"The hawker fried noodles in a big hot wok."},
+ {w:"stall",d:"a small shop space that sells food or things",c:"摊位",ex:"The fruit stall sells sweet mangoes."},
+ {w:"dishes",d:"kinds of cooked food",c:"菜肴",ex:"Noodles and rice are my favourite dishes."},
+ {w:"tradition",d:"something special passed down in families for years",c:"传统",ex:"Eating reunion dinner is a family tradition."},
+ {w:"favourite",d:"liked the most of all",c:"最喜欢的",ex:"Blue is my favourite colour."}],
+xray:[
+ {who:"Delicious smells",act:"float",rest:"from every stall.",note:"WHO (what)? The delicious smells. ACTION? Float. WHERE from? From every stall at the hawker centre."},
+ {who:"Many hawkers",act:"learnt",rest:"their recipes from their parents and grandparents.",note:"The hawkers are the WHO, learnt is the ACTION, and the rest tells WHAT they learnt and from WHOM."}],
+quiz:[
+ {q:"Which dish came first in the children's vote?",o:["Laksa","Chicken rice","Satay","Roti prata"],a:1,why:"Chicken rice came first, noodles came second."},
+ {q:"Which food won 'best dessert'?",o:["Ice kacang","Chocolate cake","Mango pudding","Ice cream"],a:0,why:"The report says ice kacang won 'best dessert.'"},
+ {q:"Why is hawker food called part of our tradition?",o:["It is very cheap","Recipes are passed down from parents and grandparents","It is eaten with spoons","The stalls are old"],a:1,why:"Many hawkers learnt recipes from their parents and grandparents — passed down through families."},
+ {q:"What did one hawker still use from his grandfather?",o:["His pushcart","His special sauce","His hat","His table"],a:1,why:"The hawker said, 'I still use his special sauce.'"}]},
+{id:"n7",t:"New Trains Glide in Quietly",e:"🚆",
+txt:`Shhh… did you hear that? Probably not — and that is the point! New trains have started running on the city line, and {passengers} say they are wonderfully quiet. The {engineers} who designed the trains gave them softer wheels and {smooth}, rounded bodies, so they glide along with barely a hum. Inside, the new trains have wider doors, brighter maps, and more space for prams and wheelchairs. "My baby slept through the whole {journey}!" laughed one mother. Each {platform} now also has new signs that light up to show where the doors will open. Train fans lined up all week to ride the first quiet trains. Next stop: an even smoother ride for everyone!`,
+kw:[
+ {w:"passengers",d:"people riding on a train, bus or plane",c:"乘客",ex:"The passengers waited for the doors to open."},
+ {w:"engineers",d:"people who design and build machines or buildings",c:"工程师",ex:"Engineers built the long bridge across the river."},
+ {w:"smooth",d:"even and gentle, with no bumps",c:"平稳的；光滑的",ex:"The plane had a smooth landing."},
+ {w:"journey",d:"a trip from one place to another",c:"旅程",ex:"The bus journey took twenty minutes."},
+ {w:"platform",d:"the place where you wait for the train",c:"站台",ex:"Please stand behind the yellow line on the platform."}],
+xray:[
+ {who:"The engineers",act:"gave",rest:"them softer wheels and smooth bodies.",note:"WHO? The engineers. ACTION? Gave. WHAT? Softer wheels and smooth, rounded bodies — that is why the trains are quiet."},
+ {who:"Train fans",act:"lined up",rest:"all week to ride the first quiet trains.",note:"The train fans are the WHO, lined up is the ACTION, and the rest tells us HOW LONG and WHY."}],
+quiz:[
+ {q:"What is special about the new trains?",o:["They are very loud","They are wonderfully quiet","They are pink","They fly"],a:1,why:"Passengers say the new trains are wonderfully quiet — they glide with barely a hum."},
+ {q:"Why are the new trains so quiet?",o:["They move very slowly","They have softer wheels and smooth bodies","They carry fewer people","They only run at night"],a:1,why:"Engineers gave them softer wheels and smooth, rounded bodies."},
+ {q:"What do the new platform signs show?",o:["The weather","Where the doors will open","Funny cartoons","Ticket prices"],a:1,why:"New signs light up to show where the doors will open."},
+ {q:"'Passengers' are people who…",o:["drive the train","ride on the train","fix the tracks","sell tickets"],a:1,why:"Passengers are the people riding on a train, bus or plane."}]},
+{id:"n8",t:"Divers Plant a Coral Garden",e:"🪸",
+txt:`Under the waves, a special garden is growing! This month, a team of {divers} began planting hundreds of baby {corals} onto an old reef that had become grey and empty. The divers gently attach each little coral to the rock, like planting seedlings in {underwater} soil. Corals may look like colourful stones, but they are actually alive — tiny animals build them, bit by bit. Healthy reefs give fish, turtles and seahorses a safe home. "If we {protect} the reef, the fish will come back," said the team leader. Scientists will visit every month to check how fast the corals {grow}. In a few years, they hope, the grey reef will bloom into a busy rainbow city of fish.`,
+kw:[
+ {w:"divers",d:"people who swim deep underwater, often with air tanks",c:"潜水员",ex:"The divers saw a shy octopus."},
+ {w:"corals",d:"sea creatures that build rocky reefs, home to many fish",c:"珊瑚",ex:"Clownfish love hiding near the corals."},
+ {w:"underwater",d:"below the surface of the water",c:"水下的",ex:"She took an underwater photo of a turtle."},
+ {w:"protect",d:"to keep something safe from harm",c:"保护",ex:"Helmets protect our heads."},
+ {w:"grow",d:"to get bigger over time",c:"生长",ex:"Sunflowers grow tall in summer."}],
+xray:[
+ {who:"A team of divers",act:"began planting",rest:"hundreds of baby corals onto an old reef.",note:"WHO? A team of divers. ACTION? Began planting. WHAT and WHERE? Baby corals, onto the old grey reef."},
+ {who:"Healthy reefs",act:"give",rest:"fish, turtles and seahorses a safe home.",note:"Healthy reefs are the WHO, give is the ACTION, and the rest tells us WHAT they give and to WHOM."}],
+quiz:[
+ {q:"What are the divers planting?",o:["Seaweed","Baby corals","Flowers","Flags"],a:1,why:"The divers began planting hundreds of baby corals onto the old reef."},
+ {q:"Corals look like stones, but they are really…",o:["plants","built by tiny animals","plastic","shells"],a:1,why:"The report says corals are alive — tiny animals build them, bit by bit."},
+ {q:"Why do reefs matter to fish and turtles?",o:["Reefs give them a safe home","Reefs feed them ice cream","Reefs keep water cold","Reefs make waves"],a:0,why:"Healthy reefs give fish, turtles and seahorses a safe home."},
+ {q:"How often will scientists check the corals?",o:["Every day","Every month","Every ten years","Never"],a:1,why:"Scientists will visit every month to check how fast the corals grow."}]},
+{id:"n9",t:"Otter Family Spotted at the Park",e:"🦦",
+txt:`Morning joggers at the riverside park had a lovely surprise this week — a family of {otters}! The furry swimmers were {spotted} sliding down the muddy {riverbank}, one after another, like children at a playground slide. Park rangers counted two parents and five fluffy {pups}. The rangers remind everyone to enjoy the otters the right way: watch quietly from far away, keep dogs on a leash, and never feed the {wildlife} — otters are excellent at catching their own fish! One ranger said the otter family seems to visit the park every morning at sunrise. So if you are an early bird, keep your eyes on the river. You might just see seven whiskery faces smiling back.`,
+kw:[
+ {w:"otters",d:"playful furry animals that swim and eat fish",c:"水獭",ex:"The otters floated on their backs in the river."},
+ {w:"spotted",d:"seen or noticed",c:"被发现；看到",ex:"We spotted a rainbow after the rain."},
+ {w:"riverbank",d:"the land along the side of a river",c:"河岸",ex:"Flowers grow along the riverbank."},
+ {w:"pups",d:"baby animals, like baby otters, dogs or seals",c:"幼崽",ex:"The otter pups squeaked for their mother."},
+ {w:"wildlife",d:"wild animals living free in nature",c:"野生动物",ex:"The park is full of wonderful wildlife."}],
+xray:[
+ {who:"The furry swimmers",act:"were sliding",rest:"down the muddy riverbank.",note:"WHO? The furry swimmers — that means the otters. ACTION? Were sliding. WHERE? Down the muddy riverbank, like a playground slide!"},
+ {who:"Park rangers",act:"counted",rest:"two parents and five fluffy pups.",note:"The rangers are the WHO, counted is the ACTION, and the rest tells us WHAT they counted — seven otters in all!"}],
+quiz:[
+ {q:"Who saw the otters first?",o:["Morning joggers","Fishermen","School children","Bus drivers"],a:0,why:"Morning joggers at the riverside park had the lovely surprise."},
+ {q:"How many otters were counted in all?",o:["Five","Six","Seven","Ten"],a:2,why:"Two parents and five pups — that makes seven otters."},
+ {q:"Which is the RIGHT way to enjoy the otters?",o:["Feed them bread","Watch quietly from far away","Chase them for photos","Let dogs play with them"],a:1,why:"Rangers say: watch quietly from far away, keep dogs on a leash, and never feed the wildlife."},
+ {q:"When does the otter family usually visit?",o:["At sunrise","At noon","At midnight","Only on Sundays"],a:0,why:"The ranger said the family seems to visit every morning at sunrise."}]},
+{id:"n10",t:"Rain Gardens to the Rescue",e:"🌧️",
+txt:`When heavy rain falls, where does all the water go? In some streets, it used to pile up into big puddles and even cause a {flood}. Now the town has a {clever} answer: rain gardens! A rain garden is a shallow garden bed filled with special {plants} and loose soil. When rain rushes off the road, the garden catches it and lets it {soak} slowly into the ground — like a giant sponge. The flowers get a big drink, and the {drains} do not overflow. Workers have built twelve rain gardens this year, and pupils from nearby schools helped choose the plants. Bees and butterflies love them too. Pretty AND useful — that is one smart garden!`,
+kw:[
+ {w:"flood",d:"when water covers land that is usually dry",c:"水灾；淹水",ex:"The heavy rain caused a flood on the road."},
+ {w:"clever",d:"smart; showing good thinking",c:"聪明的",ex:"What a clever way to solve the puzzle!"},
+ {w:"plants",d:"living things like flowers, grass and trees",c:"植物",ex:"Plants need water and sunlight."},
+ {w:"soak",d:"to slowly take in water",c:"吸收；浸透",ex:"The sponge soaked up the spilled milk."},
+ {w:"drains",d:"pipes and channels that carry water away",c:"排水沟",ex:"Leaves blocked the drains after the storm."}],
+xray:[
+ {who:"The garden",act:"catches",rest:"the rainwater from the road.",note:"WHO (what)? The rain garden. ACTION? Catches. WHAT? The rainwater rushing off the road."},
+ {who:"Pupils",act:"helped",rest:"choose the plants.",note:"The pupils are the WHO, helped is the ACTION, and 'choose the plants' tells us WHAT they helped to do."}],
+quiz:[
+ {q:"What problem did some streets have?",o:["Too much sunshine","Floods after heavy rain","Too many bees","Broken lamps"],a:1,why:"Rain used to pile up into big puddles and even cause a flood."},
+ {q:"How does a rain garden work?",o:["It catches rain and lets it soak in slowly, like a sponge","It blows the rain away","It freezes the water","It hides the puddles"],a:0,why:"The garden catches the water and lets it soak slowly into the ground — like a giant sponge."},
+ {q:"How many rain gardens were built this year?",o:["Two","Seven","Twelve","One hundred"],a:2,why:"Workers have built twelve rain gardens this year."},
+ {q:"Which visitors also love the rain gardens?",o:["Bees and butterflies","Sharks","Penguins","Camels"],a:0,why:"The report says bees and butterflies love them too."}]},
+{id:"n11",t:"The Book Bus Rolls into Town",e:"📚",
+txt:`Beep beep — story time! A bright orange bus full of books has started visiting neighbourhoods every weekend. It is called the Book Bus, and it is a little library on wheels. Inside, wooden {shelves} hold more than two thousand books — picture books, comics, science books and fairy tales. Children climb {aboard}, pick their favourites, and {borrow} up to four books for two weeks. The friendly {driver}, who is also a librarian, says the best part of her job is the sound of {excited} readers: "Wow! They have the dinosaur one!" The bus will also visit playgrounds during the school holidays. Look out for the orange bus — and bring your library card!`,
+kw:[
+ {w:"shelves",d:"flat boards on a wall or cupboard for keeping things",c:"书架；架子",ex:"The toy shelves were neat and tidy."},
+ {w:"aboard",d:"onto or inside a bus, ship, train or plane",c:"上（车/船）",ex:"The children climbed aboard the school bus."},
+ {w:"borrow",d:"to take something and give it back later",c:"借",ex:"May I borrow your pencil, please?"},
+ {w:"driver",d:"a person who drives a vehicle",c:"司机",ex:"The bus driver waved good morning."},
+ {w:"excited",d:"very happy and full of energy about something",c:"兴奋的",ex:"She was excited about the class trip."}],
+xray:[
+ {who:"Wooden shelves",act:"hold",rest:"more than two thousand books.",note:"WHO (what)? The wooden shelves. ACTION? Hold. WHAT? More than two thousand books!"},
+ {who:"Children",act:"borrow",rest:"up to four books for two weeks.",note:"The children are the WHO, borrow is the ACTION, and the rest tells us HOW MANY books and for HOW LONG."}],
+quiz:[
+ {q:"What is the Book Bus?",o:["A school bus","A little library on wheels","A food truck","A toy shop"],a:1,why:"The Book Bus is a little library on wheels, full of books."},
+ {q:"How many books may a child borrow?",o:["One","Up to four","Ten","As many as they want"],a:1,why:"Children may borrow up to four books for two weeks."},
+ {q:"What two jobs does the driver do?",o:["Driver and cook","Driver and librarian","Teacher and singer","Painter and driver"],a:1,why:"The friendly driver is also a librarian."},
+ {q:"Where will the bus go during school holidays?",o:["To the beach","To playgrounds","To the airport","To the zoo"],a:1,why:"The bus will also visit playgrounds during the school holidays."}]},
+{id:"n12",t:"A Hotel Just for Bees",e:"🐝",
+txt:`Guests are checking in at the community garden — tiny, {buzzing} guests! Gardeners have built a "bee hotel": a {wooden} box filled with hollow bamboo sticks and little holes, the perfect bedrooms for wild bees. Why help bees? Because bees are garden heroes. As they fly from flower to flower collecting {pollen}, they help {flowers} and fruit trees make seeds and fruit. No bees would mean fewer apples, mangoes and strawberries! The gardeners planted purple and yellow blooms nearby, because bees love bright colours. Children from the neighbourhood painted the hotel roof and gave it a name: "The Buzzy Inn." Room service? Fresh {nectar}, served all day, straight from the flowers.`,
+kw:[
+ {w:"buzzing",d:"making a low humming sound like a bee",c:"嗡嗡叫的",ex:"A buzzing fly circled the lamp."},
+ {w:"wooden",d:"made of wood",c:"木制的",ex:"They sat on a wooden bench."},
+ {w:"pollen",d:"yellow powder in flowers that helps make seeds",c:"花粉",ex:"The bee's legs were dusty with pollen."},
+ {w:"flowers",d:"the colourful parts of plants",c:"花朵",ex:"The garden is full of red flowers."},
+ {w:"nectar",d:"the sweet juice inside flowers that bees drink",c:"花蜜",ex:"Butterflies sip nectar with their long tongues."}],
+xray:[
+ {who:"Gardeners",act:"have built",rest:"a bee hotel from a wooden box.",note:"WHO? The gardeners. ACTION? Have built. WHAT? A bee hotel — a wooden box with tiny bedrooms."},
+ {who:"Children",act:"painted",rest:"the hotel roof.",note:"The children are the WHO, painted is the ACTION, and the hotel roof is WHAT they painted."}],
+quiz:[
+ {q:"What is the bee hotel made of?",o:["Glass jars","A wooden box with bamboo sticks and holes","Plastic bottles","Bricks"],a:1,why:"It is a wooden box filled with hollow bamboo sticks and little holes."},
+ {q:"Why are bees called garden heroes?",o:["They sting bad bugs","They help flowers and fruit trees make seeds and fruit","They water the plants","They sing to the flowers"],a:1,why:"As bees carry pollen from flower to flower, plants can make seeds and fruit."},
+ {q:"What would happen with no bees?",o:["More rain","Fewer apples, mangoes and strawberries","Bigger gardens","Louder birds"],a:1,why:"The report says no bees would mean fewer apples, mangoes and strawberries."},
+ {q:"What name did the children give the hotel?",o:["Bee Palace","The Buzzy Inn","Honey House","Flower Tower"],a:1,why:"The children painted the roof and named it 'The Buzzy Inn.'"}]},
+{id:"n13",t:"A Thousand Kites Fill the Sky",e:"🪁",
+txt:`Look up! Last Sunday, the open field by the bay turned into a sea of colour for the yearly kite {festival}. Families brought kites of every shape: dragons with long tails, butterflies, sharks, and even a giant smiling octopus. As the sea {breeze} picked up, hundreds of kites {soared} into the blue sky at once. The trick, one kite master explained, is simple: "Run into the wind, let the {string} out slowly, and be patient." The most {colourful} kite prize went to a rainbow phoenix with ribbons three metres long. Little kite flyers got free mini kites to decorate. By sunset, the sky looked like a painting — one that danced.`,
+kw:[
+ {w:"festival",d:"a special event where many people celebrate together",c:"节日；嘉年华",ex:"The lantern festival lights up the park."},
+ {w:"breeze",d:"a light, gentle wind",c:"微风",ex:"A cool breeze blew through the window."},
+ {w:"soared",d:"flew high into the air",c:"高飞；翱翔",ex:"The eagle soared above the mountains."},
+ {w:"string",d:"a thin rope or cord",c:"线；绳",ex:"Hold the balloon string tightly!"},
+ {w:"colourful",d:"full of bright colours",c:"色彩缤纷的",ex:"The parrot has colourful feathers."}],
+xray:[
+ {who:"Hundreds of kites",act:"soared",rest:"into the blue sky at once.",note:"WHO (what)? Hundreds of kites. ACTION? Soared — flew high. WHERE? Into the blue sky, all at once!"},
+ {who:"Little kite flyers",act:"got",rest:"free mini kites to decorate.",note:"The little kite flyers are the WHO, got is the ACTION, and the rest tells us WHAT they received."}],
+quiz:[
+ {q:"Where was the kite festival held?",o:["On a mountain","At the open field by the bay","In a shopping mall","At school"],a:1,why:"The open field by the bay turned into a sea of colour."},
+ {q:"What is the kite master's trick?",o:["Jump very high","Run into the wind, let the string out slowly, and be patient","Shout at the kite","Use two strings"],a:1,why:"He said: 'Run into the wind, let the string out slowly, and be patient.'"},
+ {q:"Which kite won the most colourful prize?",o:["A shark","A rainbow phoenix with long ribbons","A smiling octopus","A butterfly"],a:1,why:"The prize went to a rainbow phoenix with ribbons three metres long."},
+ {q:"'Soared' means the kites…",o:["fell down","flew high","broke apart","spun in circles"],a:1,why:"To soar means to fly high into the air."}]},
+{id:"n14",t:"Pupils Grow Their Own Vegetables",e:"🥕",
+txt:`Guess what is on the menu at one school this month — vegetables the pupils grew themselves! Behind the school hall, classes have turned a sunny corner into a vegetable {garden}. In March, the children planted tiny {seeds} in soft, dark {soil}. They watered them every morning and watched the first green {sprouts} appear. This week came the big moment: {harvest} day! Baskets filled up with kang kong, cherry tomatoes, and long green beans. The canteen cooked the vegetables for lunch, and even pupils who "never eat greens" asked for more. "Vegetables taste better when you grow them yourself," laughed one gardener. The next crop? Sweet corn — coming this September!`,
+kw:[
+ {w:"garden",d:"a piece of ground where plants are grown",c:"菜园；花园",ex:"We grow chillies in our little garden."},
+ {w:"seeds",d:"small parts of a plant that grow into new plants",c:"种子",ex:"She planted sunflower seeds in a pot."},
+ {w:"soil",d:"the top layer of earth that plants grow in",c:"泥土；土壤",ex:"Worms make the soil soft and healthy."},
+ {w:"sprouts",d:"tiny new plants just coming out of seeds",c:"新芽",ex:"Green sprouts popped up after the rain."},
+ {w:"harvest",d:"to pick or gather crops that are ready",c:"收获",ex:"Farmers harvest the rice in the dry season."}],
+xray:[
+ {who:"The children",act:"planted",rest:"tiny seeds in soft, dark soil.",note:"WHO? The children. ACTION? Planted. WHAT and WHERE? Tiny seeds, in soft dark soil."},
+ {who:"The canteen",act:"cooked",rest:"the vegetables for lunch.",note:"The canteen (its cooks) is the WHO, cooked is the ACTION, and the rest tells WHAT they cooked and WHEN."}],
+quiz:[
+ {q:"Where is the school's vegetable garden?",o:["On the roof","Behind the school hall","At the beach","In the classroom"],a:1,why:"Classes turned a sunny corner behind the school hall into a garden."},
+ {q:"What did the pupils do every morning?",o:["Picked tomatoes","Watered the plants","Cooked lunch","Painted the fence"],a:1,why:"They watered the seeds every morning and watched the first sprouts appear."},
+ {q:"What happened on harvest day?",o:["Baskets filled with vegetables","It rained all day","The garden closed","They planted trees"],a:0,why:"Baskets filled up with kang kong, cherry tomatoes and long green beans."},
+ {q:"Why did pupils who 'never eat greens' ask for more?",o:["The greens were covered in sugar","Vegetables taste better when you grow them yourself","They were told to","The canteen was empty"],a:1,why:"As one gardener said, vegetables taste better when you grow them yourself — being part of it made them proud to try."}]}
+];
+/* ================= STORY BUILDER DATA ================= */
+const SB_CHARS=[{n:"Marina the Mermaid",e:"🧜‍♀️"},{n:"Toby the Turtle",e:"🐢"},{n:"Dolly the Dolphin",e:"🐬"},{n:"Pip the Pufferfish",e:"🐡"},{n:"Coco the Crab",e:"🦀"}];
+const SB_SETTINGS=[{n:"the Rainbow Reef",e:"🪸"},{n:"the Old Shipwreck",e:"⛵"},{n:"the Sparkling Lagoon",e:"🏝️"},{n:"the Deep Blue Cave",e:"🌊"}];
+const SB_PROBLEMS=[
+ {n:"The Lost Treasure Map",e:"🗺️",news:"The great treasure map has gone missing!"},
+ {n:"The Big Storm",e:"⛈️",news:"A big storm is coming tonight!"},
+ {n:"The Missing Friend",e:"🔍",news:"Little Nemo the clownfish is lost!"},
+ {n:"The Hungry Baby Whale",e:"🐋",news:"A baby whale is hungry and far from home!"}];
+const SB_SLOTS=[
+ {label:"How does your story begin?",opts:[
+  "One sunny morning, {C} woke up in {S}.",
+  "Deep inside {S}, {C} was humming a happy song.",
+  "{C} was playing hide-and-seek with the little fish near {S}."]},
+ {label:"Uh oh! What happens next?",opts:[
+  "Suddenly a messenger seahorse zoomed up. \"{PN}\" he cried.",
+  "Then {C} saw all the worried faces. \"{PN}\" everyone was saying.",
+  "A conch shell trumpeted the big news across the water: \"{PN}\""]},
+ {label:"How does your hero feel?",opts:[
+  "\"Don't worry, everyone,\" said {C} bravely. \"I have a plan!\"",
+  "{C}'s heart went thump-thump, but a deep breath made it calm again.",
+  "{C} called all the sea friends together. \"We can fix this — together!\""]},
+ {label:"What does your hero do?",opts:[
+  "First, {C} swam through a forest of tall, swaying seaweed.",
+  "{C} followed a trail of shiny silver bubbles, one by one.",
+  "{C} raced to ask the wise old whale for advice."]},
+ {label:"A surprise helper appears!",opts:[
+  "Just then, a friendly octopus appeared with eight helping arms!",
+  "Suddenly, glowing jellyfish lit up the water like little lanterns.",
+  "A school of silver fish lined up to make a giant arrow, showing the way!"]},
+ {label:"How does your story end?",opts:[
+  "At last, everything was safe again, and all of {S} threw a big bubble party.",
+  "The problem was solved! \"Hip hip hooray for {C}!\" everyone cheered.",
+  "That night, {C} fell asleep with a smile — the hero of {S}."]}];
+/* ================= STATE ================= */
+const LS_KEY="jenny_reading_lagoon";
+let state={xp:0,streak:0,lastStreakDay:"",daily:{},done:{},words:{},stories:[]};
+try{const s=localStorage.getItem(LS_KEY);if(s)state=Object.assign(state,JSON.parse(s));}catch(e){}
+function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}}
+function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function dayIndex(){return Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86400000);}
+function addXP(n){state.xp+=n;save();updateHeader();}
+function updateHeader(){
+  document.getElementById("xpPill").textContent="⭐ "+state.xp+" XP";
+  document.getElementById("streakPill").textContent="🔥 "+state.streak;
+}
+/* ================= NAV ================= */
+let currentTab="home";
+function go(tab){
+  currentTab=tab;
+  ["home","lib","chest","builder"].forEach(t=>{
+    document.getElementById("nav-"+t).classList.toggle("active",t===tab);
+  });
+  if(tab==="home")renderHome();
+  else if(tab==="lib")renderLib();
+  else if(tab==="chest")renderChest();
+  else renderBuilder();
+  window.scrollTo(0,0);
+}
+/* ================= TODAY ================= */
+function todaysPicks(){
+  const di=dayIndex();
+  return {fun:STORIES[di%STORIES.length],news:NEWS[di%NEWS.length]};
+}
+function dailyState(){
+  const t=todayStr();
+  if(!state.daily[t])state.daily[t]={fun:false,news:false};
+  return state.daily[t];
+}
+function ringSVG(pct){
+  const r=36,c=2*Math.PI*r;
+  return `<div class="ringwrap"><svg width="88" height="88" viewBox="0 0 88 88">
+   <circle cx="44" cy="44" r="${r}" fill="none" stroke="#dff2f9" stroke-width="9"/>
+   <circle cx="44" cy="44" r="${r}" fill="none" stroke="#4ab8d8" stroke-width="9"
+     stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-pct)}"/>
+  </svg><div class="ringlabel">${Math.round(pct*100)}%<small>today</small></div></div>`;
+}
+function artCardHTML(a,kind,doneFlag){
+  return `<button class="artcard ${doneFlag?"done":""}" onclick="openArticle('${a.id}')">
+    <div class="cover">${a.e}</div>
+    <div class="grow"><span class="tag ${kind}">${kind==="fun"?"✨ Fun Story":"📰 Kids' News"}</span>
+    <div class="t">${a.t}</div>
+    <div class="k">${doneFlag?'<span class="donebadge">✔ Completed — read again any time!</span>':"Tap to dive in!"}</div></div>
+    <div style="font-size:22px;">${doneFlag?"🏅":"➜"}</div></button>`;
+}
+function renderHome(){
+  const p=todaysPicks(),d=dailyState();
+  const pct=((d.fun?1:0)+(d.news?1:0))/2;
+  let greet;
+  if(pct===1)greet="You finished today's dive! Amazing, Jenny! 🎉 Come play in the Story Builder, or explore the Library!";
+  else if(pct>0)greet="One down, one to go! You're swimming beautifully! 🐠";
+  else greet="Hi Jenny! Ready for today's dive? Two treasures are waiting for you below! 💙";
+  document.getElementById("view").innerHTML=`
+  <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">${greet}</div></div>
+  <div class="card"><div class="rowsplit">${ringSVG(pct)}
+    <div class="grow"><h2 style="margin-bottom:4px;">Today's Dive 🌊</h2>
+    <div style="font-size:14px;color:#5b8ba1;line-height:1.6;">Read 1 fun story + 1 news report to fill your ring and keep your streak! 🔥</div></div>
+  </div></div>
+  ${artCardHTML(p.fun,"fun",d.fun)}
+  ${artCardHTML(p.news,"news",d.news)}
+  <div class="card" style="background:#fdf3dd; box-shadow:0 3px 10px rgba(190,150,60,.15);">
+    <h3 style="color:#a4762a;">🐚 Did you know?</h3>
+    <div style="font-size:15px;line-height:1.7;color:#7c5a22;">Tap any <span class="kwspan">dotted word</span> while you read to learn what it means — it goes straight into your Word Chest! 🔍</div>
+  </div>`;
+}
+/* ================= LIBRARY ================= */
+function renderLib(){
+  let h=`<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">Welcome to the Lagoon Library! Every story and news report lives here. Read as many as you like! 📚</div></div>`;
+  h+=`<h2>✨ Fun Stories</h2>`;
+  STORIES.forEach(a=>{h+=artCardHTML(a,"fun",!!state.done[a.id]);});
+  h+=`<h2 style="margin-top:18px;">📰 Kids' News</h2>`;
+  NEWS.forEach(a=>{h+=artCardHTML(a,"news",!!state.done[a.id]);});
+  document.getElementById("view").innerHTML=h;
+}
+/* ================= ARTICLE ================= */
+function findArt(id){return STORIES.find(a=>a.id===id)||NEWS.find(a=>a.id===id);}
+function kindOf(id){return id[0]==="s"?"fun":"news";}
+let quizAnswered={};
+function openArticle(id){
+  const a=findArt(id);quizAnswered={};
+  const kind=kindOf(id);
+  const body=a.txt.replace(/\{([^}]+)\}/g,(m,w)=>{
+    const col=state.words[w.toLowerCase()]?" collected":"";
+    return `<span class="kwspan${col}" onclick="wordTap('${w.replace(/'/g,"\\'")}','${id}')">${w}</span>`;
+  });
+  let xr=`<div class="xraybox hidden" id="xraybox"><h3>🔬 Sentence X-ray</h3>`;
+  a.xray.forEach(x=>{
+    xr+=`<div class="xr-sent"><span class="xr-who">${x.who}</span> <span class="xr-act">${x.act}</span> <span class="xr-rest">${x.rest}</span></div>
+    <div class="xr-note">${x.note}</div>`;
+  });
+  xr+=`<div class="xr-legend"><span class="xr-who">WHO</span> = who or what does it &nbsp;<span class="xr-act">ACTION</span> = what they do &nbsp;<span class="xr-rest">WHAT / WHERE</span> = the rest of the idea</div></div>`;
+  let quiz=`<h2 style="margin-top:20px;">🐠 Quiz Time! <span style="font-size:13px;color:#6fa3ba;font-weight:600;">(${a.quiz.length} questions)</span></h2><div id="quizArea">`;
+  a.quiz.forEach((q,qi)=>{
+    quiz+=`<div class="qbox" id="q${qi}"><div class="qq">${qi+1}. ${q.q}</div>`;
+    q.o.forEach((o,oi)=>{
+      quiz+=`<button class="opt" id="q${qi}o${oi}" onclick="answer('${id}',${qi},${oi})">${o}</button>`;
+    });
+    quiz+=`<div id="q${qi}model"></div></div>`;
+  });
+  quiz+=`</div><div id="quizDone"></div>`;
+  document.getElementById("view").innerHTML=`
+  <div class="backrow"><button class="btn ghost small" onclick="go(currentTab)">← Back</button></div>
+  <div class="card">
+    <span class="tag ${kind}">${kind==="fun"?"✨ Fun Story":"📰 Kids' News"}</span>
+    <h2 style="font-size:22px;">${a.e} ${a.t}</h2>
+    <div class="readtext">${body}</div>
+    <div style="margin-top:14px;"><button class="btn sand" onclick="document.getElementById('xraybox').classList.toggle('hidden')">🔬 Sentence X-ray</button></div>
+    ${xr}
+  </div>
+  <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">Great reading! Now let's see what you remember. Don't worry about mistakes — I'll always show you the model answer! 💙</div></div>
+  ${quiz}`;
+  window.scrollTo(0,0);
+}
+function answer(id,qi,oi){
+  if(quizAnswered[qi]!==undefined)return;
+  const a=findArt(id),q=a.quiz[qi];
+  quizAnswered[qi]=oi;
+  for(let i=0;i<q.o.length;i++){
+    const b=document.getElementById("q"+qi+"o"+i);
+    b.disabled=true;
+    if(i===q.a)b.classList.add("correct");
+    else if(i===oi)b.classList.add("wrong");
+  }
+  const right=oi===q.a;
+  document.getElementById("q"+qi+"model").innerHTML=
+    `<div class="model">${right?"🌟 <b>Wonderful!</b>":"💙 <b>Nice try!</b> Let's look at the model answer together:"}<br>
+     <b>Model answer:</b> ${q.o[q.a]}<br><b>Why:</b> ${q.why}</div>`;
+  if(right){addXP(5);miniConfetti();}else addXP(1);
+  if(Object.keys(quizAnswered).length===a.quiz.length)finishArticle(id);
+}
+function finishArticle(id){
+  const first=!state.done[id];
+  state.done[id]=true;
+  const kind=kindOf(id);
+  const d=dailyState();
+  const p=todaysPicks();
+  let daily=false;
+  if((kind==="fun"&&p.fun.id===id&&!d.fun)){d.fun=true;daily=true;}
+  if((kind==="news"&&p.news.id===id&&!d.news)){d.news=true;daily=true;}
+  let msg=`<div class="card center"><div class="big">🎉</div><h2>Article complete!</h2><div style="font-size:16px;line-height:1.7;">You earned XP for every answer.`;
+  if(first){addXP(10);msg+=` <b>+10 bonus XP</b> for a new article!`;}
+  if(d.fun&&d.news&&state.lastStreakDay!==todayStr()){
+    state.streak+=1;state.lastStreakDay=todayStr();
+    msg+=`<br><b style="color:#e67e22;">🔥 Daily dive complete! Streak: ${state.streak}!</b>`;
+    fireworks();
+  }else{confettiBurst();}
+  msg+=`</div><div style="margin-top:14px;"><button class="btn" onclick="go('home')">🌊 Back to Today</button></div></div>`;
+  save();updateHeader();
+  document.getElementById("quizDone").innerHTML=msg;
+  if(daily)save();
+}
+/* ================= WORDS ================= */
+function wordTap(w,artId){
+  const a=findArt(artId);
+  const key=w.toLowerCase();
+  const kw=a.kw.find(k=>k.w.toLowerCase()===key)||a.kw.find(k=>key.indexOf(k.w.toLowerCase())===0);
+  if(!kw)return;
+  if(!state.words[key]){
+    state.words[key]={w:kw.w,d:kw.d,c:kw.c,ex:kw.ex,art:artId,artT:a.t,artE:a.e};
+    addXP(2);save();
+  }
+  showWordPopup(state.words[key],true);
+  document.querySelectorAll(".kwspan").forEach(s=>{
+    if(s.textContent.toLowerCase()===w.toLowerCase())s.classList.add("collected");
+  });
+}
+function showWordPopup(entry,fromArticle){
+  document.getElementById("popupBox").innerHTML=`
+   <div class="word">🔍 ${entry.w}</div>
+   <div class="cn">${entry.c}</div>
+   <div class="def">${entry.d}</div>
+   <div class="ex">💬 ${entry.ex}</div>
+   <div style="font-size:13px;color:#8fb4c6;margin-top:10px;">From: ${entry.artE} <b>${entry.artT}</b></div>
+   <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+     ${fromArticle?"":`<button class="btn small" onclick="closePopup();openArticle('${entry.art}')">📖 Open article</button>`}
+     <button class="btn ghost small" onclick="closePopup()">Close</button>
+   </div>`;
+  document.getElementById("popupBg").classList.add("show");
+}
+function closePopup(){document.getElementById("popupBg").classList.remove("show");}
+function renderChest(){
+  const words=Object.values(state.words);
+  let h=`<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">${words.length?`Your Word Chest has <b>${words.length}</b> treasure${words.length>1?"s":""}! Tap a word to see it again — and see which article it came from. ✨`:"Your Word Chest is empty for now. Tap the dotted words while reading, and they will appear here like treasures! 💎"}</div></div>`;
+  h+=`<h2>🔍 Word Chest (${words.length})</h2>`;
+  words.sort((a,b)=>a.w.localeCompare(b.w)).forEach((e,i)=>{
+    h+=`<button class="chestword" onclick='showWordPopup(state.words[${JSON.stringify(e.w.toLowerCase())}],false)'>
+     <span class="w">${e.w}</span><span class="from">${e.artE} ${e.artT}<br>${e.c}</span></button>`;
+  });
+  if(!words.length)h+=`<div class="card center"><div class="big">💎</div><div>Words you tap will be collected here!</div></div>`;
+  document.getElementById("view").innerHTML=h;
+}
+/* ================= STORY BUILDER ================= */
+let sb={step:0,char:null,setting:null,problem:null,slot:0,sentences:[]};
+function renderBuilder(){
+  sb={step:0,char:null,setting:null,problem:null,slot:0,sentences:[]};
+  let h=`<div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">Let's build YOUR story! Pick a hero, a place and a problem — then choose each sentence. Every choice makes a different tale! ✍️</div></div>
+  <div class="card"><h2>🧜‍♀️ Story Builder</h2>
+  <h3>1. Pick your hero</h3><div class="chiprow" id="chipC">${SB_CHARS.map((c,i)=>`<button class="chip" id="cC${i}" onclick="sbPick('char',${i})">${c.e} ${c.n}</button>`).join("")}</div>
+  <h3>2. Pick your place</h3><div class="chiprow" id="chipS">${SB_SETTINGS.map((c,i)=>`<button class="chip" id="cS${i}" onclick="sbPick('setting',${i})">${c.e} ${c.n}</button>`).join("")}</div>
+  <h3>3. Pick your problem</h3><div class="chiprow" id="chipP">${SB_PROBLEMS.map((c,i)=>`<button class="chip" id="cP${i}" onclick="sbPick('problem',${i})">${c.e} ${c.n}</button>`).join("")}</div>
+  <button class="btn" id="sbStart" onclick="sbStart()" disabled style="opacity:.5;">🌊 Start building!</button></div>`;
+  h+=`<h2>📖 My Storybook (${state.stories.length})</h2>`;
+  if(state.stories.length){
+    state.stories.forEach((s,i)=>{
+      h+=`<div class="mystory"><div class="st">${s.emoji} ${s.title} <span style="font-weight:600;color:#8fb4c6;font-size:12px;">· ${s.date}</span></div>
+      <div class="sx">${s.text}</div>
+      <div style="margin-top:8px;"><button class="btn ghost small" onclick="readStory(${i})">🔊 Read-aloud view</button></div></div>`;
+    });
+  }else h+=`<div class="card center"><div class="big">📖</div><div>Stories you build will be saved here — read them aloud to Mummy!</div></div>`;
+  document.getElementById("view").innerHTML=h;
+}
+function sbPick(kind,i){
+  if(kind==="char"){sb.char=SB_CHARS[i];SB_CHARS.forEach((_,j)=>document.getElementById("cC"+j).classList.toggle("sel",j===i));}
+  if(kind==="setting"){sb.setting=SB_SETTINGS[i];SB_SETTINGS.forEach((_,j)=>document.getElementById("cS"+j).classList.toggle("sel",j===i));}
+  if(kind==="problem"){sb.problem=SB_PROBLEMS[i];SB_PROBLEMS.forEach((_,j)=>document.getElementById("cP"+j).classList.toggle("sel",j===i));}
+  const ok=sb.char&&sb.setting&&sb.problem;
+  const b=document.getElementById("sbStart");b.disabled=!ok;b.style.opacity=ok?"1":".5";
+}
+function fillTpl(t){
+  return t.replace(/\{C\}/g,sb.char.n).replace(/\{S\}/g,sb.setting.n).replace(/\{PN\}/g,sb.problem.news);
+}
+function sbStart(){sb.slot=0;sb.sentences=[];renderSlot();}
+function renderSlot(){
+  const s=SB_SLOTS[sb.slot];
+  const sofar=sb.sentences.length?`<div class="storysofar">📜 <b>Your story so far:</b><br>${sb.sentences.join(" ")}</div>`:"";
+  let h=`<div class="backrow"><button class="btn ghost small" onclick="renderBuilder()">← Start over</button></div>
+  <div class="brow"><div class="face">🧜‍♀️</div><div class="bubble grow">Part ${sb.slot+1} of ${SB_SLOTS.length}: <b>${s.label}</b> Pick the sentence you like best!</div></div>
+  <div class="progressbar"><div style="width:${(sb.slot/SB_SLOTS.length)*100}%"></div></div>
+  ${sofar}<div class="card">`;
+  s.opts.forEach((o,i)=>{
+    h+=`<button class="slotopt" onclick="sbChoose(${i})">${fillTpl(o)}</button>`;
+  });
+  h+=`</div>`;
+  document.getElementById("view").innerHTML=h;window.scrollTo(0,0);
+}
+function sbChoose(i){
+  sb.sentences.push(fillTpl(SB_SLOTS[sb.slot].opts[i]));
+  sb.slot++;
+  if(sb.slot<SB_SLOTS.length)renderSlot();
+  else sbFinish();
+}
+function sbFinish(){
+  const title=sb.char.n.split(" ")[0]+" and "+sb.problem.n;
+  const story={title:title,emoji:sb.char.e+sb.problem.e,date:todayStr(),text:sb.sentences.join(" ")};
+  state.stories.push(story);
+  addXP(15);save();
+  fireworks();
+  document.getElementById("view").innerHTML=`
+  <div class="card center"><div class="big">🎆</div><h2>You wrote a story!</h2>
+  <div style="font-size:15px;color:#5b8ba1;">+15 XP · Saved to My Storybook</div></div>
+  <div class="card"><h2>${story.emoji} ${story.title}</h2>
+  <div class="readtext">${story.text}</div>
+  <div class="bubble" style="margin-top:16px;">🧜‍♀️ Now read your story aloud, nice and clear — you're the author! 🌟</div>
+  <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+    <button class="btn" onclick="renderBuilder()">✍️ Build another</button>
+    <button class="btn ghost" onclick="go('home')">🌊 Back to Today</button>
+  </div></div>`;
+  window.scrollTo(0,0);
+}
+function readStory(i){
+  const s=state.stories[i];
+  document.getElementById("view").innerHTML=`
+  <div class="backrow"><button class="btn ghost small" onclick="renderBuilder()">← Back</button></div>
+  <div class="card"><h2>${s.emoji} ${s.title}</h2>
+  <div class="readtext" style="font-size:20px;">${s.text}</div>
+  <div class="bubble" style="margin-top:16px;">🧜‍♀️ Read it aloud slowly — pause at every full stop, like a wave rolling in. 🌊</div></div>`;
+  window.scrollTo(0,0);
+}
+/* ================= EFFECTS ================= */
+const fxCanvas=document.getElementById("fx");
+const fxCtx=fxCanvas.getContext("2d");
+let parts=[],fxRunning=false;
+function fxResize(){fxCanvas.width=innerWidth;fxCanvas.height=innerHeight;}
+addEventListener("resize",fxResize);fxResize();
+const FX_COLORS=["#4ab8d8","#ff8a7a","#ffd66b","#8fd7b8","#a5e0ef","#f7a8d8"];
+function spawnConfetti(n,x,y,spread){
+  for(let i=0;i<n;i++){
+    parts.push({x:x??Math.random()*fxCanvas.width,y:y??-10,
+      vx:(Math.random()-.5)*(spread||4),vy:Math.random()*3+2,
+      s:Math.random()*7+4,c:FX_COLORS[Math.floor(Math.random()*FX_COLORS.length)],
+      r:Math.random()*Math.PI,vr:(Math.random()-.5)*.3,life:140});
+  }
+  runFX();
+}
+function spawnFirework(){
+  const x=Math.random()*fxCanvas.width,y=Math.random()*fxCanvas.height*.5+50;
+  const c=FX_COLORS[Math.floor(Math.random()*FX_COLORS.length)];
+  for(let i=0;i<28;i++){
+    const a=(i/28)*Math.PI*2,sp=Math.random()*3+2;
+    parts.push({x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,s:4,c:c,r:0,vr:0,life:60,fw:true});
+  }
+}
+function miniConfetti(){spawnConfetti(24,fxCanvas.width/2,fxCanvas.height*.35,8);}
+function confettiBurst(){spawnConfetti(90);}
+function fireworks(){
+  spawnConfetti(70);
+  let count=0;
+  const iv=setInterval(()=>{spawnFirework();runFX();count++;if(count>5)clearInterval(iv);},350);
+}
+function runFX(){
+  if(fxRunning)return;fxRunning=true;
+  function tick(){
+    fxCtx.clearRect(0,0,fxCanvas.width,fxCanvas.height);
+    parts=parts.filter(p=>p.life>0&&p.y<fxCanvas.height+20);
+    parts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;if(!p.fw)p.vy+=.06;else p.vy+=.03;p.r+=p.vr;p.life--;
+      fxCtx.save();fxCtx.translate(p.x,p.y);fxCtx.rotate(p.r);
+      fxCtx.globalAlpha=Math.min(1,p.life/40);
+      fxCtx.fillStyle=p.c;fxCtx.fillRect(-p.s/2,-p.s/2,p.s,p.s);fxCtx.restore();
+    });
+    if(parts.length){requestAnimationFrame(tick);}else{fxRunning=false;fxCtx.clearRect(0,0,fxCanvas.width,fxCanvas.height);}
+  }
+  requestAnimationFrame(tick);
+}
+/* ================= INIT ================= */
+updateHeader();
+go("home");
+</script>
+</body>
+</html>
