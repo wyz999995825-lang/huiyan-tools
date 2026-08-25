@@ -6,8 +6,8 @@
 <title>华文珊瑚湾 🪸</title>
 <style>
 :root{
-  --tiffany:#0abab5; --tiffany-light:#81d8d0; --lagoon:#e6f7f5; --sky:#f4fbfa;
-  --deep:#0a8a86; --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff;
+  --tiffany:#62b5e5; --tiffany-light:#aed9f7; --lagoon:#e9f4fc; --sky:#f5fafe;
+  --deep:#3387c4; --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff;
   --ink:#144644; --ink-soft:#4d7a77; --gold:#c9922e;
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -394,7 +394,7 @@ function speak(text,handlers){
     u.lang=zhVoice?zhVoice.lang:"zh-CN";
     u.rate=0.95;u.pitch=1.05;
     if(handlers){u.onstart=handlers.onstart||null;u.onend=handlers.onend||null;u.onerror=handlers.onend||null;}
-    speechSynthesis.speak(u);
+    setTimeout(function(){try{speechSynthesis.resume();}catch(e){}speechSynthesis.speak(u);},80);
     return u;
   }catch(e){return null;}
 }
@@ -783,7 +783,7 @@ const fxCtx=fxCanvas.getContext("2d");
 let parts=[],fxRunning=false;
 function fxResize(){fxCanvas.width=innerWidth;fxCanvas.height=innerHeight;}
 addEventListener("resize",fxResize);fxResize();
-const FX_COLORS=["#0abab5","#81d8d0","#ff8a7a","#ffd66b","#8fd7b8","#f7a8d8"];
+const FX_COLORS=["#62b5e5","#aed9f7","#ff8a7a","#ffd66b","#8fd7b8","#f7a8d8"];
 function spawnConfetti(n,x,y,spread){
   for(let i=0;i<n;i++){
     parts.push({x:x??Math.random()*fxCanvas.width,y:y??-10,
@@ -830,5 +830,9 @@ renderTTSBtn();
 updateMistBadge();
 go("home");
 </script>
-</body>
+<script>
+/* iOS语音解锁：首次触摸播放一个静音utterance */
+(function(){function unlock(){try{var u=new SpeechSynthesisUtterance(" ");u.volume=0;speechSynthesis.speak(u);}catch(e){}document.removeEventListener("pointerdown",unlock);}
+document.addEventListener("pointerdown",unlock,{once:true});})();
+</script></body>
 </html>

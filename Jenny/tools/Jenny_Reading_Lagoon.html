@@ -6,8 +6,8 @@
 <title>Reading Lagoon 🐢</title>
 <style>
 :root{
-  --tiffany:#0abab5; --tiffany-light:#81d8d0; --lagoon:#e6f7f5; --sky:#f4fbfa;
-  --deep:#0a8a86; --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff;
+  --tiffany:#62b5e5; --tiffany-light:#aed9f7; --lagoon:#e9f4fc; --sky:#f5fafe;
+  --deep:#3387c4; --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff;
   --ink:#144644; --ink-soft:#3d7f7c; --ink-faint:#7aada9;
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -746,11 +746,11 @@ const SB_SLOTS=[
 /* ================= SVG STORYBOOK COVER PARTS ================= */
 function coverDefs(){
  return '<defs>'
- +'<linearGradient id="gSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aef0ea"/><stop offset="1" stop-color="#0abab5"/></linearGradient>'
+ +'<linearGradient id="gSea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aef0ea"/><stop offset="1" stop-color="#62b5e5"/></linearGradient>'
  +'<linearGradient id="gDeep" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a7f9e"/><stop offset="1" stop-color="#123c5c"/></linearGradient>'
- +'<linearGradient id="gNight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2e5e"/><stop offset="1" stop-color="#0abab5"/></linearGradient>'
+ +'<linearGradient id="gNight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2e5e"/><stop offset="1" stop-color="#62b5e5"/></linearGradient>'
  +'<linearGradient id="gCandy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe3ef"/><stop offset="1" stop-color="#f9b8d8"/></linearGradient>'
- +'<linearGradient id="gSkyC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfeef9"/><stop offset="1" stop-color="#81d8d0"/></linearGradient>'
+ +'<linearGradient id="gSkyC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfeef9"/><stop offset="1" stop-color="#aed9f7"/></linearGradient>'
  +'</defs>';
 }
 function setBG(s){
@@ -776,7 +776,7 @@ function setBG(s){
    +'<path d="M68 88 C86 76 96 82 102 90 C86 88 78 92 70 96 Z" fill="#3cb87f"/>'+bubbles;
   case "cave":return '<rect width="320" height="240" fill="url(#gDeep)"/>'
    +'<path d="M0 240 L0 90 Q160 -50 320 90 L320 240 Z" fill="#0c2740"/>'
-   +'<path d="M60 240 L84 176 L108 240 Z" fill="#81d8d0" opacity=".85"/>'
+   +'<path d="M60 240 L84 176 L108 240 Z" fill="#aed9f7" opacity=".85"/>'
    +'<path d="M230 240 L252 190 L272 240 Z" fill="#b39ddb" opacity=".85"/>'
    +'<circle cx="84" cy="172" r="10" fill="#c9fffa" opacity=".5"/><circle cx="252" cy="186" r="8" fill="#e2d6ff" opacity=".5"/>'+sand;
   case "candy":return '<rect width="320" height="240" fill="url(#gCandy)"/>'
@@ -787,7 +787,7 @@ function setBG(s){
    +'<path d="M0 210 Q80 190 160 210 T320 210 L320 240 L0 240 Z" fill="#8a5a3a" opacity=".8"/>';
   case "moonsea":return '<rect width="320" height="240" fill="url(#gNight)"/>'
    +'<circle cx="160" cy="120" r="52" fill="#fff6cf"/><circle cx="144" cy="106" r="9" fill="#f0e2ae"/><circle cx="176" cy="132" r="6" fill="#f0e2ae"/>'
-   +'<path d="M0 150 Q40 140 80 150 T160 150 T240 150 T320 150 L320 240 L0 240 Z" fill="#0abab5" opacity=".9"/>'
+   +'<path d="M0 150 Q40 140 80 150 T160 150 T240 150 T320 150 L320 240 L0 240 Z" fill="#62b5e5" opacity=".9"/>'
    +'<circle cx="40" cy="40" r="2.5" fill="#fff"/><circle cx="80" cy="24" r="2" fill="#fff"/><circle cx="260" cy="34" r="2.5" fill="#fff"/><circle cx="300" cy="60" r="2" fill="#fff"/>';
   case "cloud":default:return '<rect width="320" height="240" fill="url(#gSkyC)"/>'
    +'<ellipse cx="70" cy="220" rx="60" ry="24" fill="#fff"/><ellipse cx="240" cy="228" rx="76" ry="28" fill="#fff"/>'
@@ -799,7 +799,7 @@ function charArt(c){
  const g0='<g transform="translate(222,150)">',g1='</g>';
  switch(c){
   case "mermaid":return g0
-   +'<path d="M2 26 C-4 52 -26 60 -40 62 C-22 66 2 62 12 42 Z" fill="#0abab5"/>'
+   +'<path d="M2 26 C-4 52 -26 60 -40 62 C-22 66 2 62 12 42 Z" fill="#62b5e5"/>'
    +'<ellipse cx="4" cy="8" rx="15" ry="20" fill="#59c9be"/>'
    +'<circle cx="4" cy="-22" r="17" fill="#ffe0c7"/>'
    +'<path d="M-14 -30 C-20 -6 -14 8 -6 16 C-14 -2 -10 -10 -4 -38 C6 -42 16 -36 20 -26 C22 -8 18 4 12 12 C20 -4 20 -16 14 -34 Z" fill="#b0664a"/>'
@@ -827,8 +827,8 @@ function charArt(c){
    +'<ellipse cx="0" cy="6" rx="30" ry="22" fill="#ff8a7a"/>'
    +'<circle cx="-12" cy="-2" r="3" fill="#333"/><circle cx="12" cy="-2" r="3" fill="#333"/>'
    +'<path d="M-8 12 q8 7 16 0" stroke="#c2543f" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
-   +'<circle cx="-38" cy="-18" r="10" fill="#ff8a7a"/><path d="M-44 -26 L-34 -20 L-44 -12 Z" fill="#f4fbfa"/>'
-   +'<circle cx="38" cy="-18" r="10" fill="#ff8a7a"/><path d="M44 -26 L34 -20 L44 -12 Z" fill="#f4fbfa"/>'
+   +'<circle cx="-38" cy="-18" r="10" fill="#ff8a7a"/><path d="M-44 -26 L-34 -20 L-44 -12 Z" fill="#f5fafe"/>'
+   +'<circle cx="38" cy="-18" r="10" fill="#ff8a7a"/><path d="M44 -26 L34 -20 L44 -12 Z" fill="#f5fafe"/>'
    +'<g stroke="#e0705c" stroke-width="4" stroke-linecap="round"><path d="M-22 24 L-32 34"/><path d="M-10 28 L-14 38"/><path d="M22 24 L32 34"/><path d="M10 28 L14 38"/></g>'+g1;
   case "dragonmaid":return g0
    +'<path d="M-16 -26 C-30 -40 -46 -34 -52 -22 C-40 -24 -30 -20 -24 -12 Z" fill="#b39ddb"/>'
@@ -852,7 +852,7 @@ function charArt(c){
    +'<path d="M4 -18 C28 -14 30 8 16 20 C6 30 -6 34 -4 46 C-16 36 -12 22 0 14 C10 8 12 -4 0 -6 Z" fill="#9fb8c9" stroke="#6c8ba0" stroke-width="3"/>'
    +'<circle cx="2" cy="-24" r="15" fill="#c3d6e2" stroke="#6c8ba0" stroke-width="3"/>'
    +'<path d="M14 -28 L30 -24 L16 -20 Z" fill="#8aa8bb"/>'
-   +'<circle cx="-3" cy="-26" r="4" fill="#0abab5"/><circle cx="-3" cy="-26" r="1.6" fill="#fff"/>'
+   +'<circle cx="-3" cy="-26" r="4" fill="#62b5e5"/><circle cx="-3" cy="-26" r="1.6" fill="#fff"/>'
    +'<path d="M0 -39 L0 -48" stroke="#6c8ba0" stroke-width="3" stroke-linecap="round"/><circle cx="0" cy="-51" r="4" fill="#ff8a7a"/>'
    +'<circle cx="6" cy="2" r="3" fill="#ffd66b"/><circle cx="2" cy="14" r="3" fill="#ffd66b"/>'+g1;
   case "jelly":default:return g0
@@ -871,8 +871,8 @@ function propArt(p){
    +'<path d="M18 -18 L26 -10 M26 -18 L18 -10" stroke="#e05b4b" stroke-width="3.5" stroke-linecap="round"/>'+g1;
   case "storm":return g0+'<ellipse cx="0" cy="-10" rx="32" ry="17" fill="#8fa6b5"/><ellipse cx="-16" cy="-16" rx="16" ry="12" fill="#a6bac7"/>'
    +'<path d="M-4 4 L6 4 L-2 20 L10 20 L-8 44 L-2 26 L-12 26 Z" fill="#ffd66b"/>'+g1;
-  case "friend":return g0+'<circle cx="-4" cy="-6" r="20" fill="none" stroke="#0a8a86" stroke-width="5"/>'
-   +'<path d="M10 8 L26 26" stroke="#0a8a86" stroke-width="7" stroke-linecap="round"/>'
+  case "friend":return g0+'<circle cx="-4" cy="-6" r="20" fill="none" stroke="#3387c4" stroke-width="5"/>'
+   +'<path d="M10 8 L26 26" stroke="#3387c4" stroke-width="7" stroke-linecap="round"/>'
    +'<ellipse cx="-4" cy="-6" rx="11" ry="7" fill="#ff8a7a"/><rect x="-8" y="-12" width="3.5" height="12" fill="#fff"/><rect x="0" y="-12" width="3.5" height="12" fill="#fff"/><circle cx="4" cy="-8" r="1.6" fill="#333"/>'+g1;
   case "whale":return g0+'<path d="M-30 4 C-26 -16 16 -22 28 -4 C32 4 26 12 14 14 C-4 18 -24 16 -30 4 Z" fill="#7cb5da"/>'
    +'<path d="M28 2 L40 -4 L38 10 Z" fill="#5d9cc6"/><circle cx="14" cy="-4" r="2.4" fill="#333"/>'
@@ -888,7 +888,7 @@ function propArt(p){
    +'<rect x="-18" y="-14" width="36" height="18" rx="5" fill="#ffe9a8"/>'
    +'<path d="M-26 6 q6 6 12 0 q6 6 12 0 q6 6 12 0 q6 6 16 0" stroke="#fff" stroke-width="4" fill="none"/>'
    +'<rect x="-4" y="-26" width="4" height="12" fill="#e05b4b"/><circle cx="-2" cy="-29" r="3.5" fill="#ffd66b"/></g>'
-   +'<path d="M-32 30 q8 -7 14 0 q8 -7 16 0 q8 -7 14 0" stroke="#81d8d0" stroke-width="4" fill="none" stroke-linecap="round"/>'+g1;
+   +'<path d="M-32 30 q8 -7 14 0 q8 -7 16 0 q8 -7 14 0" stroke="#aed9f7" stroke-width="4" fill="none" stroke-linecap="round"/>'+g1;
   case "tickle":default:return g0+'<path d="M-32 14 C-32 -8 -6 -16 4 -2 C18 -16 36 -4 28 12 C20 24 -20 26 -32 14 Z" fill="#b3ece6"/>'
    +'<path d="M-14 12 q-8 2 -8 10 M22 10 q8 2 8 10" stroke="#b3ece6" stroke-width="5" fill="none" stroke-linecap="round"/>'
    +'<circle cx="-8" cy="-2" r="2.6" fill="#1c5d78"/><circle cx="10" cy="-2" r="2.6" fill="#1c5d78"/>'
@@ -900,7 +900,7 @@ function coverSVG(cv,title){
  return '<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" role="img">'
   +coverDefs()+setBG(cv&&cv.s)+propArt(cv&&cv.p)+charArt(cv&&cv.c)
   +'<rect x="0" y="200" width="320" height="40" fill="#ffffffd9"/>'
-  +'<text x="160" y="226" text-anchor="middle" font-size="15" font-weight="800" fill="#0a8a86" font-family="inherit">'+escHTML(t)+'</text>'
+  +'<text x="160" y="226" text-anchor="middle" font-size="15" font-weight="800" fill="#3387c4" font-family="inherit">'+escHTML(t)+'</text>'
   +'<rect x="4" y="4" width="312" height="232" rx="16" fill="none" stroke="#ffffff99" stroke-width="5"/>'
   +'</svg>';
 }
@@ -974,7 +974,7 @@ function updateHeader(){
   const n=todayReading(),pct=Math.min(1,n/READING_GOAL),R=19,C=2*Math.PI*R;
   document.getElementById("dailyRing").innerHTML=
    '<svg viewBox="0 0 46 46"><circle cx="23" cy="23" r="'+R+'" fill="#ffffffd9" stroke="#cfe8e5" stroke-width="4"/>'
-   +'<circle cx="23" cy="23" r="'+R+'" fill="none" stroke="'+(pct>=1?"#0abab5":"#ff8a7a")+'" stroke-width="4" stroke-linecap="round" stroke-dasharray="'+(C*pct).toFixed(1)+' '+C.toFixed(1)+'"/></svg>'
+   +'<circle cx="23" cy="23" r="'+R+'" fill="none" stroke="'+(pct>=1?"#62b5e5":"#ff8a7a")+'" stroke-width="4" stroke-linecap="round" stroke-dasharray="'+(C*pct).toFixed(1)+' '+C.toFixed(1)+'"/></svg>'
    +'<span class="ringtxt">'+(pct>=1?"<b>✓</b>":"<b>"+Math.min(n,READING_GOAL)+"/"+READING_GOAL+"</b>")+'<span>today</span></span>';
 }
 /* ================= WEBAUDIO CHIMES (synth only, no files) ================= */
@@ -1047,7 +1047,7 @@ function speak(text,opts){
     let fired=false;
     u.onend=function(){if(!fired){fired=true;done(true);}};
     u.onerror=function(){if(!fired){fired=true;done(false);}};
-    speechSynthesis.speak(u);
+    setTimeout(function(){try{speechSynthesis.resume();}catch(e){}speechSynthesis.speak(u);},80);
   }catch(e){done(false);}
 }
 const CHEERS=["Amazing!","Great job!","You got it!","Super reading!","Wonderful!","High five!","You're a star!"];
@@ -1184,8 +1184,8 @@ function dailyState(){
 function ringSVG(pct){
   const r=36,c=2*Math.PI*r;
   return '<div class="ringwrap"><svg width="88" height="88" viewBox="0 0 88 88">'
-   +'<circle cx="44" cy="44" r="'+r+'" fill="none" stroke="#e6f7f5" stroke-width="9"/>'
-   +'<circle cx="44" cy="44" r="'+r+'" fill="none" stroke="#0abab5" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct))+'"/>'
+   +'<circle cx="44" cy="44" r="'+r+'" fill="none" stroke="#e9f4fc" stroke-width="9"/>'
+   +'<circle cx="44" cy="44" r="'+r+'" fill="none" stroke="#62b5e5" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct))+'"/>'
    +'</svg><div class="ringlabel">'+Math.round(pct*100)+'%<small>today</small></div></div>';
 }
 function artCardHTML(a,doneFlag){
@@ -1515,7 +1515,7 @@ const fxCtx=fxCanvas.getContext("2d");
 let parts=[],fxRunning=false;
 function fxResize(){fxCanvas.width=innerWidth;fxCanvas.height=innerHeight;}
 addEventListener("resize",fxResize);fxResize();
-const FX_COLORS=["#0abab5","#81d8d0","#ff8a7a","#ffd66b","#8fd7b8","#f7a8d8"];
+const FX_COLORS=["#62b5e5","#aed9f7","#ff8a7a","#ffd66b","#8fd7b8","#f7a8d8"];
 function spawnConfetti(n,x,y,spread){
   for(let i=0;i<n;i++){
     parts.push({x:x!=null?x:Math.random()*fxCanvas.width,y:y!=null?y:-10,
@@ -1562,5 +1562,9 @@ updateHeader();
 go("home");
 tryFetchDaily();
 </script>
-</body>
+<script>
+/* iOS语音解锁：首次触摸播放一个静音utterance */
+(function(){function unlock(){try{var u=new SpeechSynthesisUtterance(" ");u.volume=0;speechSynthesis.speak(u);}catch(e){}document.removeEventListener("pointerdown",unlock);}
+document.addEventListener("pointerdown",unlock,{once:true});})();
+</script></body>
 </html>

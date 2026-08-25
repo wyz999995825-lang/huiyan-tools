@@ -6,8 +6,8 @@
 <title>Math Master Reef 🐬</title>
 <style>
   :root {
-    --tiffany:#0abab5; --tiffany-light:#81d8d0; --lagoon:#e6f7f5; --sky:#f4fbfa;
-    --deep:#0a8a86; --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff;
+    --tiffany:#62b5e5; --tiffany-light:#aed9f7; --lagoon:#e9f4fc; --sky:#f5fafe;
+    --deep:#3387c4; --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff;
     --ink:#144644; --ink2:#4e7d78; --line:#bfe9e4; --line2:#8fd8d0;
     --good:#2fae82; --goodbg:#e2f7ee; --badbg:#ffece9; --sandline:#f0d79a; --sandink:#a8781a;
   }
@@ -289,7 +289,7 @@ function speak(text,lang){
     if(v) u.voice=v;
     else if(u.lang.indexOf("zh")===0) return; /* silent fallback: no zh voice on device */
     u.rate=0.95; u.pitch=1.05;
-    speechSynthesis.cancel(); speechSynthesis.speak(u);
+    speechSynthesis.cancel(); setTimeout(function(){try{speechSynthesis.resume();}catch(e){}speechSynthesis.speak(u);},80);
   }catch(e){}
 }
 
@@ -309,7 +309,7 @@ function bumpDaily(){
 }
 
 /* ============ visual builders (pure string HTML) ============ */
-const C1="#0abab5", C2="#ff8a7a", C3="#7fd8b4", C4="#f4c35d", CDEEP="#0a8a86", CINK="#144644";
+const C1="#62b5e5", C2="#ff8a7a", C3="#7fd8b4", C4="#f4c35d", CDEEP="#3387c4", CINK="#144644";
 function bm(rows){
   let max=0;
   rows.forEach(r=>{ const s=r.segs.reduce((a,x)=>a+x.v,0); if(s>max)max=s; });
@@ -380,7 +380,7 @@ function clockSVG(h,m,size){
   for(let i=0;i<60;i++){
     const a=i*6*Math.PI/180, big=i%5===0;
     const r1=big?60:64, r2=r;
-    s+='<line x1="'+(cx+r1*Math.sin(a)).toFixed(1)+'" y1="'+(cy-r1*Math.cos(a)).toFixed(1)+'" x2="'+(cx+r2*Math.sin(a)).toFixed(1)+'" y2="'+(cy-r2*Math.cos(a)).toFixed(1)+'" stroke="#81d8d0" stroke-width="'+(big?3:1.5)+'"/>';
+    s+='<line x1="'+(cx+r1*Math.sin(a)).toFixed(1)+'" y1="'+(cy-r1*Math.cos(a)).toFixed(1)+'" x2="'+(cx+r2*Math.sin(a)).toFixed(1)+'" y2="'+(cy-r2*Math.cos(a)).toFixed(1)+'" stroke="#aed9f7" stroke-width="'+(big?3:1.5)+'"/>';
   }
   for(let i=1;i<=12;i++){
     const a=i*30*Math.PI/180;
@@ -396,7 +396,7 @@ function rectSVG(l,w){
   const scale = 200/Math.max(l,w);
   const W=Math.max(90,l*scale), H=Math.max(60,w*scale*0.8);
   return '<svg viewBox="0 0 '+(W+70)+' '+(H+60)+'" style="max-width:300px;display:block;margin:0 auto">'
-   +'<rect x="35" y="28" width="'+W+'" height="'+H+'" fill="#e6f7f5" stroke="'+CDEEP+'" stroke-width="3" rx="4"/>'
+   +'<rect x="35" y="28" width="'+W+'" height="'+H+'" fill="#e9f4fc" stroke="'+CDEEP+'" stroke-width="3" rx="4"/>'
    +'<text x="'+(35+W/2)+'" y="18" text-anchor="middle" font-size="15" font-weight="800" fill="'+CDEEP+'">'+l+' cm</text>'
    +'<text x="'+(35+W/2)+'" y="'+(H+50)+'" text-anchor="middle" font-size="15" font-weight="800" fill="'+CDEEP+'">'+l+' cm</text>'
    +'<text x="16" y="'+(28+H/2)+'" text-anchor="middle" font-size="15" font-weight="800" fill="#ff8a7a">'+w+' cm</text>'
@@ -406,7 +406,7 @@ function gridRectSVG(l,w,countAll){
   const cs=26, W=l*cs, H=w*cs;
   let s='<svg viewBox="0 0 '+(W+20)+' '+(H+20)+'" style="max-width:'+Math.min(320,W+20)+'px;display:block;margin:0 auto">';
   for(let r=0;r<w;r++) for(let c=0;c<l;c++){
-    s+='<rect x="'+(10+c*cs)+'" y="'+(10+r*cs)+'" width="'+cs+'" height="'+cs+'" fill="'+((r+c)%2?'#e6f7f5':'#d2f0ec')+'" stroke="'+CDEEP+'" stroke-width="1.4"/>';
+    s+='<rect x="'+(10+c*cs)+'" y="'+(10+r*cs)+'" width="'+cs+'" height="'+cs+'" fill="'+((r+c)%2?'#e9f4fc':'#d2f0ec')+'" stroke="'+CDEEP+'" stroke-width="1.4"/>';
     if(countAll) s+='<text x="'+(10+c*cs+cs/2)+'" y="'+(10+r*cs+cs/2+4)+'" text-anchor="middle" font-size="11" font-weight="800" fill="'+CDEEP+'">'+(r*l+c+1)+'</text>';
   }
   return s+'</svg>';
@@ -416,7 +416,7 @@ function scaleSVG(L,R,cap){
   const em=a=>a.join("");
   let s='<svg viewBox="0 0 360 160" style="max-width:360px;display:block;margin:0 auto">';
   s+='<rect x="172" y="55" width="8" height="80" rx="3" fill="'+CDEEP+'"/>';
-  s+='<ellipse cx="176" cy="140" rx="46" ry="9" fill="#81d8d0"/>';
+  s+='<ellipse cx="176" cy="140" rx="46" ry="9" fill="#aed9f7"/>';
   s+='<rect x="46" y="48" width="260" height="8" rx="4" fill="'+C1+'"/>';
   s+='<circle cx="176" cy="52" r="9" fill="'+CDEEP+'"/>';
   s+='<line x1="58" y1="54" x2="38" y2="86" stroke="'+C1+'" stroke-width="3"/>';
@@ -446,7 +446,7 @@ function pyrSVG(cells, missIdx, hlIdx){
   let s='<svg viewBox="0 0 320 160" style="max-width:320px;display:block;margin:0 auto">';
   pos.forEach((p,i)=>{
     const miss=i===missIdx, hl=i===hlIdx;
-    s+='<rect x="'+p[0]+'" y="'+p[1]+'" width="76" height="44" rx="10" fill="'+(miss?'#fdf3dd':(hl?'#e2f7ee':'#e6f7f5'))+'" stroke="'+(miss?'#d9a83f':(hl?'#2fae82':CDEEP))+'" stroke-width="2.6"'+(miss?' stroke-dasharray="6 4"':'')+'/>';
+    s+='<rect x="'+p[0]+'" y="'+p[1]+'" width="76" height="44" rx="10" fill="'+(miss?'#fdf3dd':(hl?'#e2f7ee':'#e9f4fc'))+'" stroke="'+(miss?'#d9a83f':(hl?'#2fae82':CDEEP))+'" stroke-width="2.6"'+(miss?' stroke-dasharray="6 4"':'')+'/>';
     s+='<text x="'+(p[0]+38)+'" y="'+(p[1]+29)+'" text-anchor="middle" font-size="19" font-weight="800" fill="'+(miss?'#a8781a':CINK)+'">'+(miss?'?':cells[i])+'</text>';
   });
   return s+'</svg>';
@@ -457,7 +457,7 @@ function starPts(cx,cy,R,r){
   return p.join(" ");
 }
 /* shape tile for pattern island; token: "shape-colorIdx" | "arr-rot" | "dots-n" */
-const SHAPE_COLS=["#0abab5","#ff8a7a","#f4c35d","#8f7ae0","#2fae82"];
+const SHAPE_COLS=["#62b5e5","#ff8a7a","#f4c35d","#8f7ae0","#2fae82"];
 function shapeTile(tok, size){
   size=size||64; const half=size/2;
   let inner="";
@@ -497,7 +497,7 @@ function motifSVG(v, rot, size, missing){
     return '<svg viewBox="0 0 70 70" style="width:'+size+'px;height:'+size+'px"><rect x="3" y="3" width="64" height="64" rx="8" fill="#fdf3dd" stroke="#d9a83f" stroke-width="2.5" stroke-dasharray="7 5"/><text x="35" y="45" text-anchor="middle" font-size="26" font-weight="800" fill="#a8781a">?</text></svg>';
   }
   if(v===0){
-    inner='<path d="M 8 62 A 54 54 0 0 1 62 8 L 62 62 Z" fill="#81d8d0" stroke="'+CDEEP+'" stroke-width="2.4"/>'
+    inner='<path d="M 8 62 A 54 54 0 0 1 62 8 L 62 62 Z" fill="#aed9f7" stroke="'+CDEEP+'" stroke-width="2.4"/>'
       +'<circle cx="22" cy="22" r="8" fill="'+C2+'" stroke="'+CINK+'" stroke-width="1.8"/>'
       +'<polygon points="46,40 58,52 40,54" fill="'+C4+'" stroke="'+CINK+'" stroke-width="1.6"/>';
   } else if(v===1){
@@ -1745,8 +1745,8 @@ const LOGIC_LINES=["Time to make your brain do gymnastics! 🤸‍♀️","Detec
 function ringSVG(pct, size, label){
   size=size||54; const r=(size-10)/2, c=2*Math.PI*r;
   return '<svg class="ring" width="'+size+'" height="'+size+'"><circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="#d2f0ec" stroke-width="7"/>'
-    +'<circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="'+(pct>=80?"#2fae82":"#0abab5")+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-Math.min(100,pct)/100))+'" transform="rotate(-90 '+(size/2)+' '+(size/2)+')"/>'
-    +'<text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-size="'+(label&&label.length>3?11:13)+'" font-weight="800" fill="#0a8a86">'+(label!==undefined?label:pct+"%")+'</text></svg>';
+    +'<circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="'+(pct>=80?"#2fae82":"#62b5e5")+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-Math.min(100,pct)/100))+'" transform="rotate(-90 '+(size/2)+' '+(size/2)+')"/>'
+    +'<text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-size="'+(label&&label.length>3?11:13)+'" font-weight="800" fill="#3387c4">'+(label!==undefined?label:pct+"%")+'</text></svg>';
 }
 
 let cur=null, curTopic=null, combo=0, stepIdx=0, answered=false, redoIdx=-1, curGrid=null;
@@ -2055,7 +2055,7 @@ function fxTick(){
   });
   if(particles.length) requestAnimationFrame(fxTick); else { fxRunning=false; ctx.clearRect(0,0,cv.width,cv.height); }
 }
-const FXCOLORS=["#0abab5","#81d8d0","#ff8a7a","#f4c35d","#7fd8b4","#c8a2ff"];
+const FXCOLORS=["#62b5e5","#aed9f7","#ff8a7a","#f4c35d","#7fd8b4","#c8a2ff"];
 function burst(x,y,n,speed){
   for(let i=0;i<n;i++){
     const a=Math.random()*Math.PI*2, v=(0.4+Math.random())*speed;
@@ -2089,5 +2089,9 @@ if(typeof module!=="undefined" && module.exports){
   module.exports={TOPICS, mkOpts, fmtTime, fmtMoney, sudCount, sudHint, dedSolutions, dedSatisfy, UNITQ};
 }
 </script>
-</body>
+<script>
+/* iOS语音解锁：首次触摸播放一个静音utterance */
+(function(){function unlock(){try{var u=new SpeechSynthesisUtterance(" ");u.volume=0;speechSynthesis.speak(u);}catch(e){}document.removeEventListener("pointerdown",unlock);}
+document.addEventListener("pointerdown",unlock,{once:true});})();
+</script></body>
 </html>

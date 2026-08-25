@@ -6,8 +6,8 @@
 <title>口语小海豚 🐬</title>
 <style>
 :root{
-  --tiffany:#0abab5; --tiffany-light:#81d8d0; --lagoon:#e6f7f5; --sky:#f4fbfa;
-  --deep:#0a8a86; --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff;
+  --tiffany:#62b5e5; --tiffany-light:#aed9f7; --lagoon:#e9f4fc; --sky:#f5fafe;
+  --deep:#3387c4; --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff;
   --ink:#144644; --ink-soft:#3d7f7c; --ink-faint:#7aada9;
 }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -300,7 +300,7 @@ function updateHeader(){
   const R=20,C=2*Math.PI*R;
   document.getElementById("ringWrap").innerHTML=
    `<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="${R}" fill="#ffffffd9" stroke="#cfe8e5" stroke-width="4"/>`+
-   `<circle cx="24" cy="24" r="${R}" fill="none" stroke="${pct>=1?"#0abab5":"#ff8a7a"}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${(C*pct).toFixed(1)} ${C.toFixed(1)}"/></svg>`+
+   `<circle cx="24" cy="24" r="${R}" fill="none" stroke="${pct>=1?"#62b5e5":"#ff8a7a"}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${(C*pct).toFixed(1)} ${C.toFixed(1)}"/></svg>`+
    `<span class="ringtxt">${pct>=1?"<b>✓</b>":"<b>"+Math.min(n,ORAL_GOAL)+"/"+ORAL_GOAL+"</b>"}<span>今日</span></span>`;
 }
 /* ============ WebAudio 合成音效（无音频文件） ============ */
@@ -365,7 +365,7 @@ function speak(text,opts){
   if(!ttsOn)return;
   if(!("speechSynthesis" in window))return;      /* 不支持则静默降级 */
   if(!zhVoice)pickVoice();
-  if(voicesReady&&!zhVoice)return;                /* 无中文音色，静默降级 */
+  
   try{
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
@@ -373,7 +373,7 @@ function speak(text,opts){
     if(zhVoice)u.voice=zhVoice;
     u.rate=opts.rate||0.95;
     u.pitch=opts.pitch||1.05;
-    speechSynthesis.speak(u);
+    setTimeout(function(){try{speechSynthesis.resume();}catch(e){}speechSynthesis.speak(u);},80);
   }catch(e){}
 }
 const CHEERS=["太棒啦！","你真厉害！","读得真好听！","哇，说得真棒！","小海豚为你鼓掌！","你越来越棒了！","真是口语小明星！"];
@@ -757,7 +757,7 @@ const fxCtx=fxCanvas.getContext("2d");
 let parts=[],fxRunning=false;
 function fxResize(){fxCanvas.width=innerWidth;fxCanvas.height=innerHeight;}
 addEventListener("resize",fxResize);fxResize();
-const FX_COLORS=["#0abab5","#81d8d0","#ff8a7a","#ffd66b","#8fd7b8","#f7a8d8"];
+const FX_COLORS=["#62b5e5","#aed9f7","#ff8a7a","#ffd66b","#8fd7b8","#f7a8d8"];
 function spawnConfetti(n,x,y,spread){
   for(let i=0;i<n;i++){
     parts.push({x:x??Math.random()*fxCanvas.width,y:y??-10,
@@ -802,5 +802,9 @@ document.getElementById("ttsBtn").classList.toggle("off",!ttsOn);
 updateHeader();
 go("home");
 </script>
-</body>
+<script>
+/* iOS语音解锁：首次触摸播放一个静音utterance */
+(function(){function unlock(){try{var u=new SpeechSynthesisUtterance(" ");u.volume=0;speechSynthesis.speak(u);}catch(e){}document.removeEventListener("pointerdown",unlock);}
+document.addEventListener("pointerdown",unlock,{once:true});})();
+</script></body>
 </html>

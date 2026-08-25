@@ -6,7 +6,7 @@
 <title>Jenny's Animal Kingdom Math Adventure</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--t:#0ABAB5;--tl:#B2DFDB;--tp:#E0F7FA;--coral:#FF8A65;--cl:#FFCCBC;--gold:#FFD700;--gl:#FFF8E1;--g:#66BB6A;--r:#EF5350;--txt:#37474F;--txl:#78909C;--bg:#F5FFFE;--card:#fff}
+:root{--t:#62b5e5;--tl:#B2DFDB;--tp:#E0F7FA;--coral:#FF8A65;--cl:#FFCCBC;--gold:#FFD700;--gl:#FFF8E1;--g:#66BB6A;--r:#EF5350;--txt:#37474F;--txl:#78909C;--bg:#F5FFFE;--card:#fff}
 body{font-family:"Nunito",system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
 .scr{display:none;min-height:100vh;padding:20px 16px 40px;max-width:520px;margin:0 auto;flex-direction:column;align-items:center}.scr.on{display:flex}
 .top-bar{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
@@ -199,7 +199,7 @@ function pickQuestions(bank,n){
 // ===================== EFFECTS =====================
 function confetti(){
   let c=document.createElement('div');c.className='confetti-c';
-  let cols=['#0ABAB5','#FFD700','#FF8A65','#66BB6A','#AB47BC','#42A5F5'];
+  let cols=['#62b5e5','#FFD700','#FF8A65','#66BB6A','#AB47BC','#42A5F5'];
   for(let i=0;i<35;i++){let p=document.createElement('div');p.className='confetti';p.style.left=Math.random()*100+'%';p.style.background=cols[Math.floor(Math.random()*cols.length)];p.style.animationDelay=Math.random()*.8+'s';p.style.width=(5+Math.random()*7)+'px';p.style.height=(5+Math.random()*7)+'px';if(Math.random()>.5)p.style.borderRadius='50%';c.appendChild(p)}
   document.body.appendChild(c);setTimeout(()=>c.remove(),3200)
 }
@@ -604,5 +604,9 @@ function render(){
 
 render();
 </script>
-</body>
+<script>
+/* iOS语音解锁：首次触摸播放一个静音utterance */
+(function(){function unlock(){try{var u=new SpeechSynthesisUtterance(" ");u.volume=0;speechSynthesis.speak(u);}catch(e){}document.removeEventListener("pointerdown",unlock);}
+document.addEventListener("pointerdown",unlock,{once:true});})();
+</script></body>
 </html>

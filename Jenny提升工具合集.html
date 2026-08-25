@@ -6,7 +6,7 @@
 <title>Jenny 的海洋学习乐园</title>
 <style>
 :root{
-  --tiffany:#0abab5;--tiffany-light:#81d8d0;--lagoon:#e6f7f5;--sky:#f4fbfa;--deep:#0a8a86;
+  --tiffany:#62b5e5;--tiffany-light:#aed9f7;--lagoon:#e9f4fc;--sky:#f5fafe;--deep:#3387c4;
   --sand:#fdf3dd;--coral:#ff8a7a;--card:#ffffff;
   --bg:var(--sky);--border:#c3e9e5;--text:#144644;--text2:#54807d;
   --accent:var(--tiffany);--accent-deep:var(--deep);--accent-bg:var(--lagoon);
@@ -28,7 +28,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
 .tb-btn:active,.back-btn:active,.mb-add:active,.qm-submit:active,.mp-btn:active,.rv-btn:active,.card:active,.q-row:active,.stk-cell:active{transform:scale(.93)!important;animation:none}
 .mascot{display:inline-block;animation:idleFloat 3s ease-in-out infinite}
 
-.topbar{background:linear-gradient(135deg,#2fd0ca 0%,#0abab5 55%,#0a8a86 100%);color:#fff;padding:8px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:relative;z-index:5}
+.topbar{background:linear-gradient(135deg,#2fd0ca 0%,#62b5e5 55%,#3387c4 100%);color:#fff;padding:8px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0;position:relative;z-index:5}
 .topbar h1{font-size:19px;font-weight:800;text-shadow:0 1px 3px rgba(0,60,58,.25)}
 .topbar .info{font-size:13px;opacity:.9}
 .topbar .back-btn{background:rgba(255,255,255,.22);border:none;color:#fff;padding:9px 14px;border-radius:10px;cursor:pointer;font-size:15px;font-weight:700;display:none;min-height:46px}
@@ -342,7 +342,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
       <h2>🐚 欢迎来到海洋学习乐园</h2>
       <p class="sub">P2 · 7 个学习工具 · 点一个小岛，出发探险咯！</p>
 
-      <svg class="wave-divider" viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C150,40 300,0 450,20 C600,40 750,0 900,20 C1050,40 1150,10 1200,20 L1200,40 L0,40 Z" fill="#81d8d0" opacity="0.55"/><path d="M0,26 C150,10 350,38 550,24 C750,10 950,38 1200,24 L1200,40 L0,40 Z" fill="#0abab5" opacity="0.35"/></svg>
+      <svg class="wave-divider" viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C150,40 300,0 450,20 C600,40 750,0 900,20 C1050,40 1150,10 1200,20 L1200,40 L0,40 Z" fill="#aed9f7" opacity="0.55"/><path d="M0,26 C150,10 350,38 550,24 C750,10 950,38 1200,24 L1200,40 L0,40 Z" fill="#62b5e5" opacity="0.35"/></svg>
 
       <div class="subject-sec">
         <div class="subject-title">🧮 Maths 数学</div>
@@ -529,7 +529,7 @@ function speak(text,lang){
     const u=new SpeechSynthesisUtterance(text);
     u.lang=lang;const v=pickVoice(lang);if(v)u.voice=v;
     u.rate=.95;u.pitch=1.05;
-    speechSynthesis.cancel();speechSynthesis.speak(u);
+    speechSynthesis.cancel();setTimeout(function(){try{speechSynthesis.resume();}catch(e){}speechSynthesis.speak(u);},80);
   }catch(e){}
 }
 try{if('speechSynthesis' in window)speechSynthesis.getVoices()}catch(e){}
@@ -846,7 +846,7 @@ function submitWin(){
 }
 
 function celebrate(){
-  const colors=['#0abab5','#81d8d0','#ff8a7a','#48dbfb','#1dd1a1','#feca57','#0a8a86','#7ad8ff'];
+  const colors=['#62b5e5','#aed9f7','#ff8a7a','#48dbfb','#1dd1a1','#feca57','#3387c4','#7ad8ff'];
   for(let i=0;i<30;i++){const c=document.createElement('div');c.className='confetti';const sz=4+Math.random()*6;c.style.cssText='width:'+sz+'px;height:'+sz+'px;background:'+colors[i%colors.length]+';top:'+(40+Math.random()*10)+'%;left:'+(20+Math.random()*60)+'%;opacity:1;';document.body.appendChild(c);requestAnimationFrame(()=>{c.style.top=(5+Math.random()*80)+'%';c.style.left=(5+Math.random()*90)+'%';c.style.opacity='0';c.style.transform='scale('+(1+Math.random()*3)+') rotate('+(Math.random()*360)+'deg)'});setTimeout(()=>c.remove(),1000)}
 }
 function showBadgePopup(badge){
@@ -858,7 +858,7 @@ function showBadgePopup(badge){
 
 /* ===== 烟花棒 🎆 ===== */
 function fireworks(){
-  const colors=['#ff8a7a','#feca57','#0abab5','#81d8d0','#1dd1a1','#a55eea','#fd9644','#fff'];
+  const colors=['#ff8a7a','#feca57','#62b5e5','#aed9f7','#1dd1a1','#a55eea','#fd9644','#fff'];
   const bursts=3;
   for(let b=0;b<bursts;b++){
     const cx=15+Math.random()*70, cy=20+Math.random()*50;
@@ -1176,5 +1176,9 @@ function restoreProgress(){
   inp.click();
 }
 </script>
-</body>
+<script>
+/* iOS语音解锁：首次触摸播放一个静音utterance */
+(function(){function unlock(){try{var u=new SpeechSynthesisUtterance(" ");u.volume=0;speechSynthesis.speak(u);}catch(e){}document.removeEventListener("pointerdown",unlock);}
+document.addEventListener("pointerdown",unlock,{once:true});})();
+</script></body>
 </html>

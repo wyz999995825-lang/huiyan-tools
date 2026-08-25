@@ -7,12 +7,12 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html,body { height:100%; }
-  :root{ --tiffany:#0abab5; --tiffany-light:#81d8d0; --lagoon:#e6f7f5; --sky:#f4fbfa; --deep:#0a8a86;
+  :root{ --tiffany:#62b5e5; --tiffany-light:#aed9f7; --lagoon:#e9f4fc; --sky:#f5fafe; --deep:#3387c4;
     --sand:#fdf3dd; --coral:#ff8a7a; --card:#ffffff; --ink:#144644; --ink2:#3d7a76; --ink3:#7aa8a4; }
   body {
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
     font-size:17px; color:var(--ink); background:var(--sky);
-    background-image:linear-gradient(180deg,#f4fbfa 0%,#e6f7f5 55%,#d8f2ef 100%);
+    background-image:linear-gradient(180deg,#f5fafe 0%,#e9f4fc 55%,#d8f2ef 100%);
     min-height:100%; line-height:1.8;
   }
   #app { max-width:820px; margin:0 auto; padding:10px 12px 70px; }
@@ -56,7 +56,7 @@
   .tcard .sub { font-size:12px; color:var(--ink2); margin-top:2px; }
   .ring { margin-left:auto; flex:none; }
   .backrow { display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
-  .btn { background:linear-gradient(180deg,#19c8c2,#0abab5); color:#fff; font-weight:800; font-size:17px;
+  .btn { background:linear-gradient(180deg,#19c8c2,#62b5e5); color:#fff; font-weight:800; font-size:17px;
     border-radius:16px; padding:12px 22px; box-shadow:0 4px 0 var(--deep); min-height:50px;
     transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
   .btn:hover { animation:wiggle .35s; }
@@ -118,7 +118,7 @@
   .vbox .d { font-size:12px; color:var(--ink2); font-weight:600; }
   .varrow { color:var(--coral); font-size:18px; font-weight:800; }
   .cap { font-size:14px; color:var(--ink2); text-align:center; margin-top:6px; line-height:1.55; }
-  .pbar { height:10px; background:#d5f0ed; border-radius:6px; overflow:hidden; margin-top:6px; }
+  .pbar { height:10px; background:#e0effa; border-radius:6px; overflow:hidden; margin-top:6px; }
   .pbar>div { height:100%; background:linear-gradient(90deg,var(--tiffany-light),var(--tiffany)); transition:width .4s; }
   .badgebox { background:var(--card); border-radius:20px; padding:14px 16px; box-shadow:0 5px 16px rgba(10,138,134,.13); margin-top:16px; }
   .badgebox h3 { color:var(--deep); font-size:16px; margin-bottom:8px; }
@@ -133,7 +133,7 @@
   .youpicked { font-size:14px; color:#c65a4c; background:#fff6f4; border-radius:10px; padding:8px 11px; margin:8px 0; line-height:1.55; }
   /* MEGA celebration */
   .mega { position:fixed; inset:0; z-index:40; overflow:hidden;
-    background:linear-gradient(180deg,#8ce0da 0%,#2cc5c0 40%,#0a8a86 100%); animation:pop .4s; }
+    background:linear-gradient(180deg,#8ce0da 0%,#2cc5c0 40%,#3387c4 100%); animation:pop .4s; }
   .megaray { position:absolute; top:-10%; width:14%; height:70%; background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0));
     transform:skewX(-12deg); animation:raypulse 3s ease-in-out infinite; pointer-events:none; }
   @keyframes raypulse { 0%,100%{opacity:.4} 50%{opacity:.9} }
@@ -287,17 +287,17 @@ function cycleSVG(stages){
   stages.forEach((st,i)=>{
     const a=(i/n)*2*Math.PI-Math.PI/2;
     const x=cx+r*Math.cos(a), y=cy+r*Math.sin(a);
-    s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="30" fill="#fff" stroke="#0abab5" stroke-width="3"/>';
+    s+='<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="30" fill="#fff" stroke="#62b5e5" stroke-width="3"/>';
     s+='<text x="'+x.toFixed(1)+'" y="'+(y+7).toFixed(1)+'" text-anchor="middle" font-size="24">'+st.e+'</text>';
-    s+='<text x="'+x.toFixed(1)+'" y="'+(y+48).toFixed(1)+'" text-anchor="middle" font-size="13" font-weight="800" fill="#0a8a86">'+st.label+'</text>';
+    s+='<text x="'+x.toFixed(1)+'" y="'+(y+48).toFixed(1)+'" text-anchor="middle" font-size="13" font-weight="800" fill="#3387c4">'+st.label+'</text>';
   });
   return s+'</svg>';
 }
 function magnetSVG(mode){
   const attract = mode==="attract";
   function bar(x,flip){
-    return '<rect x="'+x+'" y="40" width="50" height="34" rx="4" fill="'+(flip?'#0abab5':'#ff8a7a')+'"/>'
-      +'<rect x="'+(x+50)+'" y="40" width="50" height="34" rx="4" fill="'+(flip?'#ff8a7a':'#0abab5')+'"/>'
+    return '<rect x="'+x+'" y="40" width="50" height="34" rx="4" fill="'+(flip?'#62b5e5':'#ff8a7a')+'"/>'
+      +'<rect x="'+(x+50)+'" y="40" width="50" height="34" rx="4" fill="'+(flip?'#ff8a7a':'#62b5e5')+'"/>'
       +'<text x="'+(x+25)+'" y="63" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">'+(flip?'S':'N')+'</text>'
       +'<text x="'+(x+75)+'" y="63" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">'+(flip?'N':'S')+'</text>';
   }
@@ -343,7 +343,7 @@ function digestSVG(){
 const DIA={
   livingNeeds: {t:"What living things need & can do", h:'<div class="grid2">'+cell("💨","air","all living things breathe")+cell("💧","water","to survive")+cell("🍎","food","for energy")+cell("🌱","grow","get bigger")+cell("🙌","respond","react to changes")+cell("🐣","reproduce","have young")+'</div><div class="cap">Living things need air, food and water — and they grow, respond and reproduce.</div>'},
   classify: {t:"The 6 animal groups", h:'<div class="grid2">'+cell("🐶🐋","Mammals","fur/hair · milk for young")+cell("🐦🐧","Birds","feathers · beak · wings")+cell("🐠🦈","Fish","gills · fins · live in water")+cell("🐜🦋","Insects","6 legs · 3 body parts")+cell("🐸","Amphibians","moist skin · water and land")+cell("🐢🐍","Reptiles","dry, scaly skin")+'</div>'},
-  insect: {t:"Insect body plan", h:'<svg viewBox="0 0 320 150" style="max-width:320px;display:block;margin:0 auto"><ellipse cx="80" cy="70" rx="26" ry="22" fill="#0abab5"/><ellipse cx="140" cy="70" rx="30" ry="24" fill="#7fd8b4"/><ellipse cx="215" cy="70" rx="45" ry="27" fill="#f4c35d"/><circle cx="70" cy="62" r="4" fill="#12475e"/><line x1="70" y1="50" x2="58" y2="30" stroke="#12475e" stroke-width="2"/><line x1="88" y1="50" x2="98" y2="30" stroke="#12475e" stroke-width="2"/>'+[115,140,165].map(x=>'<line x1="'+x+'" y1="90" x2="'+(x-12)+'" y2="125" stroke="#12475e" stroke-width="3"/><line x1="'+x+'" y1="90" x2="'+(x+12)+'" y2="125" stroke="#12475e" stroke-width="3"/>').join("")+'<text x="80" y="115" text-anchor="middle" font-size="12" font-weight="800" fill="#0a8a86">head</text><text x="140" y="142" text-anchor="middle" font-size="12" font-weight="800" fill="#0a8a86">thorax</text><text x="215" y="115" text-anchor="middle" font-size="12" font-weight="800" fill="#0a8a86">abdomen</text><text x="160" y="18" text-anchor="middle" font-size="13" font-weight="800" fill="#c65a4c">3 body parts + 6 legs = insect!</text></svg>'},
+  insect: {t:"Insect body plan", h:'<svg viewBox="0 0 320 150" style="max-width:320px;display:block;margin:0 auto"><ellipse cx="80" cy="70" rx="26" ry="22" fill="#62b5e5"/><ellipse cx="140" cy="70" rx="30" ry="24" fill="#7fd8b4"/><ellipse cx="215" cy="70" rx="45" ry="27" fill="#f4c35d"/><circle cx="70" cy="62" r="4" fill="#12475e"/><line x1="70" y1="50" x2="58" y2="30" stroke="#12475e" stroke-width="2"/><line x1="88" y1="50" x2="98" y2="30" stroke="#12475e" stroke-width="2"/>'+[115,140,165].map(x=>'<line x1="'+x+'" y1="90" x2="'+(x-12)+'" y2="125" stroke="#12475e" stroke-width="3"/><line x1="'+x+'" y1="90" x2="'+(x+12)+'" y2="125" stroke="#12475e" stroke-width="3"/>').join("")+'<text x="80" y="115" text-anchor="middle" font-size="12" font-weight="800" fill="#3387c4">head</text><text x="140" y="142" text-anchor="middle" font-size="12" font-weight="800" fill="#3387c4">thorax</text><text x="215" y="115" text-anchor="middle" font-size="12" font-weight="800" fill="#3387c4">abdomen</text><text x="160" y="18" text-anchor="middle" font-size="13" font-weight="800" fill="#c65a4c">3 body parts + 6 legs = insect!</text></svg>'},
   lifecycleB: {t:"Life cycle of a butterfly", h:cycleSVG([{e:"🥚",label:"egg"},{e:"🐛",label:"larva"},{e:"🛡️",label:"pupa"},{e:"🦋",label:"adult"}])+'<div class="cap">The adult lays eggs — and the cycle repeats!</div>'},
   lifecycleF: {t:"Life cycle of a frog", h:cycleSVG([{e:"🥚",label:"eggs"},{e:"🐟",label:"tadpole"},{e:"🐸",label:"young frog"},{e:"🐸",label:"adult frog"}])+'<div class="cap">The tadpole lives in water and looks nothing like its parent!</div>'},
   lifecycleG: {t:"Life cycle of a grasshopper (3 stages)", h:cycleSVG([{e:"🥚",label:"egg"},{e:"🦗",label:"nymph"},{e:"🦗",label:"adult"}])+'<div class="cap">A nymph looks like a small adult without wings — no pupa stage!</div>'},
@@ -846,7 +846,7 @@ function speak(text,lang){
     if(lang==="zh" && !v) return; /* no Chinese voice on device: silent fallback */
     if(v) u.voice=v;
     u.rate=0.95; u.pitch=1.05;
-    speechSynthesis.cancel(); speechSynthesis.speak(u);
+    speechSynthesis.cancel(); setTimeout(function(){try{speechSynthesis.resume();}catch(e){}speechSynthesis.speak(u);},80);
   }catch(e){}
 }
 function toggleTTS(){
@@ -906,7 +906,7 @@ function turtleChar(){
 function megaShow(titleDef,kind,n){
   sndMagic();
   const chars=["🐢","🐬","🐙","🧜‍♀️","🦀","🐳","🐡","⭐",
-    fishChar("#ffd98e"), fishChar("#ff8a7a",56), fishChar("#81d8d0",76), turtleChar()];
+    fishChar("#ffd98e"), fishChar("#ff8a7a",56), fishChar("#aed9f7",76), turtleChar()];
   let h='<div class="mega" id="mega">';
   [8,30,55,78].forEach((l,i)=>{ h+='<div class="megaray" style="left:'+l+'%;animation-delay:'+(i*0.7)+'s"></div>'; });
   chars.forEach((c,i)=>{
@@ -940,9 +940,9 @@ const GENTLE=["Good try! Scientists learn by looking again 🧜‍♀️","Almos
 const SPRAISE=["Amazing!","Well done!","Great job!","Super!","You got it!"]; /* short spoken praise */
 function ringSVG(pct,size){
   size=size||50; const r=(size-10)/2, c=2*Math.PI*r;
-  return '<svg class="ring" width="'+size+'" height="'+size+'"><circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="#d5f0ed" stroke-width="6"/>'
-   +'<circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="'+(pct>=80?"#39b98a":"#0abab5")+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct/100))+'" transform="rotate(-90 '+(size/2)+' '+(size/2)+')"/>'
-   +'<text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="12" font-weight="800" fill="#0a8a86">'+pct+'%</text></svg>';
+  return '<svg class="ring" width="'+size+'" height="'+size+'"><circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="#e0effa" stroke-width="6"/>'
+   +'<circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="'+(pct>=80?"#39b98a":"#62b5e5")+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+(c*(1-pct/100))+'" transform="rotate(-90 '+(size/2)+' '+(size/2)+')"/>'
+   +'<text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="12" font-weight="800" fill="#3387c4">'+pct+'%</text></svg>';
 }
 function header(){
   const ti=currentTitle();
@@ -1047,7 +1047,7 @@ function pickWord(i,chosen){
   else { S.words[curWord.term]=1; sndOops(); }
   dailyBump(); save();
   let h='<div class="fb '+(ok?"good":"oops")+' anim"><div class="big">'+(ok?"✅ "+pick(PRAISE)+" (+8 XP)":"💙 "+pick(GENTLE))+'</div></div>';
-  h+='<div class="model anim"><span class="tag">🔬 Scientist\'s sentence — read it out loud! <button class="spk" onclick="speakCurWord()">🔊</button></span>'+curWord.sent.replace(new RegExp(rescape(curWord.term),"i"),"<b style='color:#0a8a86'>"+curWord.term+"</b>")+'</div>';
+  h+='<div class="model anim"><span class="tag">🔬 Scientist\'s sentence — read it out loud! <button class="spk" onclick="speakCurWord()">🔊</button></span>'+curWord.sent.replace(new RegExp(rescape(curWord.term),"i"),"<b style='color:#3387c4'>"+curWord.term+"</b>")+'</div>';
   h+='<button class="btn" style="width:100%" onclick="sndPop();cardIdx++;showCard()">Next word 🐚</button>';
   $("fbzone").innerHTML=h;
   speak((ok?pick(SPRAISE)+" ":"Let's read it together. ")+curWord.sent);
@@ -1166,7 +1166,7 @@ function redoQ(id){
 
 /* ---------- confetti / fireworks ---------- */
 let particles=[], fxRunning=false;
-const FXCOLORS=["#0abab5","#ff8a7a","#f4c35d","#7fd8b4","#0a8a86","#c8a2ff"];
+const FXCOLORS=["#62b5e5","#ff8a7a","#f4c35d","#7fd8b4","#3387c4","#c8a2ff"];
 function fxTick(){
   const cv=$("fx"); if(!cv) return;
   const ctx=cv.getContext("2d");
@@ -1206,5 +1206,9 @@ if(typeof window!=="undefined" && typeof document!=="undefined" && typeof docume
 }
 if(typeof module!=="undefined" && module.exports){ module.exports={VOCAB, QUIZ, TOPICS, DIA}; }
 </script>
-</body>
+<script>
+/* iOS语音解锁：首次触摸播放一个静音utterance */
+(function(){function unlock(){try{var u=new SpeechSynthesisUtterance(" ");u.volume=0;speechSynthesis.speak(u);}catch(e){}document.removeEventListener("pointerdown",unlock);}
+document.addEventListener("pointerdown",unlock,{once:true});})();
+</script></body>
 </html>
