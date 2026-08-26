@@ -1511,5 +1511,29 @@ function restoreProgress(){
 /* iOS语音解锁：首次触摸播放一个静音utterance */
 (function(){function unlock(){try{var u=new SpeechSynthesisUtterance(" ");u.volume=0;speechSynthesis.speak(u);}catch(e){}document.removeEventListener("pointerdown",unlock);}
 document.addEventListener("pointerdown",unlock,{once:true});})();
+
+/* ===== 自动备份提醒（每7天，防Safari清数据丢进度） ===== */
+(function(){
+  function daysSince(k){try{const v=localStorage.getItem(k);if(!v)return 999;return (Date.now()-new Date(v).getTime())/864e5;}catch(e){return 999}}
+  function hasData(){try{return (localStorage.getItem('jenny_daily_v1')||'').length>20||(localStorage.getItem('jenny_stickers')||'').length>10}catch(e){return false}}
+  // 备份时记录日期：包一层原函数
+  if(typeof backupProgress==='function'){
+    const _orig=backupProgress;
+    window.backupProgress=function(){_orig();try{localStorage.setItem('jenny_last_backup',new Date().toISOString())}catch(e){}};
+  }
+  setTimeout(function(){
+    if(!hasData())return;
+    if(daysSince('jenny_last_backup')<7)return;
+    if(daysSince('jenny_backup_remind')<1)return;
+    try{localStorage.setItem('jenny_backup_remind',new Date().toISOString())}catch(e){}
+    const p=document.createElement('div');
+    p.className='mermaid-popup';
+    p.innerHTML='<div class="mp-icon">🧜‍♀️💾</div><div class="mp-title">该备份进度啦！</div>'
+      +'<div class="mp-msg">为了保护你的贴纸和积分，每周备份一次最安全。<br>点下面按钮，把进度文件存到 iCloud 云盘就好啦！</div>'
+      +'<button class="mp-btn" onclick="backupProgress();this.parentNode.remove()">💾 一键备份</button>'
+      +'<button class="mp-btn" style="background:transparent;color:var(--text2);box-shadow:none" onclick="this.parentNode.remove()">下次再说</button>';
+    document.body.appendChild(p);
+  }, 4000);
+})();
 </script></body>
 </html>
