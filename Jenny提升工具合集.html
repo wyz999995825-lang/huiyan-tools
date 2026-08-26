@@ -237,6 +237,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
   .chest-area{width:100%;flex-direction:row;justify-content:center;gap:12px}
   .q-label{font-size:15px}
 }
+/* ===== 👩‍👧 妈妈看板 ===== */
+.pb-open{display:block;margin:12px auto 2px;background:none;border:1.5px dashed #9fd9d4;color:#5a9793;border-radius:999px;padding:7px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.pb-open:hover{background:#e6f7f5;color:#0a8a86;transform:scale(1.03)}
+.pb-top{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 4px}
+.pb-big{background:#fff;border:1.5px solid #d2ecf9;border-radius:14px;padding:10px 16px;font-size:14px;color:#146462}
+.pb-big b{font-size:20px;color:#0a8a86}
+.pb-h{color:#0a8a86;font-size:16px;margin:18px 0 8px}
+.pb-gridwrap{overflow-x:auto;background:#fff;border:1.5px solid #d2ecf9;border-radius:14px;padding:10px}
+.pb-grid{border-collapse:collapse;font-size:12px;min-width:560px}
+.pb-grid th{font-weight:700;color:#5a9793;padding:3px 4px;text-align:center;min-width:30px}
+.pb-grid th span{display:block;font-size:10px}
+.pb-grid td{border:1px solid #e6f4f2;text-align:center;padding:5px 3px;min-width:30px;height:26px;color:#146462;font-weight:700}
+.pb-grid td.pb-sub{text-align:left;white-space:nowrap;padding:5px 8px;border:none;font-weight:800}
+.pb-grid td.pb-some{background:#d9f2ef}
+.pb-grid td.pb-done{background:#0abab5;color:#fff;border-color:#0abab5}
+.pb-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.pb-card{background:#fff;border:1.5px solid #d2ecf9;border-radius:14px;padding:12px 14px}
+.pb-card-t{font-weight:800;color:#0a8a86;margin-bottom:6px}
+.pb-line{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#5a9793;padding:2px 0}
+.pb-line b{color:#146462;font-size:15px}
+.pb-note{margin-top:14px;font-size:12px;color:#8aa8a5}
 </style>
 </head>
 <body>
@@ -338,6 +359,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
         <div class="dash-badges" id="dashBadges"></div>
         <div class="dash-encourage" id="dashEncourage"></div>
         <div class="dash-recent" id="dashRecent"></div>
+        <button class="pb-open" onclick="openParent()" data-i18n="pb_btn">👩‍👧 妈妈看板 / Parent Board</button>
       </div>
 
       <h2 data-i18n="welcome">🐚 欢迎来到海洋学习乐园</h2>
@@ -435,6 +457,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
         <div class="qp-sub" style="flex:1;text-align:right" id="stkHint"></div>
       </div>
       <div class="stk-grid" id="stkGrid"></div>
+    </div>
+
+    <!-- 👩‍👧 妈妈看板视图（本机只读统计） -->
+    <div class="home" id="parentView" style="display:none">
+      <div id="pbBody"></div>
     </div>
 
     <iframe class="tool-frame" id="toolFrame" style="display:none"></iframe>
@@ -606,7 +633,8 @@ zh:{
   quest_row_title:'点击去做任务',
   backup_alert:'💾 已导出进度备份文件！\n（包含任务进度和贴纸收藏）\n建议存到 iCloud云盘，换设备时用"恢复"选这个文件即可。',
   restore_ok:'✅ 已恢复 {n} 项进度！',restore_bad:'❌ 这不是有效的进度备份文件',
-  backup_file:'慧眼进度备份_'
+  backup_file:'慧眼进度备份_',
+  pb_btn:'👩‍👧 妈妈看板 / Parent Board',pb_title:'妈妈看板'
 },
 en:{
   back:'← Back',info:'P2 · 7 Learning Tools',title:"Jenny's Ocean Learning World",
@@ -647,7 +675,8 @@ en:{
   quest_row_title:'Tap to do this quest',
   backup_alert:'💾 Progress backup exported!\n(Includes quest progress and sticker collection)\nSave it to iCloud Drive; use "Restore" on a new device.',
   restore_ok:'✅ Restored {n} items!',restore_bad:'❌ This is not a valid progress backup file',
-  backup_file:'huiyan_progress_backup_'
+  backup_file:'huiyan_progress_backup_',
+  pb_btn:'👩‍👧 Parent Board / 妈妈看板',pb_title:'Parent Board'
 }};
 function T(k){const d=I18N[LANG]||{};return d[k]!==undefined?d[k]:(I18N.zh[k]!==undefined?I18N.zh[k]:k)}
 function TF(k,n){return T(k).replace('{n}',n)}
@@ -660,9 +689,11 @@ function applyLang(){
   document.querySelectorAll('[data-i18n-title]').forEach(el=>{el.title=T(el.getAttribute('data-i18n-title'))});
   const lb=document.getElementById('langBtn');if(lb)lb.textContent=LANG==='zh'?'EN':'中';
   if(currentTool==='stickers')document.getElementById('topTitle').textContent='🎁 '+T('tool_stickers');
+  else if(currentTool==='parent')document.getElementById('topTitle').textContent='👩‍👧 '+T('pb_title');
   else if(currentTool&&nameMap[currentTool])document.getElementById('topTitle').textContent=nameMap[currentTool].title[LANG];
   else document.getElementById('topTitle').innerHTML='<span class="mascot">🧜‍♀️</span> '+T('title');
   renderMotivBar();renderDashboard();renderQuests();renderStickerBook();
+  if(currentTool==='parent')renderParentBoard();
 }
 
 /* ===== STICKERS:BEGIN（纯函数区，可独立测试） ===== */
@@ -956,14 +987,16 @@ let prevBadgeCount=0;
 
 function loadState(){try{const s=localStorage.getItem('jenny_wins');if(s)state=JSON.parse(s)}catch(e){}if(!state.wins)state.wins=[];if(!state.streak)state.streak=0;if(!state.bestStreak)state.bestStreak=0}
 function saveState(){try{localStorage.setItem('jenny_wins',JSON.stringify(state))}catch(e){}}
-function today(){return new Date().toISOString().slice(0,10)}
+/* 本地日期键（新加坡等时区在早上8点前用 toISOString 会拿到昨天，统一改用本地日期） */
+function localKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function today(){return localKey(new Date())}
 
 function calcStreak(){
   const dates=[...new Set(state.wins.map(w=>w.date))].sort().reverse();
   if(!dates.length){state.streak=0;return}
   const t=today();let streak=0;let check=new Date(t);
-  if(dates[0]===t){streak=1;check.setDate(check.getDate()-1);for(let i=1;i<dates.length;i++){if(dates[i]===check.toISOString().slice(0,10)){streak++;check.setDate(check.getDate()-1)}else break}}
-  else{const y=new Date(t);y.setDate(y.getDate()-1);if(dates[0]===y.toISOString().slice(0,10)){streak=1;check=new Date(dates[0]);check.setDate(check.getDate()-1);for(let i=1;i<dates.length;i++){if(dates[i]===check.toISOString().slice(0,10)){streak++;check.setDate(check.getDate()-1)}else break}}}
+  if(dates[0]===t){streak=1;check.setDate(check.getDate()-1);for(let i=1;i<dates.length;i++){if(dates[i]===localKey(check)){streak++;check.setDate(check.getDate()-1)}else break}}
+  else{const y=new Date(t);y.setDate(y.getDate()-1);if(dates[0]===localKey(y)){streak=1;check=new Date(dates[0]);check.setDate(check.getDate()-1);for(let i=1;i<dates.length;i++){if(dates[i]===localKey(check)){streak++;check.setDate(check.getDate()-1)}else break}}}
   state.streak=streak;if(streak>state.bestStreak)state.bestStreak=streak;
 }
 function earnedBadges(){return BADGES.filter(b=>b.type==='streak'?state.bestStreak>=b.val:state.wins.length>=b.need)}
@@ -991,7 +1024,7 @@ function renderDashboard(){
   document.getElementById('dashWeek').textContent=state.wins.filter(w=>new Date(w.date)>=weekAgo).length;
 
   const dayNames=LANG==='en'?['S','M','T','W','T','F','S']:['日','一','二','三','四','五','六'];const now=new Date();const dow=now.getDay();
-  let dots='';for(let i=0;i<7;i++){const d=new Date(now);d.setDate(d.getDate()-dow+i);const ds=d.toISOString().slice(0,10);const done=state.wins.some(w=>w.date===ds);const isToday=ds===today();dots+='<div class="dash-dot'+(done?' done':'')+(isToday?' today':'')+'">'+(done?'✓':dayNames[i])+'</div>'}
+  let dots='';for(let i=0;i<7;i++){const d=new Date(now);d.setDate(d.getDate()-dow+i);const ds=localKey(d);const done=state.wins.some(w=>w.date===ds);const isToday=ds===today();dots+='<div class="dash-dot'+(done?' done':'')+(isToday?' today':'')+'">'+(done?'✓':dayNames[i])+'</div>'}
   document.getElementById('dashWeekDots').innerHTML=dots;
 
   const earned=earnedBadges();
@@ -1101,7 +1134,7 @@ function todayCounts(){
 function allQuestsDone(c){c=c||todayCounts();return QUESTS.every(q=>c[q.key]>=q.goal)}
 function questStreak(){
   const d=dailyData();let s=0;const day=new Date();
-  for(;;){const k=day.toISOString().slice(0,10);const c=d[k]||{};
+  for(;;){const k=localKey(day);const c=d[k]||{};
     if(QUESTS.every(q=>(+c[q.key]||0)>=q.goal)){s++;day.setDate(day.getDate()-1)}else break;
     if(s>3650)break;
   }
@@ -1278,11 +1311,127 @@ function checkDaily(){
   renderQuests(stampKey?{stampKey}:{});
 }
 
+/* ===== postMessage 桥（file:// 双击打开时 iframe 与主页的 localStorage 相互隔离，
+       工具会把今日计数/统计用 postMessage 发上来，这里 max 合并，绝不丢数据） ===== */
+const BRIDGE_SUBJECTS=['math','science','reading','chinese','oral'];
+function mergeDaily(date,subject,count){
+  if(typeof date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(date))return false;
+  if(BRIDGE_SUBJECTS.indexOf(subject)<0)return false;
+  count=Math.max(0,Math.floor(+count||0));
+  if(!count)return false;
+  const all=dailyData();
+  if(!all[date])all[date]={math:0,science:0,reading:0,chinese:0,oral:0};
+  if((+all[date][subject]||0)>=count)return false;   /* max 合并：只增不减 */
+  all[date][subject]=count;
+  try{localStorage.setItem('jenny_daily_v1',JSON.stringify(all))}catch(e){}
+  return true;
+}
+function parentStats(){try{const s=JSON.parse(localStorage.getItem('jenny_parent_stats'));return s&&typeof s==='object'?s:{}}catch(e){return{}}}
+function mergeStats(date,subject,patch){
+  if(typeof date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(date))return false;
+  if(BRIDGE_SUBJECTS.indexOf(subject)<0||!patch||typeof patch!=='object')return false;
+  const all=parentStats();
+  if(!all[date])all[date]={};
+  const cur=all[date][subject]||{};
+  let changed=false;
+  ['xp','correct','answered','fixed'].forEach(k=>{
+    if(typeof patch[k]==='number'&&isFinite(patch[k])){
+      const v=Math.max(0,Math.floor(patch[k]));
+      if(!(k in cur)||v>cur[k]){cur[k]=Math.max(v,+cur[k]||0);changed=true}
+    }
+  });
+  if(!changed)return false;
+  all[date][subject]=cur;
+  try{localStorage.setItem('jenny_parent_stats',JSON.stringify(all))}catch(e){}
+  return true;
+}
+window.addEventListener('message',function(ev){
+  const m=ev&&ev.data;
+  if(!m||typeof m!=='object')return;
+  try{
+    if(m.t==='jenny_daily'){
+      mergeDaily(m.date,m.subject,m.count);
+      checkDaily();
+    }else if(m.t==='jenny_stats'){
+      mergeStats(m.date,m.subject,m.statsPatch);
+      if(currentTool==='parent')renderParentBoard();
+    }
+  }catch(e){}
+});
+
+/* ===== 👩‍👧 妈妈看板（本机只读统计，无需密码） ===== */
+function openParent(){
+  hideAllViews();
+  document.getElementById('toolFrame').src='';
+  document.getElementById('parentView').style.display='block';
+  currentTool='parent';
+  document.getElementById('topTitle').textContent='👩‍👧 '+T('pb_title');
+  items.forEach(i=>i.classList.remove('active'));
+  document.querySelector('.back-btn').style.display='inline-block';
+  renderParentBoard();
+}
+function renderParentBoard(){
+  const el=document.getElementById('pbBody');if(!el)return;
+  const zh=LANG==='zh';
+  const d=dailyData(),ps=parentStats();
+  const now=new Date(),days=[];
+  for(let i=13;i>=0;i--){const x=new Date(now);x.setDate(x.getDate()-i);days.push(localKey(x))}
+  /* 14 天网格 */
+  let grid='<table class="pb-grid"><tr><th></th>';
+  days.forEach(k=>{
+    const c=d[k]||{};
+    const all=QUESTS.every(q=>(+c[q.key]||0)>=q.goal);
+    grid+='<th>'+(all?'⭐':'')+'<span>'+k.slice(5).replace('-','/')+'</span></th>';
+  });
+  grid+='</tr>';
+  QUESTS.forEach(q=>{
+    grid+='<tr><td class="pb-sub">'+q.icon+' '+q.label[LANG]+'</td>';
+    days.forEach(k=>{
+      const n=+((d[k]||{})[q.key])||0;
+      const cls=n>=q.goal?'pb-done':(n>0?'pb-some':'');
+      grid+='<td class="'+cls+'">'+(n||'')+'</td>';
+    });
+    grid+='</tr>';
+  });
+  grid+='</table>';
+  /* 每科周汇总 + 趋势 + 家长统计（来自 jenny_parent_stats，缺数据显示 —） */
+  function sumRange(key,from,to){let s=0;for(let i=from;i<=to;i++){const x=new Date(now);x.setDate(x.getDate()-i);s+=+((d[localKey(x)]||{})[key])||0}return s}
+  let wk='<div class="pb-cards">';
+  QUESTS.forEach(q=>{
+    const cw=sumRange(q.key,0,6),pw=sumRange(q.key,7,13);
+    const arrow=cw>pw?'<span style="color:#2b9268">▲</span>':cw<pw?'<span style="color:#ff8a7a">▼</span>':'<span style="color:#7aa8a5">–</span>';
+    let st=null;
+    Object.keys(ps).sort().forEach(k=>{if(ps[k]&&ps[k][q.key])st=ps[k][q.key]});
+    const acc=(st&&typeof st.correct==='number'&&st.answered>0)?Math.round(st.correct/st.answered*100)+'%':'—';
+    const xp=(st&&typeof st.xp==='number')?st.xp:'—';
+    const fx=(st&&typeof st.fixed==='number')?st.fixed:'—';
+    wk+='<div class="pb-card"><div class="pb-card-t">'+q.icon+' '+q.label[LANG]+'</div>'
+      +'<div class="pb-line"><span>'+(zh?'本周完成':'This week')+'</span><b>'+cw+'</b>&nbsp;'+arrow+'&nbsp;<small style="color:#8aa8a5">('+(zh?'上周 ':'prev ')+pw+')</small></div>'
+      +'<div class="pb-line"><span>'+(zh?'累计正确率':'Accuracy (all-time)')+'</span><b>'+acc+'</b></div>'
+      +'<div class="pb-line"><span>'+(zh?'累计 XP':'Total XP')+'</span><b>'+xp+'</b></div>'
+      +'<div class="pb-line"><span>'+(zh?'已修补错题':'Mistakes fixed')+'</span><b>'+fx+'</b></div></div>';
+  });
+  wk+='</div>';
+  calcStreak();
+  const topline='<div class="pb-top">'
+    +'<div class="pb-big">🔥 <b>'+questStreak()+'</b> '+(zh?'天任务全勤连击':'day full-quest streak')+'</div>'
+    +'<div class="pb-big">🎁 <b>'+Object.keys(stkState().owned).length+'</b>/40 '+(zh?'贴纸':'stickers')+'</div>'
+    +'<div class="pb-big">🏆 <b>'+(state.bestStreak||0)+'</b> '+(zh?'最佳打卡连击':'best check-in streak')+'</div></div>';
+  el.innerHTML='<h2 style="margin-top:0">👩‍👧 '+T('pb_title')+'</h2>'
+    +topline
+    +'<h3 class="pb-h">'+(zh?'最近 14 天完成情况（⭐ = 当日任务全勤）':'Last 14 days (⭐ = all quests done)')+'</h3>'
+    +'<div class="pb-gridwrap">'+grid+'</div>'
+    +'<h3 class="pb-h">'+(zh?'各科一周概览':'Weekly overview by subject')+'</h3>'
+    +wk
+    +'<div class="pb-note">'+(zh?'📌 数据保存在本设备（按设备分别统计）· 只读，无需密码。':'📌 Data lives on this device (per-device stats) · read-only, no password needed.')+'</div>';
+}
+
 /* ===== 视图切换 ===== */
 const items=document.querySelectorAll('.sidebar .item');
 function hideAllViews(){
   document.getElementById('homeView').style.display='none';
   document.getElementById('stickerView').style.display='none';
+  const pv=document.getElementById('parentView');if(pv)pv.style.display='none';
   const f=document.getElementById('toolFrame');f.style.display='none';
 }
 function load(url,title,el){

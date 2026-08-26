@@ -317,7 +317,9 @@ function speak(text,lang){
 
 /* ============ daily quota (cross-tool convention) ============ */
 const DKEY="jenny_daily_v1", DGOAL=10;
-function today(){ return new Date().toISOString().slice(0,10); }
+/* 本地日期键（toISOString 是 UTC，新加坡早上8点前会拿到昨天，全套工具统一用本地日期） */
+function localDayKey(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function today(){ return localDayKey(new Date()); }
 function dailyAll(){ try{ if(typeof localStorage==="undefined") return {}; return JSON.parse(localStorage.getItem(DKEY))||{}; }catch(e){ return {}; } }
 function dailyMath(){ const d=dailyAll()[today()]; return d?(d.math||0):0; }
 function bumpDaily(){
@@ -1742,7 +1744,7 @@ function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} 
 function bumpStreak(){
   const t=today();
   if(S.lastDay===t) return;
-  const y=new Date(Date.now()-86400000).toISOString().slice(0,10);
+  const y=localDayKey(new Date(Date.now()-86400000));
   S.streak = (S.lastDay===y) ? S.streak+1 : 1;
   S.lastDay=t;
 }
@@ -2110,6 +2112,104 @@ if(typeof window!=="undefined" && typeof document!=="undefined" && typeof docume
 if(typeof module!=="undefined" && module.exports){
   module.exports={TOPICS, mkOpts, fmtTime, fmtMoney, sudCount, sudHint, dedSolutions, dedSatisfy, UNITQ};
 }
+</script>
+<script>
+/* ===== Jenny v3.1 桥接层（纯附加，不改任何已有存储结构） =====
+   1) 今日计数芯片 + 每日目标一次性庆祝（新增键 jenny_goalcele_math 只存日期标记）
+   2) 专注计时（番茄式）：每15分钟轻声两音+语音提醒，跟随全局静音 jenny_tts_on
+   3) postMessage 桥：file:// 打开时 iframe 与合集主页的 localStorage 互相隔离，
+      这里把今日计数/统计发给主页做 max 合并，保证任务清单照样打勾 */
+(function(){
+"use strict";
+var SUBJECT="math", GOAL=10, ZH=false, CELE_KEY="jenny_goalcele_math";
+function pad2(n){return (n<10?"0":"")+n}
+function jToday(){var d=new Date();return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())}
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function soundOn(){return lsGet("jenny_tts_on")!=="0"}
+function dailyCount(){try{var d=JSON.parse(lsGet("jenny_daily_v1"))||{};var t=d[jToday()];return t?Math.max(0,Math.floor(+t[SUBJECT]||0)):0}catch(e){return 0}}
+function toolStats(){try{var S=JSON.parse(lsGet("jenny_math_reef"));if(!S)return null;var c=0,m=S.mastery||{};for(var k in m)c+=(m[k]&&+m[k].c)||0;return {xp:Math.max(0,+S.xp||0),correct:c,answered:Math.max(0,+S.totalAns||0),fixed:Math.max(0,+S.fixedCount||0)}}catch(e){return null}}
+/* --- 独立小音效（全局静音同样生效） --- */
+var _jac=null;
+function jTone(f,at,dur,vol){if(!soundOn())return;try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;if(!_jac)_jac=new C();if(_jac.state==="suspended")_jac.resume();var c=_jac,o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(0.0001,c.currentTime+at);g.gain.exponentialRampToValueAtTime(vol||0.12,c.currentTime+at+0.02);g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+at+dur);o.connect(g);g.connect(c.destination);o.start(c.currentTime+at);o.stop(c.currentTime+at+dur+0.06)}catch(e){}}
+function jChime(){jTone(880,0,0.18);jTone(1318.5,0.16,0.3)}
+function jCeleChime(){[523.25,659.25,783.99,1046.5,1318.5].forEach(function(f,i){jTone(f,i*0.09,0.28,0.13)})}
+function jSpeak(text){if(!soundOn())return;try{if(!("speechSynthesis" in window))return;var u=new SpeechSynthesisUtterance(text);u.lang=ZH?"zh-CN":"en-US";try{var vs=speechSynthesis.getVoices()||[],best=null,bs=-1;for(var i=0;i<vs.length;i++){var v=vs[i];if(!v||!v.lang)continue;var vl=String(v.lang).toLowerCase();if(vl.indexOf(ZH?"zh":"en")!==0)continue;var sc=(/premium/i.test(v.name||"")?4:0)+(/enhanced|\u589e\u5f3a/i.test(v.name||"")?3:0)+(/siri/i.test(v.name||"")?2:0)+(v.localService?1:0);if(sc>bs){bs=sc;best=v}}if(ZH&&!best)return;if(best)u.voice=best}catch(e){}u.rate=0.95;u.pitch=1.05;speechSynthesis.speak(u)}catch(e){}}
+function jConfetti(){try{if(typeof fireworks==="function"){fireworks();return}}catch(e){}try{if(typeof confettiBurst==="function"){confettiBurst();return}}catch(e){}try{if(typeof confetti==="function"){confetti();return}}catch(e){}try{if(typeof miniConfetti==="function")miniConfetti()}catch(e){}}
+/* --- 芯片 UI（小、淡、不挡内容、不可点击） --- */
+var box=null,cnt=null,tim=null;
+function ensureChips(){
+  if(box||typeof document==="undefined"||!document.body)return;
+  try{
+    var st=document.createElement("style");
+    st.textContent="#jennyChips{position:fixed;top:6px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;gap:6px;pointer-events:none;align-items:center}"
+      +"#jennyChips .jc{background:rgba(255,255,255,.93);border:1.5px solid #9fd9d4;border-radius:999px;padding:2px 12px;font-size:12px;font-weight:800;color:#0a8a86;box-shadow:0 2px 8px rgba(10,138,134,.14);white-space:nowrap}"
+      +"#jennyChips .jt{color:#7aa8a5;font-weight:650;border-color:#cfe8e5;background:rgba(255,255,255,.82)}"
+      +"@keyframes jcPulse{0%{transform:scale(1)}40%{transform:scale(1.2)}100%{transform:scale(1)}}"
+      +"#jennyChips .pulse{animation:jcPulse .7s ease 3}";
+    document.head.appendChild(st);
+    box=document.createElement("div");box.id="jennyChips";
+    cnt=document.createElement("div");cnt.className="jc";
+    tim=document.createElement("div");tim.className="jc jt";
+    box.appendChild(cnt);box.appendChild(tim);
+    document.body.appendChild(box);
+  }catch(e){}
+}
+function pulse(el){if(!el||!el.classList)return;try{el.classList.remove("pulse");void el.offsetWidth;el.classList.add("pulse")}catch(e){}}
+function chipText(n){
+  if(n<GOAL)return ZH?("\ud83d\udcdd \u4eca\u65e5 "+n+"/"+GOAL):("\ud83d\udcdd Today: "+n+"/"+GOAL);
+  return ZH?("\ud83c\udf1f \u76ee\u6807\u5b8c\u6210 \u00b7 \u4eca\u65e5 "+n):("\ud83c\udf1f Goal done \u00b7 "+n+" today");
+}
+/* --- 每日目标庆祝（同一天只放一次，标记存本工具自己的键里） --- */
+function maybeCelebrate(n){
+  if(n<GOAL)return;
+  var t=jToday();
+  if(lsGet(CELE_KEY)===t)return;
+  lsSet(CELE_KEY,t);
+  jCeleChime();jConfetti();pulse(cnt);
+  jSpeak(ZH?"\u4eca\u65e5\u76ee\u6807\u5b8c\u6210\uff01\u4f60\u53ef\u4ee5\u7ee7\u7eed\u505a\uff0c\u8d62\u66f4\u591a\u79ef\u5206\uff01":"Daily goal complete! Keep going to earn bonus points!");
+}
+/* --- postMessage 同步（只在被 iframe 嵌入时发送；try/catch 保护） --- */
+function postMsg(m){try{if(typeof window==="undefined"||!window.parent||window.parent===window)return;window.parent.postMessage(m,"*")}catch(e){}}
+var lastDaily=-1,lastStatsStr="",lastStatsAt=0;
+function syncOut(n){
+  if(n!==lastDaily){lastDaily=n;postMsg({t:"jenny_daily",subject:SUBJECT,date:jToday(),count:n})}
+  var st=toolStats();
+  if(st){
+    var s=JSON.stringify(st),now=Date.now();
+    if(s!==lastStatsStr&&now-lastStatsAt>=2000){lastStatsStr=s;lastStatsAt=now;postMsg({t:"jenny_stats",subject:SUBJECT,date:jToday(),statsPatch:st})}
+  }
+}
+/* --- 专注计时（本次打开累计，不存盘、不打扰） --- */
+var t0=Date.now(),lastMile=0;
+function fmtSec(s){var m=Math.floor(s/60);return pad2(m)+":"+pad2(s%60)}
+function focusMsg(min){
+  if(ZH){
+    if(min===15)return "\u5df2\u7ecf\u4e13\u6ce815\u5206\u949f\u5566\uff0c\u4f60\u771f\u68d2\uff01\u559d\u53e3\u6c34\uff0c\u4f11\u606f\u4e00\u4e0b\u773c\u775b\u518d\u7ee7\u7eed\u5427\uff01";
+    if(min===30)return "\u54c7\uff0c\u8fde\u7eed\u4e13\u6ce830\u5206\u949f\u5566\uff0c\u8d85\u7ea7\u4e86\u4e0d\u8d77\uff01\u7ad9\u8d77\u6765\u4f38\u5c55\u4e00\u4e0b\u518d\u7ee7\u7eed\u5427\uff01";
+    if(min===45)return "\u4f60\u5df2\u7ecf\u4e13\u6ce845\u5206\u949f\u5566\uff0c\u662f\u4e13\u6ce8\u5c0f\u51a0\u519b\uff01\u8bb0\u5f97\u8ba9\u773c\u775b\u4f11\u606f\u4e00\u4e0b\u54e6\uff01";
+    return "\u5df2\u7ecf\u4e13\u6ce8"+min+"\u5206\u949f\u5566\uff0c\u592a\u5389\u5bb3\u4e86\uff01\u4f11\u606f\u4e00\u4e0b\u518d\u7ee7\u7eed\u5427\uff01";
+  }
+  if(min===15)return "You have focused for 15 minutes. Amazing! Take a sip of water and keep going!";
+  if(min===30)return "Wow, 30 minutes of focus! Incredible! Stand up and stretch, then keep going!";
+  if(min===45)return "45 minutes of focus. You are a focus champion! Remember to rest your eyes!";
+  return min+" minutes of focus. Amazing! Take a little break, then keep going!";
+}
+function tick(){
+  ensureChips();
+  var n=dailyCount();
+  if(cnt)cnt.textContent=chipText(n);
+  maybeCelebrate(n);
+  syncOut(n);
+  var sec=Math.max(0,Math.floor((Date.now()-t0)/1000));
+  if(tim)tim.textContent="\u23f1 "+fmtSec(sec);
+  var mile=Math.floor(sec/900);
+  if(mile>lastMile){lastMile=mile;jChime();pulse(tim);jSpeak(focusMsg(mile*15))}
+}
+try{window.__jennyBridgeTick=tick}catch(e){}
+tick();
+try{setInterval(tick,1000)}catch(e){}
+})();
 </script>
 <script>
 /* iOS语音解锁：首次触摸播放一个静音utterance */
