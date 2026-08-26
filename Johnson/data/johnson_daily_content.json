@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-26T19:00:00+08:00",
+  "policy": "append-only-stable-ids",
+  "packs": [
+    {
+      "date": "2026-08-26",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-08-26-001",
+          "title": "The Map That Refused to Stay Dry",
+          "meta": "PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>During the school camp, Arun was chosen to lead his group along a marked forest trail. He had checked the map twice and liked the reassuring weight of the compass in his pocket. Halfway through the walk, a sudden shower swept across the trees. By the time the group reached a shelter, rain had blurred one corner of the map.</p><p>Arun wanted to continue before another team caught up. Mei noticed that the damaged section covered the next junction. She suggested comparing the visible landmarks with the emergency route card fixed inside the shelter. Arun hesitated. Stopping felt like falling behind, yet guessing would place everyone else inside his decision.</p><p>The group spent four minutes matching a stream, a footbridge and the direction of the slope. They discovered that the path Arun first chose would have led away from the campsite. When they finally arrived, they were not the first team back. However, the instructor praised the group for using evidence and checking a risky assumption. Arun folded the damp map carefully. For once, arriving later did not feel like losing.</p>",
+          "q": "Why did arriving later not feel like losing to Arun?",
+          "opts": [
+            "He learnt that the instructor always rewards the last team.",
+            "He realised that checking evidence and keeping the group safe mattered more than being the first team back.",
+            "He discovered that the other teams had used the wrong trail.",
+            "He was pleased because the damaged map no longer belonged to him."
+          ],
+          "ans": 1,
+          "model": "Arriving later did not feel like losing because Arun realised that checking the evidence and protecting his group from a risky guess were more important than returning first.",
+          "evidence": "The instructor praised the group for using evidence and checking a risky assumption.",
+          "marks": [
+            "Meaning point: explains Arun's changed view of success.",
+            "Support point: links the delay to checking evidence and keeping the group safe."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-08-26-001",
+          "title": "Pupils Map Cooler Walking Routes",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A group of Primary 5 pupils tested how shade changes the experience of walking near their school. They divided two routes into short sections and recorded the air temperature, surface temperature and amount of shade at the same times on three afternoons.</p><p>The pupils expected the shortest route to feel most comfortable. Their measurements showed a different pattern. A slightly longer path with mature trees had cooler ground surfaces and more continuous shade. The team also interviewed older residents, who explained that benches and safe road crossings affected which route they would actually use.</p><p>The pupils did not declare one route the winner. Instead, they created a map showing different needs: a faster route, a shadier route and a route with more resting points. Their teacher said the project demonstrated why a useful recommendation should combine measurements with the experiences of the people affected.</p>",
+          "q": "Why did the pupils create a map with several route choices instead of naming one winning route?",
+          "opts": [
+            "They could not agree on any of their temperature readings.",
+            "They recognised that different walkers value speed, shade, resting points and safe crossings differently.",
+            "Their teacher did not allow them to compare routes.",
+            "They wanted residents to avoid every route near the school."
+          ],
+          "ans": 1,
+          "model": "The pupils created several route choices because the best route depends on a walker's needs, such as speed, shade, places to rest and safe crossings.",
+          "evidence": "The project combined measurements with the experiences of the people affected.",
+          "marks": [
+            "Meaning point: identifies that different walkers have different needs.",
+            "Support point: names relevant route factors such as speed, shade, rests or crossings."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-logic-2026-08-26-001",
+          "topic": "logic",
+          "title": "Logic Lab · Coral Gates",
+          "tag": "Test every condition",
+          "q": "Four coral gates J, K, L and M form a row. K is immediately after J. L is after M. M is not first. Which order is possible?",
+          "opts": ["J, K, M, L", "M, J, K, L", "J, M, K, L", "L, J, K, M"],
+          "ans": 0,
+          "model": "J, K, M, L is possible. K is immediately after J, L is after M, and M is not first.",
+          "steps": ["Underline the three conditions.", "Reject an option as soon as one condition fails.", "Check the surviving option against all three conditions again."],
+          "marks": ["Method mark: checks each option against all three conditions.", "Answer mark: selects J, K, M, L."]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-electricity-2026-08-26-001",
+          "topic": "electricity",
+          "level": "P5 CORE · JOHNSON PRIORITY",
+          "title": "Electrical Diagrams · Open Switch",
+          "q": "A circuit has a working cell and bulb, but the switch is open. Which is the best complete explanation for why the bulb does not light?",
+          "opts": ["The open switch stores all the current.", "The open switch creates a gap, making the circuit incomplete, so electric current cannot flow through the bulb.", "The cell loses all its energy whenever a switch opens.", "The bulb needs two switches before current can flow."],
+          "ans": 1,
+          "model": "The open switch creates a gap, making the circuit incomplete. Therefore, electric current cannot flow through the bulb and it does not light.",
+          "steps": ["Locate the gap at the switch.", "State that the circuit is incomplete.", "Link the incomplete path to no current through the bulb."],
+          "marks": ["Science point: identifies the open switch as a gap that makes the circuit incomplete.", "Evidence link: explains that current cannot flow through the bulb, so it does not light."]
+        },
+        {
+          "id": "science-p5-heat-2026-08-26-001",
+          "topic": "heat",
+          "level": "P5 FOUNDATION REPAIR · JOHNSON PRIORITY",
+          "title": "Heat Energy · Spoon Handles",
+          "q": "A metal spoon and a wooden spoon are placed in hot soup. Why does the metal handle become warm sooner?",
+          "opts": ["Metal creates heat when it touches soup.", "Metal is a better thermal conductor, so heat is transferred from the hotter soup to the cooler handle faster.", "Wood sends coldness into the soup.", "The metal spoon must have started at a higher temperature."],
+          "ans": 1,
+          "model": "Metal is a better thermal conductor than wood, so heat is transferred from the hotter soup through the metal spoon to its cooler handle faster.",
+          "steps": ["Identify the hotter region: the soup.", "State that heat moves from hotter to colder regions.", "Compare the materials: metal conducts heat faster than wood."],
+          "marks": ["Science point: states that metal is a better thermal conductor than wood.", "Evidence link: explains that heat reaches the cooler metal handle faster."]
+        }
+      ]
+    }
+  ]
+}
