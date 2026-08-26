@@ -245,36 +245,37 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
 <div class="bubbles" id="bubbles"></div>
 
 <div class="topbar">
-  <button class="back-btn" onclick="goHome()">← 返回</button>
+  <button class="back-btn" onclick="goHome()" data-i18n="back">← 返回</button>
   <h1 id="topTitle"><span class="mascot">🧜‍♀️</span> Jenny 的海洋学习乐园</h1>
-  <span class="info">P2 · 7 个学习工具</span>
+  <span class="info" data-i18n="info">P2 · 7 个学习工具</span>
   <span style="margin-left:auto;display:flex;gap:6px">
-    <button class="tb-btn" id="ttsBtn" onclick="toggleTTS()" title="朗读开关">🔊</button>
-    <button class="tb-btn" onclick="backupProgress()">💾 备份进度</button>
-    <button class="tb-btn" onclick="restoreProgress()">📥 恢复</button>
+    <button class="tb-btn" id="ttsBtn" onclick="toggleTTS()" title="朗读开关" data-i18n-title="tts_title">🔊</button>
+    <button class="tb-btn" id="langBtn" onclick="toggleLang()" title="中 / EN" style="min-width:46px">EN</button>
+    <button class="tb-btn" onclick="backupProgress()" data-i18n="backup_btn">💾 备份进度</button>
+    <button class="tb-btn" onclick="restoreProgress()" data-i18n="restore_btn">📥 恢复</button>
   </span>
 </div>
 
 <!-- 全局激励栏 -->
 <div class="motiv-bar" id="motivBar" onclick="openQuickModal()">
-  <div class="mb-streak"><span class="fire" id="mbFire">💤</span><span id="mbStreak">0</span>天</div>
-  <div class="mb-stat"><span id="mbTotal" class="n">0</span> 个成就</div>
-  <div class="mb-stat">🎁 <span id="mbStk" class="n">0</span>/40 贴纸</div>
+  <div class="mb-streak"><span class="fire" id="mbFire">💤</span><span id="mbStreak">0</span><span data-i18n="days_unit">天</span></div>
+  <div class="mb-stat"><span id="mbTotal" class="n">0</span>&nbsp;<span data-i18n="wins_unit">个成就</span></div>
+  <div class="mb-stat">🎁 <span id="mbStk" class="n">0</span>/40&nbsp;<span data-i18n="stickers_unit">贴纸</span></div>
   <div class="mb-badges" id="mbBadges"></div>
   <div class="mb-msg" id="mbMsg"></div>
-  <button class="mb-add" onclick="event.stopPropagation();openQuickModal()">+ 记录小成功</button>
+  <button class="mb-add" onclick="event.stopPropagation();openQuickModal()" data-i18n="record_btn">+ 记录小成功</button>
 </div>
 
 <!-- 快速记录弹窗 -->
 <div class="quick-modal-overlay" id="qmOverlay" onclick="if(event.target===this)closeModal()">
   <div class="quick-modal">
-    <div class="qm-title">🌊 记录今天的小成功</div>
+    <div class="qm-title" data-i18n="qm_title">🌊 记录今天的小成功</div>
     <div class="qm-cats" id="qmCats"></div>
     <div class="qm-quicks" id="qmQuicks"></div>
-    <input class="qm-input" id="qmInput" placeholder="写下你的小成功..." onkeydown="if(event.key==='Enter')submitWin()" />
+    <input class="qm-input" id="qmInput" placeholder="写下你的小成功..." data-i18n-ph="qm_ph" onkeydown="if(event.key==='Enter')submitWin()" />
     <div class="qm-btns">
-      <button class="qm-submit" onclick="submitWin()">记录 🌟</button>
-      <button class="qm-cancel" onclick="closeModal()">取消</button>
+      <button class="qm-submit" onclick="submitWin()" data-i18n="qm_submit">记录 🌟</button>
+      <button class="qm-cancel" onclick="closeModal()" data-i18n="qm_cancel">取消</button>
     </div>
   </div>
 </div>
@@ -286,7 +287,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
     <div class="rv-name" id="rvName"></div>
     <div class="rv-rar" id="rvRar"></div>
     <div class="rv-msg" id="rvMsg"></div>
-    <button class="rv-btn" onclick="closeReveal()">收进收藏册 🎁</button>
+    <button class="rv-btn" onclick="closeReveal()" data-i18n="rv_keep">收进收藏册 🎁</button>
   </div>
 </div>
 
@@ -297,7 +298,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
     <div class="rv-name" id="sbName"></div>
     <div class="rv-rar" id="sbRar"></div>
     <div class="rv-msg" id="sbDate"></div>
-    <button class="rv-btn" onclick="document.getElementById('stkBigOverlay').classList.remove('show')">好耶！</button>
+    <button class="rv-btn" onclick="document.getElementById('stkBigOverlay').classList.remove('show')" data-i18n="yay">好耶！</button>
   </div>
 </div>
 
@@ -309,8 +310,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
       <!-- ⭐ 今日任务清单（核心） -->
       <div class="quest-panel">
         <div class="qp-head">
-          <span class="qp-title">🗺️ 今日任务清单</span>
-          <span class="qp-sub" id="qpSub">全部打勾就能开出神秘贴纸盲盒哦！</span>
+          <span class="qp-title" data-i18n="qp_title">🗺️ 今日任务清单</span>
+          <span class="qp-sub" id="qpSub" data-i18n="qp_sub">全部打勾就能开出神秘贴纸盲盒哦！</span>
         </div>
         <div class="qp-body">
           <div class="q-rows" id="qRows"></div>
@@ -320,17 +321,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
 
       <!-- 潜水日志 -->
       <div class="dash" id="dashboard">
-        <div class="dash-title">🤿 潜水日志 · Jenny 的深海探险记录</div>
+        <div class="dash-title" data-i18n="dash_title">🤿 潜水日志 · Jenny 的深海探险记录</div>
         <div class="dash-top">
           <div class="dash-streak">
             <div class="ds-icon" id="dashIcon">💤</div>
-            <div><div class="ds-num" id="dashStreak">0</div><div class="ds-label">天连续潜水</div></div>
+            <div><div class="ds-num" id="dashStreak">0</div><div class="ds-label" data-i18n="streak_label">天连续潜水</div></div>
           </div>
           <div class="dash-stats">
-            <div class="dash-stat"><div class="ds-n" id="dashTotal">0</div><div class="ds-l">总成就</div></div>
-            <div class="dash-stat"><div class="ds-n" id="dashWeek">0</div><div class="ds-l">本周</div></div>
-            <div class="dash-stat"><div class="ds-n" id="dashBest">0</div><div class="ds-l">最佳连击</div></div>
-            <div class="dash-stat"><div class="ds-n" id="dashStk">0</div><div class="ds-l">贴纸</div></div>
+            <div class="dash-stat"><div class="ds-n" id="dashTotal">0</div><div class="ds-l" data-i18n="stat_total">总成就</div></div>
+            <div class="dash-stat"><div class="ds-n" id="dashWeek">0</div><div class="ds-l" data-i18n="stat_week">本周</div></div>
+            <div class="dash-stat"><div class="ds-n" id="dashBest">0</div><div class="ds-l" data-i18n="stat_best">最佳连击</div></div>
+            <div class="dash-stat"><div class="ds-n" id="dashStk">0</div><div class="ds-l" data-i18n="stat_stk">贴纸</div></div>
           </div>
           <div class="dash-week" id="dashWeekDots"></div>
         </div>
@@ -339,82 +340,82 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
         <div class="dash-recent" id="dashRecent"></div>
       </div>
 
-      <h2>🐚 欢迎来到海洋学习乐园</h2>
-      <p class="sub">P2 · 7 个学习工具 · 点一个小岛，出发探险咯！</p>
+      <h2 data-i18n="welcome">🐚 欢迎来到海洋学习乐园</h2>
+      <p class="sub" data-i18n="welcome_sub">P2 · 7 个学习工具 · 点一个小岛，出发探险咯！</p>
 
       <svg class="wave-divider" viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C150,40 300,0 450,20 C600,40 750,0 900,20 C1050,40 1150,10 1200,20 L1200,40 L0,40 Z" fill="#aed9f7" opacity="0.55"/><path d="M0,26 C150,10 350,38 550,24 C750,10 950,38 1200,24 L1200,40 L0,40 Z" fill="#62b5e5" opacity="0.35"/></svg>
 
       <div class="subject-sec">
-        <div class="subject-title">🧮 Maths 数学</div>
+        <div class="subject-title" data-i18n="subj_math">🧮 Maths 数学</div>
         <div class="grid">
           <div class="card" onclick="loadByName('mathreef')">
             <div class="c-icon">🐬</div>
-            <div class="c-title">Math Master Reef <span class="tag tag-new">NEW</span></div>
-            <div class="c-desc">跟着小海豚在珊瑚礁里闯关练数学，一步一步变成数学小高手！</div>
+            <div class="c-title"><span data-i18n="tool_mathreef">Math Master Reef</span> <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc" data-i18n="desc_mathreef">跟着小海豚在珊瑚礁里闯关练数学，一步一步变成数学小高手！</div>
           </div>
           <div class="card" onclick="loadByName('animalmath')">
             <div class="c-icon">🦁</div>
-            <div class="c-title">动物王国数学</div>
-            <div class="c-desc">在动物世界里学数学！加减乘除、比大小，和可爱动物一起玩。</div>
+            <div class="c-title"><span data-i18n="tool_animalmath">动物王国数学</span></div>
+            <div class="c-desc" data-i18n="desc_animalmath">在动物世界里学数学！加减乘除、比大小，和可爱动物一起玩。</div>
           </div>
         </div>
       </div>
 
       <div class="subject-sec">
-        <div class="subject-title">🔬 Science 科学</div>
+        <div class="subject-title" data-i18n="subj_sci">🔬 Science 科学</div>
         <div class="grid">
           <div class="card" onclick="loadByName('science')">
             <div class="c-icon">🐠</div>
-            <div class="c-title">Science Explorer <span class="tag tag-new">NEW</span></div>
-            <div class="c-desc">和小丑鱼一起探索科学世界，做小实验、学新知识！</div>
+            <div class="c-title"><span data-i18n="tool_science">Science Explorer</span> <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc" data-i18n="desc_science">和小丑鱼一起探索科学世界，做小实验、学新知识！</div>
           </div>
         </div>
       </div>
 
       <div class="subject-sec">
-        <div class="subject-title">📖 English 英语</div>
+        <div class="subject-title" data-i18n="subj_eng">📖 English 英语</div>
         <div class="grid">
           <div class="card" onclick="loadByName('reading')">
             <div class="c-icon">🐢</div>
-            <div class="c-title">Reading Lagoon <span class="tag tag-new">NEW</span></div>
-            <div class="c-desc">跟着小海龟读故事、看新闻、学单词，英语阅读越来越棒！</div>
+            <div class="c-title"><span data-i18n="tool_reading">Reading Lagoon</span> <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc" data-i18n="desc_reading">跟着小海龟读故事、看新闻、学单词，英语阅读越来越棒！</div>
           </div>
         </div>
       </div>
 
       <div class="subject-sec">
-        <div class="subject-title">📕 华文</div>
+        <div class="subject-title" data-i18n="subj_chi">📕 华文</div>
         <div class="grid">
           <div class="card" onclick="loadByName('huawen')">
             <div class="c-icon">🪸</div>
-            <div class="c-title">华文珊瑚湾 <span class="tag tag-new">NEW</span></div>
-            <div class="c-desc">在美丽的珊瑚湾里认字、组词、读句子，华文越学越好玩！</div>
+            <div class="c-title"><span data-i18n="tool_huawen">华文珊瑚湾</span> <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc" data-i18n="desc_huawen">在美丽的珊瑚湾里认字、组词、读句子，华文越学越好玩！</div>
           </div>
           <div class="card" onclick="loadByName('kouyu')">
             <div class="c-icon">🐙</div>
-            <div class="c-title">口语小海豚 <span class="tag tag-new">NEW</span></div>
-            <div class="c-desc">开口说华文！和小海豚一起练口语，说得越来越流利。</div>
+            <div class="c-title"><span data-i18n="tool_kouyu">口语小海豚</span> <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc" data-i18n="desc_kouyu">开口说华文！和小海豚一起练口语，说得越来越流利。</div>
           </div>
         </div>
       </div>
 
       <div class="subject-sec">
-        <div class="subject-title">🧠 思维</div>
+        <div class="subject-title" data-i18n="subj_think">🧠 思维</div>
         <div class="grid">
           <div class="card" onclick="loadByName('mindmap')">
             <div class="c-icon">🕵️</div>
-            <div class="c-title">MindMap侦探社</div>
-            <div class="c-desc">化身小侦探，把知识整理成思维导图——分类、分层、连线、破案！</div>
+            <div class="c-title"><span data-i18n="tool_mindmap">MindMap侦探社</span></div>
+            <div class="c-desc" data-i18n="desc_mindmap">化身小侦探，把知识整理成思维导图——分类、分层、连线、破案！</div>
           </div>
         </div>
       </div>
 
       <div class="subject-sec">
-        <div class="subject-title">🌟 成长</div>
+        <div class="subject-title" data-i18n="subj_grow">🌟 成长</div>
         <div class="grid">
           <div class="card" onclick="loadByName('stickers')">
             <div class="c-icon">🎁</div>
-            <div class="c-title">贴纸收藏册</div>
+            <div class="c-title"><span data-i18n="tool_stickers">贴纸收藏册</span></div>
             <div class="c-desc" id="stkCardDesc">完成每日任务开盲盒，收集 40 款海洋小伙伴贴纸！</div>
           </div>
         </div>
@@ -424,12 +425,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
     <!-- 贴纸收藏册视图 -->
     <div class="home" id="stickerView" style="display:none">
       <div class="stk-head">
-        <div class="stk-count"><span id="stkOwnedN">0</span><small> / 40 已收集</small></div>
+        <div class="stk-count"><span id="stkOwnedN">0</span><small> / 40 <span data-i18n="collected_word">已收集</span></small></div>
         <div class="stk-legend">
-          <span style="border-color:#9fd9d4;color:#3a8a85">普通 <b id="lgC">0</b>/24</span>
-          <span style="border-color:#4aa8e8;color:#2d7bc0">稀有 <b id="lgR">0</b>/10</span>
-          <span style="border-color:#b07ae8;color:#8a4fc9">史诗 <b id="lgE">0</b>/5</span>
-          <span style="border-color:#f5b73c;color:#c08a10">传说 <b id="lgL">0</b>/1</span>
+          <span style="border-color:#9fd9d4;color:#3a8a85"><span data-i18n="rar_common">普通</span> <b id="lgC">0</b>/24</span>
+          <span style="border-color:#4aa8e8;color:#2d7bc0"><span data-i18n="rar_rare">稀有</span> <b id="lgR">0</b>/10</span>
+          <span style="border-color:#b07ae8;color:#8a4fc9"><span data-i18n="rar_epic">史诗</span> <b id="lgE">0</b>/5</span>
+          <span style="border-color:#f5b73c;color:#c08a10"><span data-i18n="rar_legendary">传说</span> <b id="lgL">0</b>/1</span>
         </div>
         <div class="qp-sub" style="flex:1;text-align:right" id="stkHint"></div>
       </div>
@@ -442,43 +443,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
   <!-- 控制栏（右侧） -->
   <div class="sidebar" id="sidebar">
     <div class="item active" onclick="goHome()">
-      <span class="emoji">🏠</span><span class="label">主页</span>
+      <span class="emoji">🏠</span><span class="label" data-i18n="sec_home">主页</span>
     </div>
-    <div class="sec">🧮 Maths</div>
-    <div class="item" onclick="load('Jenny/tools/Jenny_Math_Master_Reef.html','Math Master Reef',this)">
-      <span class="emoji">🐬</span><span class="label">Math Master Reef</span><span class="tag tag-new">NEW</span>
+    <div class="sec" data-i18n="sec_math">🧮 Maths</div>
+    <div class="item" data-tool="mathreef" onclick="loadByName('mathreef')">
+      <span class="emoji">🐬</span><span class="label" data-i18n="tool_mathreef">Math Master Reef</span><span class="tag tag-new">NEW</span>
     </div>
-    <div class="item" onclick="load('Jenny/tools/Jenny-Animal-Kingdom-Math.html','动物王国数学',this)">
-      <span class="emoji">🦁</span><span class="label">动物王国数学</span>
+    <div class="item" data-tool="animalmath" onclick="loadByName('animalmath')">
+      <span class="emoji">🦁</span><span class="label" data-i18n="tool_animalmath">动物王国数学</span>
     </div>
-    <div class="sec">🔬 Science</div>
-    <div class="item" onclick="load('Jenny/tools/Jenny_Science_Explorer.html','Science Explorer',this)">
-      <span class="emoji">🐠</span><span class="label">Science Explorer</span><span class="tag tag-new">NEW</span>
+    <div class="sec" data-i18n="sec_sci">🔬 Science</div>
+    <div class="item" data-tool="science" onclick="loadByName('science')">
+      <span class="emoji">🐠</span><span class="label" data-i18n="tool_science">Science Explorer</span><span class="tag tag-new">NEW</span>
     </div>
-    <div class="sec">📖 English</div>
-    <div class="item" onclick="load('Jenny/tools/Jenny_Reading_Lagoon.html','Reading Lagoon',this)">
-      <span class="emoji">🐢</span><span class="label">Reading Lagoon</span><span class="tag tag-new">NEW</span>
+    <div class="sec" data-i18n="sec_eng">📖 English</div>
+    <div class="item" data-tool="reading" onclick="loadByName('reading')">
+      <span class="emoji">🐢</span><span class="label" data-i18n="tool_reading">Reading Lagoon</span><span class="tag tag-new">NEW</span>
     </div>
-    <div class="sec">📕 华文</div>
-    <div class="item" onclick="load('Jenny/tools/Jenny_华文珊瑚湾.html','华文珊瑚湾',this)">
-      <span class="emoji">🪸</span><span class="label">华文珊瑚湾</span><span class="tag tag-new">NEW</span>
+    <div class="sec" data-i18n="sec_chi">📕 华文</div>
+    <div class="item" data-tool="huawen" onclick="loadByName('huawen')">
+      <span class="emoji">🪸</span><span class="label" data-i18n="tool_huawen">华文珊瑚湾</span><span class="tag tag-new">NEW</span>
     </div>
-    <div class="item" onclick="load('Jenny/tools/Jenny_口语小海豚.html','口语小海豚',this)">
-      <span class="emoji">🐙</span><span class="label">口语小海豚</span><span class="tag tag-new">NEW</span>
+    <div class="item" data-tool="kouyu" onclick="loadByName('kouyu')">
+      <span class="emoji">🐙</span><span class="label" data-i18n="tool_kouyu">口语小海豚</span><span class="tag tag-new">NEW</span>
     </div>
-    <div class="sec">🧠 思维</div>
-    <div class="item" onclick="load('Jenny/tools/Jenny_MindMap侦探社.html','MindMap侦探社',this)">
-      <span class="emoji">🕵️</span><span class="label">MindMap侦探社</span>
+    <div class="sec" data-i18n="sec_think">🧠 思维</div>
+    <div class="item" data-tool="mindmap" onclick="loadByName('mindmap')">
+      <span class="emoji">🕵️</span><span class="label" data-i18n="tool_mindmap">MindMap侦探社</span>
     </div>
-    <div class="sec">🌟 成长</div>
+    <div class="sec" data-i18n="sec_grow">🌟 成长</div>
     <div class="item" id="sbStickers" onclick="openStickers(this)">
-      <span class="emoji">🎁</span><span class="label">贴纸收藏册</span><span class="tag tag-new">NEW</span>
+      <span class="emoji">🎁</span><span class="label" data-i18n="tool_stickers">贴纸收藏册</span><span class="tag tag-new">NEW</span>
     </div>
   </div>
 </div>
 
 <!-- 烟花棒 -->
-<button class="sparkler-btn" onclick="fireworks()" title="放烟花！">🎆</button>
+<button class="sparkler-btn" onclick="fireworks()" title="放烟花！" data-i18n-title="fw_title">🎆</button>
 
 <script>
 /* ================================================================
@@ -510,29 +511,159 @@ function toggleTTS(){
   const on=!ttsOn();
   try{localStorage.setItem('jenny_tts_on',on?'1':'0')}catch(e){}
   renderTTSBtn();
-  if(on)speak('朗读打开啦！');else try{speechSynthesis.cancel()}catch(e){}
+  if(on)speak(T('tts_on_speak'),hubLangCode());else try{speechSynthesis.cancel()}catch(e){}
 }
 function renderTTSBtn(){const b=document.getElementById('ttsBtn');b.textContent=ttsOn()?'🔊':'🔇';b.classList.toggle('off',!ttsOn())}
+/* --- 人性化选声：给候选声音打分（Premium/Enhanced/Siri/本地/知名声音优先） --- */
+function __voiceScore(v,pref){
+  if(!v||!v.lang)return -1;
+  const vl=String(v.lang).toLowerCase().replace(/_/g,'-');
+  if(vl.indexOf(pref)!==0)return -1;
+  const n=String(v.name||'');let s=0;
+  if(/premium/i.test(n))s+=100;
+  if(/enhanced|增强/i.test(n))s+=80;
+  if(/siri/i.test(n))s+=70;
+  if(v.localService===true)s+=40;
+  if(pref==='en'){if(/\b(ava|zoe|samantha|karen|allison|susan)\b/i.test(n))s+=20}
+  else{
+    if(/tingting|ting-ting|婷婷|meijia|mei-jia|美嘉|lili|丽丽|shanshan|珊珊/i.test(n))s+=20;
+    if(vl.indexOf('zh-cn')===0||vl.indexOf('zh-hans')===0)s+=10;
+  }
+  return s;
+}
+function __bestVoice(vs,pref){
+  let best=null,bs=-1;
+  for(let i=0;i<(vs?vs.length:0);i++){const sc=__voiceScore(vs[i],pref);if(sc>bs){bs=sc;best=vs[i]}}
+  return best;
+}
+function __humanRate(){return .95+(Math.random()*.06-.03)}
+function __humanPitch(){return 1+(Math.random()*.1-.05)}
+let _voiceCache={};
 function pickVoice(lang){
+  const pref=lang.indexOf('zh')===0?'zh':'en';
+  if(_voiceCache[pref]!==undefined)return _voiceCache[pref];
   try{
-    const vs=speechSynthesis.getVoices();
-    if(lang.indexOf('zh')===0){
-      return vs.find(v=>/Tingting|Ting-Ting|Meijia|Mei-Jia|婷婷/i.test(v.name))||vs.find(v=>v.lang&&v.lang.indexOf('zh')===0)||null;
-    }
-    return vs.find(v=>/Samantha|Karen/i.test(v.name))||vs.find(v=>v.lang&&v.lang.indexOf('en')===0)||null;
+    const vs=speechSynthesis.getVoices()||[];
+    _voiceCache[pref]=__bestVoice(vs,pref);
+    return _voiceCache[pref];
   }catch(e){return null}
 }
 function speak(text,lang){
-  lang=lang||'zh-CN';
+  lang=lang||hubLangCode();
   if(!ttsOn()||!('speechSynthesis' in window))return;
   try{
     const u=new SpeechSynthesisUtterance(text);
     u.lang=lang;const v=pickVoice(lang);if(v)u.voice=v;
-    u.rate=.95;u.pitch=1.05;
+    u.rate=__humanRate();u.pitch=__humanPitch();
     speechSynthesis.cancel();setTimeout(function(){try{speechSynthesis.resume();}catch(e){}speechSynthesis.speak(u);},80);
   }catch(e){}
 }
-try{if('speechSynthesis' in window)speechSynthesis.getVoices()}catch(e){}
+try{if('speechSynthesis' in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){_voiceCache={};pickVoice('zh-CN');pickVoice('en-US')}}}catch(e){}
+
+/* ===== 语言切换 i18n（中/EN，默认 EN，存 jenny_lang） ===== */
+let LANG='en';
+try{LANG=localStorage.getItem('jenny_lang')||'en'}catch(e){}
+if(LANG!=='zh')LANG='en';
+function hubLangCode(){return LANG==='en'?'en-US':'zh-CN'}
+function hubSpeak(t){speak(t,hubLangCode())}
+const I18N={
+zh:{
+  back:'← 返回',info:'P2 · 7 个学习工具',title:'Jenny 的海洋学习乐园',
+  tts_title:'朗读开关',fw_title:'放烟花！',backup_btn:'💾 备份进度',restore_btn:'📥 恢复',
+  days_unit:'天',wins_unit:'个成就',stickers_unit:'贴纸',record_btn:'+ 记录小成功',
+  qm_title:'🌊 记录今天的小成功',qm_ph:'写下你的小成功...',qm_submit:'记录 🌟',qm_cancel:'取消',
+  rv_keep:'收进收藏册 🎁',yay:'好耶！',
+  qp_title:'🗺️ 今日任务清单',qp_sub:'全部打勾就能开出神秘贴纸盲盒哦！',
+  dash_title:'🤿 潜水日志 · Jenny 的深海探险记录',streak_label:'天连续潜水',
+  stat_total:'总成就',stat_week:'本周',stat_best:'最佳连击',stat_stk:'贴纸',
+  welcome:'🐚 欢迎来到海洋学习乐园',welcome_sub:'P2 · 7 个学习工具 · 点一个小岛，出发探险咯！',
+  subj_math:'🧮 Maths 数学',subj_sci:'🔬 Science 科学',subj_eng:'📖 English 英语',subj_chi:'📕 华文',subj_think:'🧠 思维',subj_grow:'🌟 成长',
+  sec_home:'主页',sec_math:'🧮 Maths',sec_sci:'🔬 Science',sec_eng:'📖 English',sec_chi:'📕 华文',sec_think:'🧠 思维',sec_grow:'🌟 成长',
+  tool_mathreef:'Math Master Reef',tool_animalmath:'动物王国数学',tool_science:'Science Explorer',tool_reading:'Reading Lagoon',
+  tool_huawen:'华文珊瑚湾',tool_kouyu:'口语小海豚',tool_mindmap:'MindMap侦探社',tool_stickers:'贴纸收藏册',
+  desc_mathreef:'跟着小海豚在珊瑚礁里闯关练数学，一步一步变成数学小高手！',
+  desc_animalmath:'在动物世界里学数学！加减乘除、比大小，和可爱动物一起玩。',
+  desc_science:'和小丑鱼一起探索科学世界，做小实验、学新知识！',
+  desc_reading:'跟着小海龟读故事、看新闻、学单词，英语阅读越来越棒！',
+  desc_huawen:'在美丽的珊瑚湾里认字、组词、读句子，华文越学越好玩！',
+  desc_kouyu:'开口说华文！和小海豚一起练口语，说得越来越流利。',
+  desc_mindmap:'化身小侦探，把知识整理成思维导图——分类、分层、连线、破案！',
+  collected_word:'已收集',rar_common:'普通',rar_rare:'稀有',rar_epic:'史诗',rar_legendary:'传说',
+  badge_new:'🎉 解锁新徽章！',daily_title:'每日小激励',daily_go:'开始探险 🌊',
+  tts_on_speak:'朗读打开啦！',
+  chest_ready:'🎉 宝箱来啦！点我开盲盒',chest_bonus:'连续 {n} 天全勤，奖励盲盒 +1！',
+  chest_done:'今日宝箱开完啦',chest_done_sub:'明天完成任务再来开新的！',
+  chest_locked:'🔒 神秘盲盒',chest_locked_sub:'还差 {n} 项任务就解锁！',
+  chest_speak_done:'今天的宝箱已经开完啦，明天见！',chest_speak_locked:'完成今天的任务清单，就能开盲盒哦！',
+  box_dup:'收藏册已经集满 40 款啦！你是海洋收藏大王！',box_legendary:'哇！！传说级贴纸！超级无敌稀有！',
+  box_epic:'好厉害，是史诗级贴纸！',box_rare:'不错哦，稀有贴纸到手！',box_common:'可爱的新伙伴加入收藏册啦！',
+  box_dup_speak:'收藏册集满啦，你太厉害了！',box_more_speak:'还有一个奖励盲盒，继续开！',
+  all_done_speak:'太棒啦！今天的任务全部完成，快去开宝箱！',
+  stk_full:'🏆 全部集齐！海洋收藏大王！',stk_hint:'每天完成任务清单，就能开盲盒收集新贴纸！',
+  stk_card_desc:'已收集 {n}/40 款！完成每日任务开盲盒，收集海洋小伙伴贴纸。',
+  collected_on:'收集于',today_word:'今天',
+  no_records:'还没有记录，点击上方 "记录小成功" 开始吧！',recent_wins:'最近的小成功',
+  quest_row_title:'点击去做任务',
+  backup_alert:'💾 已导出进度备份文件！\n（包含任务进度和贴纸收藏）\n建议存到 iCloud云盘，换设备时用"恢复"选这个文件即可。',
+  restore_ok:'✅ 已恢复 {n} 项进度！',restore_bad:'❌ 这不是有效的进度备份文件',
+  backup_file:'慧眼进度备份_'
+},
+en:{
+  back:'← Back',info:'P2 · 7 Learning Tools',title:"Jenny's Ocean Learning World",
+  tts_title:'Read-aloud on/off',fw_title:'Fireworks!',backup_btn:'💾 Backup',restore_btn:'📥 Restore',
+  days_unit:' days',wins_unit:'wins',stickers_unit:'stickers',record_btn:'+ Log a Small Win',
+  qm_title:"🌊 Log Today's Small Win",qm_ph:'Write your small win...',qm_submit:'Save 🌟',qm_cancel:'Cancel',
+  rv_keep:'Add to Album 🎁',yay:'Yay!',
+  qp_title:"🗺️ Today's Quests",qp_sub:'Tick them all to open a mystery sticker box!',
+  dash_title:"🤿 Dive Log · Jenny's Deep-Sea Adventures",streak_label:'day dive streak',
+  stat_total:'Total wins',stat_week:'This week',stat_best:'Best streak',stat_stk:'Stickers',
+  welcome:'🐚 Welcome to the Ocean Learning World',welcome_sub:'P2 · 7 learning tools · Pick an island and set sail!',
+  subj_math:'🧮 Maths',subj_sci:'🔬 Science',subj_eng:'📖 English',subj_chi:'📕 Chinese',subj_think:'🧠 Thinking',subj_grow:'🌟 Growing',
+  sec_home:'Home',sec_math:'🧮 Maths',sec_sci:'🔬 Science',sec_eng:'📖 English',sec_chi:'📕 Chinese',sec_think:'🧠 Thinking',sec_grow:'🌟 Growing',
+  tool_mathreef:'Math Master Reef',tool_animalmath:'Animal Kingdom Maths',tool_science:'Science Explorer',tool_reading:'Reading Lagoon',
+  tool_huawen:'Chinese Coral Bay',tool_kouyu:'Speaking Dolphin',tool_mindmap:'MindMap Detective Agency',tool_stickers:'Sticker Album',
+  desc_mathreef:'Level up your maths with the little dolphin on the coral reef, one quest at a time!',
+  desc_animalmath:'Learn maths in the animal kingdom! Add, subtract, multiply, divide and compare with cute animals.',
+  desc_science:'Explore the world of science with the clownfish — little experiments and new facts!',
+  desc_reading:'Read stories, news and new words with the sea turtle — reading gets better and better!',
+  desc_huawen:'Learn Chinese characters, words and sentences in the beautiful coral bay!',
+  desc_kouyu:'Speak Chinese out loud! Practise speaking with the little dolphin and get more fluent.',
+  desc_mindmap:'Become a little detective — sort, layer and link your knowledge into mind maps!',
+  collected_word:'collected',rar_common:'Common',rar_rare:'Rare',rar_epic:'Epic',rar_legendary:'Legendary',
+  badge_new:'🎉 New badge unlocked!',daily_title:'Daily Boost',daily_go:'Start Exploring 🌊',
+  tts_on_speak:'Read-aloud is on!',
+  chest_ready:'🎉 Treasure chest! Tap to open',chest_bonus:'{n}-day perfect streak — bonus box +1!',
+  chest_done:'All boxes opened today',chest_done_sub:'Finish your quests tomorrow for a new one!',
+  chest_locked:'🔒 Mystery Box',chest_locked_sub:'{n} more quest(s) to unlock!',
+  chest_speak_done:'All of today\'s chests are opened. See you tomorrow!',chest_speak_locked:'Finish today\'s quest list to open the mystery box!',
+  box_dup:'Your album already has all 40! You are the ocean collection champion!',box_legendary:'Wow!! A Legendary sticker! Super duper rare!',
+  box_epic:'Amazing — an Epic sticker!',box_rare:'Nice — a Rare sticker!',box_common:'A cute new friend joins your album!',
+  box_dup_speak:'Your album is complete. You are incredible!',box_more_speak:'There is one more bonus box. Keep opening!',
+  all_done_speak:'Awesome! All quests done today. Go open the treasure chest!',
+  stk_full:'🏆 All collected! Ocean collection champion!',stk_hint:'Finish your daily quests to open boxes and collect new stickers!',
+  stk_card_desc:'{n}/40 collected! Finish daily quests to open boxes and collect ocean friends.',
+  collected_on:'Collected on',today_word:'Today',
+  no_records:'No records yet — tap "Log a Small Win" above to start!',recent_wins:'Recent small wins',
+  quest_row_title:'Tap to do this quest',
+  backup_alert:'💾 Progress backup exported!\n(Includes quest progress and sticker collection)\nSave it to iCloud Drive; use "Restore" on a new device.',
+  restore_ok:'✅ Restored {n} items!',restore_bad:'❌ This is not a valid progress backup file',
+  backup_file:'huiyan_progress_backup_'
+}};
+function T(k){const d=I18N[LANG]||{};return d[k]!==undefined?d[k]:(I18N.zh[k]!==undefined?I18N.zh[k]:k)}
+function TF(k,n){return T(k).replace('{n}',n)}
+function toggleLang(){LANG=(LANG==='en'?'zh':'en');try{localStorage.setItem('jenny_lang',LANG)}catch(e){}applyLang()}
+let currentTool=null; /* null=主页, 'stickers'=收藏册, 其余=nameMap key */
+function applyLang(){
+  document.documentElement.lang=(LANG==='en'?'en':'zh-CN');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=T(el.getAttribute('data-i18n'))});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{el.placeholder=T(el.getAttribute('data-i18n-ph'))});
+  document.querySelectorAll('[data-i18n-title]').forEach(el=>{el.title=T(el.getAttribute('data-i18n-title'))});
+  const lb=document.getElementById('langBtn');if(lb)lb.textContent=LANG==='zh'?'EN':'中';
+  if(currentTool==='stickers')document.getElementById('topTitle').textContent='🎁 '+T('tool_stickers');
+  else if(currentTool&&nameMap[currentTool])document.getElementById('topTitle').textContent=nameMap[currentTool].title[LANG];
+  else document.getElementById('topTitle').innerHTML='<span class="mascot">🧜‍♀️</span> '+T('title');
+  renderMotivBar();renderDashboard();renderQuests();renderStickerBook();
+}
 
 /* ===== STICKERS:BEGIN（纯函数区，可独立测试） ===== */
 function G(id,c1,c2){return '<linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient>'}
@@ -712,42 +843,61 @@ const STICKER_DEFS=[
  {n:'美人鱼公主',r:'legendary',a:g=>bgc(g,'#fdf0f5','#f2c0d5')+spMermaid(g,'#ffe3d0','#f5a8c8','#e87aa8','#7ad8d0','#2aa8a0')+acCrown(58,24,.7)+sparklesAnim()}
 ];
 function stTag(inner){return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg>'}
-const STICKERS=STICKER_DEFS.map((s,i)=>({id:'s'+String(i+1).padStart(2,'0'),name:s.n,rarity:s.r,svg:stTag(s.a('g'+i))}));
+/* 贴纸英文名（与 STICKER_DEFS 顺序一一对应） */
+const STICKER_EN=[
+ 'Smiley Dolphin','Bubble Clownfish','Slowpoke Turtle','Jelly Jellyfish','Shy Crab','Hello Octopus',
+ 'Twinkle Starfish','Little Blue Whale','Curly Seahorse','Lemon Fish','Minty Dolphin','Violet Jellyfish',
+ 'Orange Crab','Matcha Turtle','Pink Starfish','Sky Seahorse','Grape Octopus','Creamy Whale',
+ 'Bow-tie Dolphin','Professor Fish','Balloon Starfish','Music-Note Seahorse','Scarf Whale','Lovey Clownfish',
+ 'Garland Turtle','Pearl Jellyfish','Flower Octopus','Rainbow Narwhal','Ninja Crab','Ballerina Starfish',
+ 'Pirate Whale','Singer Fish','Painter Pufferfish','Starry Jellyfish',
+ 'Guitar Octopus','DJ Jellyfish','Astronaut Dolphin','Super Whale','Seahorse King',
+ 'Mermaid Princess'
+];
+const STICKERS=STICKER_DEFS.map((s,i)=>({id:'s'+String(i+1).padStart(2,'0'),name:{zh:s.n,en:STICKER_EN[i]||s.n},rarity:s.r,svg:stTag(s.a('g'+i))}));
 const RARITY={
-  common:{label:'普通',color:'#3a9a94',roll:60},
-  rare:{label:'稀有',color:'#3a8fd8',roll:25},
-  epic:{label:'史诗',color:'#9a5fd8',roll:12},
-  legendary:{label:'传说',color:'#e8a921',roll:3}
+  common:{label:{zh:'普通',en:'Common'},color:'#3a9a94',roll:60},
+  rare:{label:{zh:'稀有',en:'Rare'},color:'#3a8fd8',roll:25},
+  epic:{label:{zh:'史诗',en:'Epic'},color:'#9a5fd8',roll:12},
+  legendary:{label:{zh:'传说',en:'Legendary'},color:'#e8a921',roll:3}
 };
 function rollRarity(rnd){const r=(rnd===undefined?Math.random():rnd)*100;return r<60?'common':r<85?'rare':r<97?'epic':'legendary'}
 /* ===== STICKERS:END ===== */
 
 /* ===== 小成功系统（沿用 V2 · jenny_wins） ===== */
 const CATS=[
-  {id:'math',label:'📐 数学',icon:'📐'},
-  {id:'english',label:'📘 英语',icon:'📘'},
-  {id:'chinese',label:'📕 华文',icon:'📕'},
-  {id:'reading',label:'📖 阅读',icon:'📖'},
-  {id:'habit',label:'💪 习惯',icon:'💪'},
-  {id:'other',label:'⭐ 其他',icon:'⭐'}
+  {id:'math',label:{zh:'📐 数学',en:'📐 Maths'},icon:'📐'},
+  {id:'english',label:{zh:'📘 英语',en:'📘 English'},icon:'📘'},
+  {id:'chinese',label:{zh:'📕 华文',en:'📕 Chinese'},icon:'📕'},
+  {id:'reading',label:{zh:'📖 阅读',en:'📖 Reading'},icon:'📖'},
+  {id:'habit',label:{zh:'💪 习惯',en:'💪 Habits'},icon:'💪'},
+  {id:'other',label:{zh:'⭐ 其他',en:'⭐ Other'},icon:'⭐'}
 ];
-const QUICK=[
+const QUICK={
+zh:[
   '数学练习全对了','学了新的英语单词','华文认字进步了',
   '读完了一本故事书','帮妈妈做了家务','今天很勇敢',
   '画了一幅漂亮的画','和朋友友好相处','自己整理了书包',
   '今日任务全完成','开出了新贴纸','口语练得很棒'
-];
+],
+en:[
+  'Got all my maths practice right','Learnt new English words','Improved my Chinese characters',
+  'Finished a storybook','Helped Mum with chores','Was brave today',
+  'Painted a beautiful picture','Played nicely with friends','Packed my own school bag',
+  'Finished all daily quests','Unlocked a new sticker','Did great at speaking practice'
+]};
 const BADGES=[
-  {id:'first',name:'第一步',icon:'🌱',need:1},
-  {id:'five',name:'五颗星',icon:'⭐',need:5},
-  {id:'ten',name:'超级棒',icon:'🌟',need:10},
-  {id:'streak3',name:'三日小达人',icon:'🔥',type:'streak',val:3},
-  {id:'streak7',name:'一周小勇士',icon:'💎',type:'streak',val:7},
-  {id:'twenty',name:'了不起',icon:'🏆',need:20},
-  {id:'streak14',name:'两周小英雄',icon:'👑',type:'streak',val:14},
-  {id:'fifty',name:'闪亮之星',icon:'🎖️',need:50}
+  {id:'first',name:{zh:'第一步',en:'First Step'},icon:'🌱',need:1},
+  {id:'five',name:{zh:'五颗星',en:'Five Stars'},icon:'⭐',need:5},
+  {id:'ten',name:{zh:'超级棒',en:'Super Star'},icon:'🌟',need:10},
+  {id:'streak3',name:{zh:'三日小达人',en:'3-Day Ace'},icon:'🔥',type:'streak',val:3},
+  {id:'streak7',name:{zh:'一周小勇士',en:'1-Week Warrior'},icon:'💎',type:'streak',val:7},
+  {id:'twenty',name:{zh:'了不起',en:'Incredible'},icon:'🏆',need:20},
+  {id:'streak14',name:{zh:'两周小英雄',en:'2-Week Hero'},icon:'👑',type:'streak',val:14},
+  {id:'fifty',name:{zh:'闪亮之星',en:'Shining Star'},icon:'🎖️',need:50}
 ];
-const MSGS=[
+const MSGS={
+zh:[
   '今天也是棒棒的一天！加油 Jenny！💕',
   '每一个小成功都让你更闪亮！✨',
   '你真的很努力，继续加油！🌸',
@@ -758,8 +908,21 @@ const MSGS=[
   '今天的 Jenny 比昨天更厉害啦！🌻',
   '每天一小步，未来一大步！🚀',
   '你真的很了不起，继续保持！🌟'
-];
-const DAILY_MSGS=[
+],
+en:[
+  'Another wonderful day! Go Jenny! 💕',
+  'Every small win makes you shine brighter! ✨',
+  'You work so hard — keep it up! 🌸',
+  'Mum and Dad are so proud of you! ❤️',
+  'A little better than yesterday is the best! 🌈',
+  'Learning can be fun — and you did it! 😊',
+  'You are the bravest kid! 🦋',
+  'Today\'s Jenny is even greater than yesterday\'s! 🌻',
+  'A small step every day, a big leap tomorrow! 🚀',
+  'You are amazing — keep going! 🌟'
+]};
+const DAILY_MSGS={
+zh:[
   '早安小美人鱼！今天的海洋世界在等你探险哦！🐚',
   '欢迎回到海洋乐园！小海豚们都想你啦！🐬',
   '今天也要像小海龟一样，一步一步慢慢进步哦！🐢',
@@ -772,7 +935,21 @@ const DAILY_MSGS=[
   '大鲸鱼喷出一朵水花，欢迎 Jenny 回来学习！🐳',
   '今天的你比昨天更棒，明天的你会比今天更闪亮！✨',
   '完成今天的任务清单，就能开神秘盲盒哦！冲呀！🎁'
-];
+],
+en:[
+  'Good morning, little mermaid! The ocean world is waiting for you! 🐚',
+  'Welcome back to the ocean park! The little dolphins missed you! 🐬',
+  'Be like the little sea turtle today — one steady step at a time! 🐢',
+  'Jenny is here! The coral bay looks extra pretty today, just like your smile! 🪸',
+  'Take a deep breath and dive into the sea of knowledge! You can do it! 🌊',
+  'The clownfish says: Jenny loves learning more than anyone in the ocean! 🐠',
+  'Learn a little today, and be a little greater tomorrow! Keep going! ⭐',
+  'The starfish sends five wishes: happy, brave, hardworking, clever, adorable! 🌟',
+  'Teacher Octopus says: even eight arms cannot count all of Jenny\'s strengths! 🐙',
+  'The big whale blows a happy splash to welcome Jenny back to learning! 🐳',
+  'Better today than yesterday — and tomorrow you will shine even more! ✨',
+  'Finish today\'s quest list to open the mystery box! Go go go! 🎁'
+]};
 
 let state={wins:[],streak:0,bestStreak:0,selectedCat:'math'};
 let prevBadgeCount=0;
@@ -798,9 +975,9 @@ function renderMotivBar(){
   document.getElementById('mbStreak').textContent=s;
   document.getElementById('mbTotal').textContent=state.wins.length;
   document.getElementById('mbStk').textContent=Object.keys(stkState().owned).length;
-  document.getElementById('mbMsg').textContent=MSGS[Math.floor(Math.random()*MSGS.length)];
+  document.getElementById('mbMsg').textContent=MSGS[LANG][Math.floor(Math.random()*MSGS[LANG].length)];
   const earned=earnedBadges();
-  document.getElementById('mbBadges').innerHTML=BADGES.map(b=>'<span class="'+(earned.find(e=>e.id===b.id)?'':'locked')+'" title="'+b.name+'">'+b.icon+'</span>').join('');
+  document.getElementById('mbBadges').innerHTML=BADGES.map(b=>'<span class="'+(earned.find(e=>e.id===b.id)?'':'locked')+'" title="'+b.name[LANG]+'">'+b.icon+'</span>').join('');
 }
 
 function renderDashboard(){
@@ -813,27 +990,27 @@ function renderDashboard(){
   const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-7);
   document.getElementById('dashWeek').textContent=state.wins.filter(w=>new Date(w.date)>=weekAgo).length;
 
-  const dayNames=['日','一','二','三','四','五','六'];const now=new Date();const dow=now.getDay();
+  const dayNames=LANG==='en'?['S','M','T','W','T','F','S']:['日','一','二','三','四','五','六'];const now=new Date();const dow=now.getDay();
   let dots='';for(let i=0;i<7;i++){const d=new Date(now);d.setDate(d.getDate()-dow+i);const ds=d.toISOString().slice(0,10);const done=state.wins.some(w=>w.date===ds);const isToday=ds===today();dots+='<div class="dash-dot'+(done?' done':'')+(isToday?' today':'')+'">'+(done?'✓':dayNames[i])+'</div>'}
   document.getElementById('dashWeekDots').innerHTML=dots;
 
   const earned=earnedBadges();
-  document.getElementById('dashBadges').innerHTML=BADGES.map(b=>'<span class="dash-badge'+(earned.find(e=>e.id===b.id)?' earned':' locked')+'" title="'+b.name+'">'+b.icon+'</span>').join('');
-  document.getElementById('dashEncourage').textContent=MSGS[Math.floor(Math.random()*MSGS.length)];
+  document.getElementById('dashBadges').innerHTML=BADGES.map(b=>'<span class="dash-badge'+(earned.find(e=>e.id===b.id)?' earned':' locked')+'" title="'+b.name[LANG]+'">'+b.icon+'</span>').join('');
+  document.getElementById('dashEncourage').textContent=MSGS[LANG][Math.floor(Math.random()*MSGS[LANG].length)];
 
   const recent=state.wins.slice(-4).reverse();
   const rd=document.getElementById('dashRecent');
-  if(!recent.length){rd.innerHTML='<h4>还没有记录，点击上方 "记录小成功" 开始吧！</h4>'}
-  else{let h='<h4>最近的小成功</h4><div class="recent-list">';recent.forEach(w=>{const cat=CATS.find(c=>c.id===w.cat)||CATS[5];h+='<div class="recent-item"><span class="ri-icon">'+cat.icon+'</span><span class="ri-text">'+esc(w.text)+'</span><span class="ri-date">'+(w.date===today()?'今天':w.date)+'</span></div>'});h+='</div>';rd.innerHTML=h}
+  if(!recent.length){rd.innerHTML='<h4>'+T('no_records')+'</h4>'}
+  else{let h='<h4>'+T('recent_wins')+'</h4><div class="recent-list">';recent.forEach(w=>{const cat=CATS.find(c=>c.id===w.cat)||CATS[5];h+='<div class="recent-item"><span class="ri-icon">'+cat.icon+'</span><span class="ri-text">'+esc(w.text)+'</span><span class="ri-date">'+(w.date===today()?T('today_word'):w.date)+'</span></div>'});h+='</div>';rd.innerHTML=h}
 }
 
 function openQuickModal(){
   document.getElementById('qmOverlay').classList.add('show');
   document.getElementById('qmInput').value='';document.getElementById('qmInput').focus();
   renderCats();
-  document.getElementById('qmQuicks').innerHTML=QUICK.map(q=>'<div class="qm-q" onclick="document.getElementById(\'qmInput\').value=\''+q.replace(/'/g,"\\'")+'\';submitWin()">'+q+'</div>').join('');
+  document.getElementById('qmQuicks').innerHTML=QUICK[LANG].map(q=>'<div class="qm-q" onclick="document.getElementById(\'qmInput\').value=\''+q.replace(/'/g,"\\'")+'\';submitWin()">'+q+'</div>').join('');
 }
-function renderCats(){document.getElementById('qmCats').innerHTML=CATS.map(c=>'<div class="qm-cat'+(state.selectedCat===c.id?' active':'')+'" onclick="state.selectedCat=\''+c.id+'\';renderCats()">'+c.label+'</div>').join('')}
+function renderCats(){document.getElementById('qmCats').innerHTML=CATS.map(c=>'<div class="qm-cat'+(state.selectedCat===c.id?' active':'')+'" onclick="state.selectedCat=\''+c.id+'\';renderCats()">'+c.label[LANG]+'</div>').join('')}
 function closeModal(){document.getElementById('qmOverlay').classList.remove('show')}
 
 function submitWin(){
@@ -851,7 +1028,7 @@ function celebrate(){
 }
 function showBadgePopup(badge){
   const p=document.createElement('div');p.className='badge-popup';
-  p.innerHTML='<div class="bp-icon">'+badge.icon+'</div><div class="bp-title">🎉 解锁新徽章！</div><div class="bp-desc">'+badge.name+'</div>';
+  p.innerHTML='<div class="bp-icon">'+badge.icon+'</div><div class="bp-title">'+T('badge_new')+'</div><div class="bp-desc">'+badge.name[LANG]+'</div>';
   document.body.appendChild(p);celebrate();celebrate();sndMagic();
   setTimeout(()=>{p.style.transition='all .3s';p.style.opacity='0';p.style.transform='translate(-50%,-50%) scale(1.2)';setTimeout(()=>p.remove(),300)},2500);
 }
@@ -887,13 +1064,13 @@ function dailyHello(){
   try{last=localStorage.getItem('jenny_daily_hello')}catch(e){}
   if(last===today())return;
   try{localStorage.setItem('jenny_daily_hello',today())}catch(e){}
-  const msg=DAILY_MSGS[Math.floor(Math.random()*DAILY_MSGS.length)];
+  const msg=DAILY_MSGS[LANG][Math.floor(Math.random()*DAILY_MSGS[LANG].length)];
   const p=document.createElement('div');p.className='mermaid-popup';
-  p.innerHTML='<div class="mp-icon">🧜‍♀️</div><div class="mp-title">每日小激励</div><div class="mp-msg">'+msg+'</div><button class="mp-btn">开始探险 🌊</button>';
+  p.innerHTML='<div class="mp-icon">🧜‍♀️</div><div class="mp-title">'+T('daily_title')+'</div><div class="mp-msg">'+msg+'</div><button class="mp-btn">'+T('daily_go')+'</button>';
   p.querySelector('.mp-btn').onclick=()=>{p.style.transition='all .3s';p.style.opacity='0';p.style.transform='translate(-50%,-50%) scale(1.15)';setTimeout(()=>p.remove(),300)};
   document.body.appendChild(p);
   setTimeout(celebrate,350);
-  setTimeout(()=>speak(msg.replace(/[🐚🐬🐢🪸🌊🐠⭐🌟🐙🐳✨🎁]/g,'')),600);
+  setTimeout(()=>hubSpeak(msg.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu,'')),600);
 }
 
 /* ===== 漂浮泡泡 ===== */
@@ -909,11 +1086,11 @@ function makeBubbles(){
 
 /* ===== 每日任务清单（跨工具约定 jenny_daily_v1） ===== */
 const QUESTS=[
-  {key:'math',   icon:'🐬',label:'数学',  goal:10,unit:'题',tool:'mathreef',praise:'数学任务完成！小海豚给你转圈圈！'},
-  {key:'science',icon:'🐠',label:'科学',  goal:5, unit:'个',tool:'science', praise:'科学任务完成！小丑鱼吐了一串开心泡泡！'},
-  {key:'reading',icon:'🐢',label:'阅读',  goal:2, unit:'篇',tool:'reading', praise:'阅读任务完成！小海龟为你鼓掌！'},
-  {key:'chinese',icon:'🪸',label:'华文',  goal:5, unit:'题',tool:'huawen',  praise:'华文任务完成！珊瑚湾开满了花！'},
-  {key:'oral',   icon:'🐙',label:'口语',  goal:1, unit:'项',tool:'kouyu',   praise:'口语任务完成！章鱼老师竖起八个大拇指！'}
+  {key:'math',   icon:'🐬',label:{zh:'数学',en:'Maths'},   goal:10,unit:'题',tool:'mathreef',praise:{zh:'数学任务完成！小海豚给你转圈圈！',en:'Maths quest complete! The little dolphin does a spin for you!'}},
+  {key:'science',icon:'🐠',label:{zh:'科学',en:'Science'}, goal:5, unit:'个',tool:'science', praise:{zh:'科学任务完成！小丑鱼吐了一串开心泡泡！',en:'Science quest complete! The clownfish blows a stream of happy bubbles!'}},
+  {key:'reading',icon:'🐢',label:{zh:'阅读',en:'Reading'}, goal:2, unit:'篇',tool:'reading', praise:{zh:'阅读任务完成！小海龟为你鼓掌！',en:'Reading quest complete! The sea turtle claps for you!'}},
+  {key:'chinese',icon:'🪸',label:{zh:'华文',en:'Chinese'}, goal:5, unit:'题',tool:'huawen',  praise:{zh:'华文任务完成！珊瑚湾开满了花！',en:'Chinese quest complete! The coral bay bursts into bloom!'}},
+  {key:'oral',   icon:'🐙',label:{zh:'口语',en:'Speaking'},goal:1, unit:'项',tool:'kouyu',   praise:{zh:'口语任务完成！章鱼老师竖起八个大拇指！',en:'Speaking quest complete! Teacher Octopus gives you eight thumbs up!'}}
 ];
 function dailyData(){try{const d=JSON.parse(localStorage.getItem('jenny_daily_v1'));return d&&typeof d==='object'?d:{}}catch(e){return{}}}
 function todayCounts(){
@@ -939,9 +1116,10 @@ function renderQuests(opts){
     const n=Math.min(c[q.key],q.goal),done=c[q.key]>=q.goal;
     const pct=Math.round(n/q.goal*100);
     const stamp=opts.stampKey===q.key?' stamp':'';
-    return '<div class="q-row'+(done?' done':'')+'" onclick="loadByName(\''+q.tool+'\')" title="点击去做任务">'
+    const lbl=LANG==='en'?(q.label.en+' ×'+q.goal):(q.label.zh+' '+q.goal+' '+q.unit);
+    return '<div class="q-row'+(done?' done':'')+'" onclick="loadByName(\''+q.tool+'\')" title="'+T('quest_row_title')+'">'
       +'<span class="q-icon">'+q.icon+'</span>'
-      +'<span class="q-label">'+q.label+' '+q.goal+' '+q.unit+'</span>'
+      +'<span class="q-label">'+lbl+'</span>'
       +'<span class="q-bar"><span class="q-fill" style="width:'+pct+'%"></span></span>'
       +'<span class="q-count">'+n+'/'+q.goal+'</span>'
       +'<span class="q-check'+stamp+'">'+(done?'✅':'⬜')+'</span>'
@@ -986,22 +1164,22 @@ function renderChest(c){
   el.classList.remove('locked','ready','opening');
   if(left>0){
     el.classList.add('ready');
-    el.innerHTML=chestSVG()+'<div class="chest-txt">🎉 宝箱来啦！点我开盲盒'+(left>1?' ×'+left:'')+'</div>'
-      +(streak>0&&streak%3===0?'<div class="chest-sub">连续 '+streak+' 天全勤，奖励盲盒 +1！</div>':'');
+    el.innerHTML=chestSVG()+'<div class="chest-txt">'+T('chest_ready')+(left>1?' ×'+left:'')+'</div>'
+      +(streak>0&&streak%3===0?'<div class="chest-sub">'+TF('chest_bonus',streak)+'</div>':'');
   }else if(all){
     el.classList.add('locked');
-    el.innerHTML=chestSVG()+'<div class="chest-txt">今日宝箱开完啦</div><div class="chest-sub">明天完成任务再来开新的！</div>';
+    el.innerHTML=chestSVG()+'<div class="chest-txt">'+T('chest_done')+'</div><div class="chest-sub">'+T('chest_done_sub')+'</div>';
   }else{
     el.classList.add('locked');
-    el.innerHTML=chestSVG()+'<div class="chest-txt">🔒 神秘盲盒</div><div class="chest-sub">还差 '+remain+' 项任务就解锁！</div>';
+    el.innerHTML=chestSVG()+'<div class="chest-txt">'+T('chest_locked')+'</div><div class="chest-sub">'+TF('chest_locked_sub',remain)+'</div>';
   }
 }
 let opening=false;
 function chestTap(){
   if(opening)return;
   if(boxesLeft()<=0){
-    if(allQuestsDone()){speak('今天的宝箱已经开完啦，明天见！')}
-    else{sndPop();speak('完成今天的任务清单，就能开盲盒哦！')}
+    if(allQuestsDone()){hubSpeak(T('chest_speak_done'))}
+    else{sndPop();hubSpeak(T('chest_speak_locked'))}
     return;
   }
   opening=true;
@@ -1029,20 +1207,22 @@ function openBox(){
   sndMagic();fireworks();fireworks();celebrate();
   const R=RARITY[pick.rarity];
   document.getElementById('rvArt').innerHTML=pick.svg;
-  document.getElementById('rvName').textContent=pick.name;
-  const rv=document.getElementById('rvRar');rv.textContent=R.label;rv.style.background=R.color;
-  document.getElementById('rvMsg').textContent=dup?'收藏册已经集满 40 款啦！你是海洋收藏大王！':
-    (pick.rarity==='legendary'?'哇！！传说级贴纸！超级无敌稀有！':
-     pick.rarity==='epic'?'好厉害，是史诗级贴纸！':
-     pick.rarity==='rare'?'不错哦，稀有贴纸到手！':'可爱的新伙伴加入收藏册啦！');
+  document.getElementById('rvName').textContent=pick.name[LANG];
+  const rv=document.getElementById('rvRar');rv.textContent=R.label[LANG];rv.style.background=R.color;
+  document.getElementById('rvMsg').textContent=dup?T('box_dup'):
+    (pick.rarity==='legendary'?T('box_legendary'):
+     pick.rarity==='epic'?T('box_epic'):
+     pick.rarity==='rare'?T('box_rare'):T('box_common'));
   document.getElementById('rvOverlay').classList.add('show');
-  speak(dup?'收藏册集满啦，你太厉害了！':'恭喜！开出了'+R.label+'贴纸，'+pick.name+'！');
+  hubSpeak(dup?T('box_dup_speak'):
+    (LANG==='en'?('Congratulations! You unlocked a '+R.label.en+' sticker: '+pick.name.en+'!')
+               :('恭喜！开出了'+R.label.zh+'贴纸，'+pick.name.zh+'！')));
   renderChest();renderMotivBar();renderStickerBook();
 }
 function closeReveal(){
   document.getElementById('rvOverlay').classList.remove('show');
   renderChest();renderDashboard();
-  if(boxesLeft()>0)speak('还有一个奖励盲盒，继续开！');
+  if(boxesLeft()>0)hubSpeak(T('box_more_speak'));
 }
 
 /* ===== 贴纸收藏册 ===== */
@@ -1056,12 +1236,12 @@ function renderStickerBook(){
   document.getElementById('lgR').textContent=byR.rare;
   document.getElementById('lgE').textContent=byR.epic;
   document.getElementById('lgL').textContent=byR.legendary;
-  document.getElementById('stkHint').textContent=ownedN>=40?'🏆 全部集齐！海洋收藏大王！':'每天完成任务清单，就能开盲盒收集新贴纸！';
-  document.getElementById('stkCardDesc').textContent='已收集 '+ownedN+'/40 款！完成每日任务开盲盒，收集海洋小伙伴贴纸。';
+  document.getElementById('stkHint').textContent=ownedN>=40?T('stk_full'):T('stk_hint');
+  document.getElementById('stkCardDesc').textContent=TF('stk_card_desc',ownedN);
   document.getElementById('stkGrid').innerHTML=STICKERS.map(s=>{
     const own=st.owned[s.id];
     return '<div class="stk-cell rar-'+s.rarity+(own?' owned':' locked')+'"'+(own?' onclick="showSticker(\''+s.id+'\')"':'')+'>'
-      +s.svg+'<div class="stk-name">'+(own?s.name:'？？？')+'</div></div>';
+      +s.svg+'<div class="stk-name">'+(own?s.name[LANG]:'？？？')+'</div></div>';
   }).join('');
 }
 function showSticker(id){
@@ -1069,11 +1249,11 @@ function showSticker(id){
   const st=stkState();const own=st.owned[id];if(!own)return;
   const R=RARITY[s.rarity];
   document.getElementById('sbArt').innerHTML=s.svg;
-  document.getElementById('sbName').textContent=s.name;
-  const rv=document.getElementById('sbRar');rv.textContent=R.label;rv.style.background=R.color;
-  document.getElementById('sbDate').textContent='收集于 '+own.date;
+  document.getElementById('sbName').textContent=s.name[LANG];
+  const rv=document.getElementById('sbRar');rv.textContent=R.label[LANG];rv.style.background=R.color;
+  document.getElementById('sbDate').textContent=T('collected_on')+' '+own.date;
   document.getElementById('stkBigOverlay').classList.add('show');
-  sndDing();speak(s.name);
+  sndDing();hubSpeak(s.name[LANG]);
 }
 
 /* ===== 任务轮询（工具在 iframe 内同源写 localStorage） ===== */
@@ -1085,14 +1265,14 @@ function checkDaily(){
       if(c[q.key]>=q.goal&&lastCounts[q.key]<q.goal){
         stampKey=q.key;
         sndDing();celebrate();
-        speak(q.praise.replace(/[！!]/g,'！'));
+        hubSpeak(q.praise[LANG]);
       }
     });
   }
   const all=allQuestsDone(c);
   if(all&&!lastAllDone&&lastCounts){
     fireworks();sndMagic();
-    setTimeout(()=>speak('太棒啦！今天的任务全部完成，快去开宝箱！'),1400);
+    setTimeout(()=>hubSpeak(T('all_done_speak')),1400);
   }
   lastCounts=c;lastAllDone=all;
   renderQuests(stampKey?{stampKey}:{});
@@ -1113,26 +1293,27 @@ function load(url,title,el){
   document.querySelector('.back-btn').style.display='inline-block';
 }
 const nameMap={
-  'mathreef':  {url:'Jenny/tools/Jenny_Math_Master_Reef.html',      title:'Math Master Reef'},
-  'animalmath':{url:'Jenny/tools/Jenny-Animal-Kingdom-Math.html',   title:'动物王国数学'},
-  'science':   {url:'Jenny/tools/Jenny_Science_Explorer.html',      title:'Science Explorer'},
-  'reading':   {url:'Jenny/tools/Jenny_Reading_Lagoon.html',        title:'Reading Lagoon'},
-  'huawen':    {url:'Jenny/tools/Jenny_华文珊瑚湾.html',             title:'华文珊瑚湾'},
-  'kouyu':     {url:'Jenny/tools/Jenny_口语小海豚.html',             title:'口语小海豚'},
-  'mindmap':   {url:'Jenny/tools/Jenny_MindMap侦探社.html',          title:'MindMap侦探社'}
+  'mathreef':  {url:'Jenny/tools/Jenny_Math_Master_Reef.html',      title:{zh:'Math Master Reef',en:'Math Master Reef'}},
+  'animalmath':{url:'Jenny/tools/Jenny-Animal-Kingdom-Math.html',   title:{zh:'动物王国数学',en:'Animal Kingdom Maths'}},
+  'science':   {url:'Jenny/tools/Jenny_Science_Explorer.html',      title:{zh:'Science Explorer',en:'Science Explorer'}},
+  'reading':   {url:'Jenny/tools/Jenny_Reading_Lagoon.html',        title:{zh:'Reading Lagoon',en:'Reading Lagoon'}},
+  'huawen':    {url:'Jenny/tools/Jenny_华文珊瑚湾.html',             title:{zh:'华文珊瑚湾',en:'Chinese Coral Bay'}},
+  'kouyu':     {url:'Jenny/tools/Jenny_口语小海豚.html',             title:{zh:'口语小海豚',en:'Speaking Dolphin'}},
+  'mindmap':   {url:'Jenny/tools/Jenny_MindMap侦探社.html',          title:{zh:'MindMap侦探社',en:'MindMap Detective Agency'}}
 };
 function loadByName(name){
   if(name==='stickers'){openStickers(document.getElementById('sbStickers'));return}
   const t=nameMap[name];if(!t)return;
-  let el=null;
-  items.forEach(i=>{const oc=i.getAttribute('onclick')||'';if(oc.indexOf("'"+t.url+"'")>=0)el=i});
-  load(t.url,t.title,el);
+  const el=document.querySelector('.sidebar .item[data-tool="'+name+'"]');
+  currentTool=name;
+  load(t.url,t.title[LANG],el);
 }
 function openStickers(el){
   hideAllViews();
   document.getElementById('toolFrame').src='';
   document.getElementById('stickerView').style.display='block';
-  document.getElementById('topTitle').textContent='🎁 贴纸收藏册';
+  currentTool='stickers';
+  document.getElementById('topTitle').textContent='🎁 '+T('tool_stickers');
   items.forEach(i=>i.classList.remove('active'));if(el)el.classList.add('active');
   document.querySelector('.back-btn').style.display='inline-block';
   renderStickerBook();
@@ -1141,14 +1322,15 @@ function goHome(){
   hideAllViews();
   document.getElementById('toolFrame').src='';
   document.getElementById('homeView').style.display='block';
-  document.getElementById('topTitle').innerHTML='<span class="mascot">🧜‍♀️</span> Jenny 的海洋学习乐园';
+  currentTool=null;
+  document.getElementById('topTitle').innerHTML='<span class="mascot">🧜‍♀️</span> '+T('title');
   items.forEach(i=>i.classList.remove('active'));items[0].classList.add('active');
   document.querySelector('.back-btn').style.display=window.innerWidth<=760?'inline-block':'none';
   renderDashboard();renderQuests();
 }
 
 /* ===== 启动 ===== */
-loadState();renderMotivBar();renderDashboard();makeBubbles();dailyHello();
+loadState();applyLang();renderMotivBar();renderDashboard();makeBubbles();dailyHello();
 renderStickerBook();
 lastCounts=todayCounts();lastAllDone=allQuestsDone(lastCounts);
 renderQuests();
@@ -1161,17 +1343,17 @@ function backupProgress(){
   const payload=JSON.stringify({app:'huiyan-progress',date:new Date().toISOString(),count:Object.keys(d).length,data:d});
   const blob=new Blob([payload],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='慧眼进度备份_'+new Date().toISOString().slice(0,10)+'.json';
+  a.download=T('backup_file')+new Date().toISOString().slice(0,10)+'.json';
   document.body.appendChild(a);a.click();a.remove();
-  alert('💾 已导出进度备份文件！\n（包含任务进度和贴纸收藏）\n建议存到 iCloud云盘，换设备时用"恢复"选这个文件即可。');
+  alert(T('backup_alert'));
 }
 function restoreProgress(){
   const inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';
   inp.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
     r.onload=()=>{try{const j=JSON.parse(r.result);const d=j.data||j;let n=0;
       for(const k in d){localStorage.setItem(k,d[k]);n++}
-      alert('✅ 已恢复 '+n+' 项进度！');location.reload();
-    }catch(err){alert('❌ 这不是有效的进度备份文件')}};
+      alert(TF('restore_ok',n));location.reload();
+    }catch(err){alert(T('restore_bad'))}};
     r.readAsText(f)};
   inp.click();
 }

@@ -830,6 +830,36 @@ function sndMagic(){ [523,659,784,1047,1319,1568].forEach((f,i)=>tone(f,i*0.09,0
 /* ================= TTS (Web Speech API) ================= */
 let ttsOn = true;
 try{ ttsOn = (typeof localStorage!=="undefined") ? localStorage.getItem("jenny_tts_on")!=="0" : true; }catch(e){}
+/* Humanized voice ranking: Premium/Enhanced/Siri/local/known-good names first */
+function __voiceScore(v,pref){
+  if(!v||!v.lang)return -1;
+  const vl=String(v.lang).toLowerCase().replace(/_/g,'-');
+  if(vl.indexOf(pref)!==0)return -1;
+  const n=String(v.name||'');let s=0;
+  if(/premium/i.test(n))s+=100;
+  if(/enhanced|增强/i.test(n))s+=80;
+  if(/siri/i.test(n))s+=70;
+  if(v.localService===true)s+=40;
+  if(pref==="en"){if(/\b(ava|zoe|samantha|karen|allison|susan)\b/i.test(n))s+=20;}
+  else{
+    if(/tingting|ting-ting|婷婷|meijia|mei-jia|美嘉|lili|丽丽|shanshan|珊珊/i.test(n))s+=20;
+    if(vl.indexOf('zh-cn')===0||vl.indexOf('zh-hans')===0)s+=10;
+  }
+  return s;
+}
+function __bestVoice(vs,pref){
+  let best=null,bs=-1;
+  for(let i=0;i<(vs?vs.length:0);i++){const sc=__voiceScore(vs[i],pref);if(sc>bs){bs=sc;best=vs[i];}}
+  return best;
+}
+function __humanRate(){return 0.95+(Math.random()*0.06-0.03);}
+function __humanPitch(){return 1+(Math.random()*0.1-0.05);}
+let __vCache={};
+function __pickVoice(pref){
+  if(__vCache[pref]!==undefined) return __vCache[pref];
+  try{ return __vCache[pref]=__bestVoice(speechSynthesis.getVoices()||[],pref); }catch(e){ return null; }
+}
+try{ if(typeof speechSynthesis!=="undefined") speechSynthesis.onvoiceschanged=function(){ __vCache={}; }; }catch(e){} /* re-rank when voices load async (iOS) */
 function speak(text,lang){
   if(!ttsOn) return;
   try{
@@ -837,15 +867,10 @@ function speak(text,lang){
     lang=lang||"en";
     const u=new SpeechSynthesisUtterance(text);
     u.lang = lang==="zh" ? "zh-CN" : "en-US";
-    const vs=speechSynthesis.getVoices()||[];
-    const prefs = lang==="zh" ? ["Tingting","Ting-Ting","Meijia","婷婷"] : ["Samantha","Karen"];
-    let v=null;
-    prefs.some(p=>{ v=vs.find(x=>x.name && x.name.indexOf(p)>=0); return !!v; });
-    if(!v) v=vs.find(x=>x.name && /enhanced|premium/i.test(x.name) && x.lang && x.lang.toLowerCase().indexOf(lang==="zh"?"zh":"en")===0);
-    if(!v) v=vs.find(x=>x.lang && x.lang.toLowerCase().indexOf(lang==="zh"?"zh":"en")===0);
+    const v=__pickVoice(lang==="zh"?"zh":"en");
     if(lang==="zh" && !v) return; /* no Chinese voice on device: silent fallback */
     if(v) u.voice=v;
-    u.rate=0.95; u.pitch=1.05;
+    u.rate=__humanRate(); u.pitch=__humanPitch();
     speechSynthesis.cancel(); setTimeout(function(){try{speechSynthesis.resume();}catch(e){}speechSynthesis.speak(u);},80);
   }catch(e){}
 }

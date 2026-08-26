@@ -1013,24 +1013,42 @@ function sndOops(){tone(392,0,0.14,"sine",0.1);tone(330,0.13,0.2,"sine",0.1);}
 let ttsOn=true;
 try{ttsOn=localStorage.getItem("jenny_tts_on")!=="0";}catch(e){}
 let enVoice=null,voicesReady=false;
+/* Humanized voice ranking: Premium/Enhanced/Siri/local/known-good names first */
+function __voiceScore(v,pref){
+  if(!v||!v.lang)return -1;
+  const vl=String(v.lang).toLowerCase().replace(/_/g,'-');
+  if(vl.indexOf(pref)!==0)return -1;
+  const n=String(v.name||'');let s=0;
+  if(/premium/i.test(n))s+=100;
+  if(/enhanced|增强/i.test(n))s+=80;
+  if(/siri/i.test(n))s+=70;
+  if(v.localService===true)s+=40;
+  if(pref==="en"){if(/\b(ava|zoe|samantha|karen|allison|susan)\b/i.test(n))s+=20;}
+  else{
+    if(/tingting|ting-ting|婷婷|meijia|mei-jia|美嘉|lili|丽丽|shanshan|珊珊/i.test(n))s+=20;
+    if(vl.indexOf('zh-cn')===0||vl.indexOf('zh-hans')===0)s+=10;
+  }
+  return s;
+}
+function __bestVoice(vs,pref){
+  let best=null,bs=-1;
+  for(let i=0;i<(vs?vs.length:0);i++){const sc=__voiceScore(vs[i],pref);if(sc>bs){bs=sc;best=vs[i];}}
+  return best;
+}
+function __humanRate(){return 0.95+(Math.random()*0.06-0.03);}
+function __humanPitch(){return 1+(Math.random()*0.1-0.05);}
 function pickVoice(){
   if(!("speechSynthesis" in window))return;
   try{
     const vs=speechSynthesis.getVoices();
     if(!vs||!vs.length)return;
     voicesReady=true;
-    const en=vs.filter(function(v){return /^en([-_]|$)/i.test(v.lang);});
-    const pref=["samantha","karen","moira","tessa","serena","daniel","google uk english female","google us english","enhanced","premium"];
-    for(let i=0;i<pref.length;i++){
-      const hit=en.find(function(v){return v.name.toLowerCase().includes(pref[i]);});
-      if(hit){enVoice=hit;return;}
-    }
-    enVoice=en.find(function(v){return /GB|US|AU/i.test(v.lang);})||en[0]||null;
+    enVoice=__bestVoice(vs,"en");   /* ranked pick, cached in enVoice */
   }catch(e){}
 }
 if("speechSynthesis" in window){
   pickVoice();
-  try{speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}
+  try{speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}  /* re-rank when voices load async (iOS) */
 }
 function speak(text,opts){
   opts=opts||{};
@@ -1042,8 +1060,8 @@ function speak(text,opts){
     const u=new SpeechSynthesisUtterance(text);
     u.lang=(enVoice&&enVoice.lang)||"en-GB";
     if(enVoice)u.voice=enVoice;
-    u.rate=opts.rate||0.95;
-    u.pitch=opts.pitch||1.05;
+    u.rate=opts.rate||__humanRate();
+    u.pitch=opts.pitch||__humanPitch();
     let fired=false;
     u.onend=function(){if(!fired){fired=true;done(true);}};
     u.onerror=function(){if(!fired){fired=true;done(false);}};

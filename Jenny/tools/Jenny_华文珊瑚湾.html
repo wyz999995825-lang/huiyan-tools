@@ -367,20 +367,40 @@ document.addEventListener("click",e=>{
 let ttsOn=true;
 try{ttsOn=localStorage.getItem("jenny_tts_on")!=="0";}catch(e){}
 let zhVoice=null;
+/* 人性化选声：给候选声音打分（Premium/Enhanced/Siri/本地/知名声音优先） */
+function __voiceScore(v,pref){
+  if(!v||!v.lang)return -1;
+  const vl=String(v.lang).toLowerCase().replace(/_/g,'-');
+  if(vl.indexOf(pref)!==0)return -1;
+  const n=String(v.name||'');let s=0;
+  if(/premium/i.test(n))s+=100;
+  if(/enhanced|增强/i.test(n))s+=80;
+  if(/siri/i.test(n))s+=70;
+  if(v.localService===true)s+=40;
+  if(pref==='en'){if(/\b(ava|zoe|samantha|karen|allison|susan)\b/i.test(n))s+=20;}
+  else{
+    if(/tingting|ting-ting|婷婷|meijia|mei-jia|美嘉|lili|丽丽|shanshan|珊珊/i.test(n))s+=20;
+    if(vl.indexOf('zh-cn')===0||vl.indexOf('zh-hans')===0)s+=10;
+  }
+  return s;
+}
+function __bestVoice(vs,pref){
+  let best=null,bs=-1;
+  for(let i=0;i<(vs?vs.length:0);i++){const sc=__voiceScore(vs[i],pref);if(sc>bs){bs=sc;best=vs[i];}}
+  return best;
+}
+function __humanRate(){return 0.95+(Math.random()*0.06-0.03);}
+function __humanPitch(){return 1+(Math.random()*0.1-0.05);}
 function pickVoice(){
   if(!("speechSynthesis" in window))return;
   try{
     const vs=speechSynthesis.getVoices();if(!vs||!vs.length)return;
-    const prefer=["Tingting","Ting-Ting","婷婷","Meijia","美嘉","Sinji","Yue"];
-    zhVoice=vs.find(v=>prefer.some(p=>(v.name||"").includes(p))&&/zh/i.test(v.lang||""))
-      ||vs.find(v=>/^zh[-_]?(CN|Hans)/i.test(v.lang||""))
-      ||vs.find(v=>/^zh/i.test(v.lang||""))
-      ||null;
+    zhVoice=__bestVoice(vs,"zh");   /* 打分排序：Premium/增强 优先，zh-CN 优先但接受任何 zh */
   }catch(e){}
 }
 if("speechSynthesis" in window){
   pickVoice();
-  try{speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}
+  try{speechSynthesis.onvoiceschanged=pickVoice;}catch(e){}  /* iOS 声音异步加载后重新排序缓存 */
 }
 function cleanSpeech(t){
   return String(t).replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{2B00}-\u{2BFF}]/gu,"")
@@ -392,7 +412,7 @@ function speak(text,handlers){
     const u=new SpeechSynthesisUtterance(cleanSpeech(text));
     if(zhVoice)u.voice=zhVoice;
     u.lang=zhVoice?zhVoice.lang:"zh-CN";
-    u.rate=0.95;u.pitch=1.05;
+    u.rate=__humanRate();u.pitch=__humanPitch();
     if(handlers){u.onstart=handlers.onstart||null;u.onend=handlers.onend||null;u.onerror=handlers.onend||null;}
     setTimeout(function(){try{speechSynthesis.resume();}catch(e){}speechSynthesis.speak(u);},80);
     return u;
