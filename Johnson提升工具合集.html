@@ -312,7 +312,7 @@ function percentVisual(n){let h='<div><div class="percent-grid">';for(let i=0;i<
 function renderMath(topic){
   if(topic==="mistakes"){renderMistakes();return}const q=MATH[topic]||MATH.angles;
   $("screen").innerHTML=`<div class="page-title"><div class="page-icon">🐢</div><div><h1>Math Model Reef</h1><p>Try it, then see the thinking move in pictures.</p></div></div>
-    <div class="topic-chips">${TOPICS.math.filter(t=>t.id!=="mistakes").map(t=>`<button class="chip-btn ${topic===t.id?'active':''}" onclick="setTopic('${t.id}')">${t.label}</button>`).join("")}</div>
+    <div class="topic-chips">${TOPICS.math.map(t=>`<button class="chip-btn ${topic===t.id?'active':''}" onclick="setTopic('${t.id}')">${t.label}</button>`).join("")}</div>
     <section class="question-card"><div class="question-kicker"><span>${q.title}</span><span>Original Singapore-style practice</span></div><div class="question">${q.q}</div><div class="visual-stage">${q.visual}</div><div class="options" id="mathOptions">${q.opts.map((o,i)=>`<button class="option" onclick="answerMath('${topic}',${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join("")}</div><div id="mathFeedback"></div></section>`;
 }
 function recordAttempt(subject,q,pick){
