@@ -1,1 +1,182 @@
-[]
+[
+ {
+  "id": "d20260827a",
+  "type": "fun",
+  "date": "2026-08-27",
+  "title": "The Octopus Who Painted the Reef",
+  "emoji": "🐙",
+  "text": "Ollie the octopus loved colours, but his reef was grey. One morning he found a box of coral paints that had fallen from a boat. \"I will paint the reef!\" he said. With eight arms, he painted eight things at once: red anemones, golden sand, purple shells and a bright blue door for the moray eel. The fish watched with wide eyes. When the sun set, the reef glowed like a rainbow. \"You forgot one spot,\" smiled the eel, pointing at Ollie. So the fish dipped their fins in paint and covered Ollie in happy dots. Now the reef is the brightest home in the sea, and Ollie is the proudest painter in it.",
+  "keywords": [
+   {
+    "w": "reef",
+    "def": "a ridge of coral where sea animals live",
+    "zh": "珊瑚礁",
+    "eg": "Many fish live near the reef."
+   },
+   {
+    "w": "anemones",
+    "def": "soft sea animals that look like flowers",
+    "zh": "海葵",
+    "eg": "Clownfish hide in anemones."
+   },
+   {
+    "w": "glowed",
+    "def": "shone with a soft light",
+    "zh": "发光",
+    "eg": "The lamp glowed in the dark."
+   },
+   {
+    "w": "proudest",
+    "def": "feeling the most pleased about something done",
+    "zh": "最自豪的",
+    "eg": "She was the proudest runner in school."
+   },
+   {
+    "w": "dipped",
+    "def": "put into liquid for a short time",
+    "zh": "蘸",
+    "eg": "He dipped the brush in water."
+   }
+  ],
+  "questions": [
+   {
+    "q": "Why was the reef grey at first?",
+    "options": [
+     "Nobody had painted it yet.",
+     "The sun never shone there.",
+     "The paints had run out.",
+     "The fish liked grey best."
+    ],
+    "correct": 0,
+    "why": "The story says the reef was grey until Ollie found the paints."
+   },
+   {
+    "q": "How could Ollie paint eight things at once?",
+    "options": [
+     "He worked for eight days.",
+     "He had eight arms.",
+     "Eight fish helped him.",
+     "He used a magic brush."
+    ],
+    "correct": 1,
+    "why": "An octopus has eight arms, so Ollie painted eight things at once."
+   },
+   {
+    "q": "What did the fish do at the end?",
+    "options": [
+     "They washed the paint away.",
+     "They painted Ollie with happy dots.",
+     "They hid in the blue door.",
+     "They swam away from the reef."
+    ],
+    "correct": 1,
+    "why": "The fish dipped their fins in paint and covered Ollie in dots."
+   },
+   {
+    "q": "Which word best describes Ollie?",
+    "options": [
+     "Lazy",
+     "Creative",
+     "Shy",
+     "Angry"
+    ],
+    "correct": 1,
+    "why": "Ollie had the idea to paint the whole reef — that is creative."
+   }
+  ],
+  "xray": [
+   1,
+   4
+  ]
+ },
+ {
+  "id": "d20260827b",
+  "type": "news",
+  "date": "2026-08-27",
+  "title": "Kids Grow Vegetables on School Rooftops",
+  "emoji": "🥬",
+  "text": "More schools are turning their rooftops into little farms. Students plant vegetables like kailan, spinach and cherry tomatoes in neat rows of planter boxes. Teachers say the gardens help children learn where food comes from. Every week, young gardeners water the plants, pull out weeds and check the leaves for insects. When the vegetables are ready, some schools cook them in the canteen, and others share them with families nearby. Growing food in the city also helps the environment, because the vegetables do not need to travel far in lorries. One student said the best part is simple: \"Everything tastes better when you grow it yourself!\"",
+  "keywords": [
+   {
+    "w": "rooftops",
+    "def": "the top outside parts of buildings",
+    "zh": "屋顶",
+    "eg": "Birds landed on the rooftops."
+   },
+   {
+    "w": "planter",
+    "def": "a box for growing plants",
+    "zh": "种植箱",
+    "eg": "The planter is full of flowers."
+   },
+   {
+    "w": "weeds",
+    "def": "wild plants growing where they are not wanted",
+    "zh": "杂草",
+    "eg": "Dad pulled the weeds from the garden."
+   },
+   {
+    "w": "canteen",
+    "def": "a place in school where food is sold",
+    "zh": "食堂",
+    "eg": "We had noodles at the canteen."
+   },
+   {
+    "w": "environment",
+    "def": "the natural world around us",
+    "zh": "环境",
+    "eg": "Recycling helps the environment."
+   }
+  ],
+  "questions": [
+   {
+    "q": "Where do the students grow the vegetables?",
+    "options": [
+     "In a forest",
+     "On school rooftops",
+     "Beside the beach",
+     "Inside the classroom"
+    ],
+    "correct": 1,
+    "why": "The article says schools turn rooftops into little farms."
+   },
+   {
+    "q": "Which job is NOT mentioned as part of caring for the plants?",
+    "options": [
+     "Watering them",
+     "Pulling out weeds",
+     "Checking for insects",
+     "Painting the boxes"
+    ],
+    "correct": 3,
+    "why": "Watering, weeding and checking leaves are mentioned; painting is not."
+   },
+   {
+    "q": "Why does city farming help the environment?",
+    "options": [
+     "Vegetables do not travel far in lorries.",
+     "Rooftops become warmer.",
+     "Children eat less food.",
+     "Schools buy more boxes."
+    ],
+    "correct": 0,
+    "why": "Food grown nearby does not need long lorry trips, which is better for the environment."
+   },
+   {
+    "q": "What did one student say about home-grown food?",
+    "options": [
+     "It is cheaper.",
+     "It looks prettier.",
+     "It tastes better.",
+     "It grows faster."
+    ],
+    "correct": 2,
+    "why": "The student said everything tastes better when you grow it yourself."
+   }
+  ],
+  "xray": [
+   0,
+   5
+  ]
+ }
+]
