@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jenny 的海洋学习乐园</title>
+<title>Jenny 提升工具合集</title>
 <style>
 :root{
   --tiffany:#62b5e5;--tiffany-light:#aed9f7;--lagoon:#e9f4fc;--sky:#f5fafe;--deep:#3387c4;
@@ -267,7 +267,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
 
 <div class="topbar">
   <button class="back-btn" onclick="goHome()" data-i18n="back">← 返回</button>
-  <h1 id="topTitle"><span class="mascot">🧜‍♀️</span> Jenny 的海洋学习乐园</h1>
+  <h1 id="topTitle"><span class="mascot">🧜‍♀️</span> Jenny 提升工具合集</h1>
   <span class="info" data-i18n="info">P2 · 7 个学习工具</span>
   <span style="margin-left:auto;display:flex;gap:6px">
     <button class="tb-btn off" id="cloudInd" onclick="try{JennySync&&JennySync.syncNow('manual')}catch(e){}" title="云同步" style="min-width:52px">☁️—</button>
@@ -363,7 +363,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
         <button class="pb-open" onclick="openParent()" data-i18n="pb_btn">👩‍👧 妈妈看板 / Parent Board</button>
       </div>
 
-      <h2 data-i18n="welcome">🐚 欢迎来到海洋学习乐园</h2>
+      <h2 data-i18n="welcome">🐚 欢迎回来，Jenny！</h2>
       <p class="sub" data-i18n="welcome_sub">P2 · 7 个学习工具 · 点一个小岛，出发探险咯！</p>
 
       <svg class="wave-divider" viewBox="0 0 1200 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,20 C150,40 300,0 450,20 C600,40 750,0 900,20 C1050,40 1150,10 1200,20 L1200,40 L0,40 Z" fill="#aed9f7" opacity="0.55"/><path d="M0,26 C150,10 350,38 550,24 C750,10 950,38 1200,24 L1200,40 L0,40 Z" fill="#62b5e5" opacity="0.35"/></svg>
@@ -596,7 +596,7 @@ function hubLangCode(){return LANG==='en'?'en-US':'zh-CN'}
 function hubSpeak(t){speak(t,hubLangCode())}
 const I18N={
 zh:{
-  back:'← 返回',info:'P2 · 7 个学习工具',title:'Jenny 的海洋学习乐园',
+  back:'← 返回',info:'P2 · 7 个学习工具',title:'Jenny 提升工具合集',
   tts_title:'朗读开关',fw_title:'放烟花！',backup_btn:'💾 备份进度',restore_btn:'📥 恢复',
   days_unit:'天',wins_unit:'个成就',stickers_unit:'贴纸',record_btn:'+ 记录小成功',
   qm_title:'🌊 记录今天的小成功',qm_ph:'写下你的小成功...',qm_submit:'记录 🌟',qm_cancel:'取消',
@@ -604,7 +604,7 @@ zh:{
   qp_title:'🗺️ 今日任务清单',qp_sub:'全部打勾就能开出神秘贴纸盲盒哦！',
   dash_title:'🤿 潜水日志 · Jenny 的深海探险记录',streak_label:'天连续潜水',
   stat_total:'总成就',stat_week:'本周',stat_best:'最佳连击',stat_stk:'贴纸',
-  welcome:'🐚 欢迎来到海洋学习乐园',welcome_sub:'P2 · 7 个学习工具 · 点一个小岛，出发探险咯！',
+  welcome:'🐚 欢迎回来，Jenny！',welcome_sub:'P2 · 7 个学习工具 · 点一个小岛，出发探险咯！',
   subj_math:'🧮 Maths 数学',subj_sci:'🔬 Science 科学',subj_eng:'📖 English 英语',subj_chi:'📕 华文',subj_think:'🧠 思维',subj_grow:'🌟 成长',
   sec_home:'主页',sec_math:'🧮 Maths',sec_sci:'🔬 Science',sec_eng:'📖 English',sec_chi:'📕 华文',sec_think:'🧠 思维',sec_grow:'🌟 成长',
   tool_mathreef:'Math Master Reef',tool_animalmath:'动物王国数学',tool_science:'Science Explorer',tool_reading:'Reading Lagoon',
@@ -638,7 +638,7 @@ zh:{
   pb_btn:'👩‍👧 妈妈看板 / Parent Board',pb_title:'妈妈看板'
 },
 en:{
-  back:'← Back',info:'P2 · 7 Learning Tools',title:"Jenny's Ocean Learning World",
+  back:'← Back',info:'P2 · 7 Learning Tools',title:"Jenny 提升工具合集",
   tts_title:'Read-aloud on/off',fw_title:'Fireworks!',backup_btn:'💾 Backup',restore_btn:'📥 Restore',
   days_unit:' days',wins_unit:'wins',stickers_unit:'stickers',record_btn:'+ Log a Small Win',
   qm_title:"🌊 Log Today's Small Win",qm_ph:'Write your small win...',qm_submit:'Save 🌟',qm_cancel:'Cancel',
@@ -646,7 +646,7 @@ en:{
   qp_title:"🗺️ Today's Quests",qp_sub:'Tick them all to open a mystery sticker box!',
   dash_title:"🤿 Dive Log · Jenny's Deep-Sea Adventures",streak_label:'day dive streak',
   stat_total:'Total wins',stat_week:'This week',stat_best:'Best streak',stat_stk:'Stickers',
-  welcome:'🐚 Welcome to the Ocean Learning World',welcome_sub:'P2 · 7 learning tools · Pick an island and set sail!',
+  welcome:'🐚 Welcome, Jenny!',welcome_sub:'P2 · 7 learning tools · Pick an island and set sail!',
   subj_math:'🧮 Maths',subj_sci:'🔬 Science',subj_eng:'📖 English',subj_chi:'📕 Chinese',subj_think:'🧠 Thinking',subj_grow:'🌟 Growing',
   sec_home:'Home',sec_math:'🧮 Maths',sec_sci:'🔬 Science',sec_eng:'📖 English',sec_chi:'📕 Chinese',sec_think:'🧠 Thinking',sec_grow:'🌟 Growing',
   tool_mathreef:'Math Master Reef',tool_animalmath:'Animal Kingdom Maths',tool_science:'Science Explorer',tool_reading:'Reading Lagoon',
