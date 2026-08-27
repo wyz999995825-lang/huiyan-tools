@@ -2187,6 +2187,20 @@ function repairLegacyQuestionOptions(q){const fix=QUESTION_OPTION_REPAIRS[q?.q];
    ============================================================ */
 let VOICE_ON = true;          // 语音开关
 let _enVoice = null;
+let directVoiceGesture = false;
+let voiceRequestSerial = 0;
+
+function beginTrustedVoiceGesture(event){
+  directVoiceGesture = Boolean(event.isTrusted);
+  queueMicrotask(()=>{ directVoiceGesture = false; });
+}
+function voicePageIsForeground(){
+  return !document.hidden && (typeof document.hasFocus !== 'function' || document.hasFocus());
+}
+function stopVoice(){
+  voiceRequestSerial++;
+  if(window.speechSynthesis) try{ speechSynthesis.cancel(); }catch(e){}
+}
 
 function pickVoice(){
   const vs = window.speechSynthesis ? speechSynthesis.getVoices() : [];
@@ -2201,16 +2215,31 @@ if(window.speechSynthesis){
 }
 
 function say(text){
-  if(!VOICE_ON || !window.speechSynthesis) return;
+  if(!VOICE_ON || !directVoiceGesture || !voicePageIsForeground() || !window.speechSynthesis) return;
   try{
+    const request = ++voiceRequestSerial;
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     if(_enVoice) u.voice=_enVoice;
     u.lang='en-GB';
     u.rate=0.95; u.pitch=1.12; u.volume=1;
-    speechSynthesis.speak(u);
+    if(request===voiceRequestSerial) speechSynthesis.speak(u);
   }catch(e){}
 }
+
+document.addEventListener('click',beginTrustedVoiceGesture,true);
+document.addEventListener('visibilitychange',()=>{ if(document.hidden) stopVoice(); });
+document.addEventListener('freeze',stopVoice);
+window.addEventListener('blur',stopVoice);
+window.addEventListener('pagehide',stopVoice);
+window.addEventListener('message',event=>{
+  if(event.data?.type==='johnson-hub-suspend-audio'){ stopVoice(); return; }
+  if(event.data?.type!=='johnson-hub-sound') return;
+  VOICE_ON=Boolean(event.data.value);
+  if(!VOICE_ON) stopVoice();
+  const btn=document.getElementById('voiceBtn');
+  if(btn){btn.textContent=VOICE_ON?'🔊 语音鼓励':'🔇 语音关闭';btn.classList.toggle('off',!VOICE_ON)}
+});
 
 // ============ 花式鼓励语库（英文鼓励，旁敲侧击练词汇）============
 // 每条 {en: 英文, zh: 中文意思}，做完会显示英文 + 中文，语音念英文
@@ -2994,7 +3023,7 @@ function finishQuiz(){
   else if(pct>=0.8) voiceMsg=rnd(PRAISE_GREAT).en;
   else if(pct>=0.6) voiceMsg=rnd(PRAISE_GOOD).en;
   else voiceMsg=rnd(PRAISE_TRYAGAIN).en;
-  setTimeout(()=>say(voiceMsg),700);
+  say(voiceMsg);
   // ----- 烟花（全对、过关、或赢过自己）-----
   if(allCorrect||passed||beatSelf) setTimeout(fireworks,400);
 }
