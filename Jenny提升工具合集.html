@@ -1558,13 +1558,12 @@ document.addEventListener("pointerdown",unlock,{once:true});})();
    ================================================================ */
 var JennySync=(function(){
 'use strict';
-/* token 占位符分成两半存放（_p1+_p2 拼成完整占位符）。
-   部署时把真实 token 也分成两半：前半填入 _p1、后半填入 _p2，
-   这样文件里永远不出现完整 token，不会被密钥扫描器拦截。 */
-var _p1="ghp_fJJBPWs82AWPDoLf";
-var _p2="dfaD8tjlAonlxY38Nsz8";
+/* Never place a GitHub token or private Gist id in public HTML. A secure
+   server-side sync endpoint must be deployed before this layer is enabled. */
+var _p1="__SYNC";
+var _p2="_TOKEN__";
 var _cfg={
-  i:["ddb1d7c5","b0706831","40cb7e2b","a8547e10"].join(""),
+  i:["__JENNY","_SYNC","_GIST__"].join(""),
   f:["huiyan","-progress",".json"].join(""),
   u:["https://","api.git","hub.com","/gists/"].join("")
 };
