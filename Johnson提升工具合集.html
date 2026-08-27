@@ -201,7 +201,7 @@ const DAILY_GOALS=[
   {id:"english",icon:"🐙",name:"Two readings",goal:2,time:"11 min"},
   {id:"chinese",icon:"🦀",name:"华文短文",goal:1,time:"6 min"}
 ];
-const DAILY_TOTAL=DAILY_GOALS.reduce((n,g)=>n+g.goal,0),FOCUS_TARGET_SECONDS=45*60,LEARNING_VIEWS=new Set(["math","science","english","pet","chinese"]);
+const DAILY_TOTAL=DAILY_GOALS.reduce((n,g)=>n+g.goal,0),FOCUS_TARGET_SECONDS=45*60,FOCUS_IDLE_PAUSE_MS=5*60*1000,FOCUS_SLEEP_GAP_MS=6000,AUDIO_ACTIVITY_WINDOW_MS=45*1000,QUIET_START_MINUTES=21*60,QUIET_END_MINUTES=7*60,LEARNING_VIEWS=new Set(["math","science","english","pet","chinese"]);
 const STICKERS=[
   {id:"manta-map",art:"🌊",name:"Manta Mapmaker",tier:"Rare",rarity:"Tidal Rare",colour:"#d9f3ff"},{id:"circuit-ray",art:"⚡",name:"Circuit Ray",tier:"Rare",rarity:"Electric Rare",colour:"#fff1a7"},
   {id:"coral-coder",art:"🪸",name:"Coral Codebreaker",tier:"Rare",rarity:"Reef Rare",colour:"#ffe4df"},{id:"neptune-focus",art:"🔱",name:"Neptune Focus",tier:"Epic",rarity:"Royal Epic",colour:"#dce8ff"},
@@ -230,7 +230,7 @@ const STICKERS=[
 const STICKER_ALIASES={"time-guardian":"moon-oracle","comet-spirit":"star-forge","sun-chariot":"solar-dolphin","logic-crown":"logic-turtle","evidence-lens":"evidence-octopus","word-smith":"word-whale","mountain-map":"manta-map","city-architect":"coral-coder","music-maker":"cosmic-palette","garden-keeper":"forest-crown","reef-scholar":"pearl-builder","circuit-hero":"circuit-ray"};
 function freshState(){return {schemaVersion:3,xp:0,streak:0,best:0,lastActive:"",rewardDate:"",sound:true,answers:{},savedWords:[],daily:{},attempts:{},questionArchive:{},stickers:{owned:[],opened:{}},stories:[],focusDays:{},checkins:{},goalCelebrated:{},lastBackup:""}}
 let state=freshState();
-let currentView="home",currentTopic="",albumFilter="All",toastTimer=null,recorder=null,recordChunks=[],audioStream=null,focusLastSavedAt=0;
+let currentView="home",currentTopic="",albumFilter="All",toastTimer=null,recorder=null,recordChunks=[],audioStream=null,focusLastSavedAt=0,focusLastTickAt=Date.now(),lastUserActivityAt=0,focusAutoPaused=false;
 
 function localDay(d=new Date()){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function yesterday(){const d=new Date();d.setDate(d.getDate()-1);return localDay(d)}
@@ -240,6 +240,7 @@ function loadState(){
     const saved=JSON.parse(localStorage.getItem(STORE)||"null"),legacy=JSON.parse(localStorage.getItem(LEGACY_STORE)||"null"),source=saved||legacy;
     if(source){state=Object.assign(freshState(),source);state.answers=mergeObject({},source.answers);state.daily=mergeObject({},source.daily);state.attempts=mergeObject({},source.attempts);state.questionArchive=mergeObject({},source.questionArchive);state.stickers=Object.assign({owned:[],opened:{}},source.stickers||{});state.stickers.owned=[...new Set(state.stickers.owned||[])];state.stickers.opened=mergeObject({},state.stickers.opened);state.stories=Array.isArray(source.stories)?source.stories:[];state.focusDays=mergeObject({},source.focusDays);state.checkins=mergeObject({},source.checkins);state.goalCelebrated=mergeObject({},source.goalCelebrated)}
   }catch(e){state=freshState()}
+  Object.values(state.focusDays||{}).forEach(f=>{if(f&&typeof f==="object")f.runningSince=0});
   state.schemaVersion=3;ensureToday();inferHistoricalCheckins();saveState();
 }
 function saveState(){try{localStorage.setItem(STORE,JSON.stringify(state))}catch(e){}}
@@ -268,10 +269,18 @@ function dailyPercent(){ensureToday();return dailyPercentFor(localDay())}
 function inferHistoricalCheckins(){Object.keys(state.daily||{}).forEach(date=>{if(dailyPercentFor(date)===100&&!state.checkins[date])state.checkins[date]=date+"T23:59:59+08:00"})}
 function markDaily(subject,id){if(!subject||!id)return;const before=dailyPercent(),today=ensureToday(),list=today[subject]||(today[subject]=[]);if(!list.includes(id))list.push(id);const after=dailyPercent();if(after===100){state.checkins[localDay()]=state.checkins[localDay()]||new Date().toISOString();if(before<100&&!state.goalCelebrated[localDay()]){state.goalCelebrated[localDay()]=true;setTimeout(()=>{showToast("Today's core target is complete. You may stop proudly or take a bonus mission.");speakEncouragement("Today's core target is complete. Your progress is saved.");fireworks()},800)}}saveState();renderChrome();if(currentView==="home")renderHome()}
 function focusEntry(date=localDay()){if(!state.focusDays[date]||typeof state.focusDays[date]!=="object")state.focusDays[date]={elapsed:0,runningSince:0,lastNotice:0,manuallyPaused:false};const f=state.focusDays[date];f.elapsed=Math.max(0,Number(f.elapsed)||0);f.runningSince=Math.max(0,Number(f.runningSince)||0);f.lastNotice=Math.max(0,Number(f.lastNotice)||0);f.manuallyPaused=Boolean(f.manuallyPaused);return f}
-function focusElapsed(date=localDay()){const f=state.focusDays?.[date];if(!f)return 0;let seconds=Math.max(0,Number(f.elapsed)||0);if(date===localDay()&&Number(f.runningSince)>0)seconds+=(Date.now()-Number(f.runningSince))/1000;return Math.max(0,Math.floor(seconds))}
+function quietHoursActive(now=new Date()){const minutes=now.getHours()*60+now.getMinutes();return minutes>=QUIET_START_MINUTES||minutes<QUIET_END_MINUTES}
+function noteUserActivity(){lastUserActivityAt=Date.now()}
+function hasRecentUserActivity(windowMs=FOCUS_IDLE_PAUSE_MS){return lastUserActivityAt>0&&Date.now()-lastUserActivityAt<=windowMs}
+function pageIsForeground(){return !document.hidden&&(typeof document.hasFocus!=="function"||document.hasFocus())}
+function audioEnvironmentSafe(){return !quietHoursActive()&&pageIsForeground()&&hasRecentUserActivity(AUDIO_ACTIVITY_WINDOW_MS)}
+function silencePageAudio(){if("speechSynthesis" in window)try{speechSynthesis.cancel()}catch(e){}document.querySelector(".embedded-tool-frame")?.contentWindow?.postMessage({type:"johnson-hub-sound",value:false},"*")}
+function focusEnvironmentSafe(){return !quietHoursActive()&&pageIsForeground()&&hasRecentUserActivity(FOCUS_IDLE_PAUSE_MS)}
+function focusElapsed(date=localDay()){const f=state.focusDays?.[date];if(!f)return 0;let seconds=Math.max(0,Number(f.elapsed)||0);if(date===localDay()&&Number(f.runningSince)>0){const now=Date.now(),cutoff=focusLastTickAt&&now-focusLastTickAt>FOCUS_SLEEP_GAP_MS?focusLastTickAt:now;seconds+=Math.max(0,cutoff-Number(f.runningSince))/1000}return Math.max(0,Math.floor(seconds))}
 function checkpointFocus(stop=false){const f=focusEntry();if(f.runningSince){f.elapsed=focusElapsed();f.runningSince=stop?0:Date.now();focusLastSavedAt=Date.now();saveState()}return f}
-function syncFocusForView(){const learning=LEARNING_VIEWS.has(currentView),f=focusEntry();if(!learning||document.hidden){checkpointFocus(true);return}if(!f.manuallyPaused&&!f.runningSince){f.runningSince=Date.now();focusLastSavedAt=Date.now();saveState()}}
-function toggleFocus(){const f=focusEntry();if(f.runningSince){checkpointFocus(true);f.manuallyPaused=true;saveState()}else{f.manuallyPaused=false;f.runningSince=Date.now();focusLastSavedAt=Date.now();saveState()}renderFocusStrip()}
+function suspendFocusForEnvironment(){checkpointFocus(true);focusAutoPaused=true;lastUserActivityAt=0;silencePageAudio()}
+function syncFocusForView(){const learning=LEARNING_VIEWS.has(currentView),f=focusEntry();if(!learning||!focusEnvironmentSafe()){suspendFocusForEnvironment();return}focusAutoPaused=false;if(!f.manuallyPaused&&!f.runningSince){f.runningSince=Date.now();focusLastSavedAt=Date.now();saveState()}document.querySelector(".embedded-tool-frame")?.contentWindow?.postMessage({type:"johnson-hub-sound",value:state.sound},"*")}
+function toggleFocus(){noteUserActivity();const f=focusEntry();if(quietHoursActive()){suspendFocusForEnvironment();showToast("Quiet hours are active from 9 PM to 7 AM. The timer and voice are paused.");renderFocusStrip();return}if(f.runningSince){checkpointFocus(true);f.manuallyPaused=true;focusAutoPaused=false;saveState()}else{f.manuallyPaused=false;focusAutoPaused=false;f.runningSince=Date.now();focusLastSavedAt=Date.now();saveState()}renderFocusStrip()}
 function focusQuestionInfo(){
   const progress=(label,id,total)=>{const done=Math.min(total,dailyCount(id)),number=done>=total?total:done+1;return {label,number,total}};
   const missionLabel=(name,id,total)=>dailyCount(id)>=total?name+" · core complete · bonus":name+" · today "+dailyCount(id)+"/"+total;
@@ -283,8 +292,8 @@ function focusQuestionInfo(){
   return {label:"Today's route",number:dailyDoneFor(localDay()),total:DAILY_TOTAL}
 }
 function focusTimeLabel(seconds){const min=Math.floor(seconds/60),sec=seconds%60;return String(min).padStart(2,"0")+":"+String(sec).padStart(2,"0")}
-function renderFocusStrip(){const strip=$("focusStrip");if(!strip)return;const visible=LEARNING_VIEWS.has(currentView);strip.hidden=!visible;if(!visible)return;const elapsed=focusElapsed(),f=focusEntry(),q=focusQuestionInfo(),nextMark=(Math.floor(elapsed/900)+1)*15;$("focusClock").textContent=focusTimeLabel(elapsed);$("focusFill").style.width=Math.min(100,elapsed/FOCUS_TARGET_SECONDS*100)+"%";$("focusQuestion").textContent=q.label+" "+q.number+" / "+q.total;$("focusNotice").textContent=f.manuallyPaused?"Paused · tap play when ready":elapsed>=FOCUS_TARGET_SECONDS?"45-minute focus target reached · bonus is optional":"Next time check at "+nextMark+":00";$("focusToggle").textContent=f.runningSince?"⏸":"▶";$("focusToggle").title=f.runningSince?"Pause focus timer":"Resume focus timer";$("focusToggle").setAttribute("aria-label",$("focusToggle").title)}
-function focusTick(){if(!LEARNING_VIEWS.has(currentView)){renderFocusStrip();return}const f=focusEntry();if(!f.runningSince){renderFocusStrip();return}const elapsed=focusElapsed(),notice=Math.floor(elapsed/900);if(notice>f.lastNotice){f.lastNotice=notice;saveState();const minutes=notice*15,message=minutes===45?"45-minute focus target complete. Strong work.":minutes+" focused minutes complete. Check your pace and continue calmly.";showToast(message);speakEncouragement(message)}if(Date.now()-focusLastSavedAt>=15000)checkpointFocus(false);renderFocusStrip()}
+function renderFocusStrip(){const strip=$("focusStrip");if(!strip)return;const visible=LEARNING_VIEWS.has(currentView);strip.hidden=!visible;if(!visible)return;const elapsed=focusElapsed(),f=focusEntry(),q=focusQuestionInfo(),nextMark=(Math.floor(elapsed/900)+1)*15,quiet=quietHoursActive();$("focusClock").textContent=focusTimeLabel(elapsed);$("focusFill").style.width=Math.min(100,elapsed/FOCUS_TARGET_SECONDS*100)+"%";$("focusQuestion").textContent=q.label+" "+q.number+" / "+q.total;$("focusNotice").textContent=quiet?"Quiet hours 21:00-07:00 · timer and voice paused":f.manuallyPaused?"Paused · tap play when ready":focusAutoPaused?"Paused while the screen is off or inactive · interact to resume":elapsed>=FOCUS_TARGET_SECONDS?"45-minute focus target reached · bonus is optional":"Next time check at "+nextMark+":00";$("focusToggle").textContent=f.runningSince?"⏸":"▶";$("focusToggle").title=f.runningSince?"Pause focus timer":"Resume focus timer";$("focusToggle").setAttribute("aria-label",$("focusToggle").title)}
+function focusTick(){const now=Date.now(),gap=now-focusLastTickAt;if(gap>FOCUS_SLEEP_GAP_MS)suspendFocusForEnvironment();focusLastTickAt=now;if(!LEARNING_VIEWS.has(currentView)){renderFocusStrip();return}const f=focusEntry();if(!focusEnvironmentSafe()){if(f.runningSince)suspendFocusForEnvironment();renderFocusStrip();return}if(!f.runningSince){if(!f.manuallyPaused&&focusAutoPaused)syncFocusForView();renderFocusStrip();return}const elapsed=focusElapsed(),notice=Math.floor(elapsed/900);if(notice>f.lastNotice){f.lastNotice=notice;saveState();const minutes=notice*15,message=minutes===45?"45-minute focus target complete. Strong work.":minutes+" focused minutes complete. Check your pace and continue calmly.";showToast(message);if(audioEnvironmentSafe())speakEncouragement(message)}if(Date.now()-focusLastSavedAt>=15000)checkpointFocus(false);renderFocusStrip()}
 function firstActivityToday(){const t=localDay();if(state.lastActive===t)return;state.streak=state.lastActive===yesterday()?state.streak+1:1;state.best=Math.max(state.best,state.streak);state.lastActive=t}
 function award(points,message,celebrate=true,key="",subject=""){
   const answerKey=key?localDay()+":"+key:"";
@@ -314,9 +323,9 @@ function openBlindBox(){
 }
 function claimReward(){openBlindBox()}
 function toggleSound(){state.sound=!state.sound;if(!state.sound&&"speechSynthesis" in window)speechSynthesis.cancel();const pet=readPetState(false);if(pet){pet.sound=state.sound;try{localStorage.setItem(PET_STORE,JSON.stringify(pet))}catch(e){}}document.querySelector(".embedded-tool-frame")?.contentWindow?.postMessage({type:"johnson-hub-sound",value:state.sound},"*");saveState();renderChrome();showToast(state.sound?"All sound is on.":"All sound is muted.");if(state.sound)playTone(true)}
-function playTone(good){if(!state.sound)return;try{const A=window.AudioContext||window.webkitAudioContext;const ac=new A();const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type="sine";o.frequency.setValueAtTime(good?660:330,ac.currentTime);if(good)o.frequency.exponentialRampToValueAtTime(990,ac.currentTime+.14);g.gain.setValueAtTime(.055,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.24);o.start();o.stop(ac.currentTime+.25);o.onended=()=>ac.close()}catch(e){}}
+function playTone(good){if(!state.sound||!audioEnvironmentSafe())return;try{const A=window.AudioContext||window.webkitAudioContext;const ac=new A();const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type="sine";o.frequency.setValueAtTime(good?660:330,ac.currentTime);if(good)o.frequency.exponentialRampToValueAtTime(990,ac.currentTime+.14);g.gain.setValueAtTime(.055,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.24);o.start();o.stop(ac.currentTime+.25);o.onended=()=>ac.close()}catch(e){}}
 function preferredVoice(lang,naturalOnly=false){const voices=window.speechSynthesis?speechSynthesis.getVoices():[],prefix=lang.toLowerCase().slice(0,2),local=lang.toLowerCase(),natural=/premium|enhanced|siri|natural|neural|samantha|serena|daniel|ting|sin-ji|meijia|yu-shu|li-mu/i;const best=voices.find(v=>v.lang.toLowerCase()===local&&natural.test(v.name))||voices.find(v=>v.lang.toLowerCase().startsWith(prefix)&&natural.test(v.name));if(best||naturalOnly)return best;return voices.find(v=>v.lang.toLowerCase()===local)||voices.find(v=>v.lang.toLowerCase().startsWith(prefix))}
-function speak(text,lang="en-SG",naturalOnly=false){if(!state.sound||!("speechSynthesis" in window))return;try{speechSynthesis.cancel();setTimeout(()=>{if(!state.sound)return;const voice=preferredVoice(lang,naturalOnly);if(naturalOnly&&!voice)return;const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=lang.startsWith("zh")?.92:.97;u.pitch=1;if(voice)u.voice=voice;speechSynthesis.resume();speechSynthesis.speak(u)},80)}catch(e){}}
+function speak(text,lang="en-SG",naturalOnly=false){if(!state.sound||!audioEnvironmentSafe()||!("speechSynthesis" in window))return;try{speechSynthesis.cancel();setTimeout(()=>{if(!state.sound||!audioEnvironmentSafe())return;const voice=preferredVoice(lang,naturalOnly);if(naturalOnly&&!voice)return;const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=lang.startsWith("zh")?.92:.97;u.pitch=1;if(voice)u.voice=voice;speechSynthesis.resume();speechSynthesis.speak(u)},80)}catch(e){}}
 function speakEnglish(text){speak(text,"en-SG")}
 function speakEncouragement(text){speak(text,"en-SG",true)}
 function showToast(msg){clearTimeout(toastTimer);$("toast").textContent=msg;$("toast").classList.add("show");toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2400)}
@@ -936,9 +945,15 @@ function drawFX(){const c=$("fx"),ctx=c.getContext("2d"),dpr=Math.min(devicePixe
 function sparkler(el){const r=el.getBoundingClientRect();for(let i=0;i<5;i++)setTimeout(()=>sparkBurst(r.left+r.width/2,r.top+r.height/2,18,3.5),i*120);playTone(true);showToast("Neptune says: effort creates the sparkle.")}
 function fireworks(){for(let i=0;i<5;i++)setTimeout(()=>sparkBurst(innerWidth*(.18+Math.random()*.64),innerHeight*(.18+Math.random()*.4),70,6),i*180)}
 document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if($("toolOverlay").classList.contains("show"))closeTool();["rewardOverlay","syncOverlay"].forEach(id=>closeModal(id))});
+document.addEventListener("pointerdown",noteUserActivity,{passive:true});
+document.addEventListener("keydown",noteUserActivity,{passive:true});
+document.addEventListener("touchstart",noteUserActivity,{passive:true});
+window.addEventListener("scroll",noteUserActivity,{passive:true});
 document.addEventListener("pointerdown",()=>{if("speechSynthesis" in window){speechSynthesis.getVoices();speechSynthesis.resume()}},{once:true});
-document.addEventListener("visibilitychange",()=>{if(document.hidden)checkpointFocus(true);else syncFocusForView();renderFocusStrip()});
-window.addEventListener("pagehide",()=>checkpointFocus(true));
+document.addEventListener("visibilitychange",()=>{if(document.hidden)suspendFocusForEnvironment();renderFocusStrip()});
+window.addEventListener("blur",()=>{suspendFocusForEnvironment();renderFocusStrip()});
+window.addEventListener("focus",()=>renderFocusStrip());
+window.addEventListener("pagehide",()=>suspendFocusForEnvironment());
 loadState();loadDailyContent().finally(()=>openView("home"));
 setInterval(focusTick,1000);
 </script>
