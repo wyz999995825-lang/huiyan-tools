@@ -1687,11 +1687,18 @@ function computeMerged(doc,localData,localMeta){
     else if(k==='jenny_stickers')data[k]=mergeStickers(vals);
     else if(k==='jenny_wins')data[k]=mergeWins(vals);
     else{
-      var best=null,bestT='';
+      /* 进度多者赢：工具状态先比"分量"（近似=内容长度），差距明显才用时间戳兜底 */
+      var best=null,bestT='',bestScore=-1;
       sources.forEach(function(s){
         if(typeof s.data[k]!=='string')return;
         var t=(s.meta&&typeof s.meta[k]==='string')?s.meta[k]:EPOCH;
-        if(best===null||t>bestT){best=s.data[k];bestT=t}
+        var sc=s.data[k].length;
+        var win=false;
+        if(best===null)win=true;
+        else if(sc>bestScore*1.15)win=true;              /* 明显更大的存档赢 */
+        else if(bestScore>sc*1.15)win=false;             /* 明显更小的输 */
+        else if(t>bestT)win=true;                        /* 差不多大 → 新的赢 */
+        if(win){best=s.data[k];bestT=t;bestScore=sc}
       });
       data[k]=best;lwwMeta[k]=bestT||EPOCH;
     }
