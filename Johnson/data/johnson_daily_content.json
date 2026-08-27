@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-26T19:00:00+08:00",
+  "updatedAt": "2026-08-27T19:00:00+08:00",
   "policy": "append-only-stable-ids",
   "packs": [
     {
@@ -85,6 +85,164 @@
           "model": "Metal is a better thermal conductor than wood, so heat is transferred from the hotter soup through the metal spoon to its cooler handle faster.",
           "steps": ["Identify the hotter region: the soup.", "State that heat moves from hotter to colder regions.", "Compare the materials: metal conducts heat faster than wood."],
           "marks": ["Science point: states that metal is a better thermal conductor than wood.", "Evidence link: explains that heat reaches the cooler metal handle faster."]
+        }
+      ]
+    },
+    {
+      "date": "2026-08-27",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-08-27-001",
+          "title": "The Pause Before the Launch",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>Evan's team had one final chance to launch its weather balloon before the judging window closed. The balloon was ready, the camera was recording, and the other teams had gathered beside the field. Just as the countdown began, Evan noticed that the wind sensor showed the same reading for the sixth time. The unmoving number looked suspicious, but everyone else was watching the clock.</p><p>He almost stayed silent. During earlier rehearsals, his teammates had teased him for checking every cable twice. Stopping now might make him seem afraid of failure. Then Evan remembered that the balloon would drift beyond the recovery zone if the wind estimate was wrong. He raised his hand and asked for the launch to be paused.</p><p>The team leader frowned but agreed to a quick test. A loose connector was keeping the sensor display frozen. By the time they repaired it, the judging window had closed. Their balloon never left the ground that afternoon. Evan expected the team to blame him. Instead, the leader placed the faulty connector beside their project log and said, 'This is part of our result too. We found evidence that our plan was not yet safe.'</p><p>On the journey home, Evan still wished they had launched. However, he no longer confused courage with rushing forward. Sometimes courage meant being the person who asked everyone to stop and look again.</p>",
+          "q": "Why did Evan no longer see pausing the launch as a sign of weakness?",
+          "opts": [
+            "He learnt that the judges always rewarded teams whose balloons remained on the ground.",
+            "He realised that raising an evidence-based concern protected the team from an unsafe decision, even though speaking up was difficult.",
+            "He wanted to delay the launch so that the other teams would finish first.",
+            "He believed that repairing one connector guaranteed that the team would win the next competition."
+          ],
+          "ans": 1,
+          "model": "Evan no longer saw the pause as weakness because he realised that speaking up about suspicious evidence prevented the team from making an unsafe decision, even though it was difficult to stop everyone.",
+          "evidence": "Sometimes courage meant being the person who asked everyone to stop and look again.",
+          "marks": [
+            "Meaning point: explains Evan's new understanding of courage.",
+            "Support point: links his decision to the faulty reading and the risk of an unsafe launch."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-08-27-001",
+          "title": "Pupils Test Quieter Study Corners",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>Primary school pupils working with a community library have tested three movable panels designed to create quieter study corners. The panels used different arrangements of recycled felt, cardboard channels and ventilation gaps.</p><p>During each test, the pupils placed a speaker at the same distance from a sound meter and played the same recording at the same volume. Panel C reduced the measured sound level the most. At first, the team expected to recommend it immediately.</p><p>A second set of observations changed their view. Temperature readings rose more quickly behind Panel C because its thick layers left little space for air to move. Library users who tried the corner also said that it felt warm after ten minutes. Panel B reduced slightly less noise but allowed better airflow and received more comfortable ratings.</p><p>The pupils will repeat the trials at busier times before making a final recommendation. Their report will show the sound readings, temperature changes and user comments together. The librarian said that a useful design should solve the original problem without creating a new one.</p>",
+          "q": "Why did the pupils decide not to recommend Panel C immediately?",
+          "opts": [
+            "Panel C produced no change in the measured sound level.",
+            "They found that Panel C reduced noise well but also trapped warmer air, so they needed to consider both quietness and user comfort.",
+            "The library users refused to enter any study corner containing recycled material.",
+            "They wanted to choose the panel with the highest temperature reading."
+          ],
+          "ans": 1,
+          "model": "The pupils did not recommend Panel C immediately because, although it reduced noise the most, it also allowed less airflow and became warmer, so the team had to consider comfort as well as sound reduction.",
+          "evidence": "Panel C reduced the measured sound level the most, but temperature readings rose more quickly behind it and users said that it felt warm.",
+          "marks": [
+            "Meaning point: identifies the trade-off instead of judging the design by one measurement.",
+            "Support point: compares Panel C's stronger noise reduction with its poorer airflow or comfort."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-angles-2026-08-27-001",
+          "topic": "angles",
+          "kind": "thinking",
+          "title": "Angles · Signal Rays",
+          "tag": "Connect vertically opposite angles and split an angle",
+          "q": "Straight lines P-O-R and Q-O-S intersect at O. Ray OT lies inside angle ROS. Angle POQ is 128° and angle ROT is 37°. Find angle TOS. The diagram is not drawn to scale.",
+          "opts": ["53°", "91°", "128°", "165°"],
+          "ans": 1,
+          "visual": "<svg viewBox='0 0 420 245' role='img' aria-label='Two straight lines intersect at O and ray OT divides angle ROS'><line x1='45' y1='115' x2='375' y2='115' stroke='#1557c0' stroke-width='6' stroke-linecap='round'/><line x1='292' y1='15' x2='128' y2='215' stroke='#1557c0' stroke-width='6' stroke-linecap='round'/><line x1='210' y1='115' x2='327' y2='203' stroke='#0a8a63' stroke-width='6' stroke-linecap='round'/><circle cx='210' cy='115' r='9' fill='#ff7b6b'/><g fill='#073b86' font-size='18' font-weight='800'><text x='24' y='108'>P</text><text x='382' y='108'>R</text><text x='296' y='18'>Q</text><text x='110' y='231'>S</text><text x='334' y='218'>T</text><text x='194' y='105'>O</text><text x='145' y='58'>128°</text><text x='281' y='145'>37°</text><text x='218' y='195'>x°</text></g></svg>",
+          "model": "Angle ROS = angle POQ = 128° because vertically opposite angles are equal. Therefore, angle TOS = 128° - 37° = 91°.",
+          "steps": [
+            "Use the intersecting straight lines: angle ROS is vertically opposite angle POQ, so angle ROS = 128°.",
+            "Ray OT splits angle ROS into angle ROT and angle TOS.",
+            "Subtract the known part: angle TOS = 128° - 37° = 91°."
+          ],
+          "marks": [
+            "Method mark: identifies angle ROS as 128° using vertically opposite angles.",
+            "Answer mark: subtracts 37° and gives angle TOS = 91°."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-water-2026-08-27-001",
+          "topic": "water",
+          "level": "P5 CORE · WATER CYCLE",
+          "focus": "controlled comparison and cross-diagram evidence",
+          "title": "Water Cycle · Two Rain Chambers",
+          "q": "Two sealed rain chambers contain equal amounts of warm water. Chamber A has an 8°C metal lid and produces 18 drops from its lid in five minutes. Chamber B has a 25°C metal lid and produces 3 drops in the same time. Which is the best complete explanation for the difference?",
+          "opts": [
+            "The cold lid in Chamber A creates new water and pushes it through the metal.",
+            "Only Chamber A contains water vapour because evaporation cannot occur under a warmer lid.",
+            "Water evaporates in both chambers. In Chamber A, the water vapour loses heat faster at the cooler lid and condenses into liquid droplets more quickly, so more droplets combine and fall in five minutes.",
+            "The warm water in Chamber B freezes before it can reach the lid."
+          ],
+          "ans": 2,
+          "visual": "<div class='system-map'><div class='system-node'><span>🧊</span>Chamber A<small>8°C lid<br>18 drops</small></div><span class='map-arrow'>↔</span><div class='system-node'><span>🌡️</span>Same warm water<small>equal amount<br>same five minutes</small></div><span class='map-arrow'>↔</span><div class='system-node'><span>💧</span>Chamber B<small>25°C lid<br>3 drops</small></div></div>",
+          "model": "Water evaporates in both sealed chambers. In Chamber A, water vapour loses heat faster when it reaches the cooler 8°C lid, so it condenses into liquid water droplets more quickly. More droplets therefore combine and fall from the lid within five minutes.",
+          "steps": [
+            "Compare only the changed condition: the lid temperature is lower in Chamber A, while the amount of warm water and time are the same.",
+            "Trace the process: liquid water evaporates, and the water vapour reaches each lid.",
+            "Link evidence to result: faster heat loss at the cooler lid causes faster condensation, matching the larger number of drops in Chamber A."
+          ],
+          "marks": [
+            "Science point: states that water vapour loses heat at the cooler lid and condenses into liquid droplets.",
+            "Evidence link: uses the controlled comparison and 18-versus-3 drop result to explain the faster condensation in Chamber A."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-water-2026-08-27-001",
+          "group": "precision",
+          "term": "water vapour is invisible",
+          "meaning": "water in its gaseous state cannot be seen, although it can be present in the surrounding air",
+          "example": "The invisible water vapour later formed visible droplets on the cooler lid.",
+          "note": "OEQ warning: clouds and mist are tiny water droplets, not visible water vapour."
+        },
+        {
+          "id": "science-vocab-water-2026-08-27-002",
+          "group": "precision",
+          "term": "loses heat at a cooler surface",
+          "meaning": "transfers heat to a surface at a lower temperature",
+          "example": "The water vapour loses heat when it reaches the cooler metal lid.",
+          "note": "Name both the substance and the cooler surface instead of writing only 'it became cold'."
+        },
+        {
+          "id": "science-vocab-water-2026-08-27-003",
+          "group": "precision",
+          "term": "condenses into liquid water droplets",
+          "meaning": "changes from water vapour to small drops of liquid water after losing heat",
+          "example": "After losing heat, the water vapour condenses into liquid water droplets on the lid.",
+          "note": "High-scoring sequence: water vapour loses heat -> condenses -> liquid droplets form."
+        },
+        {
+          "id": "science-vocab-water-2026-08-27-004",
+          "group": "precision",
+          "term": "droplets combine and fall",
+          "meaning": "small liquid droplets join to form larger drops that are pulled down by gravity",
+          "example": "The droplets combine and fall from the sloping lid like rain.",
+          "note": "Use this phrase only after explaining how the droplets formed."
+        },
+        {
+          "id": "science-vocab-water-2026-08-27-005",
+          "group": "precision",
+          "term": "evidence from a controlled comparison",
+          "meaning": "a result that can be linked to one changed condition because other relevant conditions were kept the same",
+          "example": "The 18-versus-3 drop result is evidence from a controlled comparison of lid temperature.",
+          "note": "OEQ use: name what changed, what stayed the same and the measured result."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-08-27-001",
+          "title": "P5 华文短文阅读 · 看见别人的贡献",
+          "q": "班级要参加节水宣传比赛。文浩画图很快，说话也很有信心，因此总觉得动作较慢的宇杰帮不上忙。宇杰没有争辩，只是把大家讨论过的资料整理好，还用硬纸板做了一个不用电的展示架。比赛当天，活动室突然停电，原本准备好的电子画面无法播放。正当大家手忙脚乱时，宇杰拿出展示架，把整理好的图表一张张放上去。小组顺利完成介绍，还得到评审的称赞。活动结束后，文浩重新制作名单，并把宇杰的名字写在最前面。",
+          "ask": "文浩为什么把宇杰的名字写在最前面？",
+          "opts": [
+            "因为宇杰要求文浩把自己列为组长。",
+            "因为文浩认识到宇杰虽然做事较慢，却准备得认真周到，并在停电时帮助小组顺利完成介绍。",
+            "因为文浩不再愿意参加节水宣传比赛。",
+            "因为评审只称赞了宇杰制作的展示架。"
+          ],
+          "ans": 1,
+          "model": "文浩把宇杰的名字写在最前面，是因为他终于看见宇杰认真周到的准备。停电时，宇杰制作的展示架和整理好的图表帮助小组顺利完成介绍，使文浩明白贡献不能只用做事速度来判断。",
+          "marks": [
+            "内容点：说明文浩改变了对宇杰的看法。",
+            "依据点：写出宇杰事先认真准备，并在停电时帮助小组完成介绍。"
+          ]
         }
       ]
     }
