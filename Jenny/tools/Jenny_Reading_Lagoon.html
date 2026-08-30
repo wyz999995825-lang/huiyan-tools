@@ -958,7 +958,7 @@ if(!Array.isArray(state.fetched))state.fetched=[];
 function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}}
 function addXP(n){state.xp+=n;save();updateHeader();}
 /* ---- Daily quota (jenny_daily_v1 · reading goal 2/day, shared across tools) ---- */
-const DAILY_KEY="jenny_daily_v1", READING_GOAL=2;
+const DAILY_KEY="jenny_daily_v1", READING_GOAL=3;
 function dailyLoad(){try{const s=localStorage.getItem(DAILY_KEY);if(s)return JSON.parse(s)||{};}catch(e){}return {};}
 function todayReading(){const d=dailyLoad();const t=d[todayStr()];return t&&typeof t.reading==="number"?t.reading:0;}
 function bumpReading(){
@@ -1588,7 +1588,7 @@ tryFetchDaily();
       这里把今日计数/统计发给主页做 max 合并，保证任务清单照样打勾 */
 (function(){
 "use strict";
-var SUBJECT="reading", GOAL=2, ZH=false, CELE_KEY="jenny_goalcele_reading";
+var SUBJECT="reading", GOAL=3, ZH=false, CELE_KEY="jenny_goalcele_reading";
 function pad2(n){return (n<10?"0":"")+n}
 function jToday(){var d=new Date();return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())}
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}

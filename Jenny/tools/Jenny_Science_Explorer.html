@@ -105,8 +105,23 @@
   .diabox h4 { color:var(--deep); font-size:16px; margin-bottom:8px; }
   .whys { margin-top:10px; }
   .why { font-size:15px; color:var(--ink2); background:var(--sky); border-left:4px solid #ffb8ae; border-radius:8px; padding:8px 11px; margin:6px 0; line-height:1.6; }
-  .spk { background:none; border:none; font-size:22px; min-height:auto; min-width:34px; padding:0 4px; vertical-align:middle; cursor:pointer; }
+  .spk { background:none; border:none; font-size:22px; min-height:40px; min-width:40px; padding:0 4px; vertical-align:middle; cursor:pointer; }
   .spk:active { transform:scale(.85); }
+  /* --- reading guidance (tap-a-word + option speakers + phonics) --- */
+  .tapw { border-radius:6px; }
+  .tapw.hl { background:#ffe9c9; box-shadow:0 0 0 2px #f0d9a0; }
+  .qspk { border:2px solid var(--tiffany-light); border-radius:12px; background:var(--sky); margin-left:6px; }
+  .optrow { display:flex; gap:6px; align-items:stretch; }
+  .optrow .opt { flex:1; }
+  .optspk { flex:none; align-self:center; min-width:44px; min-height:44px; border:2px solid var(--tiffany-light);
+    border-radius:14px; background:var(--card); font-size:19px; }
+  .sylrow { margin-top:10px; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .sylbtn { font-size:14px; font-weight:800; color:var(--deep); background:var(--sky); border:2px solid var(--tiffany-light);
+    border-radius:14px; padding:6px 14px; min-height:40px; cursor:pointer; }
+  .sylbtn:active { transform:scale(.94); }
+  .syl { font-size:20px; font-weight:800; color:var(--ink2); padding:2px 5px; border-radius:8px; transition:background .15s; }
+  .syl.hl { background:#ffe9c9; color:#a8781a; }
+  .syldot { color:var(--ink3); font-weight:800; }
   /* diagrams */
   .grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:8px; }
   .cell { background:var(--sky); border:2px solid var(--tiffany-light); border-radius:14px; padding:9px 6px; text-align:center; }
@@ -883,8 +898,88 @@ function toggleTTS(){
   const b=$("ttsbtn"); if(b) b.textContent=ttsOn?"🔊":"🔇";
 }
 
+/* ================= Reading guidance (for a P2 reader) ================= */
+/* Wrap every English word in a tappable span. Safe over HTML: only text outside tags is wrapped. */
+function tapWords(text){
+  return String(text).split(/(<[^>]+>)/g).map(function(seg){
+    if(seg.charAt(0)==="<") return seg;
+    return seg.replace(/[A-Za-z][A-Za-z'’-]*/g,function(m){ return '<span class="tapw">'+m+'</span>'; });
+  }).join("");
+}
+function speakTappedWord(el){
+  if(!ttsOn||!el) return;
+  const t=(el.textContent||"").replace(/[^A-Za-z'’-]/g,"");
+  if(!t) return;
+  el.classList.add("hl");
+  setTimeout(function(){ el.classList.remove("hl"); },700);
+  speak(t);
+}
+/* speakers for quiz question / options */
+function speakQ(){ if(curQ) speak(curQ.q); }
+function speakOpt(i){ if(qopts&&qopts[i]) speak(qopts[i].s); }
+/* speakers for Word Lab "use the word" question / options */
+function speakWQ(){ if(curWord) speak(curWord.sent.replace(new RegExp(rescape(curWord.term),"i")," blank ")); }
+function speakWOpt(i){ if(window._wopts&&window._wopts[i]) speak(window._wopts[i]); }
+/* flashcard speakers */
+function speakTerm(){ if(curWord) speak(curWord.term); }
+function speakDef(){ if(curWord) speak(curWord.def); }
+
+/* 字母引导 — naive syllable chunks: split before consonant clusters that follow vowels
+   e.g. magnet -> mag·net, digestion -> di·ges·tion */
+function syllabify(word){
+  const out=[];
+  const isV=function(ch){ return "aeiouyAEIOUY".indexOf(ch)>=0; };
+  String(word).split(/[\s-]+/).forEach(function(w){
+    if(!w) return;
+    let i=0;
+    while(i<w.length){
+      const start=i;
+      while(i<w.length && !isV(w.charAt(i))) i++;      /* leading consonants */
+      while(i<w.length && isV(w.charAt(i))) i++;       /* vowel group */
+      const cstart=i;
+      while(i<w.length && !isV(w.charAt(i))) i++;      /* consonants before next vowel */
+      const cons=i-cstart;
+      if(i>=w.length){ out.push(w.slice(start)); }              /* tail joins this chunk */
+      else if(cons<=1){ out.push(w.slice(start,cstart)); i=cstart; }      /* di-gest */
+      else { out.push(w.slice(start,cstart+1)); i=cstart+1; }             /* mag-net */
+    }
+  });
+  return out.filter(function(s){ return s; });
+}
+function sylHTML(term){
+  return '<div class="sylrow"><div>'
+    +syllabify(term).map(function(s,i){ return '<span class="syl" id="syl'+i+'">'+s+'</span>'; }).join('<span class="syldot">·</span>')
+    +'</div><button class="sylbtn" onclick="event.stopPropagation();soundItOut()">🔤 sound it out</button></div>';
+}
+let __soToken=0;
+function soundItOut(){
+  if(!ttsOn||!curWord) return;
+  const chunks=syllabify(curWord.term);
+  const token=++__soToken;
+  try{ speechSynthesis.cancel(); }catch(e){}
+  let i=0, advanced=false;
+  function clearHl(){ chunks.forEach(function(_,k){ const el=$("syl"+k); if(el) el.classList.remove("hl"); }); }
+  function step(){
+    if(token!==__soToken) return;
+    clearHl();
+    if(i>=chunks.length || !ttsOn){ clearHl(); if(ttsOn) speak(curWord.term); return; }  /* finish: whole word */
+    const el=$("syl"+i); if(el) el.classList.add("hl");
+    advanced=false;
+    const go=function(){ if(advanced||token!==__soToken) return; advanced=true; i++; setTimeout(step,150); };
+    try{
+      const u=new SpeechSynthesisUtterance(chunks[i]);
+      u.lang="en-US"; const v=__pickVoice("en"); if(v) u.voice=v;
+      u.rate=0.6; u.pitch=1;
+      u.onend=go; u.onerror=go;
+      speechSynthesis.speak(u);
+      setTimeout(go,2500);            /* iOS safety net if onend never fires */
+    }catch(e){ go(); }
+  }
+  step();
+}
+
 /* ================= Daily quota (jenny_daily_v1, cross-tool) ================= */
-const DKEY="jenny_daily_v1", DGOAL=5;
+const DKEY="jenny_daily_v1", DGOAL=10;
 function dailyBump(){
   let d={}; try{ d=JSON.parse(localStorage.getItem(DKEY))||{}; }catch(e){ d={}; }
   const t=today();
@@ -1037,15 +1132,17 @@ function showCard(){
   let h=header()+'<div class="backrow"><button class="btn ghost" onclick="showWordTopics()">◀ Topics</button><div class="chip">'+wordTopic.emoji+' <small>'+wordTopic.name+' · card '+(cardIdx+1)+'/'+deck.length+'</small></div></div>';
   h+='<div class="pbar" style="margin-bottom:14px"><div style="width:'+(cardIdx/deck.length*100)+'%"></div></div>';
   h+='<div class="flip" id="flip" onclick="flipCard()"><div class="flipinner">';
-  h+='<div class="face3d"><div class="bigem">'+curWord.e+'</div><div class="term">'+curWord.term+'</div>'
+  h+='<div class="face3d"><div class="bigem">'+curWord.e+'</div><div class="term">'+curWord.term+' <button class="spk" onclick="event.stopPropagation();speakTerm()" title="read the word">🔊</button></div>'
+    +sylHTML(curWord.term)
     +(st===2?'<div class="wordstat known">✔ known</div>':st===1?'<div class="wordstat learning">📖 learning</div>':'')
     +'<div class="tapnote">tap the card to flip 🔄</div></div>';
-  h+='<div class="face3d back"><div style="font-size:34px">'+curWord.e+'</div><div class="term" style="font-size:20px">'+curWord.term+'</div>'
-    +'<div class="def">'+curWord.def+'</div>'
-    +'<div class="scibox"><span class="tag">🔬 Scientist\'s sentence <button class="spk" onclick="event.stopPropagation();speakCurWord()">🔊</button></span>'+curWord.sent+'</div></div>';
+  h+='<div class="face3d back"><div style="font-size:34px">'+curWord.e+'</div><div class="term" style="font-size:20px">'+curWord.term+' <button class="spk" onclick="event.stopPropagation();speakTerm()" title="read the word">🔊</button></div>'
+    +'<div class="def"><button class="spk" onclick="event.stopPropagation();speakDef()" title="read the meaning">🔊</button> '+tapWords(curWord.def)+'</div>'
+    +'<div class="scibox"><span class="tag">🔬 Scientist\'s sentence <button class="spk" onclick="event.stopPropagation();speakCurWord()">🔊</button></span>'+tapWords(curWord.sent)+'</div></div>';
   h+='</div></div>';
   h+='<div style="display:flex;gap:10px;max-width:460px;margin:0 auto"><button class="btn sand" style="flex:1" onclick="useWord()">Use the word! ✏️</button></div>';
   $("app").innerHTML=h; window.scrollTo(0,0);
+  speakTerm();   /* auto-read the word when the card is shown */
 }
 function flipCard(){ sndPop(); $("flip").classList.toggle("flipped"); }
 function useWord(){
@@ -1055,7 +1152,7 @@ function useWord(){
   const blanked=curWord.sent.replace(new RegExp(rescape(curWord.term),"i"),"<b style='color:#ff8a7a'>_____</b>");
   let h=header()+'<div class="backrow"><button class="btn ghost" onclick="showCard()">◀ Card</button><div class="chip">✏️ <small>Use the word</small></div></div>';
   h+='<div class="guide"><div class="face">🐙</div><div class="bubble">Which word fits the scientist\'s sentence?</div></div>';
-  h+='<div class="qcard"><div class="qtext">'+blanked+'</div><div class="opts short">';
+  h+='<div class="qcard"><div class="qtext"><button class="spk" onclick="speakWQ()" title="read the sentence">🔊</button> '+blanked+'</div><div class="opts short">';
   opts.forEach((o,i)=>{ h+='<button class="opt" id="wopt'+i+'" onclick="pickWord('+i+',\''+o.replace(/'/g,"\\'")+'\')">'+o+'</button>'; });
   h+='</div></div><div id="fbzone"></div>';
   $("app").innerHTML=h; window.scrollTo(0,0);
@@ -1100,7 +1197,11 @@ function showQuizTopics(){
 function startQuiz(tid){
   sndPop(); redoMode=false;
   quizTopic = tid==="mix" ? {id:"mix",name:"Mix — all topics",emoji:"🌊"} : TOPICS.find(t=>t.id===tid);
-  qdeck = shuffle(tid==="mix" ? QUIZ : QUIZ.filter(q=>q.t===tid));
+  var pool = shuffle(tid==="mix" ? QUIZ : QUIZ.filter(q=>q.t===tid));
+  S.seen = S.seen || {};                                  /* 跨天记住做过的题 */
+  var fresh = pool.filter(function(q){return !S.seen[q.id]});
+  var old_  = pool.filter(function(q){return S.seen[q.id]});
+  qdeck = fresh.concat(old_);                             /* 新题优先，做完才轮旧题 */
   qIdx=0; combo=0; showQuiz();
 }
 function quizBack(){ sndPop(); if(redoMode){ redoMode=false; showMistakes(); } else showQuizTopics(); }
@@ -1114,10 +1215,12 @@ function showQuiz(){
     +'<div class="chip">'+quizTopic.emoji+' <small>'+quizTopic.name+'</small></div>'
     +(combo>=2?'<div class="chip" style="color:#ff7a5c">🔥 <small>combo ×'+combo+'</small></div>':'')+'</div>';
   h+='<div class="guide"><div class="face">🐙</div><div class="bubble">Read every sentence carefully — one of them is a perfect model answer! 📝</div></div>';
-  h+='<div class="qcard"><div class="qtext">'+curQ.q+'</div><div class="opts">';
-  qopts.forEach((o,i)=>{ h+='<button class="opt" id="qopt'+i+'" onclick="pickQ('+i+')">'+o.s+'</button>'; });
+  h+='<div class="qcard"><div class="qtext"><button class="spk" onclick="speakQ()" title="read the question">🔊</button> '+tapWords(curQ.q)+'</div><div class="opts">';
+  qopts.forEach((o,i)=>{ h+='<div style="display:flex;align-items:center;gap:6px"><button class="spk" style="flex:0 0 auto" onclick="event.stopPropagation();speakOpt('+i+')" title="read this answer">🔊</button>'
+    +'<button class="opt" id="qopt'+i+'" style="flex:1" onclick="pickQ('+i+')">'+o.s+'</button></div>'; });
   h+='</div></div><div id="fbzone"></div>';
   $("app").innerHTML=h; window.scrollTo(0,0);
+  setTimeout(function(){ try{speakQ()}catch(e){} },350);   /* 自动读题一次 */
 }
 function speakModel(){ if(curQ) speak(curQ.opts.find(o=>o.ok).s); }
 function pickQ(i){
@@ -1128,7 +1231,7 @@ function pickQ(i){
     if(o.ok) el.classList.add(ok&&j===i?"sel-ok":"show-ok");
     if(j===i&&!ok) el.classList.add("sel-no");
   });
-  if(!redoMode){ S.quiz[curQ.t].t++; S.done++; }
+  if(!redoMode){ S.quiz[curQ.t].t++; S.done++; S.seen=S.seen||{}; S.seen[curQ.id]=1; }
   if(ok){
     combo++; bumpStreak(); sndDing();
     if(!redoMode){ S.quiz[curQ.t].c++; S.xp+=10+(combo>=3?5:0); } else S.xp+=6;
@@ -1241,7 +1344,7 @@ if(typeof module!=="undefined" && module.exports){ module.exports={VOCAB, QUIZ, 
       这里把今日计数/统计发给主页做 max 合并，保证任务清单照样打勾 */
 (function(){
 "use strict";
-var SUBJECT="science", GOAL=5, ZH=false, CELE_KEY="jenny_goalcele_science";
+var SUBJECT="science", GOAL=10, ZH=false, CELE_KEY="jenny_goalcele_science";
 function pad2(n){return (n<10?"0":"")+n}
 function jToday(){var d=new Date();return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())}
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}

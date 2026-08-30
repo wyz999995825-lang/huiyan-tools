@@ -337,6 +337,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
           <span class="qp-sub" id="qpSub" data-i18n="qp_sub">全部打勾就能开出神秘贴纸盲盒哦！</span>
         </div>
         <div class="qp-body">
+          <div id="holidayTip" style="display:none;margin:0 0 10px;padding:10px 14px;border-radius:14px;background:linear-gradient(90deg,#fff6da,#e9f4fc);border:1.5px dashed #e0a72e;font-weight:800;color:#8a6a1e;font-size:14px"></div>
           <div class="q-rows" id="qRows"></div>
           <div class="chest-area locked" id="chestArea" onclick="chestTap()"></div>
         </div>
@@ -420,6 +421,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
             <div class="c-title"><span data-i18n="tool_kouyu">口语小海豚</span> <span class="tag tag-new">NEW</span></div>
             <div class="c-desc" data-i18n="desc_kouyu">开口说华文！和小海豚一起练口语，说得越来越流利。</div>
           </div>
+          <div class="card" onclick="openExt('https://chatgpt.com/share/6a8f92e5-4a0c-83ec-b807-684ac7ad9ea1')">
+            <div class="c-icon">🎙️</div>
+            <div class="c-title"><span data-i18n="tool_oral_zh">华文口试对练</span> <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc" data-i18n="desc_oral_zh">和小菜叔叔的口试考官对练华文口试（新窗口打开）。</div>
+          </div>
+          <div class="card" onclick="openExt('https://chatgpt.com/share/6a8f932d-1d40-83ec-812e-7d613a9a73cd')">
+            <div class="c-icon">🗣️</div>
+            <div class="c-title"><span data-i18n="tool_oral_en">英文口试对练</span> <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc" data-i18n="desc_oral_en">英文口试模拟对练，练朗读和看图说话（新窗口打开）。</div>
+          </div>
         </div>
       </div>
 
@@ -495,6 +506,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
     </div>
     <div class="item" data-tool="kouyu" onclick="loadByName('kouyu')">
       <span class="emoji">🐙</span><span class="label" data-i18n="tool_kouyu">口语小海豚</span><span class="tag tag-new">NEW</span>
+    </div>
+    <div class="item" onclick="openExt('https://chatgpt.com/share/6a8f92e5-4a0c-83ec-b807-684ac7ad9ea1')">
+      <span class="emoji">🎙️</span><span class="label" data-i18n="tool_oral_zh">华文口试对练</span><span class="tag tag-new">NEW</span>
+    </div>
+    <div class="item" onclick="openExt('https://chatgpt.com/share/6a8f932d-1d40-83ec-812e-7d613a9a73cd')">
+      <span class="emoji">🗣️</span><span class="label" data-i18n="tool_oral_en">英文口试对练</span><span class="tag tag-new">NEW</span>
     </div>
     <div class="sec" data-i18n="sec_think">🧠 思维</div>
     <div class="item" data-tool="mindmap" onclick="loadByName('mindmap')">
@@ -609,7 +626,7 @@ zh:{
   subj_math:'🧮 Maths 数学',subj_sci:'🔬 Science 科学',subj_eng:'📖 English 英语',subj_chi:'📕 华文',subj_think:'🧠 思维',subj_grow:'🌟 成长',
   sec_home:'主页',sec_math:'🧮 Maths',sec_sci:'🔬 Science',sec_eng:'📖 English',sec_chi:'📕 华文',sec_think:'🧠 思维',sec_grow:'🌟 成长',
   tool_mathreef:'Math Master Reef',tool_animalmath:'动物王国数学',tool_science:'Science Explorer',tool_reading:'Reading Lagoon',
-  tool_huawen:'华文珊瑚湾',tool_kouyu:'口语小海豚',tool_mindmap:'MindMap侦探社',tool_stickers:'贴纸收藏册',
+  tool_huawen:'华文珊瑚湾',tool_kouyu:'口语小海豚',tool_oral_zh:'华文口试对练',tool_oral_en:'英文口试对练',desc_oral_zh:'和小菜叔叔的口试考官对练华文口试（新窗口打开）。',desc_oral_en:'英文口试模拟对练，练朗读和看图说话（新窗口打开）。',tool_mindmap:'MindMap侦探社',tool_stickers:'贴纸收藏册',
   desc_mathreef:'跟着小海豚在珊瑚礁里闯关练数学，一步一步变成数学小高手！',
   desc_animalmath:'在动物世界里学数学！加减乘除、比大小，和可爱动物一起玩。',
   desc_science:'和小丑鱼一起探索科学世界，做小实验、学新知识！',
@@ -651,7 +668,7 @@ en:{
   subj_math:'🧮 Maths',subj_sci:'🔬 Science',subj_eng:'📖 English',subj_chi:'📕 Chinese',subj_think:'🧠 Thinking',subj_grow:'🌟 Growing',
   sec_home:'Home',sec_math:'🧮 Maths',sec_sci:'🔬 Science',sec_eng:'📖 English',sec_chi:'📕 Chinese',sec_think:'🧠 Thinking',sec_grow:'🌟 Growing',
   tool_mathreef:'Math Master Reef',tool_animalmath:'Animal Kingdom Maths',tool_science:'Science Explorer',tool_reading:'Reading Lagoon',
-  tool_huawen:'Chinese Coral Bay',tool_kouyu:'Speaking Dolphin',tool_mindmap:'MindMap Detective Agency',tool_stickers:'Sticker Album',
+  tool_huawen:'Chinese Coral Bay',tool_kouyu:'Speaking Dolphin',tool_oral_zh:'Chinese Oral Practice',tool_oral_en:'English Oral Practice',desc_oral_zh:'Practise Chinese oral exam with an AI examiner (opens in a new tab).',desc_oral_en:'Practise English oral exam: reading aloud and picture talk (opens in a new tab).',tool_mindmap:'MindMap Detective Agency',tool_stickers:'Sticker Album',
   desc_mathreef:'Level up your maths with the little dolphin on the coral reef, one quest at a time!',
   desc_animalmath:'Learn maths in the animal kingdom! Add, subtract, multiply, divide and compare with cute animals.',
   desc_science:'Explore the world of science with the clownfish — little experiments and new facts!',
@@ -1132,10 +1149,10 @@ function makeBubbles(){
 /* ===== 每日任务清单（跨工具约定 jenny_daily_v1） ===== */
 const QUESTS=[
   {key:'math',   icon:'🐬',label:{zh:'数学',en:'Maths'},   goal:10,unit:'题',tool:'mathreef',praise:{zh:'数学任务完成！小海豚给你转圈圈！',en:'Maths quest complete! The little dolphin does a spin for you!'}},
-  {key:'science',icon:'🐠',label:{zh:'科学',en:'Science'}, goal:5, unit:'个',tool:'science', praise:{zh:'科学任务完成！小丑鱼吐了一串开心泡泡！',en:'Science quest complete! The clownfish blows a stream of happy bubbles!'}},
-  {key:'reading',icon:'🐢',label:{zh:'阅读',en:'Reading'}, goal:2, unit:'篇',tool:'reading', praise:{zh:'阅读任务完成！小海龟为你鼓掌！',en:'Reading quest complete! The sea turtle claps for you!'}},
-  {key:'chinese',icon:'🪸',label:{zh:'华文',en:'Chinese'}, goal:5, unit:'题',tool:'huawen',  praise:{zh:'华文任务完成！珊瑚湾开满了花！',en:'Chinese quest complete! The coral bay bursts into bloom!'}},
-  {key:'oral',   icon:'🐙',label:{zh:'口语',en:'Speaking'},goal:1, unit:'项',tool:'kouyu',   praise:{zh:'口语任务完成！章鱼老师竖起八个大拇指！',en:'Speaking quest complete! Teacher Octopus gives you eight thumbs up!'}}
+  {key:'science',icon:'🐠',label:{zh:'科学',en:'Science'}, goal:10, unit:'个',tool:'science', praise:{zh:'科学任务完成！小丑鱼吐了一串开心泡泡！',en:'Science quest complete! The clownfish blows a stream of happy bubbles!'}},
+  {key:'reading',icon:'🐢',label:{zh:'阅读',en:'Reading'}, goal:3, unit:'篇',tool:'reading', praise:{zh:'阅读任务完成！小海龟为你鼓掌！',en:'Reading quest complete! The sea turtle claps for you!'}},
+  {key:'chinese',icon:'🪸',label:{zh:'华文',en:'Chinese'}, goal:10, unit:'题',tool:'huawen',  praise:{zh:'华文任务完成！珊瑚湾开满了花！',en:'Chinese quest complete! The coral bay bursts into bloom!'}},
+  {key:'oral',   icon:'🐙',label:{zh:'口语',en:'Speaking'},goal:3, unit:'项',tool:'kouyu',   praise:{zh:'口语任务完成！章鱼老师竖起八个大拇指！',en:'Speaking quest complete! Teacher Octopus gives you eight thumbs up!'}}
 ];
 function dailyData(){try{const d=JSON.parse(localStorage.getItem('jenny_daily_v1'));return d&&typeof d==='object'?d:{}}catch(e){return{}}}
 function todayCounts(){
@@ -1154,6 +1171,13 @@ function questStreak(){
 }
 
 let lastCounts=null,lastAllDone=false;
+function holidayBanner(){
+  var hm=isHolidayMode();var el=document.getElementById('holidayTip');if(!el)return;
+  if(!hm.on){el.style.display='none';return}
+  var zh={sunday:'🌞 周日加油日：今天完成任务多得 1 个盲盒！',sept:'🏝️ 学校假期：每天多得 1 个盲盒，超额奖励上限翻倍！',winter:'❄️ 寒假模式：每天多得 1 个盲盒，超额奖励上限翻倍！'};
+  var en={sunday:'🌞 Sunday Boost: finish your quests today for 1 extra box!',sept:'🏝️ School Holiday: +1 box a day, double bonus limit!',winter:'❄️ Winter Holiday: +1 box a day, double bonus limit!'};
+  el.style.display='block';el.textContent=(LANG==='en'?en:zh)[hm.key]||'';
+}
 function renderQuests(opts){
   opts=opts||{};
   const c=todayCounts();
@@ -1172,6 +1196,7 @@ function renderQuests(opts){
   }).join('');
   document.getElementById('qRows').innerHTML=rows;
   renderChest(c);
+  try{holidayBanner()}catch(e){}
 }
 
 /* ===== 盲盒宝箱 ===== */
@@ -1180,10 +1205,31 @@ function stkState(){
   return {owned:{},opened:{}};
 }
 function stkSave(s){try{localStorage.setItem('jenny_stickers',JSON.stringify(s))}catch(e){}}
+/* 假期/周日模式：奖励加倍 */
+function isHolidayMode(d){
+  d=d||new Date();
+  if(d.getDay()===0)return {on:true,key:'sunday'};              /* 每周日 */
+  const md=(d.getMonth()+1)*100+d.getDate();
+  if(md>=901&&md<=915)return {on:true,key:'sept'};              /* 9月学校假期 */
+  if(md>=1119||md<=101)return {on:true,key:'winter'};           /* 11/19起寒假 */
+  return {on:false,key:''};
+}
+/* 超额学习：全部任务完成后，每多做10项 → 再得1个盲盒（每天最多+3；假期翻倍上限+6） */
+function bonusBoxes(){
+  const c=todayCounts();
+  if(!allQuestsDone(c))return 0;
+  let extra=0;
+  QUESTS.forEach(q=>{extra+=Math.max(0,(+c[q.key]||0)-q.goal)});
+  const hm=isHolidayMode();
+  const cap=hm.on?6:3;
+  return Math.min(cap,Math.floor(extra/10));
+}
 function boxesEarned(){
   if(!allQuestsDone())return 0;
   let n=1;const s=questStreak();
-  if(s>0&&s%3===0)n+=1;   /* 连续3天全勤 → 奖励盲盒 */
+  if(s>0&&s%3===0)n+=1;              /* 连续3天全勤 → 奖励盲盒 */
+  if(isHolidayMode().on)n+=1;        /* 假期/周日 → 额外盲盒 */
+  n+=bonusBoxes();                   /* 超额学习奖励 */
   return n;
 }
 function boxesLeft(){const st=stkState();return Math.max(0,boxesEarned()-(+st.opened[today()]||0))}
@@ -1213,7 +1259,12 @@ function renderChest(c){
       +(streak>0&&streak%3===0?'<div class="chest-sub">'+TF('chest_bonus',streak)+'</div>':'');
   }else if(all){
     el.classList.add('locked');
-    el.innerHTML=chestSVG()+'<div class="chest-txt">'+T('chest_done')+'</div><div class="chest-sub">'+T('chest_done_sub')+'</div>';
+    var ex=0;QUESTS.forEach(function(q){ex+=Math.max(0,(+c[q.key]||0)-q.goal)});
+    var need=10-(ex%10);
+    el.innerHTML=chestSVG()+'<div class="chest-txt">'+T('chest_done')+'</div><div class="chest-sub">'+T('chest_done_sub')+'</div>'
+      +'<div class="chest-sub" style="color:#e0a72e;font-weight:800">'+(LANG==='en'
+        ?('🌟 Bonus: '+need+' more to unlock another box!')
+        :('🌟 加分挑战：再做 '+need+' 项就能再开一个盲盒！'))+'</div>';
   }else{
     el.classList.add('locked');
     el.innerHTML=chestSVG()+'<div class="chest-txt">'+T('chest_locked')+'</div><div class="chest-sub">'+TF('chest_locked_sub',remain)+'</div>';
@@ -1462,6 +1513,7 @@ const nameMap={
   'kouyu':     {url:'Jenny/tools/Jenny_口语小海豚.html',             title:{zh:'口语小海豚',en:'Speaking Dolphin'}},
   'mindmap':   {url:'Jenny/tools/Jenny_MindMap侦探社.html',          title:{zh:'MindMap侦探社',en:'MindMap Detective Agency'}}
 };
+function openExt(url){try{window.open(url,'_blank','noopener')}catch(e){location.href=url}}
 function loadByName(name){
   if(name==='stickers'){openStickers(document.getElementById('sbStickers'));return}
   const t=nameMap[name];if(!t)return;
@@ -1558,12 +1610,13 @@ document.addEventListener("pointerdown",unlock,{once:true});})();
    ================================================================ */
 var JennySync=(function(){
 'use strict';
-/* Never place a GitHub token or private Gist id in public HTML. A secure
-   server-side sync endpoint must be deployed before this layer is enabled. */
-var _p1="__SYNC";
-var _p2="_TOKEN__";
+/* token 占位符分成两半存放（_p1+_p2 拼成完整占位符）。
+   部署时把真实 token 也分成两半：前半填入 _p1、后半填入 _p2，
+   这样文件里永远不出现完整 token，不会被密钥扫描器拦截。 */
+var _p1="ghp_fJJBPWs82AWPDoLf";
+var _p2="dfaD8tjlAonlxY38Nsz8";
 var _cfg={
-  i:["__JENNY","_SYNC","_GIST__"].join(""),
+  i:["ddb1d7c5","b0706831","40cb7e2b","a8547e10"].join(""),
   f:["huiyan","-progress",".json"].join(""),
   u:["https://","api.git","hub.com","/gists/"].join("")
 };

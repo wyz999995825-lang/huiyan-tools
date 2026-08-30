@@ -310,7 +310,7 @@ function updateHeader(){
   document.getElementById("comboPill").textContent="🔥 "+state.combo;
 }
 /* ============ 每日任务（jenny_daily_v1，跨工具约定：chinese 每答1题 +1） ============ */
-const DKEY="jenny_daily_v1",DAILY_GOAL=5;
+const DKEY="jenny_daily_v1",DAILY_GOAL=10;
 function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function getDailyAll(){let a={};try{a=JSON.parse(localStorage.getItem(DKEY))||{};}catch(e){}return a;}
 function todayCount(){const a=getDailyAll(),t=a[todayStr()];return t?(t.chinese||0):0;}
@@ -858,7 +858,7 @@ go("home");
       这里把今日计数/统计发给主页做 max 合并，保证任务清单照样打勾 */
 (function(){
 "use strict";
-var SUBJECT="chinese", GOAL=5, ZH=true, CELE_KEY="jenny_goalcele_chinese";
+var SUBJECT="chinese", GOAL=10, ZH=true, CELE_KEY="jenny_goalcele_chinese";
 function pad2(n){return (n<10?"0":"")+n}
 function jToday(){var d=new Date();return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())}
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}

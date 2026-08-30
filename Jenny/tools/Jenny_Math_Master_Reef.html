@@ -1756,8 +1756,8 @@ function levelInfo(){
   return {title, pct, next};
 }
 function masteryPct(id){ const m=S.mastery[id]; return m.t===0?0:Math.round(m.c/m.t*100); }
-function masterProg(id){ const c=S.mastery[id]?S.mastery[id].c:0; return Math.min(100,Math.round(c/24*100)); }
-function topicDiff(id){ const c=S.mastery[id]?S.mastery[id].c:0; return c>=24?3:(c>=10?2:1); }
+function masterProg(id){ const c=S.mastery[id]?S.mastery[id].c:0; return Math.min(100,Math.round(c/30*100)); }
+function topicDiff(id){ const c=S.mastery[id]?S.mastery[id].c:0; return c>=20?3:(c>=10?2:1); }
 function unfixedCount(){ return S.mistakes.filter(m=>!m.fixed).length; }
 
 /* ============ microcopy (funny!) ============ */
@@ -1799,21 +1799,21 @@ function showHome(){
   h+='<div class="guide"><div class="face">🧜‍♀️</div><div class="bubble"><b>Marina the Mermaid:</b> '+pick(HOME_LINES)+'</div></div>';
   const uf=unfixedCount();
   h+='<button class="shellbar" onclick="showMistakes()">🐚 Mistake Shells <span class="cnt'+(uf===0?' zero':'')+'">'+uf+'</span> <span style="font-weight:650;color:var(--ink2);font-size:14px">'+(uf===0?"all polished — nice!":"tap to fix them and make them shine!")+'</span></button>';
-  h+='<h2 class="mapttl">🪸 Coral Reef Map — tap an island! <span style="font-size:13px;color:var(--ink2);font-weight:650">(each island: answer 24 correctly to Master it 🏆 · fresh questions every time)</span></h2>';
+  h+='<h2 class="mapttl">🪸 Coral Reef Map — tap an island! <span style="font-size:13px;color:var(--ink2);font-weight:650">(each island: every 10✓ = level up · 30✓ = Master 🏆 · fresh questions every time)</span></h2>';
   h+='<div class="map">';
   TOPICS.filter(t=>!t.logic).forEach(t=>{
     h+='<button class="island'+(t.preview?' preview':'')+'" onclick="startTopic(\''+t.id+'\')">'
       +(t.preview?'<span class="ptag">🌟 P3 Preview</span>':'')
-      +'<span class="em">'+t.emoji+'</span><span><span class="nm">'+t.name+'</span><div class="sub">'+S.mastery[t.id].c+'/24 to Master · '+S.mastery[t.id].t+' tried · Lv'+topicDiff(t.id)+'</div></span>'
-      +ringSVG(masterProg(t.id), 54, S.mastery[t.id].c>=24?'🏆':(S.mastery[t.id].c+'/24'))+'</button>';
+      +'<span class="em">'+t.emoji+'</span><span><span class="nm">'+t.name+'</span><div class="sub">'+S.mastery[t.id].c+'/30 to Master · '+S.mastery[t.id].t+' tried · Lv'+topicDiff(t.id)+'</div></span>'
+      +ringSVG(masterProg(t.id), 54, S.mastery[t.id].c>=30?'🏆':(S.mastery[t.id].c+'/30'))+'</button>';
   });
   h+='</div>';
   h+='<h2 class="mapttl">🧩 Logic Island — brain-gym puzzles! <span style="font-size:13px;color:var(--ink2);font-weight:650">(they get trickier as you master them)</span></h2>';
   h+='<div class="map">';
   TOPICS.filter(t=>t.logic).forEach(t=>{
     h+='<button class="island logic" onclick="startTopic(\''+t.id+'\')">'
-      +'<span class="em">'+t.emoji+'</span><span><span class="nm">'+t.name+'</span><div class="sub">'+t.sub+' · '+S.mastery[t.id].c+'/24 to Master · Lv'+topicDiff(t.id)+'</div></span>'
-      +ringSVG(masterProg(t.id), 54, S.mastery[t.id].c>=24?'🏆':(S.mastery[t.id].c+'/24'))+'</button>';
+      +'<span class="em">'+t.emoji+'</span><span><span class="nm">'+t.name+'</span><div class="sub">'+t.sub+' · '+S.mastery[t.id].c+'/30 to Master · Lv'+topicDiff(t.id)+'</div></span>'
+      +ringSVG(masterProg(t.id), 54, S.mastery[t.id].c>=30?'🏆':(S.mastery[t.id].c+'/30'))+'</button>';
   });
   h+='</div>';
   h+='<div class="badgebox"><h3>🏅 Badges</h3>'+badges()+'</div>';

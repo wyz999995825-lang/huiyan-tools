@@ -282,7 +282,7 @@ function addXP(n){state.xp+=n;save();updateHeader();}
 function doneCount(){return Object.keys(state.read).length+Object.keys(state.pic).length+Object.keys(state.qa).length;}
 /* ============ 每日任务（jenny_daily_v1 · oral 目标 1/天） ============ */
 const DAILY_KEY="jenny_daily_v1";
-const ORAL_GOAL=1;
+const ORAL_GOAL=3;
 function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function dailyLoad(){try{const s=localStorage.getItem(DAILY_KEY);if(s)return JSON.parse(s)||{};}catch(e){}return {};}
 function todayOral(){const d=dailyLoad();const t=d[todayStr()];return t&&t.oral?t.oral:0;}
@@ -827,7 +827,7 @@ go("home");
       这里把今日计数/统计发给主页做 max 合并，保证任务清单照样打勾 */
 (function(){
 "use strict";
-var SUBJECT="oral", GOAL=1, ZH=true, CELE_KEY="jenny_goalcele_oral";
+var SUBJECT="oral", GOAL=3, ZH=true, CELE_KEY="jenny_goalcele_oral";
 function pad2(n){return (n<10?"0":"")+n}
 function jToday(){var d=new Date();return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())}
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
