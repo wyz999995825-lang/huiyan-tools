@@ -322,7 +322,7 @@ function renderChrome(){
   renderFocusStrip();
 }
 function closeModal(id){$(id).classList.remove("show")}
-function stickerForDay(){const seed=Number(localDay().replaceAll("-","")),roll=seed%100,tier=roll<18?"Mythic":roll<43?"Epic":roll<78?"Rare":"Common",pool=STICKERS.filter(s=>s.tier===tier);return pool[Math.floor(seed/100)%pool.length]}
+function stickerForDay(){const day=localDay(),opened=state.stickers?.opened||{},used=new Set(Object.entries(opened).filter(([date])=>date!==day).map(([,id])=>id).filter(id=>STICKERS.some(s=>s.id===id))),dates=Object.keys(opened).filter(date=>date!==day).sort(),lastId=dates.length?opened[dates[dates.length-1]]:"",d=new Date(day+"T00:00:00"),dayIndex=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000),roll=dayIndex%100,tier=roll<18?"Mythic":roll<43?"Epic":roll<78?"Rare":"Common",available=STICKERS.filter(s=>!used.has(s.id)),cyclePool=available.length?available:STICKERS.filter(s=>s.id!==lastId),tierPool=cyclePool.filter(s=>s.tier===tier),pool=tierPool.length?tierPool:cyclePool;return pool[dayIndex%pool.length]}
 function stickerArtHTML(s){return s.image?`<img src="${s.image}" alt="${s.name}">`:s.art}
 function ownedStickerIds(){const pet=readPetState(false),known=new Set(STICKERS.map(s=>s.id));return new Set([...(state.stickers.owned||[]),...(pet?.stickers?.owned||[])].map(id=>STICKER_ALIASES[id]||id).filter(id=>known.has(id)))}
 function openBlindBox(){
