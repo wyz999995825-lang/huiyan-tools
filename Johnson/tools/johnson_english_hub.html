@@ -2361,6 +2361,25 @@ function fireworks(){
    ============================================================ */
 const KEY='johnsonEnglishHub';        // 永久钥匙 —— 绝不更改
 const OLD_KEYS=['johnsonEnglishHub_v1']; // 旧钥匙，仅用于一次性迁移
+const PET_KEY='johnson_psle_vocab_pet_v1';
+
+function englishQuestionFingerprint(q){
+  const source=String(q&&q.q||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().toLowerCase();
+  let hash=2166136261;
+  for(let i=0;i<source.length;i++){hash^=source.charCodeAt(i);hash=Math.imul(hash,16777619)}
+  return (hash>>>0).toString(36)
+}
+function rewardEnglishHubCoins(q){
+  if(!q)return 0;
+  try{
+    const pet=JSON.parse(localStorage.getItem(PET_KEY)||'{}'),rewards=pet.externalRewards&&typeof pet.externalRewards==='object'?pet.externalRewards:{};
+    const id='english-hub:'+englishQuestionFingerprint(q),key='question:'+id,legacyClaimed=Object.keys(rewards).some(savedKey=>savedKey===id||savedKey.endsWith(':'+id));
+    if(rewards[key]||legacyClaimed)return 0;
+    rewards[key]=5;pet.externalRewards=rewards;pet.coins=(Number(pet.coins)||0)+5;localStorage.setItem(PET_KEY,JSON.stringify(pet));
+    try{window.parent.postMessage({type:'johnson-pet-coins-updated'},'*')}catch(e){}
+    return 5;
+  }catch(e){return 0}
+}
 
 // 一份「完整的」默认存档结构。新版本加字段就加在这里。
 function freshState(){
@@ -2378,6 +2397,7 @@ function freshState(){
     cloze:{},           // {cl1:{done:true,stars:3}}
     visual:{},          // {vt1:{done:true,stars:3}}
     compre:{},          // {cp1:{done:true,stars:3}}
+    seenQuestionKeys:{},// 永久题目指纹：避免同一道题跨天重复进入普通练习
     mistakes:[]         // {q,chosen,correct,why,from}
   };
 }
@@ -2388,6 +2408,7 @@ function migrate(saved){
   const out=Object.assign({},def,saved||{});
   // 子对象也要保证存在
   ['grammar','st','vocab','editing','cloze','visual','compre'].forEach(k=>{ if(typeof out[k]!=='object'||!out[k]) out[k]={}; });
+  if(typeof out.seenQuestionKeys!=='object'||!out.seenQuestionKeys) out.seenQuestionKeys={};
   if(!Array.isArray(out.mistakes)) out.mistakes=[];
   // ---- 旧结构 → 7 天结构迁移 ----
   // 旧：{g1:{done,stars,bestScore,doneDate}}  新：{g1:{days:{1:{done,best,date}}}}
@@ -2629,6 +2650,19 @@ function getDayQuestions(lv,day){
   if(lv.dayQuestions && lv.dayQuestions[day-1]) return lv.dayQuestions[day-1];
   return lv.questions;
 }
+function levelListForKind(kind){
+  if(kind==='grammar')return GRAMMAR_LEVELS;
+  if(kind==='st')return ST_LEVELS;
+  if(kind==='editing')return EDITING_LEVELS;
+  if(kind==='vocab')return VOCAB_DAYS;
+  return [];
+}
+function allLevelQuestions(lv){return lv&&lv.dayQuestions&&lv.dayQuestions.length?lv.dayQuestions.flat():((lv&&lv.questions)||[])}
+function unseenQuestionsFor(kind,lv,day){
+  const target=Math.max(1,(getDayQuestions(lv,day)||[]).length),ordered=[...(getDayQuestions(lv,day)||[]),...allLevelQuestions(lv),...levelListForKind(kind).flatMap(allLevelQuestions)],unique=[],included=new Set;
+  for(const q of ordered){const key=englishQuestionFingerprint(q);if(!key||included.has(key)||S.seenQuestionKeys[key])continue;included.add(key);unique.push(q);if(unique.length>=target)break}
+  return unique
+}
 
 let CURLEVEL=null; // {kind,id,short,title}
 function openLevel(kind,id){
@@ -2693,10 +2727,12 @@ function renderDayPick(){
 
 function startDay(kind,id,day){
   const lv=getLevelObj(kind,id);
+  const questions=unseenQuestionsFor(kind,lv,day);
+  if(!questions.length){document.getElementById('daypickSub').textContent='这一科目前的原创题已经全部完成。旧题不会自动重复；新题追加后会自动进入这里。';return}
   quizReturn='daypick';
   CUR={
     kind,id,day,
-    questions:getDayQuestions(lv,day),
+    questions,
     rule:lv.rule||null,
     title:lv.title+' · Day '+day,
     shortName:CURLEVEL.short
@@ -2713,6 +2749,7 @@ function openEditingLevel(id){ openLevel('editing',id); }
 function startQuiz(){
   CUR.answers=new Array(CUR.questions.length).fill(null);
   CUR.locked=new Array(CUR.questions.length).fill(false);  // 每题是否已批
+  CUR.coinAwards=new Array(CUR.questions.length).fill(0);
   CUR.checked=false;
   document.getElementById('quizTitle').textContent=CUR.title;
   document.getElementById('quizSub').textContent=
@@ -2901,6 +2938,7 @@ function renderQuizBody(){
       const keyHtml=buildSolveKey(q,CUR);   // 解题钥匙
       html+=`<div class="explain show ${correct?'ok':'no'}">
         <b>${correct?'✓ 答对了！':'✗ 答错了。正确答案是 '+'ABCD'[q.ans]+'. '+q.opts[q.ans]}</b>
+        ${CUR.coinAwards&&CUR.coinAwards[qi]?'<div class="why">🪙 +5 pet coins saved · one reward for this unique question</div>':''}
         <div class="why">为什么对：${q.why[q.ans]}</div>
         ${(!correct&&CUR.answers[qi]!=null)?'<div class="why">你选的 '+'ABCD'[CUR.answers[qi]]+'：'+q.why[CUR.answers[qi]]+'</div>':''}
         ${keyHtml}
@@ -2929,6 +2967,10 @@ function renderQuizBody(){
       CUR.answers[qi]=oi;
       CUR.locked[qi]=true;              // 立刻锁定这一题
       const correct=oi===CUR.questions[qi].ans;
+      const fingerprint=englishQuestionFingerprint(CUR.questions[qi]);
+      S.seenQuestionKeys[fingerprint]={date:todayStr(),correct:correct};
+      CUR.coinAwards[qi]=correct?rewardEnglishHubCoins(CUR.questions[qi]):0;
+      save();
       sayQuick(correct);                // 即时小语音反馈
       renderQuizBody();
       // 滚动到下一题
