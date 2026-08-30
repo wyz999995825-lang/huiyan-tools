@@ -9,7 +9,7 @@
 </head>
 <body><main class="app"><header class="hero"><div><p class="kicker">Johnson English · Growing Model Library</p><h1>Model Composition Studio</h1><p>Read a strong model. Notice its choices. Borrow the method, then make it yours.</p></div><button class="sound" id="sound" type="button">🔊 Read aloud</button></header><nav class="tabs" id="tabs" aria-label="Model compositions"></nav><section id="screen"></section></main>
 <script>
-const STORE='johnson_model_composition_studio_v1';let muted=false,activeId='model-compo-a-mistake-001';
+const STORE='johnson_model_composition_studio_v1';const tabs=document.getElementById('tabs'),screen=document.getElementById('screen'),sound=document.getElementById('sound');let muted=false,activeId='model-compo-a-mistake-001';
 // Future family-provided model compositions are appended here. Existing IDs and study records never change.
 const COMPOSITIONS=[{id:'model-compo-a-mistake-001',title:'A Mistake',type:'P5/P6 Continuous Writing',theme:'Friendship · Responsibility · Time management',source:'Family model composition · added 2026-08-29',paragraphs:[
 'Whenever I see a birthday invitation, I cannot help but remember a mistake I made two years ago. Although my friend forgave me, the guilt I felt that day has remained fresh in my mind. Even now, I can still remember the incident as clearly as if it had happened yesterday…',
