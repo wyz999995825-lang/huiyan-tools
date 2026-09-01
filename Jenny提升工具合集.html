@@ -36,8 +36,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
 .topbar .tb-btn.off{opacity:.55}
 
 /* 全局激励栏 */
-.motiv-bar{background:linear-gradient(90deg,var(--sand) 0%,var(--lagoon) 100%);border-bottom:1.5px solid var(--border);padding:6px 14px;display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap;min-height:48px;cursor:pointer;transition:.15s}
-.motiv-bar:hover{filter:brightness(.97)}
+.motiv-bar{background:linear-gradient(90deg,var(--sand) 0%,var(--lagoon) 100%);border-bottom:1.5px solid var(--border);padding:6px 14px;display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap;min-height:48px;cursor:default;transition:.15s}
 .mb-streak{display:flex;align-items:center;gap:5px;font-weight:800;font-size:18px;color:var(--deep)}
 .mb-streak .fire{font-size:22px}
 .mb-stat{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--text2);background:var(--card);padding:5px 10px;border-radius:12px;border:1px solid var(--border)}
@@ -280,13 +279,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
 </div>
 
 <!-- 全局激励栏 -->
-<div class="motiv-bar" id="motivBar" onclick="openQuickModal()">
+<div class="motiv-bar" id="motivBar">
   <div class="mb-streak"><span class="fire" id="mbFire">💤</span><span id="mbStreak">0</span><span data-i18n="days_unit">天</span></div>
   <div class="mb-stat"><span id="mbTotal" class="n">0</span>&nbsp;<span data-i18n="wins_unit">个成就</span></div>
   <div class="mb-stat">🎁 <span id="mbStk" class="n">0</span>/40&nbsp;<span data-i18n="stickers_unit">贴纸</span></div>
   <div class="mb-badges" id="mbBadges"></div>
   <div class="mb-msg" id="mbMsg"></div>
-  <button class="mb-add" onclick="event.stopPropagation();openQuickModal()" data-i18n="record_btn">+ 记录小成功</button>
 </div>
 
 <!-- 快速记录弹窗 -->
@@ -616,7 +614,7 @@ const I18N={
 zh:{
   back:'← 返回',info:'P2 · 7 个学习工具',title:'Jenny 提升工具合集',
   tts_title:'朗读开关',fw_title:'放烟花！',backup_btn:'💾 备份进度',restore_btn:'📥 恢复',
-  days_unit:'天',wins_unit:'个成就',stickers_unit:'贴纸',record_btn:'+ 记录小成功',
+  days_unit:'天',wins_unit:'个成就',stickers_unit:'贴纸',record_btn:'妈妈记录',
   qm_title:'🌊 记录今天的小成功',qm_ph:'写下你的小成功...',qm_submit:'记录 🌟',qm_cancel:'取消',
   rv_keep:'收进收藏册 🎁',yay:'好耶！',
   qp_title:'🗺️ 今日任务清单',qp_sub:'全部打勾就能开出神秘贴纸盲盒哦！',
@@ -648,7 +646,7 @@ zh:{
   stk_full:'🏆 全部集齐！海洋收藏大王！',stk_hint:'每天完成任务清单，就能开盲盒收集新贴纸！',
   stk_card_desc:'已收集 {n}/40 款！完成每日任务开盲盒，收集海洋小伙伴贴纸。',
   collected_on:'收集于',today_word:'今天',
-  no_records:'还没有记录，点击上方 "记录小成功" 开始吧！',recent_wins:'最近的小成功',
+  no_records:'还没有妈妈记录。',recent_wins:'最近的妈妈记录',
   quest_row_title:'点击去做任务',
   backup_alert:'💾 已导出进度备份文件！\n（包含任务进度和贴纸收藏）\n建议存到 iCloud云盘，换设备时用"恢复"选这个文件即可。',
   restore_ok:'✅ 已恢复 {n} 项进度！',restore_bad:'❌ 这不是有效的进度备份文件',
@@ -658,7 +656,7 @@ zh:{
 en:{
   back:'← Back',info:'P2 · 7 Learning Tools',title:"Jenny 提升工具合集",
   tts_title:'Read-aloud on/off',fw_title:'Fireworks!',backup_btn:'💾 Backup',restore_btn:'📥 Restore',
-  days_unit:' days',wins_unit:'wins',stickers_unit:'stickers',record_btn:'+ Log a Small Win',
+  days_unit:' days',wins_unit:'wins',stickers_unit:'stickers',record_btn:'Parent Log',
   qm_title:"🌊 Log Today's Small Win",qm_ph:'Write your small win...',qm_submit:'Save 🌟',qm_cancel:'Cancel',
   rv_keep:'Add to Album 🎁',yay:'Yay!',
   qp_title:"🗺️ Today's Quests",qp_sub:'Tick them all to open a mystery sticker box!',
@@ -690,7 +688,7 @@ en:{
   stk_full:'🏆 All collected! Ocean collection champion!',stk_hint:'Finish your daily quests to open boxes and collect new stickers!',
   stk_card_desc:'{n}/40 collected! Finish daily quests to open boxes and collect ocean friends.',
   collected_on:'Collected on',today_word:'Today',
-  no_records:'No records yet — tap "Log a Small Win" above to start!',recent_wins:'Recent small wins',
+  no_records:'No parent notes yet.',recent_wins:'Recent parent notes',
   quest_row_title:'Tap to do this quest',
   backup_alert:'💾 Progress backup exported!\n(Includes quest progress and sticker collection)\nSave it to iCloud Drive; use "Restore" on a new device.',
   restore_ok:'✅ Restored {n} items!',restore_bad:'❌ This is not a valid progress backup file',
@@ -1077,11 +1075,8 @@ function closeModal(){document.getElementById('qmOverlay').classList.remove('sho
 
 function submitWin(){
   const input=document.getElementById('qmInput');const text=input.value.trim();if(!text)return;
-  prevBadgeCount=earnedBadges().length;
   state.wins.push({id:Date.now().toString(36),text,cat:state.selectedCat,date:today(),time:new Date().toTimeString().slice(0,5)});
-  input.value='';saveState();closeModal();renderMotivBar();renderDashboard();celebrate();fireworks();sndDing();
-  const newBadges=earnedBadges();
-  if(newBadges.length>prevBadgeCount){setTimeout(()=>showBadgePopup(newBadges[newBadges.length-1]),600)}
+  input.value='';saveState();closeModal();renderMotivBar();renderDashboard();
 }
 
 function celebrate(){
@@ -1148,11 +1143,11 @@ function makeBubbles(){
 
 /* ===== 每日任务清单（跨工具约定 jenny_daily_v1） ===== */
 const QUESTS=[
-  {key:'math',   icon:'🐬',label:{zh:'数学',en:'Maths'},   goal:20,unit:'题',tool:'mathreef',praise:{zh:'数学任务完成！小海豚给你转圈圈！',en:'Maths quest complete! The little dolphin does a spin for you!'}},
-  {key:'science',icon:'🐠',label:{zh:'科学',en:'Science'}, goal:20, unit:'个',tool:'science', praise:{zh:'科学任务完成！小丑鱼吐了一串开心泡泡！',en:'Science quest complete! The clownfish blows a stream of happy bubbles!'}},
-  {key:'reading',icon:'🐢',label:{zh:'阅读',en:'Reading'}, goal:6, unit:'篇',tool:'reading', praise:{zh:'阅读任务完成！小海龟为你鼓掌！',en:'Reading quest complete! The sea turtle claps for you!'}},
-  {key:'chinese',icon:'🪸',label:{zh:'华文',en:'Chinese'}, goal:20, unit:'题',tool:'huawen',  praise:{zh:'华文任务完成！珊瑚湾开满了花！',en:'Chinese quest complete! The coral bay bursts into bloom!'}},
-  {key:'oral',   icon:'🐙',label:{zh:'口语',en:'Speaking'},goal:6, unit:'项',tool:'kouyu',   praise:{zh:'口语任务完成！章鱼老师竖起八个大拇指！',en:'Speaking quest complete! Teacher Octopus gives you eight thumbs up!'}}
+  {key:'math',   icon:'🐬',label:{zh:'数学',en:'Maths'},   goal:40,unit:'题',tool:'mathreef',praise:{zh:'数学任务完成！小海豚给你转圈圈！',en:'Maths quest complete! The little dolphin does a spin for you!'}},
+  {key:'science',icon:'🐠',label:{zh:'科学',en:'Science'}, goal:40, unit:'个',tool:'science', praise:{zh:'科学任务完成！小丑鱼吐了一串开心泡泡！',en:'Science quest complete! The clownfish blows a stream of happy bubbles!'}},
+  {key:'reading',icon:'🐢',label:{zh:'英文阅读',en:'English Reading'}, goal:12, unit:'篇',tool:'reading', praise:{zh:'英文阅读任务完成！小海龟为你鼓掌！',en:'English reading quest complete! The sea turtle claps for you!'}},
+  {key:'chinese',icon:'🪸',label:{zh:'华文',en:'Chinese'}, goal:40, unit:'题',tool:'huawen',  praise:{zh:'华文任务完成！珊瑚湾开满了花！',en:'Chinese quest complete! The coral bay bursts into bloom!'}},
+  {key:'oral',   icon:'🐙',label:{zh:'口语',en:'Speaking'},goal:12, unit:'项',tool:'kouyu',   praise:{zh:'口语任务完成！章鱼老师竖起八个大拇指！',en:'Speaking quest complete! Teacher Octopus gives you eight thumbs up!'}}
 ];
 function dailyData(){try{const d=JSON.parse(localStorage.getItem('jenny_daily_v1'));return d&&typeof d==='object'?d:{}}catch(e){return{}}}
 function todayCounts(){
@@ -1232,7 +1227,16 @@ function boxesEarned(){
   if(!allQuestsDone())return 0;   /* 任务没做完 → 一个都没有 */
   return 1+accuracyBonus();       /* 硬上限 2 */
 }
-function boxesLeft(){const st=stkState();return Math.max(0,boxesEarned()-(+st.opened[today()]||0))}
+function normalizeStickerState(st){
+  st=st&&typeof st==='object'?st:{};
+  if(!st.owned||typeof st.owned!=='object')st.owned={};
+  if(!st.opened||typeof st.opened!=='object')st.opened={};
+  const t=today(),earned=boxesEarned(),cur=Math.max(0,Math.floor(+st.opened[t]||0));
+  if(cur>earned)st.opened[t]=earned;             /* 旧版若已写入 5/9 次，刷新后按新制度封顶 */
+  if(st.opened[t]>2)st.opened[t]=2;              /* 永远不显示或承认超过 2 次 */
+  return st;
+}
+function boxesLeft(){const st=normalizeStickerState(stkState());stkSave(st);return Math.max(0,boxesEarned()-(+st.opened[today()]||0))}
 function chestSVG(){
   return '<svg class="chest-svg" viewBox="0 0 100 82" xmlns="http://www.w3.org/2000/svg">'
   +'<defs><linearGradient id="chW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b57a4a"/><stop offset="1" stop-color="#8a5a3b"/></linearGradient>'
@@ -1291,7 +1295,11 @@ function chestTap(){
   },900);
 }
 function openBox(){
-  const st=stkState();
+  const st=normalizeStickerState(stkState());
+  if(boxesLeft()<=0||!allQuestsDone()){
+    stkSave(st);renderChest();hubSpeak(allQuestsDone()?T('chest_speak_done'):T('chest_speak_locked'));
+    return;
+  }
   const rar=rollRarity();
   const unownedIn=STICKERS.filter(s=>s.rarity===rar&&!st.owned[s.id]);
   const unownedAll=STICKERS.filter(s=>!st.owned[s.id]);
@@ -1300,7 +1308,7 @@ function openBox(){
   else if(unownedAll.length)pick=unownedAll[Math.floor(Math.random()*unownedAll.length)];
   else{pick=STICKERS[Math.floor(Math.random()*STICKERS.length)];dup=true}
   if(!dup)st.owned[pick.id]={date:today(),rarity:pick.rarity};
-  st.opened[today()]=(+st.opened[today()]||0)+1;
+  st.opened[today()]=Math.min(2,(+st.opened[today()]||0)+1);
   stkSave(st);
   sndMagic();fireworks();fireworks();celebrate();
   const R=RARITY[pick.rarity];

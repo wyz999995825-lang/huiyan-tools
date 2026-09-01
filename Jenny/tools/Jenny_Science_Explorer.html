@@ -780,12 +780,44 @@ const QUIZ=[
    {s:"The clips will all stick to the middle of the magnet.", n:"The middle is the WEAKEST part — the ends are the strongest."},
    {s:"The clips will float in the air above the magnet.", n:"The clips are pulled ONTO the magnet — they do not float."},
    {s:"Paper clips cannot show the poles because paper is non-magnetic.", n:"These clips are made of STEEL, so the magnet attracts them."}]},
- {t:"mg", q:"Two bar magnets snap together. What does this tell us about the two poles facing each other?", dia:"magAttract", opts:[
-   {s:"The two facing poles are unlike poles, because unlike poles attract.", ok:true},
-   {s:"The two facing poles are like poles, because like poles attract.", n:"Like poles REPEL — attraction means the poles are unlike."},
-   {s:"The two facing poles must both be North poles.", n:"Two North poles would push apart, not snap together."},
-   {s:"The magnets snapped together because they are sticky.", n:"There is no glue — the magnetic force pulls them together."}]}
-];
+	 {t:"mg", q:"Two bar magnets snap together. What does this tell us about the two poles facing each other?", dia:"magAttract", opts:[
+	   {s:"The two facing poles are unlike poles, because unlike poles attract.", ok:true},
+	   {s:"The two facing poles are like poles, because like poles attract.", n:"Like poles REPEL — attraction means the poles are unlike."},
+	   {s:"The two facing poles must both be North poles.", n:"Two North poles would push apart, not snap together."},
+	   {s:"The magnets snapped together because they are sticky.", n:"There is no glue — the magnetic force pulls them together."}]}
+	,
+	 // ---- PSLE-style challenge questions: read evidence, then decide ----
+	 {t:"lt", q:"Jenny puts two things near a window for two weeks. Object A becomes taller. Object B stays the same size and never needs water. Which conclusion is best?", dia:"livingNeeds", opts:[
+	   {s:"Object A is likely a living thing because it grows, while Object B is likely non-living.", ok:true},
+	   {s:"Both objects are living because both were near the window.", n:"Being near a window is not enough evidence. Look for growth and needs."},
+	   {s:"Object B is living because it did not change.", n:"Not changing is not a sign of life. Living things grow, respond or reproduce."},
+	   {s:"Object A is non-living because it stayed in one place.", n:"Plants stay in one place but are living things."}]},
+	 {t:"ma", q:"Four cups are made from paper, metal, glass and rubber. Jenny needs a cup for hot Milo that will not burn her hand easily. Which property matters MOST?", dia:"materials", opts:[
+	   {s:"Poor conductor of heat, so heat does not pass to her hand quickly.", ok:true},
+	   {s:"Transparent, so she can see the drink.", n:"Seeing the drink is useful, but it does not protect her hand from heat."},
+	   {s:"Magnetic, so it can stick to a magnet.", n:"Magnetism does not help with holding a hot cup safely."},
+	   {s:"Waterproof only, so the drink cannot leak.", n:"A cup must be waterproof, but the key safety property here is heat transfer."}]},
+	 {t:"pp", q:"A plant has healthy roots but its leaves are covered tightly with black paper for many days. What is most likely to happen?", dia:"plantParts", opts:[
+	   {s:"The plant makes less food because its leaves receive little light.", ok:true},
+	   {s:"The plant makes more food because the roots are healthy.", n:"Roots absorb water, but leaves need light to make food."},
+	   {s:"The plant will flower faster because it is kept dark.", n:"Darkness does not help leaves make food."},
+	   {s:"Nothing changes because leaves only decorate the plant.", n:"Leaves are important food-making parts."}]},
+	 {t:"dg", q:"A child chews bread for a long time before swallowing. Which process has already started in the mouth?", dia:"digestive", opts:[
+	   {s:"Digestion has started because teeth break food into smaller pieces and saliva mixes with it.", ok:true},
+	   {s:"Digestion starts only in the stomach, so nothing happens in the mouth.", n:"Digestion begins in the mouth before food reaches the stomach."},
+	   {s:"Breathing has started because bread contains air.", n:"Breathing uses the lungs; this question is about food."},
+	   {s:"Reproduction has started because the bread is soft.", n:"Reproduction is producing young; it is not part of digestion."}]},
+	 {t:"mg", q:"Jenny tests a magnet with four objects: iron nail, wooden ruler, steel clip and plastic button. Which pair should be attracted?", dia:"magnets", opts:[
+	   {s:"Iron nail and steel clip, because both are magnetic materials.", ok:true},
+	   {s:"Wooden ruler and plastic button, because both are light.", n:"Light objects are not automatically magnetic."},
+	   {s:"Iron nail and wooden ruler, because both are hard.", n:"Hardness is not the test for magnetism."},
+	   {s:"Steel clip and plastic button, because both are small.", n:"Size does not decide whether a magnet can attract an object."}]},
+	 {t:"cy", q:"A butterfly lays eggs on a leaf. Later Jenny sees caterpillars eating the leaves. Which stage came just before the caterpillar stage?", dia:"lifecycleB", opts:[
+	   {s:"Egg, because the young caterpillar hatches from the egg.", ok:true},
+	   {s:"Adult butterfly, because adults always come before young animals.", n:"The adult lays eggs, but the direct stage before caterpillar is egg."},
+	   {s:"Pupa, because the caterpillar changes into a pupa.", n:"Pupa comes after the caterpillar stage."},
+	   {s:"Seed, because plants grow from seeds.", n:"Butterflies are animals. Seeds belong to plants."}]}
+	];
 /* V3 rule: ALWAYS append new questions at the END of their topic block. Never reorder or delete —
    each question's stable id (topic + number) is derived from its position within its topic. */
 (function(){ const c={}; QUIZ.forEach(q=>{ c[q.t]=(c[q.t]||0)+1; q.id=q.t+"-"+c[q.t]; }); })();
@@ -979,7 +1011,7 @@ function soundItOut(){
 }
 
 /* ================= Daily quota (jenny_daily_v1, cross-tool) ================= */
-const DKEY="jenny_daily_v1", DGOAL=20;
+const DKEY="jenny_daily_v1", DGOAL=40;
 
 /* ═══════════ 防蒙混：统一作答记账（三条铁律）═══════════
    1. 每道题当天只记一次    —— 重复做同一题不再重复计数

@@ -316,7 +316,7 @@ function speak(text,lang){
 }
 
 /* ============ daily quota (cross-tool convention) ============ */
-const DKEY="jenny_daily_v1", DGOAL=20;
+const DKEY="jenny_daily_v1", DGOAL=40;
 /* 本地日期键（toISOString 是 UTC，新加坡早上8点前会拿到昨天，全套工具统一用本地日期） */
 function localDayKey(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 function today(){ return localDayKey(new Date()); }
@@ -1737,7 +1737,80 @@ function genLSpa(d){
       {c:"Look at the tiles beside the gap — follow how the picture turns around the centre.", h:mosaicSVG(v,-1,true)},
       {c:"So the missing tile must be turned exactly like this. The other choices are twisted the wrong way!", h:'<div style="display:flex;justify-content:center">'+motifSVG(v,baseRot,80)+'</div>'}
     ],
-    dbg:{tpl:"lspa", v:v, mq:mq, rots:rel, ansIdx:ansIdx} };
+	    dbg:{tpl:"lspa", v:v, mq:mq, rots:rel, ansIdx:ansIdx} };
+}
+
+/* ---------- PSLE-style multi-step challenge (Challenge Reef) ---------- */
+function genChallenge(d){
+  d=d||1;
+  const sub=pick(["bar","elapsed","money","fraction","table"]);
+  if(sub==="bar"){
+    const small=ri(18,48), more=ri(9,24), big=small+more, total=small+big;
+    return { id:qid("chall","bar",[small,more]), type:"input", intOnly:true,
+      text:"Jenny and Meili collected <b>"+total+"</b> shells altogether. Jenny collected <b>"+more+"</b> more shells than Meili.<br>How many shells did <b>Jenny</b> collect?",
+      qvis:bm([{name:"Jenny",segs:[{v:small,t:"?",c:C1},{v:more,t:"+"+more,c:C2}]},{name:"Meili",segs:[{v:small,t:"?",c:C1}]}]),
+      ans:big,
+      model:"Jenny collected <b>"+big+"</b> shells.",
+      steps:[
+        {c:"Remove the extra part first.", h:eq(total+" − "+more+" = <b>"+(total-more)+"</b>")},
+        {c:"The remaining shells make two equal parts.", h:eq((total-more)+" ÷ 2 = <b>"+small+"</b>")},
+        {c:"Jenny has one equal part plus the extra part.", h:eq(small+" + "+more+" = <b>"+big+"</b>")}
+      ],
+      dbg:{tpl:"chall-bar", small:small, more:more} };
+  }
+  if(sub==="elapsed"){
+    const h=ri(7,10), m=pick([10,15,20,25,35,40,45,50]); const start=(h%12)*60+m;
+    const warm=ri(2,5)*5, main=ri(5,9)*5, pack=ri(1,4)*5, end=start+warm+main+pack;
+    const o=mkOpts(end,[end+5,end-5,start+main,end+10],fmtTime);
+    return { id:qid("chall","elapsed",[h,m,warm,main,pack]), type:"mcq", short:true,
+      text:"A practice session starts at <b>"+fmtTime(start)+"</b>. Warm-up takes <b>"+warm+" min</b>, main practice takes <b>"+main+" min</b>, and packing takes <b>"+pack+" min</b>.<br>What time does it finish?",
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+      model:"It finishes at <b>"+fmtTime(end)+"</b>.",
+      steps:[
+        {c:"Add all the parts of the session.", h:eq(warm+" + "+main+" + "+pack+" = <b>"+(warm+main+pack)+"</b> min")},
+        {c:"Jump forward from the start time.", h:chain([{box:fmtTime(start)},{arrow:"+"+(warm+main+pack)+" min"},{box:fmtTime(end),miss:true}])}
+      ],
+      dbg:{tpl:"chall-elapsed", start:start, warm:warm, main:main, pack:pack} };
+  }
+  if(sub==="money"){
+    const book=ri(4,8)*50, pen=ri(3,6)*20, nb=ri(2,4), np=ri(3,5);
+    const total=book*nb+pen*np, paid=Math.ceil((total+ri(80,220))/100)*100, change=paid-total;
+    const o=mkOpts(change,[change+20,change-20,paid-book*nb,paid-pen*np],fmtMoney);
+    return { id:qid("chall","money",[book,pen,nb,np,paid]), type:"mcq", short:true,
+      text:"Jenny buys <b>"+nb+"</b> books at <b>"+fmtMoney(book)+"</b> each and <b>"+np+"</b> pens at <b>"+fmtMoney(pen)+"</b> each. She pays <b>"+fmtMoney(paid)+"</b>.<br>How much change should she get?",
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+      model:"Her change is <b>"+fmtMoney(change)+"</b>.",
+      steps:[
+        {c:"Find the cost of the books and pens.", h:eq(nb+" × "+fmtMoney(book)+" = "+fmtMoney(book*nb)+"<br>"+np+" × "+fmtMoney(pen)+" = "+fmtMoney(pen*np))},
+        {c:"Find the total cost.", h:eq(fmtMoney(book*nb)+" + "+fmtMoney(pen*np)+" = <b>"+fmtMoney(total)+"</b>")},
+        {c:"Subtract from the amount paid.", h:eq(fmtMoney(paid)+" − "+fmtMoney(total)+" = <b>"+fmtMoney(change)+"</b>")}
+      ],
+      dbg:{tpl:"chall-money", book:book, pen:pen, nb:nb, np:np, paid:paid} };
+  }
+  if(sub==="fraction"){
+    const denom=pick([3,4,5]), unit=ri(7,15), pages=denom*unit, read=unit, left=pages-read;
+    const o=mkOpts(left,[pages-read+denom,pages-unit*2,read,pages],String);
+    return { id:qid("chall","fraction",[denom,unit]), type:"mcq", short:true,
+      text:"Jenny has <b>"+pages+"</b> pages to read. She reads <b>1/"+denom+"</b> of the pages before dinner.<br>How many pages are <b>left</b>?",
+      opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+      model:"There are <b>"+left+"</b> pages left.",
+      steps:[
+        {c:"Split the pages into "+denom+" equal parts.", h:eq(pages+" ÷ "+denom+" = <b>"+unit+"</b> pages in each part")},
+        {c:"She read one part, so "+(denom-1)+" parts are left.", h:eq((denom-1)+" × "+unit+" = <b>"+left+"</b>")}
+      ],
+      dbg:{tpl:"chall-fraction", denom:denom, unit:unit} };
+  }
+  const start=ri(14,32), add=ri(5,12), rows=ri(4,6), target=start+add*(rows-1);
+  const o=mkOpts(target,[target+add,target-add,start+rows,add*rows],String);
+  return { id:qid("chall","table",[start,add,rows]), type:"mcq", short:true,
+    text:"A number pattern starts at <b>"+start+"</b> and increases by <b>"+add+"</b> each step.<br>What is the <b>"+rows+(rows===4?"th":rows===5?"th":"th")+"</b> number?",
+    opts:o.opts, ansIdx:o.ansIdx, ans:o.ans,
+    model:"The "+rows+"th number is <b>"+target+"</b>.",
+    steps:[
+      {c:"List the pattern carefully.", h:eq(Array.from({length:rows},(_,i)=>start+add*i).join(", "))},
+      {c:"There are "+(rows-1)+" jumps from the 1st number to the "+rows+"th number.", h:eq(start+" + "+(rows-1)+" × "+add+" = <b>"+target+"</b>")}
+    ],
+    dbg:{tpl:"chall-table", start:start, add:add, rows:rows} };
 }
 /* ============ topic registry ============ */
 const TOPICS=[
@@ -1754,7 +1827,8 @@ const TOPICS=[
   {id:"lbal",   name:"Balance Bay",           emoji:"⚖️", gen:genLBal, logic:true, sub:"Scale swap puzzles"},
   {id:"lded",   name:"Detective Dock",        emoji:"🕵️‍♀️", gen:genLDed, logic:true, sub:"Clue riddles"},
   {id:"lpyr",   name:"Pyramid Point",         emoji:"🔺", gen:genLPyr, logic:true, sub:"Number pyramids"},
-  {id:"lspa",   name:"Tile Cove",             emoji:"🧭", gen:genLSpa, logic:true, sub:"Fix the picture"}
+  {id:"lspa",   name:"Tile Cove",             emoji:"🧭", gen:genLSpa, logic:true, sub:"Fix the picture"},
+  {id:"chall",  name:"Challenge Reef",        emoji:"🏆", gen:genChallenge, logic:true, sub:"Multi-step PSLE style"}
 ];
 
 /* ============ state (extends v2 jenny_math_reef — never wipes old progress) ============ */
@@ -1987,7 +2061,7 @@ function finish(ok, pickText){
   S.totalAns++;   /* 作答总数照记，但每日任务计数移到答对分支里 */
   if(!isRedo) S.mastery[curTopic.id].t++;
   let headline;
-  if(!isRedo){ _stat("math",ok); if(ok)bumpDaily(); }   /* 首答才统计、首答做对才计数；订正不补 */
+  if(!isRedo&&_dayOnce("jenny_day_math",cur.id)){ _stat("math",ok); if(ok)bumpDaily(); }   /* 同一题当天只记一次；首答做对才计数，订正不补 */
   if(ok){
     if(isRedo){
       S.mistakes[redoIdx].fixed=true;

@@ -282,7 +282,7 @@ function addXP(n){state.xp+=n;save();updateHeader();}
 function doneCount(){return Object.keys(state.read).length+Object.keys(state.pic).length+Object.keys(state.qa).length;}
 /* ============ 每日任务（jenny_daily_v1 · oral 目标 1/天） ============ */
 const DAILY_KEY="jenny_daily_v1";
-const ORAL_GOAL=6;
+const ORAL_GOAL=12;
 function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function dailyLoad(){try{const s=localStorage.getItem(DAILY_KEY);if(s)return JSON.parse(s)||{};}catch(e){}return {};}
 function todayOral(){const d=dailyLoad();const t=d[todayStr()];return t&&t.oral?t.oral:0;}
