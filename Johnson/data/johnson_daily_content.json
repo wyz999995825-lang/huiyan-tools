@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-27T19:00:00+08:00",
+  "updatedAt": "2026-09-01T19:00:00+08:00",
   "policy": "append-only-stable-ids",
   "packs": [
     {
@@ -242,6 +242,162 @@
           "marks": [
             "内容点：说明文浩改变了对宇杰的看法。",
             "依据点：写出宇杰事先认真准备，并在停电时帮助小组完成介绍。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-01",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-01-001",
+          "title": "The List Beside the Door",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>On the morning of the school innovation showcase, Soren checked his team's display three times. The model bridge stood neatly on the table, and every label was in place. When his teammate Hana suggested testing the bridge once more with the heaviest weight, Soren shook his head. The judges would arrive soon, and he did not want to disturb a display that already looked perfect.</p><p>Hana pointed to a small list taped beside the door. It was the team's test checklist: check the joints, add weights one at a time, and record what changes. Soren remembered that they had only tested the bridge with light wooden blocks. Reluctantly, he agreed. At the third heavier block, one joint bent downwards.</p><p>The team had only minutes left, but they used two short supports to strengthen that joint. During the showcase, the bridge held the full set of weights. Afterwards, Soren did not praise Hana for making the display look better. He thanked her for noticing that a neat-looking model was not the same as tested evidence.</p>",
+          "q": "Why did Soren change his mind about testing the bridge again?",
+          "opts": [
+            "He wanted to make the bridge look less neat before the judges arrived.",
+            "He realised that the bridge had not been tested with the heaviest weights, so its appearance was not enough evidence that it would work safely.",
+            "He believed that heavy wooden blocks always damage any bridge.",
+            "He wanted Hana to complete the whole showcase alone."
+          ],
+          "ans": 1,
+          "model": "Soren changed his mind because the checklist reminded him that the bridge had only been tested with light blocks. He realised that a neat appearance was not evidence that it could safely hold the heaviest weight.",
+          "evidence": "They had only tested the bridge with light wooden blocks.",
+          "marks": [
+            "Meaning point: states that Soren needed evidence from a heavier-weight test.",
+            "Support point: links the decision to the earlier test using only light blocks."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-01-001",
+          "title": "Pupils Help Plan a Safer Cycling Route",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>Pupils from a neighbourhood school have worked with residents to study a short cycling route near a community centre. The route is popular after school, but several adults said that younger riders sometimes turn quickly around a blind corner.</p><p>The pupils first counted riders at the same half-hour on five weekdays. They also drew where riders slowed down, rang their bells or stopped. The highest number of sudden stops happened near a hedge that blocked the view of people walking from the opposite direction.</p><p>Instead of asking only for a new sign, the pupils proposed trimming part of the hedge, painting a slower-speed marking before the corner and adding a small mirror. A town council representative said the group had made a useful recommendation because it connected observations with more than one possible safety measure.</p>",
+          "q": "Why did the pupils propose several safety measures instead of only a new sign?",
+          "opts": [
+            "They wanted to make the cycling route longer for every rider.",
+            "Their observations showed that the blind corner involved both poor visibility and sudden stopping, so they suggested measures that addressed more than one part of the problem.",
+            "They did not collect any information about the route.",
+            "The town council asked them to remove all bicycles from the neighbourhood."
+          ],
+          "ans": 1,
+          "model": "The pupils suggested several measures because their observations showed more than one safety issue: the hedge reduced visibility and riders often stopped suddenly. Trimming, road markings and a mirror address different parts of that problem.",
+          "evidence": "The highest number of sudden stops happened near a hedge that blocked the view.",
+          "marks": [
+            "Meaning point: identifies the linked visibility and stopping problem.",
+            "Support point: connects the observations to the range of suggested measures."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-percentage-2026-09-01-001",
+          "topic": "percentage",
+          "kind": "thinking",
+          "title": "Percentage · Club Donation Goal",
+          "tag": "Compare a completed percentage with the whole",
+          "q": "A school club has collected $168, which is 70% of its donation goal. After a parent adds $36, what percentage of the goal has the club collected?",
+          "opts": ["75%", "80%", "85%", "90%"],
+          "ans": 2,
+          "model": "If 70% is $168, then 10% is $24 and 100% is $240. After the extra $36, the club has $204. $204 is 85% of $240.",
+          "steps": [
+            "Use 70% = $168 to find 10%: $168 ÷ 7 = $24.",
+            "Find the whole goal: $24 × 10 = $240.",
+            "Add the donation: $168 + $36 = $204, then $204 ÷ $240 = 85%."
+          ],
+          "marks": [
+            "Method mark: finds the whole donation goal correctly.",
+            "Answer mark: states that $204 is 85% of $240."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-reproduction-2026-09-01-001",
+          "topic": "reproduction",
+          "level": "P5 CORE · PLANT REPRODUCTION",
+          "focus": "control variable and evidence link",
+          "title": "Plant Reproduction · Pollinator Access",
+          "q": "Three similar flowers were kept in the same garden. Flower A was covered with a fine mesh bag before it opened. Flower B was left uncovered. Flower C was covered only after insects had visited it. Later, A produced no fruit, while B and C produced fruit. Which is the best complete explanation?",
+          "opts": [
+            "The bag made Flower A too cold to grow leaves.",
+            "The bag prevented insects from transferring pollen to Flower A's stigma before it opened. Without pollination, fertilisation did not occur, so fruit did not form.",
+            "Flower B and C produced fruit because insects create seeds inside their bodies.",
+            "Flower A produced no fruit because all flowers need to be covered after insects visit."
+          ],
+          "ans": 1,
+          "model": "The mesh bag prevented insects from transferring pollen grains to Flower A's stigma before it opened. Without pollination, fertilisation could not occur, so the ovary did not develop into a fruit.",
+          "steps": [
+            "Compare when each flower was covered: only Flower A was blocked before insects could visit.",
+            "Insects transfer pollen from anthers to stigmas during pollination.",
+            "Without pollination and fertilisation, fruit and seeds cannot form."
+          ],
+          "marks": [
+            "Science point: uses pollination and fertilisation in the correct sequence.",
+            "Evidence link: connects the early mesh bag on A to its lack of fruit."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-reproduction-2026-09-01-001",
+          "group": "precision",
+          "term": "pollen grains are transferred to the stigma",
+          "meaning": "the pollination step in which pollen from an anther reaches a stigma of a flower of the same species",
+          "example": "An insect transfers pollen grains to the stigma when it visits another similar flower.",
+          "note": "OEQ order: pollen transfer happens before fertilisation."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-01-002",
+          "group": "precision",
+          "term": "pollination is prevented",
+          "meaning": "pollen cannot reach the stigma because an agent such as an insect is blocked",
+          "example": "The mesh bag prevents pollination by blocking insects from the flower.",
+          "note": "State what is blocked and why it matters."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-01-003",
+          "group": "precision",
+          "term": "fertilisation does not occur",
+          "meaning": "the male and female reproductive cells do not fuse after pollen fails to reach the stigma",
+          "example": "Without pollination, fertilisation does not occur in the flower.",
+          "note": "Do not use pollination and fertilisation as if they mean the same thing."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-01-004",
+          "group": "precision",
+          "term": "the ovary develops into a fruit",
+          "meaning": "after fertilisation, the ovary grows to form the fruit",
+          "example": "After fertilisation, the ovary develops into a fruit containing seeds.",
+          "note": "Useful paired fact: ovules develop into seeds."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-01-005",
+          "group": "precision",
+          "term": "evidence from the timing of a comparison",
+          "meaning": "a conclusion supported by noticing when a changed condition happened relative to the result",
+          "example": "Only the flower covered before insect visits produced no fruit, which is evidence that pollinator access mattered.",
+          "note": "OEQ pattern: name the different timing, then link it to the different result."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-01-001",
+          "title": "P5 华文短文阅读 · 从提醒到承担",
+          "q": "班级负责布置阅读角。开始时，俊豪只挑自己喜欢的海报设计，还嫌小敏一直核对书架编号太慢。活动前一天，老师发现有一箱新书没有分类。小敏拿出早已写好的编号表，带着大家一格一格放好。俊豪这才发现，如果没有小敏的细心，明天同学们根本找不到想看的书。活动结束后，他主动留下来，把自己设计的海报贴在正确的书架旁。",
+          "ask": "俊豪后来主动留下来贴海报，主要说明了什么？",
+          "opts": [
+            "他只想让大家看见自己的海报设计。",
+            "他认识到细心分类的重要，也愿意承担责任，让阅读角真正方便同学使用。",
+            "他认为小敏做事太慢，所以决定不再和她合作。",
+            "他不喜欢阅读角里的新书。"
+          ],
+          "ans": 1,
+          "model": "俊豪认识到小敏细心分类的重要，也明白阅读角要方便同学使用，不能只追求海报好看。因此他主动留下来，把海报贴在正确的书架旁，愿意承担责任。",
+          "marks": [
+            "内容点：写出俊豪认识到分类和责任的重要。",
+            "依据点：结合小敏的编号表和俊豪贴海报的行为说明。"
           ]
         }
       ]
