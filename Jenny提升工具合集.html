@@ -637,7 +637,7 @@ zh:{
   collected_word:'已收集',rar_common:'普通',rar_rare:'稀有',rar_epic:'史诗',rar_legendary:'传说',
   badge_new:'🎉 解锁新徽章！',daily_title:'每日小激励',daily_go:'开始探险 🌊',
   tts_on_speak:'朗读打开啦！',
-  chest_ready:'🎉 宝箱来啦！点我开盲盒',chest_bonus:'连续 {n} 天全勤，奖励盲盒 +1！',
+  chest_ready:'🎉 宝箱来啦！点我开盲盒',chest_bonus:'今天正确率 {n}%，奖励盲盒 +1！🎯',
   chest_done:'今日宝箱开完啦',chest_done_sub:'明天完成任务再来开新的！',
   chest_locked:'🔒 神秘盲盒',chest_locked_sub:'还差 {n} 项任务就解锁！',
   chest_speak_done:'今天的宝箱已经开完啦，明天见！',chest_speak_locked:'完成今天的任务清单，就能开盲盒哦！',
@@ -679,7 +679,7 @@ en:{
   collected_word:'collected',rar_common:'Common',rar_rare:'Rare',rar_epic:'Epic',rar_legendary:'Legendary',
   badge_new:'🎉 New badge unlocked!',daily_title:'Daily Boost',daily_go:'Start Exploring 🌊',
   tts_on_speak:'Read-aloud is on!',
-  chest_ready:'🎉 Treasure chest! Tap to open',chest_bonus:'{n}-day perfect streak — bonus box +1!',
+  chest_ready:'🎉 Treasure chest! Tap to open',chest_bonus:'{n}% accuracy today — bonus box +1! 🎯',
   chest_done:'All boxes opened today',chest_done_sub:'Finish your quests tomorrow for a new one!',
   chest_locked:'🔒 Mystery Box',chest_locked_sub:'{n} more quest(s) to unlock!',
   chest_speak_done:'All of today\'s chests are opened. See you tomorrow!',chest_speak_locked:'Finish today\'s quest list to open the mystery box!',
@@ -1148,11 +1148,11 @@ function makeBubbles(){
 
 /* ===== 每日任务清单（跨工具约定 jenny_daily_v1） ===== */
 const QUESTS=[
-  {key:'math',   icon:'🐬',label:{zh:'数学',en:'Maths'},   goal:10,unit:'题',tool:'mathreef',praise:{zh:'数学任务完成！小海豚给你转圈圈！',en:'Maths quest complete! The little dolphin does a spin for you!'}},
-  {key:'science',icon:'🐠',label:{zh:'科学',en:'Science'}, goal:10, unit:'个',tool:'science', praise:{zh:'科学任务完成！小丑鱼吐了一串开心泡泡！',en:'Science quest complete! The clownfish blows a stream of happy bubbles!'}},
-  {key:'reading',icon:'🐢',label:{zh:'阅读',en:'Reading'}, goal:3, unit:'篇',tool:'reading', praise:{zh:'阅读任务完成！小海龟为你鼓掌！',en:'Reading quest complete! The sea turtle claps for you!'}},
-  {key:'chinese',icon:'🪸',label:{zh:'华文',en:'Chinese'}, goal:10, unit:'题',tool:'huawen',  praise:{zh:'华文任务完成！珊瑚湾开满了花！',en:'Chinese quest complete! The coral bay bursts into bloom!'}},
-  {key:'oral',   icon:'🐙',label:{zh:'口语',en:'Speaking'},goal:3, unit:'项',tool:'kouyu',   praise:{zh:'口语任务完成！章鱼老师竖起八个大拇指！',en:'Speaking quest complete! Teacher Octopus gives you eight thumbs up!'}}
+  {key:'math',   icon:'🐬',label:{zh:'数学',en:'Maths'},   goal:20,unit:'题',tool:'mathreef',praise:{zh:'数学任务完成！小海豚给你转圈圈！',en:'Maths quest complete! The little dolphin does a spin for you!'}},
+  {key:'science',icon:'🐠',label:{zh:'科学',en:'Science'}, goal:20, unit:'个',tool:'science', praise:{zh:'科学任务完成！小丑鱼吐了一串开心泡泡！',en:'Science quest complete! The clownfish blows a stream of happy bubbles!'}},
+  {key:'reading',icon:'🐢',label:{zh:'阅读',en:'Reading'}, goal:6, unit:'篇',tool:'reading', praise:{zh:'阅读任务完成！小海龟为你鼓掌！',en:'Reading quest complete! The sea turtle claps for you!'}},
+  {key:'chinese',icon:'🪸',label:{zh:'华文',en:'Chinese'}, goal:20, unit:'题',tool:'huawen',  praise:{zh:'华文任务完成！珊瑚湾开满了花！',en:'Chinese quest complete! The coral bay bursts into bloom!'}},
+  {key:'oral',   icon:'🐙',label:{zh:'口语',en:'Speaking'},goal:6, unit:'项',tool:'kouyu',   praise:{zh:'口语任务完成！章鱼老师竖起八个大拇指！',en:'Speaking quest complete! Teacher Octopus gives you eight thumbs up!'}}
 ];
 function dailyData(){try{const d=JSON.parse(localStorage.getItem('jenny_daily_v1'));return d&&typeof d==='object'?d:{}}catch(e){return{}}}
 function todayCounts(){
@@ -1174,8 +1174,8 @@ let lastCounts=null,lastAllDone=false;
 function holidayBanner(){
   var hm=isHolidayMode();var el=document.getElementById('holidayTip');if(!el)return;
   if(!hm.on){el.style.display='none';return}
-  var zh={sunday:'🌞 周日加油日：今天完成任务多得 1 个盲盒！',sept:'🏝️ 学校假期：每天多得 1 个盲盒，超额奖励上限翻倍！',winter:'❄️ 寒假模式：每天多得 1 个盲盒，超额奖励上限翻倍！'};
-  var en={sunday:'🌞 Sunday Boost: finish your quests today for 1 extra box!',sept:'🏝️ School Holiday: +1 box a day, double bonus limit!',winter:'❄️ Winter Holiday: +1 box a day, double bonus limit!'};
+  var zh={sunday:'🌞 周日加油日：慢慢做，做对最重要！',sept:'🏝️ 学校假期模式：每天照常打卡，做对 90% 多一个盲盒！',winter:'❄️ 寒假模式：每天照常打卡，做对 90% 多一个盲盒！'};
+  var en={sunday:'🌞 Sunday Boost: take your time — accuracy matters most!',sept:'🏝️ Holiday mode: keep your streak, 90% accuracy = bonus box!',winter:'❄️ Winter mode: keep your streak, 90% accuracy = bonus box!'};
   el.style.display='block';el.textContent=(LANG==='en'?en:zh)[hm.key]||'';
 }
 function renderQuests(opts){
@@ -1210,27 +1210,27 @@ function isHolidayMode(d){
   d=d||new Date();
   if(d.getDay()===0)return {on:true,key:'sunday'};              /* 每周日 */
   const md=(d.getMonth()+1)*100+d.getDate();
-  if(md>=901&&md<=915)return {on:true,key:'sept'};              /* 9月学校假期 */
+  if(md>=905&&md<=913)return {on:true,key:'sept'};              /* 9月学校假期（9月5-13日）*/
   if(md>=1119||md<=101)return {on:true,key:'winter'};           /* 11/19起寒假 */
   return {on:false,key:''};
 }
-/* 超额学习：全部任务完成后，每多做10项 → 再得1个盲盒（每天最多+3；假期翻倍上限+6） */
-function bonusBoxes(){
-  const c=todayCounts();
-  if(!allQuestsDone(c))return 0;
-  let extra=0;
-  QUESTS.forEach(q=>{extra+=Math.max(0,(+c[q.key]||0)-q.goal)});
-  const hm=isHolidayMode();
-  const cap=hm.on?6:3;
-  return Math.min(cap,Math.floor(extra/10));
+/* ===== 盲盒规则（妈妈定的，2026-09-01 修订）=====
+   每天最多 2 个，不再有任何叠加：
+     · 完成今日任务清单            → 1 个
+     · 且当天正确率 ≥ ACCURACY_GOAL → 再 1 个
+   旧规则里的「连续3天全勤 +1」「假期/周日 +1」「超额每10项 +1（上限3~6）」
+   全部取消 —— 那套叠加最多能到 9 个，奖励太廉价，而且鼓励刷量而不是做对。 */
+const ACCURACY_GOAL=0.9;
+function todayAccuracy(){
+  const s=parentStats()[today()]||{};
+  let c=0,a=0;
+  BRIDGE_SUBJECTS.forEach(k=>{const v=s[k]||{};c+=Math.max(0,+v.correct||0);a+=Math.max(0,+v.answered||0)});
+  return {correct:c,answered:a,rate:a>0?c/a:0,pct:a>0?Math.round(c/a*100):0};
 }
+function accuracyBonus(){const t=todayAccuracy();return (t.answered>0&&t.rate>=ACCURACY_GOAL)?1:0}
 function boxesEarned(){
-  if(!allQuestsDone())return 0;
-  let n=1;const s=questStreak();
-  if(s>0&&s%3===0)n+=1;              /* 连续3天全勤 → 奖励盲盒 */
-  if(isHolidayMode().on)n+=1;        /* 假期/周日 → 额外盲盒 */
-  n+=bonusBoxes();                   /* 超额学习奖励 */
-  return n;
+  if(!allQuestsDone())return 0;   /* 任务没做完 → 一个都没有 */
+  return 1+accuracyBonus();       /* 硬上限 2 */
 }
 function boxesLeft(){const st=stkState();return Math.max(0,boxesEarned()-(+st.opened[today()]||0))}
 function chestSVG(){
@@ -1255,16 +1255,18 @@ function renderChest(c){
   el.classList.remove('locked','ready','opening');
   if(left>0){
     el.classList.add('ready');
+    var accR=todayAccuracy();
     el.innerHTML=chestSVG()+'<div class="chest-txt">'+T('chest_ready')+(left>1?' ×'+left:'')+'</div>'
-      +(streak>0&&streak%3===0?'<div class="chest-sub">'+TF('chest_bonus',streak)+'</div>':'');
+      +(accuracyBonus()?'<div class="chest-sub">'+TF('chest_bonus',accR.pct)+'</div>':'');
   }else if(all){
     el.classList.add('locked');
-    var ex=0;QUESTS.forEach(function(q){ex+=Math.max(0,(+c[q.key]||0)-q.goal)});
-    var need=10-(ex%10);
+    var acc=todayAccuracy();
+    var accTip = acc.answered===0 ? ''
+      : (acc.rate>=ACCURACY_GOAL
+          ? (LANG==='en' ? '🎯 Accuracy '+acc.pct+'% — bonus box earned!' : '🎯 今天正确率 '+acc.pct+'%，奖励盲盒已拿到！')
+          : (LANG==='en' ? '🎯 Accuracy '+acc.pct+'% — reach 90% for a bonus box!' : '🎯 今天正确率 '+acc.pct+'%，达到 90% 就能多开一个盲盒！'));
     el.innerHTML=chestSVG()+'<div class="chest-txt">'+T('chest_done')+'</div><div class="chest-sub">'+T('chest_done_sub')+'</div>'
-      +'<div class="chest-sub" style="color:#e0a72e;font-weight:800">'+(LANG==='en'
-        ?('🌟 Bonus: '+need+' more to unlock another box!')
-        :('🌟 加分挑战：再做 '+need+' 项就能再开一个盲盒！'))+'</div>';
+      +(accTip?'<div class="chest-sub" style="color:#e0a72e;font-weight:800">'+accTip+'</div>':'');
   }else{
     el.classList.add('locked');
     el.innerHTML=chestSVG()+'<div class="chest-txt">'+T('chest_locked')+'</div><div class="chest-sub">'+TF('chest_locked_sub',remain)+'</div>';
@@ -1564,7 +1566,28 @@ function restoreProgress(){
   const inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';
   inp.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
     r.onload=()=>{try{const j=JSON.parse(r.result);const d=j.data||j;let n=0;
-      for(const k in d){localStorage.setItem(k,d[k]);n++}
+      /* 防作弊：恢复旧备份不能把「今天已开几个盲盒」洗回去，
+         也不能把当天的防重复记录清空（否则备份→开盒→恢复就能无限开）。*/
+      const _today=today();
+      for(const k in d){
+        if(k==='jenny_stickers'){
+          try{
+            const inc=JSON.parse(d[k])||{}, cur=JSON.parse(localStorage.getItem(k)||'{}')||{};
+            const owned=Object.assign({},inc.owned||{},cur.owned||{});          /* 贴纸取并集，不丢 */
+            const opened=Object.assign({},inc.opened||{});
+            Object.keys(cur.opened||{}).forEach(function(dt){                   /* 开盒次数取大 */
+              opened[dt]=Math.max(+opened[dt]||0,+(cur.opened||{})[dt]||0);
+            });
+            localStorage.setItem(k,JSON.stringify({owned:owned,opened:opened}));
+          }catch(e){localStorage.setItem(k,d[k])}
+          n++; continue;
+        }
+        if(/^jenny_(day_|reading_dayset|oral_dayset)/.test(k)){                  /* 当天的去重记录不被旧备份覆盖 */
+          let curSet=null; try{curSet=JSON.parse(localStorage.getItem(k)||'null')}catch(e){}
+          if(curSet&&curSet.d===_today){ n++; continue; }
+        }
+        localStorage.setItem(k,d[k]);n++;
+      }
       alert(TF('restore_ok',n));location.reload();
     }catch(err){alert(T('restore_bad'))}};
     r.readAsText(f)};

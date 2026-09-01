@@ -958,9 +958,24 @@ if(!Array.isArray(state.fetched))state.fetched=[];
 function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}}
 function addXP(n){state.xp+=n;save();updateHeader();}
 /* ---- Daily quota (jenny_daily_v1 · reading goal 2/day, shared across tools) ---- */
-const DAILY_KEY="jenny_daily_v1", READING_GOAL=3;
+const DAILY_KEY="jenny_daily_v1", READING_GOAL=6;
 function dailyLoad(){try{const s=localStorage.getItem(DAILY_KEY);if(s)return JSON.parse(s)||{};}catch(e){}return {};}
 function todayReading(){const d=dailyLoad();const t=d[todayStr()];return t&&typeof t.reading==="number"?t.reading:0;}
+
+/* 每日去重：同一项当天只计一次，隔天可以重做再计。
+   不能用「终身只算一次」—— 题库有限（文章28篇/口语29项），
+   全做完一遍后计数就再也加不上去，任务永远完不成、盲盒永远开不了。 */
+function _dayOnce(storeKey,id){
+  var t=(function(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")})();
+  var o;try{o=JSON.parse(localStorage.getItem(storeKey)||"{}")}catch(e){o={}}
+  if(!o||o.d!==t)o={d:t,ids:{}};
+  if(!o.ids)o.ids={};
+  if(o.ids[id])return false;
+  o.ids[id]=1;
+  try{localStorage.setItem(storeKey,JSON.stringify(o))}catch(e){}
+  return true;
+}
+/* 阅读没有对错，完成即算，因此不计入正确率统计（只有数学/科学/华文算正确率）*/
 function bumpReading(){
   const d=dailyLoad(),k=todayStr();
   if(!d[k])d[k]={math:0,science:0,reading:0,chinese:0,oral:0};
@@ -1354,7 +1369,7 @@ function finishArticle(id){
   const kind=artKind(findArt(id));
   const d=dailyState();
   const p=todaysPicks();
-  bumpReading(); /* jenny_daily_v1: reading +1 per completed article */
+  if(_dayOnce("jenny_reading_dayset",id))bumpReading();   /* 同一篇当天只算一次，隔天可重读 */
   if(kind==="fun"&&p.fun.id===id&&!d.fun)d.fun=true;
   if(kind==="news"&&p.news.id===id&&!d.news)d.news=true;
   let msg='<div class="card center"><div class="big">🎉</div><h2>Article complete!</h2><div style="font-size:16px;line-height:1.7;">You earned XP for every answer.';

@@ -310,10 +310,39 @@ function updateHeader(){
   document.getElementById("comboPill").textContent="🔥 "+state.combo;
 }
 /* ============ 每日任务（jenny_daily_v1，跨工具约定：chinese 每答1题 +1） ============ */
-const DKEY="jenny_daily_v1",DAILY_GOAL=10;
+const DKEY="jenny_daily_v1",DAILY_GOAL=20;
 function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function getDailyAll(){let a={};try{a=JSON.parse(localStorage.getItem(DKEY))||{};}catch(e){}return a;}
 function todayCount(){const a=getDailyAll(),t=a[todayStr()];return t?(t.chinese||0):0;}
+
+/* ═══════════ 防蒙混：统一作答记账（三条铁律）═══════════
+   1. 每道题当天只记一次    —— 重复做同一题不再重复计数
+   2. 只有首答做对才计任务  —— 答错后订正只给 XP 和讲解，不补计数
+   3. 正确率只按首答统计    —— 先乱答再订正刷不高正确率
+   合集里的盲盒规则依赖 jenny_parent_stats，缺了它第二个盲盒永远拿不到。 */
+function _dayKey(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function _dayOnce(store,id){
+  var t=_dayKey(),o;
+  try{o=JSON.parse(localStorage.getItem(store)||"{}")}catch(e){o={}}
+  if(!o||o.d!==t)o={d:t,ids:{}};
+  if(!o.ids)o.ids={};
+  if(o.ids[String(id)])return false;
+  o.ids[String(id)]=1;
+  try{localStorage.setItem(store,JSON.stringify(o))}catch(e){}
+  return true;
+}
+function _stat(subject,ok){
+  try{
+    var t=_dayKey(),all={};
+    try{all=JSON.parse(localStorage.getItem("jenny_parent_stats"))||{}}catch(e){all={}}
+    if(!all[t])all[t]={};
+    var c=all[t][subject]||{correct:0,answered:0};
+    c.answered=(+c.answered||0)+1;
+    if(ok)c.correct=(+c.correct||0)+1;
+    all[t][subject]=c;
+    localStorage.setItem("jenny_parent_stats",JSON.stringify(all));
+  }catch(e){}
+}
 function bumpDaily(){
   const a=getDailyAll(),t=todayStr();
   if(!a[t])a[t]={math:0,science:0,reading:0,chinese:0,oral:0};
@@ -560,7 +589,7 @@ function answerQ(i){
   }
   document.getElementById("modelBox").innerHTML=`<div class="model">${head}<br><b>规范句子：</b>${q.model} <button class="spkline" onclick="speakCurModel()" title="听规范句子">🔊</button><br><b>小提示：</b>${q.why}</div>`;
   document.getElementById("nextBox").innerHTML=`<div class="center"><button class="btn" onclick="nextQ()">${round.idx+1<ROUND?"下一题 →":"看看本轮成绩 🎉"}</button></div>`;
-  bumpDaily();
+  if(_dayOnce("jenny_day_chinese","w:"+q.id)){ _stat("chinese",right); if(right)bumpDaily(); }   /* 同一题当天只记一次 */
   save();updateHeader();
 }
 function nextQ(){
@@ -706,7 +735,7 @@ function passAnswer(id,qi,oi){
   else{state.combo=0;addXP(1);sfxWrong();recordMistake(qid,"阅读·"+p.t,"阅读理解",q.q,q.o,oi,q.a,q.model,q.why);}
   state.totalAnswered++;
   document.getElementById("pq"+qi+"model").innerHTML=`<div class="model">${right?"🌟 <b>答对啦！</b>":"💙 <b>没关系，看看规范答案：</b>"}<br><b>规范答案：</b>${q.model} <button class="spkline" onclick="speakPassModel('${id}',${qi})" title="听规范答案">🔊</button><br><b>为什么：</b>${q.why}</div>`;
-  bumpDaily();
+  if(_dayOnce("jenny_day_chinese","p:"+qid)){ _stat("chinese",right); if(right)bumpDaily(); }   /* 同一题当天只记一次 */
   save();updateHeader();
   if(Object.keys(passAnswered).length===p.quiz.length){
     const first=!state.passDone[id];
@@ -789,7 +818,7 @@ function answerFix(qid,i){
     sfxWrong();
     box.innerHTML=`<div class="model">💙 <b>再看一遍规范答案，下次一定行：</b><br><b>规范答案：</b>${m.model} <button class="spkline" onclick="speakMist('${qid}')">🔊</button><br><b>讲解：</b>${m.why}</div>`;
   }
-  bumpDaily();
+  /* 订正只给 XP 和讲解，不补任务计数、不改正确率 —— 防止先乱答再订正刷进度 */
   save();updateHeader();updateMistBadge();
   document.getElementById("fixNext").innerHTML=`<div class="center"><button class="btn" onclick="go('mist')">回错题贝壳 🐚</button></div>`;
   if(right)checkBadges();

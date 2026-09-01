@@ -979,7 +979,36 @@ function soundItOut(){
 }
 
 /* ================= Daily quota (jenny_daily_v1, cross-tool) ================= */
-const DKEY="jenny_daily_v1", DGOAL=10;
+const DKEY="jenny_daily_v1", DGOAL=20;
+
+/* ═══════════ 防蒙混：统一作答记账（三条铁律）═══════════
+   1. 每道题当天只记一次    —— 重复做同一题不再重复计数
+   2. 只有首答做对才计任务  —— 答错后订正只给 XP 和讲解，不补计数
+   3. 正确率只按首答统计    —— 先乱答再订正刷不高正确率
+   合集里的盲盒规则依赖 jenny_parent_stats，缺了它第二个盲盒永远拿不到。 */
+function _dayKey(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function _dayOnce(store,id){
+  var t=_dayKey(),o;
+  try{o=JSON.parse(localStorage.getItem(store)||"{}")}catch(e){o={}}
+  if(!o||o.d!==t)o={d:t,ids:{}};
+  if(!o.ids)o.ids={};
+  if(o.ids[String(id)])return false;
+  o.ids[String(id)]=1;
+  try{localStorage.setItem(store,JSON.stringify(o))}catch(e){}
+  return true;
+}
+function _stat(subject,ok){
+  try{
+    var t=_dayKey(),all={};
+    try{all=JSON.parse(localStorage.getItem("jenny_parent_stats"))||{}}catch(e){all={}}
+    if(!all[t])all[t]={};
+    var c=all[t][subject]||{correct:0,answered:0};
+    c.answered=(+c.answered||0)+1;
+    if(ok)c.correct=(+c.correct||0)+1;
+    all[t][subject]=c;
+    localStorage.setItem("jenny_parent_stats",JSON.stringify(all));
+  }catch(e){}
+}
 function dailyBump(){
   let d={}; try{ d=JSON.parse(localStorage.getItem(DKEY))||{}; }catch(e){ d={}; }
   const t=today();
@@ -1169,7 +1198,8 @@ function pickWord(i,chosen){
   });
   if(ok){ S.words[curWord.term]=2; S.xp+=8; bumpStreak(); confetti(); sndDing(); }
   else { S.words[curWord.term]=1; sndOops(); }
-  dailyBump(); save();
+  if(_dayOnce("jenny_day_science","w:"+curWord.term)){ _stat("science",ok); if(ok)dailyBump(); }   /* 同一个单词当天只记一次 */
+  save();
   let h='<div class="fb '+(ok?"good":"oops")+' anim"><div class="big">'+(ok?"✅ "+pick(PRAISE)+" (+8 XP)":"💙 "+pick(GENTLE))+'</div></div>';
   h+='<div class="model anim"><span class="tag">🔬 Scientist\'s sentence — read it out loud! <button class="spk" onclick="speakCurWord()">🔊</button></span>'+curWord.sent.replace(new RegExp(rescape(curWord.term),"i"),"<b style='color:#3387c4'>"+curWord.term+"</b>")+'</div>';
   h+='<button class="btn" style="width:100%" onclick="sndPop();cardIdx++;showCard()">Next word 🐚</button>';
@@ -1241,7 +1271,8 @@ function pickQ(i){
     combo=0; sndOops();
     S.mist[curQ.id]={p:chosen.s, fixed:false};  /* collect into mistake shells */
   }
-  dailyBump(); save();
+  if(!redoMode && _dayOnce("jenny_day_science","q:"+curQ.id)){ _stat("science",ok); if(ok)dailyBump(); }   /* 同一题当天只记一次；订正不补 */
+  save();
   const model=curQ.opts.find(o=>o.ok).s;
   const bigLine = redoMode&&ok ? "💚 Fixed! The shell turned green! (+6 XP)"
     : ok ? "✅ "+pick(PRAISE)+(combo>=3?" 🔥 combo ×"+combo+" (+15 XP)":" (+10 XP)")

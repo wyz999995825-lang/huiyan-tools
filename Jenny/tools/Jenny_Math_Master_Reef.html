@@ -316,12 +316,41 @@ function speak(text,lang){
 }
 
 /* ============ daily quota (cross-tool convention) ============ */
-const DKEY="jenny_daily_v1", DGOAL=10;
+const DKEY="jenny_daily_v1", DGOAL=20;
 /* 本地日期键（toISOString 是 UTC，新加坡早上8点前会拿到昨天，全套工具统一用本地日期） */
 function localDayKey(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 function today(){ return localDayKey(new Date()); }
 function dailyAll(){ try{ if(typeof localStorage==="undefined") return {}; return JSON.parse(localStorage.getItem(DKEY))||{}; }catch(e){ return {}; } }
 function dailyMath(){ const d=dailyAll()[today()]; return d?(d.math||0):0; }
+
+/* ═══════════ 防蒙混：统一作答记账（三条铁律）═══════════
+   1. 每道题当天只记一次    —— 重复做同一题不再重复计数
+   2. 只有首答做对才计任务  —— 答错后订正只给 XP 和讲解，不补计数
+   3. 正确率只按首答统计    —— 先乱答再订正刷不高正确率
+   合集里的盲盒规则依赖 jenny_parent_stats，缺了它第二个盲盒永远拿不到。 */
+function _dayKey(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function _dayOnce(store,id){
+  var t=_dayKey(),o;
+  try{o=JSON.parse(localStorage.getItem(store)||"{}")}catch(e){o={}}
+  if(!o||o.d!==t)o={d:t,ids:{}};
+  if(!o.ids)o.ids={};
+  if(o.ids[String(id)])return false;
+  o.ids[String(id)]=1;
+  try{localStorage.setItem(store,JSON.stringify(o))}catch(e){}
+  return true;
+}
+function _stat(subject,ok){
+  try{
+    var t=_dayKey(),all={};
+    try{all=JSON.parse(localStorage.getItem("jenny_parent_stats"))||{}}catch(e){all={}}
+    if(!all[t])all[t]={};
+    var c=all[t][subject]||{correct:0,answered:0};
+    c.answered=(+c.answered||0)+1;
+    if(ok)c.correct=(+c.correct||0)+1;
+    all[t][subject]=c;
+    localStorage.setItem("jenny_parent_stats",JSON.stringify(all));
+  }catch(e){}
+}
 function bumpDaily(){
   try{
     if(typeof localStorage==="undefined") return;
@@ -1955,9 +1984,10 @@ function addMistake(q, pickText){
 function finish(ok, pickText){
   answered=true;
   const isRedo = redoIdx>=0;
-  S.totalAns++; bumpDaily();
+  S.totalAns++;   /* 作答总数照记，但每日任务计数移到答对分支里 */
   if(!isRedo) S.mastery[curTopic.id].t++;
   let headline;
+  if(!isRedo){ _stat("math",ok); if(ok)bumpDaily(); }   /* 首答才统计、首答做对才计数；订正不补 */
   if(ok){
     if(isRedo){
       S.mistakes[redoIdx].fixed=true;

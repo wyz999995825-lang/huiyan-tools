@@ -282,10 +282,25 @@ function addXP(n){state.xp+=n;save();updateHeader();}
 function doneCount(){return Object.keys(state.read).length+Object.keys(state.pic).length+Object.keys(state.qa).length;}
 /* ============ 每日任务（jenny_daily_v1 · oral 目标 1/天） ============ */
 const DAILY_KEY="jenny_daily_v1";
-const ORAL_GOAL=3;
+const ORAL_GOAL=6;
 function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function dailyLoad(){try{const s=localStorage.getItem(DAILY_KEY);if(s)return JSON.parse(s)||{};}catch(e){}return {};}
 function todayOral(){const d=dailyLoad();const t=d[todayStr()];return t&&t.oral?t.oral:0;}
+
+/* 每日去重：同一项当天只计一次，隔天可以重做再计。
+   不能用「终身只算一次」—— 题库有限（文章28篇/口语29项），
+   全做完一遍后计数就再也加不上去，任务永远完不成、盲盒永远开不了。 */
+function _dayOnce(storeKey,id){
+  var t=(function(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")})();
+  var o;try{o=JSON.parse(localStorage.getItem(storeKey)||"{}")}catch(e){o={}}
+  if(!o||o.d!==t)o={d:t,ids:{}};
+  if(!o.ids)o.ids={};
+  if(o.ids[id])return false;
+  o.ids[id]=1;
+  try{localStorage.setItem(storeKey,JSON.stringify(o))}catch(e){}
+  return true;
+}
+/* 口语没有对错，完成即算，因此不计入正确率统计 */
 function bumpOral(){
   const d=dailyLoad();const k=todayStr();
   if(!d[k])d[k]={math:0,science:0,reading:0,chinese:0,oral:0};
@@ -635,7 +650,7 @@ function finishRead(){
   state.read[rd.id]=best;
   if(first)addXP(10);else addXP(3);
   save();updateHeader();
-  bumpOral();
+  if(_dayOnce("jenny_oral_dayset","read:"+rd.id))bumpOral();   /* 同一篇朗读当天只算一次 */
   rd.phase=2;
   renderRead();
   showMedal("朗读小勋章","整段读完啦！你的声音真好听！");
@@ -697,7 +712,7 @@ function finishScene(face){
   state.pic[id]=face;
   if(first)addXP(10);else addXP(3);
   save();updateHeader();
-  bumpOral();
+  if(_dayOnce("jenny_oral_dayset","pic:"+id))bumpOral();   /* 同一张图当天只算一次 */
   clearRecUrl();
   fireworks();sndMagic();
   speakCheer();
@@ -748,7 +763,7 @@ function finishQa(i){
   state.qa["q"+i]=true;
   if(first)addXP(10);else addXP(3);
   save();updateHeader();
-  bumpOral();
+  if(_dayOnce("jenny_oral_dayset","qa:"+i))bumpOral();   /* 同一题当天只算一次 */
   fireworks();sndDing();
   speakCheer();
   document.getElementById("qaDoneBox").innerHTML=`
