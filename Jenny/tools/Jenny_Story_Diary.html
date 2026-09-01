@@ -14,18 +14,25 @@ button{border:0;cursor:pointer;min-height:44px}
 .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .chip{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:7px 12px;font-weight:800;box-shadow:0 5px 16px rgba(72,150,195,.12)}
 .chip small{display:block;font-size:12px;color:var(--soft);font-weight:700;line-height:1.15}
-.book{background:var(--paper);border:2px solid #c7e8fa;border-radius:8px;box-shadow:0 16px 36px rgba(64,137,178,.18);overflow:hidden;position:relative}
-.book:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:#e8d8c9}
+.book{background:var(--paper);border:2px solid #c7e8fa;border-radius:8px;box-shadow:0 16px 36px rgba(64,137,178,.18);overflow:hidden}
 .cover{padding:18px 16px;background:linear-gradient(90deg,#dff4ff,#f4fbff 48%,#e8f8ff);border-bottom:2px solid #c7e8fa;display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center}
 .badge{width:60px;height:60px;border-radius:50%;background:linear-gradient(145deg,#b7e8ff,#fff);display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:inset 0 0 0 3px #fff,0 7px 18px rgba(52,127,168,.2)}
 h1{font-size:25px;line-height:1.15;color:#245f82;letter-spacing:0}
 .sub{font-size:14px;color:var(--soft);font-weight:700;margin-top:3px}
 .spread{display:grid;grid-template-columns:1fr;gap:0}
-@media(min-width:760px){.spread{grid-template-columns:280px 1fr}.cover{grid-column:1/3}.left{border-right:2px solid #eadfd2}}
+@media(min-width:760px){.spread{grid-template-columns:310px 1fr}.cover{grid-column:1/3}}
 .left,.right{padding:16px}
 .prompt{background:#f4fbff;border:1.5px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}
 .prompt h2{font-size:16px;color:var(--deep);margin-bottom:5px}
 .starter{font-size:20px;font-weight:850;line-height:1.45;color:#234b68}
+.datecard{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.datebox{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:9px 10px;font-weight:900;color:#245f82}
+.datebox small{display:block;font-size:11px;text-transform:uppercase;color:var(--soft);line-height:1.2}
+.moods,.ideas,.frames{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.mood,.idea,.frame{background:#fff;border:1.5px solid #c7e8fa;border-radius:18px;padding:7px 10px;font-weight:850;color:#285a76;font-size:14px;min-height:38px}
+.mood.sel,.idea.sel{background:#e7f7ff;border-color:#68bfe9;color:#1d6f97;box-shadow:0 0 0 3px rgba(143,208,247,.22)}
+.frame{border-radius:8px;text-align:left}
+.hint{font-size:13px;color:#4f7187;font-weight:750;line-height:1.55;margin-top:6px}
 .words{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
 .word{border:1.5px solid #c7e8fa;background:#fff;color:#285a76;border-radius:18px;padding:7px 10px;font-weight:800;font-size:14px}
 .word.used{background:#e3f8ef;border-color:#9bdcbd;color:#1c7555}
@@ -79,6 +86,30 @@ const BRIDGE_PROMPTS=[
 {title:"The Morning Routine",starter:"I woke up late, but I still wanted to reach school calmly.",words:["prepared","organised","hurried","decision","before","after","calm","responsible"]},
 {title:"The Library Helper",starter:"A younger student could not find the book she needed.",words:["noticed","guided","shelf","thankful","while","finally","helpful","quietly"]}
 ];
+const WEEKDAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const MOODS=[
+  {id:"happy",label:"happy",line:"I felt happy because something small made my day better."},
+  {id:"excited",label:"excited",line:"I felt excited because I was looking forward to something."},
+  {id:"proud",label:"proud",line:"I felt proud because I tried hard and did not give up."},
+  {id:"nervous",label:"nervous",line:"I felt nervous at first, but I still tried."},
+  {id:"grateful",label:"grateful",line:"I felt grateful because someone was kind to me."},
+  {id:"calm",label:"calm",line:"I felt calm after I slowed down and thought carefully."}
+];
+const IDEAS=[
+  {id:"friend",label:"a classmate",q:"Who did I talk to or help today?",line:"Today, something happened with my classmate."},
+  {id:"lesson",label:"a lesson",q:"Which lesson made me think harder?",line:"During a lesson today, I learned something that was not easy at first."},
+  {id:"recess",label:"recess",q:"What happened during recess or lunch?",line:"During recess, I noticed a small moment that I want to remember."},
+  {id:"home",label:"home",q:"What happened at home?",line:"After school, something at home made me think."},
+  {id:"kindness",label:"kindness",q:"Did someone show kindness?",line:"Today, I saw a kind action that made me smile."},
+  {id:"mistake",label:"a mistake",q:"What mistake helped me learn?",line:"I made a small mistake today, but it taught me something useful."}
+];
+const FRAMES=[
+  "At first, I felt ___ because ___.",
+  "Then, I decided to ___.",
+  "My friend/classmate told me that ___.",
+  "I learned that ___ is important.",
+  "Next time, I will ___."
+];
 function bridgeRules(){
   const d=new Date(),md=(d.getMonth()+1)*100+d.getDate();
   if(md>=914)return {name:"P3 Bridge",word:60,sent:6,unique:35,vocab:5,map:true,note:"Term 4 mode"};
@@ -87,7 +118,7 @@ function bridgeRules(){
 }
 function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function dayIndex(len){const d=new Date();return Math.floor(new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime()/86400000)%len}
-function load(){let s;try{s=JSON.parse(localStorage.getItem(LS))||{}}catch(e){s={}};if(!s.entries)s.entries={};if(!s.drafts)s.drafts={};if(!s.maps)s.maps={};return s}
+function load(){let s;try{s=JSON.parse(localStorage.getItem(LS))||{}}catch(e){s={}};if(!s.entries)s.entries={};if(!s.drafts)s.drafts={};if(!s.maps)s.maps={};if(!s.meta)s.meta={};return s}
 function save(s){try{localStorage.setItem(LS,JSON.stringify(s))}catch(e){}}
 function dailyLoad(){try{return JSON.parse(localStorage.getItem(DKEY))||{}}catch(e){return{}}}
 function dailyCount(){const d=dailyLoad()[today()];return d?Math.max(0,+d[SUBJECT]||0):0}
@@ -104,6 +135,8 @@ function words(text){return (text.toLowerCase().match(/[a-z]+(?:'[a-z]+)?/g)||[]
 function sentenceCount(text){return (text.match(/[.!?]+/g)||[]).length}
 function uniqueCount(list){return new Set(list).size}
 function currentPrompt(){const r=bridgeRules(),arr=r.name==="P2 Finish Strong"?PROMPTS:BRIDGE_PROMPTS;return arr[dayIndex(arr.length)]}
+function dateLabel(){const d=new Date();return d.toLocaleDateString("en-SG",{day:"numeric",month:"long",year:"numeric"})}
+function todaysMeta(s){if(!s.meta)s.meta={};if(!s.meta[today()])s.meta[today()]={mood:"",idea:""};return s.meta[today()]}
 function mapValues(){return ["m1","m2","m3","m4"].map(id=>{const el=document.getElementById(id);return el?el.value.trim():""})}
 function analyse(text,prompt,rules,map){
   const ws=words(text),low=" "+text.toLowerCase()+" ";
@@ -126,7 +159,20 @@ function pass(a,rules){return a.wordN>=rules.word&&a.sentN>=rules.sent&&a.unique
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
 function insertWord(w){const ta=document.getElementById("diary");const add=(ta.value&&/\\S$/.test(ta.value)?" ":"")+w+" ";ta.value+=add;ta.focus();onInput()}
 function fillStarter(){const ta=document.getElementById("diary"),p=currentPrompt();if(!ta.value.trim())ta.value=p.starter+" ";ta.focus();onInput()}
-function clearDraft(){const s=load();delete s.drafts[today()];save(s);render()}
+function setMood(id){const s=load();todaysMeta(s).mood=id;save(s);render()}
+function setIdea(id){const s=load();todaysMeta(s).idea=id;save(s);render()}
+function chosenMood(meta){return MOODS.find(m=>m.id===meta.mood)||null}
+function chosenIdea(meta){return IDEAS.find(i=>i.id===meta.idea)||null}
+function useLifeStart(){
+  const s=load(),meta=todaysMeta(s),m=chosenMood(meta),i=chosenIdea(meta),ta=document.getElementById("diary");
+  const first=i?i.line:currentPrompt().starter;
+  const second=m?m.line:"I want to remember this moment because it helped me notice my day.";
+  if(!ta.value.trim())ta.value=first+" "+second+" ";
+  else ta.value+=(/\\S$/.test(ta.value)?" ":"")+second+" ";
+  ta.focus();onInput();
+}
+function insertFrame(txt){const ta=document.getElementById("diary");ta.value+=(ta.value&&/\\S$/.test(ta.value)?"\n":"")+txt+" ";ta.focus();onInput()}
+function clearDraft(){const s=load();delete s.drafts[today()];delete s.maps[today()];delete s.meta[today()];save(s);render()}
 function onInput(){
   const s=load(),p=currentPrompt(),r=bridgeRules(),text=document.getElementById("diary").value,map=mapValues();
   s.drafts[today()]=text;s.maps[today()]=map;save(s);
@@ -157,13 +203,15 @@ function historyHTML(s){
   return '<div class="history"><b>Diary Pages</b>'+entries.map(e=>'<div class="entry"><div class="d">'+esc(e.date)+" · "+esc(e.title)+'</div><div class="t">'+esc(e.text)+'</div></div>').join("")+'</div>';
 }
 function render(){
-  const s=load(),p=currentPrompt(),r=bridgeRules(),done=!!s.entries[today()],draft=s.drafts[today()]||"",map=s.maps[today()]||["","","",""],n=dailyCount();
+  const s=load(),p=currentPrompt(),r=bridgeRules(),meta=todaysMeta(s),m=chosenMood(meta),idea=chosenIdea(meta),done=!!s.entries[today()],draft=s.drafts[today()]||"",map=s.maps[today()]||["","","",""],n=dailyCount();
   document.getElementById("app").innerHTML='<div class="top"><div class="chip">✍️ Story Diary<small>English writing</small></div><div class="chip">'+(done?"✓":"○")+' Today '+n+'/1<small>daily writing</small></div></div>'
   +'<div class="book"><div class="cover"><div class="badge">🩵</div><div><h1>Jenny&apos;s Dream Blue Diary</h1><div class="sub">'+esc(p.title)+'</div></div></div>'
-  +'<div class="prompt" style="margin:14px 16px 0"><h2>'+r.name+'</h2><div class="note">'+r.note+' · target: '+r.word+' words, '+r.sent+' sentences, '+r.vocab+' diary words'+(r.map?', story map required':'')+'</div></div>'
-  +'<div class="spread"><div class="left"><div class="prompt"><h2>Story Starter</h2><div class="starter">'+esc(p.starter)+'</div><div class="words">'+p.words.map(w=>'<button class="word" id="w_'+w+'" onclick="insertWord(&quot;'+w+'&quot;)">'+w+'</button>').join("")+'</div></div>'
+  +'<div class="prompt" style="margin:14px 16px 0"><h2>'+r.name+'</h2><div class="datecard"><div class="datebox"><small>Date</small>'+dateLabel()+'</div><div class="datebox"><small>Day</small>'+WEEKDAYS[new Date().getDay()]+'</div></div><div class="hint">'+r.note+' · target: '+r.word+' words, '+r.sent+' sentences, '+r.vocab+' diary words'+(r.map?', story map required':'')+'</div></div>'
+  +'<div class="spread"><div class="left"><div class="prompt"><h2>How do I feel today?</h2><div class="moods">'+MOODS.map(x=>'<button class="mood '+(meta.mood===x.id?"sel":"")+'" onclick="setMood(&quot;'+x.id+'&quot;)">'+x.label+'</button>').join("")+'</div><div class="hint">'+esc(m?m.line:"Choose one feeling. It can be tiny. A normal school day is still worth writing.")+'</div></div>'
+  +'<div class="prompt"><h2>What can I write about?</h2><div class="ideas">'+IDEAS.map(x=>'<button class="idea '+(meta.idea===x.id?"sel":"")+'" onclick="setIdea(&quot;'+x.id+'&quot;)">'+x.label+'</button>').join("")+'</div><div class="hint">'+esc(idea?idea.q:"Pick one small moment: a friend, a lesson, recess, home, kindness or a mistake.")+'</div><div style="margin-top:10px"><button class="btn" onclick="useLifeStart()">Help me start</button></div></div>'
+  +'<div class="prompt"><h2>Story Starter</h2><div class="starter">'+esc(p.starter)+'</div><div class="words">'+p.words.map(w=>'<button class="word" id="w_'+w+'" onclick="insertWord(&quot;'+w+'&quot;)">'+w+'</button>').join("")+'</div></div>'
   +'<div class="prompt"><h2>Story Map</h2><div class="map"><label>Beginning</label><input id="m1" value="'+esc(map[0]||"")+'" placeholder="Who and where?"><label>Problem</label><input id="m2" value="'+esc(map[1]||"")+'" placeholder="What happened?"><label>Feeling</label><input id="m3" value="'+esc(map[2]||"")+'" placeholder="How did I feel?"><label>Ending</label><input id="m4" value="'+esc(map[3]||"")+'" placeholder="What changed?"></div></div></div>'
-  +'<div class="right"><textarea id="diary" placeholder="Write your story here...">'+esc(done?s.entries[today()].text:draft)+'</textarea><div id="checks" class="checks"></div><div class="actions"><button class="btn" onclick="fillStarter()">Use starter</button><button class="btn rose" id="saveBtn" onclick="saveEntry()">Finish today</button><button class="btn ghost" onclick="clearDraft()">Clear draft</button><span class="note">'+(done?'<span class="stamp">Finished today</span>':'Write enough, then finish today.')+'</span></div></div></div></div>'
+  +'<div class="right"><div class="prompt"><h2>Sentence Helpers</h2><div class="frames">'+FRAMES.map(x=>'<button class="frame" onclick="insertFrame(&quot;'+esc(x)+'&quot;)">'+esc(x)+'</button>').join("")+'</div></div><textarea id="diary" placeholder="Write a small true moment, or turn it into a story...">'+esc(done?s.entries[today()].text:draft)+'</textarea><div id="checks" class="checks"></div><div class="actions"><button class="btn" onclick="fillStarter()">Use story starter</button><button class="btn rose" id="saveBtn" onclick="saveEntry()">Finish today</button><button class="btn ghost" onclick="clearDraft()">Clear draft</button><span class="note">'+(done?'<span class="stamp">Finished today</span>':'Start with one tiny moment, then add feelings and details.')+'</span></div></div></div></div>'
   +historyHTML(s);
   document.getElementById("diary").addEventListener("input",onInput);
   ["m1","m2","m3","m4"].forEach(id=>document.getElementById(id).addEventListener("input",onInput));
