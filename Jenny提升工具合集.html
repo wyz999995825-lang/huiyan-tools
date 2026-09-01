@@ -403,6 +403,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
             <div class="c-title"><span data-i18n="tool_reading">Reading Lagoon</span> <span class="tag tag-new">NEW</span></div>
             <div class="c-desc" data-i18n="desc_reading">跟着小海龟读故事、看新闻、学单词，英语阅读越来越棒！</div>
           </div>
+          <div class="card" onclick="loadByName('storydiary')">
+            <div class="c-icon">🩵</div>
+            <div class="c-title"><span data-i18n="tool_storydiary">Story Diary</span> <span class="tag tag-new">NEW</span></div>
+            <div class="c-desc" data-i18n="desc_storydiary">梦幻浅蓝日记本：每天写一篇英文小故事，练词汇、句子和表达。</div>
+          </div>
         </div>
       </div>
 
@@ -497,6 +502,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-
     <div class="sec" data-i18n="sec_eng">📖 English</div>
     <div class="item" data-tool="reading" onclick="loadByName('reading')">
       <span class="emoji">🐢</span><span class="label" data-i18n="tool_reading">Reading Lagoon</span><span class="tag tag-new">NEW</span>
+    </div>
+    <div class="item" data-tool="storydiary" onclick="loadByName('storydiary')">
+      <span class="emoji">🩵</span><span class="label" data-i18n="tool_storydiary">Story Diary</span><span class="tag tag-new">NEW</span>
     </div>
     <div class="sec" data-i18n="sec_chi">📕 华文</div>
     <div class="item" data-tool="huawen" onclick="loadByName('huawen')">
@@ -612,7 +620,7 @@ function hubLangCode(){return LANG==='en'?'en-US':'zh-CN'}
 function hubSpeak(t){speak(t,hubLangCode())}
 const I18N={
 zh:{
-  back:'← 返回',info:'P2 · 7 个学习工具',title:'Jenny 提升工具合集',
+  back:'← 返回',info:'P2 · 8 个学习工具',title:'Jenny 提升工具合集',
   tts_title:'朗读开关',fw_title:'放烟花！',backup_btn:'💾 备份进度',restore_btn:'📥 恢复',
   days_unit:'天',wins_unit:'个成就',stickers_unit:'贴纸',record_btn:'妈妈记录',
   qm_title:'🌊 记录今天的小成功',qm_ph:'写下你的小成功...',qm_submit:'记录 🌟',qm_cancel:'取消',
@@ -620,15 +628,16 @@ zh:{
   qp_title:'🗺️ 今日任务清单',qp_sub:'全部打勾就能开出神秘贴纸盲盒哦！',
   dash_title:'🤿 潜水日志 · Jenny 的深海探险记录',streak_label:'天连续潜水',
   stat_total:'总成就',stat_week:'本周',stat_best:'最佳连击',stat_stk:'贴纸',
-  welcome:'🐚 欢迎回来，Jenny！',welcome_sub:'P2 · 7 个学习工具 · 点一个小岛，出发探险咯！',
+  welcome:'🐚 欢迎回来，Jenny！',welcome_sub:'P2 · 8 个学习工具 · 点一个小岛，出发探险咯！',
   subj_math:'🧮 Maths 数学',subj_sci:'🔬 Science 科学',subj_eng:'📖 English 英语',subj_chi:'📕 华文',subj_think:'🧠 思维',subj_grow:'🌟 成长',
   sec_home:'主页',sec_math:'🧮 Maths',sec_sci:'🔬 Science',sec_eng:'📖 English',sec_chi:'📕 华文',sec_think:'🧠 思维',sec_grow:'🌟 成长',
-  tool_mathreef:'Math Master Reef',tool_animalmath:'动物王国数学',tool_science:'Science Explorer',tool_reading:'Reading Lagoon',
+  tool_mathreef:'Math Master Reef',tool_animalmath:'动物王国数学',tool_science:'Science Explorer',tool_reading:'Reading Lagoon',tool_storydiary:'Story Diary',
   tool_huawen:'华文珊瑚湾',tool_kouyu:'口语小海豚',tool_oral_zh:'华文口试对练',tool_oral_en:'英文口试对练',desc_oral_zh:'和小菜叔叔的口试考官对练华文口试（新窗口打开）。',desc_oral_en:'英文口试模拟对练，练朗读和看图说话（新窗口打开）。',tool_mindmap:'MindMap侦探社',tool_stickers:'贴纸收藏册',
   desc_mathreef:'跟着小海豚在珊瑚礁里闯关练数学，一步一步变成数学小高手！',
   desc_animalmath:'在动物世界里学数学！加减乘除、比大小，和可爱动物一起玩。',
   desc_science:'和小丑鱼一起探索科学世界，做小实验、学新知识！',
   desc_reading:'跟着小海龟读故事、看新闻、学单词，英语阅读越来越棒！',
+  desc_storydiary:'梦幻浅蓝日记本：每天写一篇英文小故事，练词汇、句子和表达。',
   desc_huawen:'在美丽的珊瑚湾里认字、组词、读句子，华文越学越好玩！',
   desc_kouyu:'开口说华文！和小海豚一起练口语，说得越来越流利。',
   desc_mindmap:'化身小侦探，把知识整理成思维导图——分类、分层、连线、破案！',
@@ -654,7 +663,7 @@ zh:{
   pb_btn:'👩‍👧 妈妈看板 / Parent Board',pb_title:'妈妈看板'
 },
 en:{
-  back:'← Back',info:'P2 · 7 Learning Tools',title:"Jenny 提升工具合集",
+  back:'← Back',info:'P2 · 8 Learning Tools',title:"Jenny 提升工具合集",
   tts_title:'Read-aloud on/off',fw_title:'Fireworks!',backup_btn:'💾 Backup',restore_btn:'📥 Restore',
   days_unit:' days',wins_unit:'wins',stickers_unit:'stickers',record_btn:'Parent Log',
   qm_title:"🌊 Log Today's Small Win",qm_ph:'Write your small win...',qm_submit:'Save 🌟',qm_cancel:'Cancel',
@@ -662,15 +671,16 @@ en:{
   qp_title:"🗺️ Today's Quests",qp_sub:'Tick them all to open a mystery sticker box!',
   dash_title:"🤿 Dive Log · Jenny's Deep-Sea Adventures",streak_label:'day dive streak',
   stat_total:'Total wins',stat_week:'This week',stat_best:'Best streak',stat_stk:'Stickers',
-  welcome:'🐚 Welcome, Jenny!',welcome_sub:'P2 · 7 learning tools · Pick an island and set sail!',
+  welcome:'🐚 Welcome, Jenny!',welcome_sub:'P2 · 8 learning tools · Pick an island and set sail!',
   subj_math:'🧮 Maths',subj_sci:'🔬 Science',subj_eng:'📖 English',subj_chi:'📕 Chinese',subj_think:'🧠 Thinking',subj_grow:'🌟 Growing',
   sec_home:'Home',sec_math:'🧮 Maths',sec_sci:'🔬 Science',sec_eng:'📖 English',sec_chi:'📕 Chinese',sec_think:'🧠 Thinking',sec_grow:'🌟 Growing',
-  tool_mathreef:'Math Master Reef',tool_animalmath:'Animal Kingdom Maths',tool_science:'Science Explorer',tool_reading:'Reading Lagoon',
+  tool_mathreef:'Math Master Reef',tool_animalmath:'Animal Kingdom Maths',tool_science:'Science Explorer',tool_reading:'Reading Lagoon',tool_storydiary:'Story Diary',
   tool_huawen:'Chinese Coral Bay',tool_kouyu:'Speaking Dolphin',tool_oral_zh:'Chinese Oral Practice',tool_oral_en:'English Oral Practice',desc_oral_zh:'Practise Chinese oral exam with an AI examiner (opens in a new tab).',desc_oral_en:'Practise English oral exam: reading aloud and picture talk (opens in a new tab).',tool_mindmap:'MindMap Detective Agency',tool_stickers:'Sticker Album',
   desc_mathreef:'Level up your maths with the little dolphin on the coral reef, one quest at a time!',
   desc_animalmath:'Learn maths in the animal kingdom! Add, subtract, multiply, divide and compare with cute animals.',
   desc_science:'Explore the world of science with the clownfish — little experiments and new facts!',
   desc_reading:'Read stories, news and new words with the sea turtle — reading gets better and better!',
+  desc_storydiary:'A dreamy blue notebook for one short English story every day.',
   desc_huawen:'Learn Chinese characters, words and sentences in the beautiful coral bay!',
   desc_kouyu:'Speak Chinese out loud! Practise speaking with the little dolphin and get more fluent.',
   desc_mindmap:'Become a little detective — sort, layer and link your knowledge into mind maps!',
@@ -1146,6 +1156,7 @@ const QUESTS=[
   {key:'math',   icon:'🐬',label:{zh:'数学',en:'Maths'},   goal:40,unit:'题',tool:'mathreef',praise:{zh:'数学任务完成！小海豚给你转圈圈！',en:'Maths quest complete! The little dolphin does a spin for you!'}},
   {key:'science',icon:'🐠',label:{zh:'科学',en:'Science'}, goal:40, unit:'个',tool:'science', praise:{zh:'科学任务完成！小丑鱼吐了一串开心泡泡！',en:'Science quest complete! The clownfish blows a stream of happy bubbles!'}},
   {key:'reading',icon:'🐢',label:{zh:'英文阅读',en:'English Reading'}, goal:12, unit:'篇',tool:'reading', praise:{zh:'英文阅读任务完成！小海龟为你鼓掌！',en:'English reading quest complete! The sea turtle claps for you!'}},
+  {key:'writing',icon:'🩵',label:{zh:'英文写作',en:'English Writing'}, goal:1, unit:'篇',tool:'storydiary', praise:{zh:'英文写作任务完成！今天的日记本亮起来啦！',en:'English writing quest complete! Today\'s diary page shines!'}},
   {key:'chinese',icon:'🪸',label:{zh:'华文',en:'Chinese'}, goal:40, unit:'题',tool:'huawen',  praise:{zh:'华文任务完成！珊瑚湾开满了花！',en:'Chinese quest complete! The coral bay bursts into bloom!'}},
   {key:'oral',   icon:'🐙',label:{zh:'口语',en:'Speaking'},goal:12, unit:'项',tool:'kouyu',   praise:{zh:'口语任务完成！章鱼老师竖起八个大拇指！',en:'Speaking quest complete! Teacher Octopus gives you eight thumbs up!'}}
 ];
@@ -1386,14 +1397,14 @@ function checkDaily(){
 
 /* ===== postMessage 桥（file:// 双击打开时 iframe 与主页的 localStorage 相互隔离，
        工具会把今日计数/统计用 postMessage 发上来，这里 max 合并，绝不丢数据） ===== */
-const BRIDGE_SUBJECTS=['math','science','reading','chinese','oral'];
+const BRIDGE_SUBJECTS=['math','science','reading','writing','chinese','oral'];
 function mergeDaily(date,subject,count){
   if(typeof date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(date))return false;
   if(BRIDGE_SUBJECTS.indexOf(subject)<0)return false;
   count=Math.max(0,Math.floor(+count||0));
   if(!count)return false;
   const all=dailyData();
-  if(!all[date])all[date]={math:0,science:0,reading:0,chinese:0,oral:0};
+  if(!all[date])all[date]={math:0,science:0,reading:0,writing:0,chinese:0,oral:0};
   if((+all[date][subject]||0)>=count)return false;   /* max 合并：只增不减 */
   all[date][subject]=count;
   try{localStorage.setItem('jenny_daily_v1',JSON.stringify(all))}catch(e){}
@@ -1519,6 +1530,7 @@ const nameMap={
   'animalmath':{url:'Jenny/tools/Jenny-Animal-Kingdom-Math.html',   title:{zh:'动物王国数学',en:'Animal Kingdom Maths'}},
   'science':   {url:'Jenny/tools/Jenny_Science_Explorer.html',      title:{zh:'Science Explorer',en:'Science Explorer'}},
   'reading':   {url:'Jenny/tools/Jenny_Reading_Lagoon.html',        title:{zh:'Reading Lagoon',en:'Reading Lagoon'}},
+  'storydiary':{url:'Jenny/tools/Jenny_Story_Diary.html',           title:{zh:'Story Diary',en:'Story Diary'}},
   'huawen':    {url:'Jenny/tools/Jenny_华文珊瑚湾.html',             title:{zh:'华文珊瑚湾',en:'Chinese Coral Bay'}},
   'kouyu':     {url:'Jenny/tools/Jenny_口语小海豚.html',             title:{zh:'口语小海豚',en:'Speaking Dolphin'}},
   'mindmap':   {url:'Jenny/tools/Jenny_MindMap侦探社.html',          title:{zh:'MindMap侦探社',en:'MindMap Detective Agency'}}
@@ -1576,9 +1588,22 @@ function restoreProgress(){
     r.onload=()=>{try{const j=JSON.parse(r.result);const d=j.data||j;let n=0;
       /* 防作弊：恢复旧备份不能把「今天已开几个盲盒」洗回去，
          也不能把当天的防重复记录清空（否则备份→开盒→恢复就能无限开）。*/
-      const _today=today();
-      for(const k in d){
-        if(k==='jenny_stickers'){
+	      const _today=today();
+	      for(const k in d){
+	        if(k==='jenny_daily_v1'){
+	          try{
+	            const inc=JSON.parse(d[k])||{}, cur=JSON.parse(localStorage.getItem(k)||'{}')||{};
+	            Object.keys(cur).forEach(function(dt){
+	              if(!inc[dt])inc[dt]={};
+	              BRIDGE_SUBJECTS.forEach(function(s){
+	                inc[dt][s]=Math.max(+inc[dt][s]||0,+cur[dt][s]||0);
+	              });
+	            });
+	            localStorage.setItem(k,JSON.stringify(inc));
+	          }catch(e){localStorage.setItem(k,d[k])}
+	          n++; continue;
+	        }
+	        if(k==='jenny_stickers'){
           try{
             const inc=JSON.parse(d[k])||{}, cur=JSON.parse(localStorage.getItem(k)||'{}')||{};
             const owned=Object.assign({},inc.owned||{},cur.owned||{});          /* 贴纸取并集，不丢 */

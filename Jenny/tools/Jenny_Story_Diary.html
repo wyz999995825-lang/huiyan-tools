@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Jenny Story Diary</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--sky:#eef9ff;--blue:#8fd0f7;--deep:#347fa8;--ink:#17384d;--soft:#5e7d91;--paper:#fffdf8;--line:#cfe8f7;--mint:#bcebdc;--rose:#ffb8c7;--gold:#f5c96b}
+body{min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,#f5fbff 0%,#e6f7ff 54%,#dff2ff 100%);font-size:17px;line-height:1.65}
+#app{max-width:920px;margin:0 auto;padding:12px 12px 84px}
+button,textarea,input{font:inherit}
+button{border:0;cursor:pointer;min-height:44px}
+.top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:7px 12px;font-weight:800;box-shadow:0 5px 16px rgba(72,150,195,.12)}
+.chip small{display:block;font-size:12px;color:var(--soft);font-weight:700;line-height:1.15}
+.book{background:var(--paper);border:2px solid #c7e8fa;border-radius:8px;box-shadow:0 16px 36px rgba(64,137,178,.18);overflow:hidden;position:relative}
+.book:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:#e8d8c9}
+.cover{padding:18px 16px;background:linear-gradient(90deg,#dff4ff,#f4fbff 48%,#e8f8ff);border-bottom:2px solid #c7e8fa;display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center}
+.badge{width:60px;height:60px;border-radius:50%;background:linear-gradient(145deg,#b7e8ff,#fff);display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:inset 0 0 0 3px #fff,0 7px 18px rgba(52,127,168,.2)}
+h1{font-size:25px;line-height:1.15;color:#245f82;letter-spacing:0}
+.sub{font-size:14px;color:var(--soft);font-weight:700;margin-top:3px}
+.spread{display:grid;grid-template-columns:1fr;gap:0}
+@media(min-width:760px){.spread{grid-template-columns:280px 1fr}.cover{grid-column:1/3}.left{border-right:2px solid #eadfd2}}
+.left,.right{padding:16px}
+.prompt{background:#f4fbff;border:1.5px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}
+.prompt h2{font-size:16px;color:var(--deep);margin-bottom:5px}
+.starter{font-size:20px;font-weight:850;line-height:1.45;color:#234b68}
+.words{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.word{border:1.5px solid #c7e8fa;background:#fff;color:#285a76;border-radius:18px;padding:7px 10px;font-weight:800;font-size:14px}
+.word.used{background:#e3f8ef;border-color:#9bdcbd;color:#1c7555}
+.map{display:grid;gap:8px;margin-top:12px}
+.map input{width:100%;border:1.5px solid var(--line);border-radius:8px;padding:10px;background:#fff;color:var(--ink);min-height:42px}
+.map label{font-size:12px;color:var(--soft);font-weight:850;text-transform:uppercase}
+textarea{width:100%;min-height:330px;resize:vertical;border:0;outline:0;background:repeating-linear-gradient(var(--paper),var(--paper) 31px,#dff0fa 32px);padding:10px 12px;font-size:18px;line-height:32px;color:var(--ink)}
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}
+.check{border:1.5px solid var(--line);border-radius:8px;background:#fff;padding:8px 10px;font-weight:800;color:#8a6a1c;font-size:14px}
+.check.ok{background:#e8f8ef;color:#177a55;border-color:#94dbb9}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{background:linear-gradient(180deg,#8fd0f7,#59addf);color:#fff;font-weight:900;border-radius:8px;padding:10px 16px;box-shadow:0 4px 0 #347fa8}
+.btn:disabled{opacity:.45;filter:grayscale(.35);cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--deep);border:1.5px solid var(--line);box-shadow:none}
+.btn.rose{background:linear-gradient(180deg,#ffc9d5,#ff94ad);box-shadow:0 4px 0 #d86b83}
+.note{font-size:13px;color:var(--soft);font-weight:700}
+.history{margin-top:14px;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:12px}
+.entry{border-top:1px dashed #cfe8f7;padding:10px 0}
+.entry:first-child{border-top:0}
+.entry .d{font-size:12px;color:var(--soft);font-weight:900}
+.entry .t{font-size:14px;white-space:pre-wrap;color:#36566a}
+.stamp{display:inline-flex;align-items:center;gap:6px;background:#e8f8ef;color:#177a55;border:1.5px solid #94dbb9;border-radius:18px;padding:5px 10px;font-size:13px;font-weight:900}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+"use strict";
+const LS="jenny_story_diary_v1",DKEY="jenny_daily_v1",SUBJECT="writing";
+const MIN_WORDS=45,MIN_SENTENCES=5,MIN_VOCAB=4;
+const PROMPTS=[
+{title:"The Blue Notebook",starter:"Today I found a tiny blue notebook under my desk.",words:["discovered","secret","carefully","wondered","because","suddenly","brave","promise"]},
+{title:"A Rainy Recess",starter:"During recess, the rain became louder and everyone ran back inside.",words:["umbrella","slippery","shared","grateful","after","while","kind","noticed"]},
+{title:"The New Girl",starter:"A new girl stood at the classroom door and held her bag tightly.",words:["nervous","welcome","smiled","invited","before","friendly","together","relieved"]},
+{title:"The Missing Pencil Case",starter:"My pencil case was gone, and the bell was about to ring.",words:["searched","worried","honest","returned","then","finally","thankful","mistake"]},
+{title:"The Garden Surprise",starter:"Grandma asked me to water the plants, but one pot looked different.",words:["sprout","gentle","soil","surprised","because","watched","patient","beautiful"]},
+{title:"The Library Promise",starter:"I promised to return a book before the library closed.",words:["promise","responsible","hurried","shelf","when","quietly","helpful","proud"]},
+{title:"The Science Fair",starter:"My project did not work at first, but I did not give up.",words:["experiment","failed","improved","explained","so","again","confident","result"]},
+{title:"The Lunchbox Note",starter:"When I opened my lunchbox, I saw a note folded beside my sandwich.",words:["message","smiled","remembered","excited","after","special","shared","home"]},
+{title:"The Brave Apology",starter:"I knew I had made a mistake, so I took a deep breath.",words:["sorry","truth","brave","forgive","because","better","learned","respect"]},
+{title:"The Story Door",starter:"At the end of the hallway, a painted door appeared on the wall.",words:["magical","opened","whispered","adventure","suddenly","curious","sparkling","journey"]}
+];
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function dayIndex(){const d=new Date();return Math.floor(new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime()/86400000)%PROMPTS.length}
+function load(){try{return JSON.parse(localStorage.getItem(LS))||{entries:{},drafts:{}}}catch(e){return{entries:{},drafts:{}}}}
+function save(s){try{localStorage.setItem(LS,JSON.stringify(s))}catch(e){}}
+function dailyLoad(){try{return JSON.parse(localStorage.getItem(DKEY))||{}}catch(e){return{}}}
+function dailyCount(){const d=dailyLoad()[today()];return d?Math.max(0,+d[SUBJECT]||0):0}
+function bumpWriting(){
+  const all=dailyLoad(),t=today();
+  if(!all[t])all[t]={math:0,science:0,reading:0,chinese:0,oral:0,writing:0};
+  all[t][SUBJECT]=Math.max(1,+all[t][SUBJECT]||0);
+  try{localStorage.setItem(DKEY,JSON.stringify(all))}catch(e){}
+  syncParent();
+}
+function postMsg(m){try{if(window.parent&&window.parent!==window)window.parent.postMessage(m,"*")}catch(e){}}
+function syncParent(){postMsg({t:"jenny_daily",subject:SUBJECT,date:today(),count:dailyCount()})}
+function words(text){return (text.toLowerCase().match(/[a-z]+(?:'[a-z]+)?/g)||[])}
+function sentenceCount(text){return (text.match(/[.!?]+/g)||[]).length}
+function uniqueCount(list){return new Set(list).size}
+function currentPrompt(){return PROMPTS[dayIndex()]}
+function analyse(text,prompt){
+  const ws=words(text),low=" "+text.toLowerCase()+" ";
+  const used=prompt.words.filter(w=>new RegExp("\\b"+w.toLowerCase()+"\\b").test(low));
+  const connectors=["because","so","then","after","before","when","while","but","finally"];
+  const feelings=["happy","proud","worried","excited","surprised","nervous","grateful","relieved","sorry","confident","brave"];
+  return {
+    wordN:ws.length,
+    sentN:sentenceCount(text),
+    uniqueN:uniqueCount(ws),
+    vocabN:used.length,
+    used:used,
+    hasConnector:connectors.some(w=>new RegExp("\\b"+w+"\\b").test(low)),
+    hasFeeling:feelings.some(w=>new RegExp("\\b"+w+"\\b").test(low)),
+    copied:text.trim().toLowerCase()===prompt.starter.trim().toLowerCase()
+  };
+}
+function pass(a){return a.wordN>=MIN_WORDS&&a.sentN>=MIN_SENTENCES&&a.uniqueN>=25&&a.vocabN>=MIN_VOCAB&&a.hasConnector&&a.hasFeeling&&!a.copied}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+function insertWord(w){const ta=document.getElementById("diary");const add=(ta.value&&/\\S$/.test(ta.value)?" ":"")+w+" ";ta.value+=add;ta.focus();onInput()}
+function fillStarter(){const ta=document.getElementById("diary"),p=currentPrompt();if(!ta.value.trim())ta.value=p.starter+" ";ta.focus();onInput()}
+function clearDraft(){const s=load();delete s.drafts[today()];save(s);render()}
+function onInput(){
+  const s=load(),p=currentPrompt(),text=document.getElementById("diary").value;
+  s.drafts[today()]=text;save(s);
+  const a=analyse(text,p);renderChecks(a,p);document.getElementById("saveBtn").disabled=!pass(a);
+}
+function renderChecks(a,p){
+  p.words.forEach(w=>{const el=document.getElementById("w_"+w);if(el)el.classList.toggle("used",a.used.indexOf(w)>=0)});
+  const checks=[
+    ["words",a.wordN>=MIN_WORDS,a.wordN+"/"+MIN_WORDS+" words"],
+    ["sent",a.sentN>=MIN_SENTENCES,a.sentN+"/"+MIN_SENTENCES+" sentences"],
+    ["unique",a.uniqueN>=25,a.uniqueN+"/25 different words"],
+    ["vocab",a.vocabN>=MIN_VOCAB,a.vocabN+"/"+MIN_VOCAB+" diary words"],
+    ["conn",a.hasConnector,"connector"],
+    ["feel",a.hasFeeling,"feeling word"]
+  ];
+  document.getElementById("checks").innerHTML=checks.map(c=>'<div class="check '+(c[1]?"ok":"")+'">'+(c[1]?"✓ ":"○ ")+c[2]+"</div>").join("");
+}
+function saveEntry(){
+  const s=load(),p=currentPrompt(),text=document.getElementById("diary").value.trim(),a=analyse(text,p);
+  if(!pass(a))return;
+  s.entries[today()]={date:today(),title:p.title,text:text,words:a.used,time:new Date().toTimeString().slice(0,5)};
+  delete s.drafts[today()];save(s);bumpWriting();render();
+}
+function historyHTML(s){
+  const entries=Object.values(s.entries||{}).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);
+  if(!entries.length)return '<div class="history"><b>Diary Pages</b><div class="note">No finished pages yet.</div></div>';
+  return '<div class="history"><b>Diary Pages</b>'+entries.map(e=>'<div class="entry"><div class="d">'+esc(e.date)+" · "+esc(e.title)+'</div><div class="t">'+esc(e.text)+'</div></div>').join("")+'</div>';
+}
+function render(){
+  const s=load(),p=currentPrompt(),done=!!s.entries[today()],draft=s.drafts[today()]||"",n=dailyCount();
+  document.getElementById("app").innerHTML='<div class="top"><div class="chip">✍️ Story Diary<small>English writing</small></div><div class="chip">'+(done?"✓":"○")+' Today '+n+'/1<small>daily writing</small></div></div>'
+  +'<div class="book"><div class="cover"><div class="badge">🩵</div><div><h1>Jenny&apos;s Dream Blue Diary</h1><div class="sub">'+esc(p.title)+'</div></div></div>'
+  +'<div class="spread"><div class="left"><div class="prompt"><h2>Story Starter</h2><div class="starter">'+esc(p.starter)+'</div><div class="words">'+p.words.map(w=>'<button class="word" id="w_'+w+'" onclick="insertWord(&quot;'+w+'&quot;)">'+w+'</button>').join("")+'</div></div>'
+  +'<div class="prompt"><h2>Story Map</h2><div class="map"><label>Beginning</label><input id="m1" placeholder="Who and where?"><label>Problem</label><input id="m2" placeholder="What happened?"><label>Feeling</label><input id="m3" placeholder="How did I feel?"><label>Ending</label><input id="m4" placeholder="What changed?"></div></div></div>'
+  +'<div class="right"><textarea id="diary" placeholder="Write your story here...">'+esc(done?s.entries[today()].text:draft)+'</textarea><div id="checks" class="checks"></div><div class="actions"><button class="btn" onclick="fillStarter()">Use starter</button><button class="btn rose" id="saveBtn" onclick="saveEntry()">Finish today</button><button class="btn ghost" onclick="clearDraft()">Clear draft</button><span class="note">'+(done?'<span class="stamp">Finished today</span>':'Write enough, then finish today.')+'</span></div></div></div></div>'
+  +historyHTML(s);
+  document.getElementById("diary").addEventListener("input",onInput);
+  const a=analyse(document.getElementById("diary").value,p);renderChecks(a,p);document.getElementById("saveBtn").disabled=done||!pass(a);
+  syncParent();
+}
+render();
+</script>
+</body>
+</html>
