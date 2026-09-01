@@ -1178,11 +1178,15 @@ function questStreak(){
 
 let lastCounts=null,lastAllDone=false;
 function holidayBanner(){
-  var hm=isHolidayMode();var el=document.getElementById('holidayTip');if(!el)return;
-  if(!hm.on){el.style.display='none';return}
-  var zh={sunday:'🌞 周日加油日：慢慢做，做对最重要！',sept:'🏝️ 学校假期模式：每天照常打卡，做对 90% 多一个盲盒！',winter:'❄️ 寒假模式：每天照常打卡，做对 90% 多一个盲盒！'};
-  var en={sunday:'🌞 Sunday Boost: take your time — accuracy matters most!',sept:'🏝️ Holiday mode: keep your streak, 90% accuracy = bonus box!',winter:'❄️ Winter mode: keep your streak, 90% accuracy = bonus box!'};
-  el.style.display='block';el.textContent=(LANG==='en'?en:zh)[hm.key]||'';
+  var hm=isHolidayMode(),el=document.getElementById('holidayTip');if(!el)return;
+  var d=new Date(),md=(d.getMonth()+1)*100+d.getDate(),msg='';
+  var zh={sunday:'🌞 周日加油日：慢慢做，做对最重要！',sept:'🏝️ 学校假期过渡：每天照常打卡，英文写作和华文字词不能漏。',winter:'❄️ 寒假模式：每天照常打卡，做对 90% 多一个盲盒！'};
+  var en={sunday:'🌞 Sunday Boost: take your time — accuracy matters most!',sept:'🏝️ Holiday bridge: keep every quest, especially writing and Chinese words.',winter:'❄️ Winter mode: keep your streak, 90% accuracy = bonus box!'};
+  if(md>=914)msg=LANG==='en'?'🚀 Term 4 / P3 Bridge: harder reading, daily writing, vocabulary and multi-step thinking are now required.':'🚀 Term 4 / P3 过渡：阅读理解、每日英文写作、词汇识字、多步骤思维都要稳住。';
+  else if(md>=901&&md<=904)msg=LANG==='en'?'📘 P2 Finish Strong: build the routine now; Term 4 starts after the Sep 5-13 school holiday.':'📘 P2 收尾强化：现在先把习惯立住；9月5-13日学校假期后进入 Term 4。';
+  else if(hm.on)msg=(LANG==='en'?en:zh)[hm.key]||'';
+  if(!msg){el.style.display='none';return}
+  el.style.display='block';el.textContent=msg;
 }
 function renderQuests(opts){
   opts=opts||{};
