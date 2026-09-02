@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-01T19:00:00+08:00",
+  "updatedAt": "2026-09-02T19:00:00+08:00",
   "policy": "append-only-stable-ids",
   "packs": [
     {
@@ -398,6 +398,162 @@
           "marks": [
             "内容点：写出俊豪认识到分类和责任的重要。",
             "依据点：结合小敏的编号表和俊豪贴海报的行为说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-02",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-02-001",
+          "title": "The Question on the Clipboard",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>Leo had spent two weekends building a small automatic plant-watering device for the school fair. When it finally poured water into the pot, he took a short video and began preparing his display board. His sister watched the video twice, then asked why the device had watered the plant after only a few drops of rain.</p><p>Leo replied that the sensor had worked exactly as planned. Still, he wrote her question on a clipboard. The next afternoon, he placed the device outside while using a measuring cup to add small, equal amounts of water to the sensor tray. He discovered that water collected at one corner and touched both metal contacts earlier than he expected.</p><p>Leo raised the tray slightly and tested it again. This time, the pump started only after the amount of water he had chosen. At the fair, several visitors praised the device. Leo kept the first video too. It reminded him that a working result was not the end of an investigation; a good question could reveal what still needed checking.</p>",
+          "q": "Why did Leo keep the first video after improving the device?",
+          "opts": [
+            "He wanted to show that the first design was already perfect.",
+            "He wanted proof that visitors had praised him before the fair.",
+            "It reminded him that a result which seems to work can still need careful testing after a useful question is asked.",
+            "He planned to stop testing the device after recording the video."
+          ],
+          "ans": 2,
+          "model": "Leo kept the first video because it reminded him that the device appeared to work at first, but a useful question led him to test it more carefully and discover a problem with the water collecting too early.",
+          "evidence": "A working result was not the end of an investigation; a good question could reveal what still needed checking.",
+          "marks": [
+            "Meaning point: explains that Leo valued further testing, not just the first working result.",
+            "Support point: links the question to discovering water reached the contacts too early."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-02-001",
+          "title": "Student Garden Team Tracks Food-Waste Compost",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A school garden team has begun turning fruit peels and vegetable scraps from the canteen into compost. The pupils set up two covered compost boxes of the same size. Both boxes received equal amounts of food waste and dry leaves, but one box was mixed every three days while the other was left undisturbed.</p><p>For six weeks, the pupils recorded the temperature and appearance of the materials. The mixed box became darker and crumbly sooner. However, the group did not immediately claim that mixing was the only reason. They checked their records and noticed that both boxes had been kept in the same shaded area and had received the same amount of water.</p><p>The pupils will next test whether the compost helps bean plants grow. Their teacher said the project was strong because the team separated what they observed from what they could reasonably conclude.</p>",
+          "q": "Why did the pupils check that both compost boxes had the same location and amount of water?",
+          "opts": [
+            "To make the comparison fairer, so the different mixing routine could be linked more confidently to the different results.",
+            "To ensure that neither compost box would change during the six weeks.",
+            "To prove that water is more important than food waste in every garden.",
+            "To make the undisturbed box receive more dry leaves."
+          ],
+          "ans": 0,
+          "model": "The pupils kept the location and amount of water the same to make a fair comparison. This meant that the different mixing routine was the main changed condition they could link to the compost results.",
+          "evidence": "Both boxes had been kept in the same shaded area and had received the same amount of water.",
+          "marks": [
+            "Meaning point: identifies a fair comparison or controlled variables.",
+            "Support point: links the controlled conditions to testing the effect of mixing."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-fractions-2026-09-02-001",
+          "topic": "fractions",
+          "kind": "thinking",
+          "title": "Fractions · Reef Badge Box",
+          "tag": "Use the remaining fraction to rebuild the whole",
+          "q": "Johnson has used 3/8 of the badges in a box. There are 30 badges left. How many badges were in the box at first?",
+          "opts": ["40", "48", "60", "80"],
+          "ans": 1,
+          "model": "If 3/8 has been used, 5/8 remains. Therefore, 5/8 is 30 badges. One eighth is 30 ÷ 5 = 6 badges, so the whole box has 8 × 6 = 48 badges.",
+          "steps": [
+            "Find the remaining fraction: 1 − 3/8 = 5/8.",
+            "Use 5 equal parts = 30 to find one part: 30 ÷ 5 = 6.",
+            "Find all eight parts: 8 × 6 = 48."
+          ],
+          "marks": [
+            "Method mark: recognises that 30 represents 5/8, not 3/8.",
+            "Answer mark: finds the original total of 48 badges."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-systems-2026-09-02-001",
+          "topic": "systems",
+          "level": "P5 CORE · HUMAN SYSTEMS",
+          "focus": "trace a substance through linked body systems",
+          "title": "Human Systems · Fuel for a Race",
+          "q": "Before a race, Mina eats a banana and drinks water. During the race, her leg muscles need energy. Which is the best complete explanation of how the banana helps the muscles?",
+          "opts": [
+            "The banana stays in Mina's stomach and directly pushes her leg muscles faster.",
+            "The digestive system breaks the banana into small soluble nutrients. These are absorbed into the blood in the small intestine, and the circulatory system transports them to the leg muscles for respiration.",
+            "The lungs change the banana into oxygen before it reaches the muscles.",
+            "The heart digests the banana and stores all nutrients outside the body."
+          ],
+          "ans": 1,
+          "model": "The digestive system breaks the banana into small soluble nutrients. The nutrients are absorbed through the small intestine into the blood. The circulatory system then transports them to Mina's leg muscles, where they are used in respiration to release energy.",
+          "steps": [
+            "Food is digested into small soluble nutrients.",
+            "Nutrients are absorbed from the small intestine into the blood.",
+            "Blood transports nutrients to muscle cells, where respiration releases energy."
+          ],
+          "marks": [
+            "Science point: states digestion, absorption and transport in the correct order.",
+            "Evidence link: connects the nutrients from the banana to energy release in working leg muscles."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-systems-2026-09-02-001",
+          "group": "precision",
+          "term": "small soluble nutrients",
+          "meaning": "food substances made small enough by digestion to pass through the wall of the small intestine",
+          "example": "Digestion changes food into small soluble nutrients that can be absorbed.",
+          "note": "Do not write only 'small food'; use the word soluble."
+        },
+        {
+          "id": "science-vocab-systems-2026-09-02-002",
+          "group": "precision",
+          "term": "absorbed into the blood",
+          "meaning": "small soluble nutrients pass through the wall of the small intestine into blood vessels",
+          "example": "The digested nutrients are absorbed into the blood through the small intestine.",
+          "note": "OEQ chain: digestion -> absorption -> transport."
+        },
+        {
+          "id": "science-vocab-systems-2026-09-02-003",
+          "group": "precision",
+          "term": "transported to body cells",
+          "meaning": "blood carries useful substances such as oxygen and nutrients to cells around the body",
+          "example": "The circulatory system transports nutrients to the working muscle cells.",
+          "note": "Name what is carried and where it is carried to."
+        },
+        {
+          "id": "science-vocab-systems-2026-09-02-004",
+          "group": "precision",
+          "term": "used in respiration to release energy",
+          "meaning": "cells use nutrients and oxygen in respiration, releasing energy for activities",
+          "example": "Muscle cells use nutrients and oxygen in respiration to release energy for running.",
+          "note": "Energy is released, not created."
+        },
+        {
+          "id": "science-vocab-systems-2026-09-02-005",
+          "group": "precision",
+          "term": "linked body-system pathway",
+          "meaning": "an explanation that traces a substance through more than one body system in sequence",
+          "example": "Food is digested, nutrients are absorbed into blood, and blood transports them to body cells.",
+          "note": "For 2 marks, keep the pathway in order and name the systems involved."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-02-001",
+          "title": "P5 华文短文阅读 · 先听再判断",
+          "q": "班会要选出环保活动的负责人。大家都推荐说话响亮的凯翔，小恩却一直没有举手。凯翔以为小恩不愿意帮忙，便在讨论时不耐烦地说：‘你有意见就快点说。’小恩拿出一张记录表，原来他这几天已经问过同学们最想参加什么活动，还把大家的想法分成了节水、回收和校园清洁三类。凯翔看完后安静下来，建议大家先用小恩的记录表安排任务。",
+          "ask": "凯翔后来建议使用小恩的记录表，说明他有了什么改变？",
+          "opts": [
+            "他认识到不能只凭一个人的表现判断别人，也开始重视小恩认真收集的意见。",
+            "他决定以后不参加任何环保活动。",
+            "他认为说话响亮的人不需要准备资料。",
+            "他想把所有同学的意见都删掉。"
+          ],
+          "ans": 0,
+          "model": "凯翔原先只凭小恩没有举手就以为他不愿意帮忙。看了记录表后，他发现小恩已经认真收集和整理同学的意见，因此开始重视别人的实际贡献，不再轻易判断。",
+          "marks": [
+            "内容点：写出凯翔不再轻易判断别人，并重视实际贡献。",
+            "依据点：结合小恩收集、分类意见和凯翔采用记录表说明。"
           ]
         }
       ]
