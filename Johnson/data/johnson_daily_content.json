@@ -557,6 +557,165 @@
           ]
         }
       ]
+    },
+    {
+      "date": "2026-09-03",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-03-001",
+          "title": "The Map of Quiet Corners",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>For a group project, Arjun and his classmates had to record the sounds around their school. Arjun wanted to finish quickly, so he stood near the canteen for two minutes, wrote ‘very noisy’ on the chart and suggested that the class use the library as the quietest place.</p><p>Mei did not disagree, but she asked to see the times of day on his chart. Arjun had not written them down. She showed him a map with small coloured dots. For three days, she had listened at the same five places before school, during recess and after dismissal. The library was quiet before school, but the corridor beside it became noisy when two classes changed rooms. The garden was not always silent, yet it was the quietest place during recess.</p><p>Arjun looked again at his single note from the canteen. He added the missing times to a new chart and thanked Mei for making the group’s conclusion more useful. When their teacher asked what they had improved, Arjun said, ‘We stopped treating one quick observation as the whole story.’</p>",
+          "q": "What did Arjun learn from Mei's map?",
+          "opts": [
+            "A conclusion about a place should be based on observations made at different relevant times, not on one quick observation.",
+            "The canteen is always quieter than every other part of the school.",
+            "A chart does not need labels if it uses coloured dots.",
+            "The group should only record sounds before school."
+          ],
+          "ans": 0,
+          "model": "Arjun learned that one quick observation was not enough. Mei's map compared the same places at different times, showing that noise levels changed and that their conclusion needed fuller evidence.",
+          "evidence": "For three days, she had listened at the same five places before school, during recess and after dismissal.",
+          "marks": [
+            "Meaning point: explains that evidence needs more than one observation or time.",
+            "Support point: links the idea to Mei's repeated observations at the same five places."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-03-001",
+          "title": "Pupils Test a Cooler Waiting Area",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A pupil council has worked with its school to test whether a shaded waiting area feels cooler in the afternoon. The group placed two identical thermometers at the same height: one under a newly installed shade sail and one on an open walkway nearby. They recorded the readings at 2 p.m. for five school days.</p><p>The shaded thermometer was lower on each day. The pupils also noted whether it had rained and whether the walkway was wet. Their report did not say that the shade sail was the only possible influence. Instead, it explained that the repeated lower readings supported the idea that blocking direct sunlight helped keep that area cooler under the tested conditions.</p><p>The council will next ask pupils where they wait after CCA. The principal said the project was helpful because it used measurements before making a practical suggestion.</p>",
+          "q": "Which statement best describes the pupils' conclusion?",
+          "opts": [
+            "The shade sail made every part of the school permanently cold.",
+            "The repeated lower readings support the idea that blocking direct sunlight helped keep the tested waiting area cooler under those conditions.",
+            "Rain can never affect a temperature reading outdoors.",
+            "One thermometer reading is enough to decide where all pupils should wait."
+          ],
+          "ans": 1,
+          "model": "The pupils could reasonably conclude that the shaded area was cooler under the tested conditions because the thermometer there gave lower readings repeatedly. They did not claim that shade was the only possible influence.",
+          "evidence": "The shaded thermometer was lower on each day.",
+          "marks": [
+            "Meaning point: states the supported conclusion without overclaiming.",
+            "Support point: uses the repeated lower readings as evidence."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-ratio-2026-09-03-001",
+          "topic": "ratio",
+          "kind": "thinking",
+          "title": "Ratio · Badge Exchange",
+          "tag": "Track both quantities before and after the exchange",
+          "q": "At first, the ratio of red badges to blue badges was 3 : 5. After 12 red badges and 4 blue badges were added, the ratio became 2 : 3. How many badges were there at first?",
+          "opts": ["168", "224", "252", "280"],
+          "ans": 1,
+          "model": "Let the first numbers be 3 units and 5 units. After the additions, the ratio is 2 : 3. Matching the two ratios gives 3 units = 84 red badges and 5 units = 140 blue badges. So there were 84 + 140 = 224 badges at first.",
+          "steps": [
+            "Let the first numbers be 3u red and 5u blue.",
+            "Use the new ratio: (3u + 12) : (5u + 4) = 2 : 3.",
+            "Cross-multiply: 3(3u + 12) = 2(5u + 4), so 9u + 36 = 10u + 8 and u = 28.",
+            "Find the first total: 3u + 5u = 8 × 28 = 224."
+          ],
+          "marks": [
+            "Method mark: represents both original amounts with the same ratio unit and includes both additions.",
+            "Answer mark: finds the original total of 224 badges."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-photosynthesis-2026-09-03-001",
+          "topic": "photosynthesis",
+          "level": "P6 BRIDGE · PHOTOSYNTHESIS",
+          "focus": "use a controlled comparison to link light, photosynthesis and starch",
+          "title": "Photosynthesis · Covered Leaf Test",
+          "q": "After keeping a green plant in darkness overnight to remove stored starch, a pupil covers part of one leaf with black paper. The plant is kept in sunlight for several hours. After the iodine test, the uncovered part turns blue-black but the covered part remains brown. Which is the best complete explanation?",
+          "opts": [
+            "The covered part made more starch because black paper adds food to the leaf.",
+            "The uncovered part received light and made starch by photosynthesis. The covered part did not receive light, so it did not make starch during the test.",
+            "Iodine changes every green leaf part blue-black, whether or not light reaches it.",
+            "The covered part used sunlight to move starch into the black paper."
+          ],
+          "ans": 1,
+          "model": "The uncovered part received light, so photosynthesis took place and starch was made. Iodine turns blue-black when starch is present. The covered part did not receive light, so it did not make starch during the test and remained brown.",
+          "steps": [
+            "First remove stored starch by keeping the plant in darkness overnight.",
+            "Keep one green leaf, so both parts have the same plant and similar conditions.",
+            "Change only light: black paper blocks light from the covered part.",
+            "Read the iodine result: blue-black shows starch; brown shows no starch.",
+            "Link evidence to conclusion: light is needed for photosynthesis to make starch."
+          ],
+          "marks": [
+            "Science point: states that light is needed for photosynthesis and starch production.",
+            "Evidence link: connects each iodine colour to the presence or absence of starch in the two leaf parts."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-photosynthesis-2026-09-03-001",
+          "group": "precision",
+          "term": "photosynthesis takes place",
+          "meaning": "green plants use light energy to make food from carbon dioxide and water",
+          "example": "Photosynthesis takes place in the uncovered green part of the leaf because it receives light.",
+          "note": "Name the condition: light must reach the green leaf part."
+        },
+        {
+          "id": "science-vocab-photosynthesis-2026-09-03-002",
+          "group": "precision",
+          "term": "starch is produced",
+          "meaning": "some food made by photosynthesis is stored in the leaf as starch",
+          "example": "Starch is produced in the leaf when photosynthesis occurs.",
+          "note": "Use 'produced' or 'made'; do not say the leaf absorbs starch from light."
+        },
+        {
+          "id": "science-vocab-photosynthesis-2026-09-03-003",
+          "group": "precision",
+          "term": "iodine turns blue-black in the presence of starch",
+          "meaning": "a test result showing that starch is present in the tested leaf part",
+          "example": "The uncovered part turned blue-black after iodine was added, showing that starch was present.",
+          "note": "State the observation first, then what it shows."
+        },
+        {
+          "id": "science-vocab-photosynthesis-2026-09-03-004",
+          "group": "precision",
+          "term": "light was the changed condition",
+          "meaning": "the covered and uncovered leaf parts are compared so that access to light is the key difference",
+          "example": "Light was the changed condition because black paper blocked it from only one leaf part.",
+          "note": "This is the fair-test link in a conclusion."
+        },
+        {
+          "id": "science-vocab-photosynthesis-2026-09-03-005",
+          "group": "precision",
+          "term": "evidence supports the conclusion",
+          "meaning": "the observed difference is used to justify, rather than merely repeat, a scientific claim",
+          "example": "The different iodine colours support the conclusion that light is needed to make starch by photosynthesis.",
+          "note": "OEQ pattern: condition -> observation -> what the observation shows."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-03-001",
+          "title": "P5 华文短文阅读 · 一次认真的核对",
+          "q": "班级准备义卖会时，子轩负责在海报上写价格。他很快写完，还说不用再检查。安琪发现其中一个玩具的价格和登记表不同，便请子轩一起核对。子轩起初觉得安琪太小心，后来却发现自己把两个数字的位置写反了。如果照原来的海报出售，班级可能会少收钱。子轩马上改正海报，并在义卖会结束后主动把登记表和收款记录逐项对照。",
+          "ask": "从子轩后来的做法，可以看出他明白了什么？",
+          "opts": [
+            "做事快就不需要别人提醒。",
+            "核对细节虽然花时间，却能避免错误，也要对自己的工作负责。",
+            "只要海报好看，价格是否正确并不重要。",
+            "登记表应该在义卖会后立刻丢掉。"
+          ],
+          "ans": 1,
+          "model": "子轩原先只求快，不愿检查。发现数字写反后，他马上改正，并主动逐项对照登记表和收款记录，说明他明白核对细节能避免错误，也要对自己的工作负责。",
+          "marks": [
+            "内容点：写出核对细节和承担责任的重要。",
+            "依据点：结合改正海报、逐项对照记录的行为说明。"
+          ]
+        }
+      ]
     }
   ]
 }
