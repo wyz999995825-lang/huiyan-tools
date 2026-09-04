@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-02T19:00:00+08:00",
+  "updatedAt": "2026-09-04T19:00:00+08:00",
   "policy": "append-only-stable-ids",
   "packs": [
     {
@@ -713,6 +713,164 @@
           "marks": [
             "内容点：写出核对细节和承担责任的重要。",
             "依据点：结合改正海报、逐项对照记录的行为说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-04",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-04-001",
+          "title": "The Shortcut List",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>On the morning of the inter-class challenge, Yusuf was chosen to organise the equipment table. His team needed tape, string, rulers and a box of wooden blocks. Yusuf made a list in neat handwriting, but when the bell rang, he saw that the items were still spread across three cupboards.</p><p>‘We can just take whatever we find first,’ he said. His teammate Hana pointed to the list and asked which group had borrowed the rulers the day before. Yusuf did not know. He was tempted to leave the question for later, yet he remembered that the challenge involved measuring a bridge model. He checked the return slip, found the rulers in the art room, and labelled each tray before the other teams arrived.</p><p>During the challenge, Yusuf's team was not the quickest to begin. However, nobody had to stop to search for missing equipment. When their bridge measurements matched on the first try, Yusuf smiled at the unused shortcut list. It was not a list of faster ways to move. It was a reminder to check what would matter later.</p>",
+          "q": "What does the phrase 'unused shortcut list' suggest about Yusuf at the end?",
+          "opts": [
+            "He understood that preparing and checking important details could save the team from bigger problems later.",
+            "He decided that lists always make a task slower than guessing.",
+            "He wanted to hide the rulers from the other teams.",
+            "He believed that the bridge did not need correct measurements."
+          ],
+          "ans": 0,
+          "model": "The phrase suggests that Yusuf no longer saw rushing as the best choice. By checking where the rulers were and organising the trays, he prevented later delays and helped the team measure accurately.",
+          "evidence": "Nobody had to stop to search for missing equipment. When their bridge measurements matched on the first try...",
+          "marks": [
+            "Meaning point: explains Yusuf's changed view of a shortcut.",
+            "Support point: links his preparation to avoiding searches or getting accurate measurements."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-04-001",
+          "title": "School Refill Station Measures Bottle Use",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A school has installed a water-refill station near its hall and is tracking whether it changes the number of disposable bottles used during CCA. For four Mondays before the station opened, student leaders counted bottles placed in the recycling bins after CCA. They continued the count for four Mondays after it opened, using the same bin locations and the same time for each count.</p><p>The total number of bottles in the selected bins was lower in the second four-week period. The leaders also recorded that one CCA had moved to another venue on one Monday, so they marked that count as unusual rather than treating it as proof of a trend.</p><p>The school will collect another term of data before deciding how many more refill stations to install. Its report says that the first results are encouraging, but a longer record will make the decision stronger.</p>",
+          "q": "Why did the student leaders mark one Monday's count as unusual?",
+          "opts": [
+            "They wanted to remove every result that was lower than expected.",
+            "A change in CCA venue could affect bottle use, so that count should not be treated as clear evidence of the refill station's effect.",
+            "They had forgotten where the recycling bins were located.",
+            "They had already proved that no more data was needed."
+          ],
+          "ans": 1,
+          "model": "The venue change could have changed how many pupils used that area or its bins. The leaders therefore treated the count carefully instead of assuming it showed only the effect of the refill station.",
+          "evidence": "One CCA had moved to another venue on one Monday, so they marked that count as unusual rather than treating it as proof of a trend.",
+          "marks": [
+            "Meaning point: identifies the venue change as another possible influence.",
+            "Support point: explains why the result is not clear evidence of the refill station alone."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-average-2026-09-04-001",
+          "topic": "average",
+          "kind": "thinking",
+          "title": "Average · Training Sessions",
+          "tag": "Connect two averages with a difference between the final scores",
+          "q": "Over 5 training sessions, Johnson scored an average of 68 points. His first 3 scores had an average of 64 points. His last 2 scores differed by 12 points. What was his higher score in the last 2 sessions?",
+          "opts": ["74", "80", "86", "92"],
+          "ans": 1,
+          "model": "The total for 5 sessions is 5 × 68 = 340. The total for the first 3 sessions is 3 × 64 = 192, so the last 2 total 148. Two scores with a total of 148 and a difference of 12 are 68 and 80. The higher score is 80.",
+          "steps": [
+            "Find the total for all 5 sessions: 5 × 68 = 340.",
+            "Find the total for the first 3: 3 × 64 = 192.",
+            "Find the total for the last 2: 340 − 192 = 148.",
+            "Split 148 into two scores 12 apart: 68 and 80, so the higher score is 80."
+          ],
+          "marks": [
+            "Method mark: finds the total for the final two sessions using both averages.",
+            "Answer mark: uses the difference of 12 to identify 80 as the higher score."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-energy-2026-09-04-001",
+          "topic": "energy",
+          "level": "P6 BRIDGE · ENERGY CONVERSION",
+          "focus": "trace useful and wasted energy through an electrical device",
+          "title": "Energy Conversion · Mini Fan",
+          "q": "A battery-operated mini fan is switched on. The blades turn and the motor becomes slightly warm. Which is the best complete description of the energy changes?",
+          "opts": [
+            "Chemical energy in the battery is changed directly into cold energy in the air only.",
+            "Chemical energy in the battery is changed to electrical energy in the circuit. The motor changes it mainly to kinetic energy in the turning blades, with some heat and sound energy also produced.",
+            "The turning blades create chemical energy and store it back in the battery.",
+            "The motor changes all energy into sound, so the blades cannot move."
+          ],
+          "ans": 1,
+          "model": "The battery stores chemical energy. When the circuit is complete, this becomes electrical energy. The motor converts much of it to kinetic energy that turns the blades, while some energy is transferred as heat and sound.",
+          "steps": [
+            "Identify the store: the battery contains chemical energy.",
+            "Trace the pathway: a complete circuit carries electrical energy to the motor.",
+            "Identify the useful output: kinetic energy turns the blades and moves air.",
+            "Use the evidence: the warm motor and audible fan show heat and sound energy are also produced."
+          ],
+          "marks": [
+            "Science point: gives the correct chemical -> electrical -> kinetic energy pathway.",
+            "Evidence link: accounts for the warm motor and sound as other energy outputs."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-energy-2026-09-04-001",
+          "group": "precision",
+          "term": "chemical energy store",
+          "meaning": "energy stored in a battery that can be released in a circuit",
+          "example": "The battery provides energy from its chemical energy store.",
+          "note": "Name the energy store before describing the change."
+        },
+        {
+          "id": "science-vocab-energy-2026-09-04-002",
+          "group": "precision",
+          "term": "electrical energy in the circuit",
+          "meaning": "energy transferred through a complete circuit from a cell to an electrical component",
+          "example": "Electrical energy is transferred through the circuit to the fan motor.",
+          "note": "A component needs a complete circuit to receive this energy."
+        },
+        {
+          "id": "science-vocab-energy-2026-09-04-003",
+          "group": "precision",
+          "term": "kinetic energy",
+          "meaning": "energy an object has because it is moving",
+          "example": "The turning fan blades have kinetic energy.",
+          "note": "Link kinetic energy to a visible movement."
+        },
+        {
+          "id": "science-vocab-energy-2026-09-04-004",
+          "group": "precision",
+          "term": "energy is transferred as heat and sound",
+          "meaning": "some energy from a device spreads to the surroundings as warming and sound",
+          "example": "The warm motor and fan noise show that energy is transferred as heat and sound.",
+          "note": "Use observations as evidence for energy outputs."
+        },
+        {
+          "id": "science-vocab-energy-2026-09-04-005",
+          "group": "precision",
+          "term": "useful energy output",
+          "meaning": "the energy change a device is designed to provide",
+          "example": "For a fan, kinetic energy in the blades is the useful energy output.",
+          "note": "A useful output can exist alongside heat and sound outputs."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-04-001",
+          "title": "P5 华文短文阅读 · 不只看结果",
+          "q": "学校举行纸桥比赛。承宇的纸桥一开始能承受最多的积木，他兴奋地说自己的方法一定最好。老师请各组写下制作过程，承宇才发现自己没有记录纸张折叠的次数和胶带的长度。后来，另一组虽然承受的积木较少，却把每一次调整都记录得很清楚，还能解释为什么桥面会变稳。承宇听完后，主动请对方教他怎样记录，并重新测试自己的纸桥。",
+          "ask": "承宇后来主动学习记录制作过程，最主要的原因是什么？",
+          "opts": [
+            "他明白了除了看结果，也要有清楚的过程和依据，才能知道方法为什么有效。",
+            "他决定以后不再参加任何比赛。",
+            "他认为积木越少，纸桥一定越好。",
+            "他只想把别人的纸桥带回家。"
+          ],
+          "ans": 0,
+          "model": "承宇原先只看纸桥能承受多少积木。听了另一组的说明后，他明白要记录调整过程和依据，才能知道方法为什么有效，也才能重新测试和改进自己的纸桥。",
+          "marks": [
+            "内容点：写出过程记录和依据的重要。",
+            "依据点：结合另一组清楚记录、承宇重新测试的行为说明。"
           ]
         }
       ]
