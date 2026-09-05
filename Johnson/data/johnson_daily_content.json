@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-04T19:00:00+08:00",
+  "updatedAt": "2026-09-05T19:00:00+08:00",
   "policy": "append-only-stable-ids",
   "packs": [
     {
@@ -871,6 +871,164 @@
           "marks": [
             "内容点：写出过程记录和依据的重要。",
             "依据点：结合另一组清楚记录、承宇重新测试的行为说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-05",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-05-001",
+          "title": "The Label on the Sample Jar",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>For the school exhibition, Nia's group collected leaves from different parts of the campus. Nia found a leaf with silver spots near the field and hurried to place it in a sample jar. She wanted it to be the first specimen on their display.</p><p>Her partner, Tomas, asked where exactly she had found it. Nia pointed vaguely towards the field. Tomas then showed her the labels on the other jars: date, location, plant height and a sketch of nearby plants. Nia felt embarrassed. She had a beautiful leaf but no reliable way to help another pupil find the same plant again.</p><p>Instead of hiding the jar, Nia returned to the field with Tomas. They found the plant beside a drainage grate, measured it and added a clear label. At the exhibition, a visitor asked how they knew the leaf had come from that plant. Nia pointed to the label and the sketch. She had learnt that a good discovery becomes more useful when someone else can check it.</p>",
+          "q": "Why did Nia return to the field with Tomas?",
+          "opts": [
+            "She wanted to make the leaf look more colourful for the display.",
+            "She needed reliable details that would link the leaf to its source and allow others to check the discovery.",
+            "She hoped to remove all the other groups' sample jars.",
+            "She had decided that labels were less useful than memory."
+          ],
+          "ans": 1,
+          "model": "Nia returned to collect reliable details about the plant and its location. The label and sketch let other people connect the leaf to its source and check the group's discovery.",
+          "evidence": "She had a beautiful leaf but no reliable way to help another pupil find the same plant again.",
+          "marks": [
+            "Meaning point: identifies the need for reliable, checkable evidence.",
+            "Support point: links the label or sketch to locating the same plant."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-05-001",
+          "title": "Student Team Times a Safer Crossing Route",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A student team has compared two walking routes from a bus stop to its school gate. One route was shorter, while the other included an overhead bridge and a sheltered path. For five mornings, the team timed both routes from the same bus arrival point. They also recorded the number of road crossings and whether rain made either route slippery.</p><p>The shorter route usually took less time, but it required two road crossings. The longer route took about three more minutes on average and had only one controlled crossing. The team did not tell every pupil to use the longer route. Instead, it suggested that pupils who had heavy bags or were walking during rain should consider the sheltered route, while those choosing the shorter route should use the marked crossings.</p><p>The school's safety committee said the report was useful because it explained the trade-off instead of pretending that one route was best for every situation.</p>",
+          "q": "What does the report's recommendation show?",
+          "opts": [
+            "The team ignored time because every route takes exactly the same length of time.",
+            "The team considered evidence about both speed and safety, then gave different advice for different needs.",
+            "The longer route is always the only safe route for every pupil.",
+            "Rain makes road crossings disappear."
+          ],
+          "ans": 1,
+          "model": "The team used both travel-time and safety evidence. Because different pupils may face different conditions, it gave guidance that considered the trade-off instead of naming one route as best for everyone.",
+          "evidence": "The report was useful because it explained the trade-off instead of pretending that one route was best for every situation.",
+          "marks": [
+            "Meaning point: identifies the trade-off between time and safety.",
+            "Support point: explains why the advice differs by condition or need."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-speed-2026-09-05-001",
+          "topic": "speed",
+          "kind": "thinking",
+          "title": "Speed · Split Training Run",
+          "tag": "Find total distance and total time; do not average the two speeds",
+          "q": "Johnson runs the first 600 m of a training route at 4 m/s and the next 600 m at 6 m/s. What is his average speed for the whole 1 200 m route?",
+          "opts": ["4.8 m/s", "5 m/s", "5.2 m/s", "10 m/s"],
+          "ans": 0,
+          "model": "For the first 600 m, time = 600 ÷ 4 = 150 s. For the next 600 m, time = 600 ÷ 6 = 100 s. Total distance is 1 200 m and total time is 250 s. Average speed = 1 200 ÷ 250 = 4.8 m/s.",
+          "steps": [
+            "Find first time: 600 ÷ 4 = 150 seconds.",
+            "Find second time: 600 ÷ 6 = 100 seconds.",
+            "Add distances and times: 1 200 m in 250 seconds.",
+            "Use average speed = total distance ÷ total time = 4.8 m/s."
+          ],
+          "marks": [
+            "Method mark: adds the two travel times instead of averaging 4 and 6.",
+            "Answer mark: calculates the average speed as 4.8 m/s."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-forces-2026-09-05-001",
+          "topic": "forces",
+          "level": "P6 BRIDGE · FORCES",
+          "focus": "infer balanced forces from constant speed and predict a changed force",
+          "title": "Forces · Supply Trolley",
+          "q": "A pupil pulls a loaded trolley along a level floor with a force of 6 N. The trolley moves at a constant speed. The pupil then increases the pulling force to 8 N while the floor and load stay the same. What will most likely happen next, and why?",
+          "opts": [
+            "The trolley will continue at the same speed because there is no friction at all.",
+            "The trolley will speed up because the original 6 N pull balanced friction, but the 8 N pull gives a larger forward force than the opposing friction.",
+            "The trolley will move backwards because the pulling force became larger.",
+            "The trolley will stop immediately because a larger force always stops an object."
+          ],
+          "ans": 1,
+          "model": "When the trolley moved at constant speed, the 6 N pulling force was balanced by an equal frictional force in the opposite direction. Increasing the pull to 8 N gives a resultant forward force of 2 N, so the trolley speeds up.",
+          "steps": [
+            "Read constant speed as balanced forces: forward pull = opposing friction.",
+            "At first, friction is 6 N backwards because the pull is 6 N forwards.",
+            "The new pull is 8 N while friction stays 6 N on the same floor and load.",
+            "Resultant force is 2 N forwards, so the trolley accelerates forwards."
+          ],
+          "marks": [
+            "Science point: links constant speed to balanced forces and identifies friction as the opposing force.",
+            "Evidence link: compares 8 N forward with 6 N backward to predict speeding up."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-forces-2026-09-05-001",
+          "group": "precision",
+          "term": "balanced forces",
+          "meaning": "forces of equal size acting in opposite directions, giving no change in motion",
+          "example": "The trolley moves at constant speed when the pulling force and friction are balanced.",
+          "note": "Balanced forces do not mean there are no forces."
+        },
+        {
+          "id": "science-vocab-forces-2026-09-05-002",
+          "group": "precision",
+          "term": "friction acts in the opposite direction",
+          "meaning": "a contact force that opposes motion between touching surfaces",
+          "example": "Friction from the floor acts backwards while the trolley is pulled forwards.",
+          "note": "Always state the direction when explaining a force."
+        },
+        {
+          "id": "science-vocab-forces-2026-09-05-003",
+          "group": "precision",
+          "term": "resultant force",
+          "meaning": "the overall force after forces in different directions are combined",
+          "example": "An 8 N pull and 6 N friction give a resultant force of 2 N forwards.",
+          "note": "Show which force is larger and in which direction."
+        },
+        {
+          "id": "science-vocab-forces-2026-09-05-004",
+          "group": "precision",
+          "term": "accelerates in the direction of the resultant force",
+          "meaning": "an object speeds up, slows down or changes direction when forces are unbalanced",
+          "example": "The trolley accelerates forwards because the resultant force is forwards.",
+          "note": "Do not say a force automatically gives constant speed."
+        },
+        {
+          "id": "science-vocab-forces-2026-09-05-005",
+          "group": "precision",
+          "term": "same floor and same load",
+          "meaning": "conditions kept unchanged so the frictional comparison is fair",
+          "example": "With the same floor and load, the friction can be treated as unchanged in this prediction.",
+          "note": "Mention unchanged conditions when a question asks for a prediction."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-05-001",
+          "title": "P5 华文短文阅读 · 先听完整的意见",
+          "q": "班上讨论毕业册封面的设计。乐恩一听见同学提议用黑色背景，就立刻说：‘太暗了，一定不好看。’设计小组的嘉雯没有和他争辩，而是请大家把不同方案贴在墙上，再写下喜欢和担心的原因。乐恩后来发现，有些同学喜欢黑色背景，是因为照片上的亮色图案会更清楚；也有人担心字太小。经过讨论，小组决定保留深色边框，却把主要内容改成浅色底。乐恩主动说：‘原来先听完整的理由，才能提出有用的建议。’",
+          "ask": "乐恩最后的话主要说明了什么？",
+          "opts": [
+            "他明白了要先了解别人的理由和需要，才能提出更有根据的建议。",
+            "他认为所有封面都必须用黑色背景。",
+            "他不愿意再参加毕业册的讨论。",
+            "他觉得同学不应该写下担心的原因。"
+          ],
+          "ans": 0,
+          "model": "乐恩起初只凭自己的感觉否定黑色背景。听完同学们的理由后，他明白不同方案各有优点和需要改进的地方，因此要先了解完整情况，才能提出有根据的建议。",
+          "marks": [
+            "内容点：写出先听理由、了解完整情况的重要。",
+            "依据点：结合大家写下喜欢和担心的原因，以及最后的折中设计说明。"
           ]
         }
       ]
