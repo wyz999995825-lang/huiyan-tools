@@ -467,7 +467,7 @@ function renderHome(){
 }
 function renderPetAcademy(){
   const pet=readPetState();pet.sound=state.sound;try{localStorage.setItem(PET_STORE,JSON.stringify(pet))}catch(e){}
-  $("screen").innerHTML=`<div class="page-title"><div class="page-icon">🐉</div><div><h1>PSLE Vocabulary Pet Academy</h1><p>Twenty useful words each day. Correct answers earn coins to grow a dragon or phoenix.</p></div></div><iframe class="embedded-tool-frame" src="Johnson/tools/Johnson_PSLE_Vocabulary_Pet_Academy.html?embedded=1&amp;v=20260827c" title="PSLE Vocabulary Pet Academy"></iframe>`;
+  $("screen").innerHTML=`<div class="page-title"><div class="page-icon">🐉</div><div><h1>PSLE Vocabulary Pet Academy</h1><p>Twenty useful words each day. Correct answers earn coins to grow a dragon or phoenix.</p></div></div><iframe class="embedded-tool-frame" src="Johnson/tools/Johnson_PSLE_Vocabulary_Pet_Academy.html?embedded=1&amp;v=20260906a" title="PSLE Vocabulary Pet Academy"></iframe>`;
 }
 function setAlbumFilter(tier){albumFilter=tier;renderStickerAlbum()}
 function renderStickerAlbum(){
