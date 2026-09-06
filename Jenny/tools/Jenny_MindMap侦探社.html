@@ -15,7 +15,7 @@
   html,body{margin:0; height:100%; overflow:hidden; font-family:"Segoe UI",-apple-system,"Comic Sans MS",sans-serif; touch-action:none;}
   body{background:#3E2A1B;}
 
-  #stage{position:relative; width:100vw; height:100vh; overflow:hidden;
+  #stage{position:relative; width:100vw; height:100vh; overflow:hidden; touch-action:none;
     background:
       radial-gradient(ellipse at 30% 20%, rgba(255,235,200,.12), transparent 60%),
       repeating-linear-gradient(45deg, rgba(0,0,0,.04) 0 3px, transparent 3px 7px),
@@ -23,7 +23,7 @@
   #stage::before{content:""; position:absolute; inset:0; border:14px solid var(--wood);
     border-radius:6px; pointer-events:none; box-shadow:inset 0 0 40px rgba(0,0,0,.45); z-index:50;}
 
-  .scene{position:absolute; inset:0; display:none; z-index:1;}
+  .scene{position:absolute; inset:0; display:none; z-index:1; touch-action:none;}
   .scene.on{display:block;}
 
   /* ---------- chief ---------- */
@@ -77,13 +77,13 @@
   .mini.filled{border-style:solid; border-color:var(--green); background:var(--paperD); animation:cabpop .3s;}
 
   /* ---------- cards ---------- */
-  .card{position:absolute; width:min(17vw,110px); height:min(20vw,128px); background:var(--paper);
+  .card{min-width:56px; min-height:52px; position:absolute; width:min(17vw,110px); height:min(20vw,128px); min-width:48px; min-height:48px; background:var(--paper);
     border:2.5px solid var(--ink); border-radius:10px; box-shadow:var(--shadow); cursor:grab; z-index:20;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
-    transition:transform .12s; touch-action:none;}
+    transition:transform .12s; touch-action:none; will-change:transform;}
   .card .emo{font-size:min(11vw,58px); line-height:1; pointer-events:none;}
   .card .nm{font-size:min(2.8vw,14.5px); font-weight:800; color:var(--ink); pointer-events:none;}
-  .card.drag{cursor:grabbing; z-index:30; transform:scale(1.12) rotate(2deg); transition:none;}
+  .card.drag{cursor:grabbing; z-index:30; transition:none !important; will-change:transform; filter:drop-shadow(0 8px 14px rgba(0,0,0,.35));}
   .card.shake{animation:shake .4s;}
   @keyframes shake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-9px) rotate(-3deg)}75%{transform:translateX(9px) rotate(3deg)}}
   .card.ghost{opacity:.45; filter:grayscale(.4);}
@@ -220,7 +220,15 @@ const stage=$("#stage");
 function el(tag,cls,html){ const d=document.createElement(tag); if(cls)d.className=cls; if(html!=null)d.innerHTML=html; return d; }
 function pct(n){ return n+"%"; }
 function rectOf(e){ return e.getBoundingClientRect(); }
-function overlap(a,b){ return !(a.right<b.left||a.left>b.right||a.bottom<b.top||a.top>b.bottom); }
+function overlap(a,b,pad){ pad=pad||0;
+  return !(a.right<b.left-pad||a.left>b.right+pad||a.bottom<b.top-pad||a.top>b.bottom+pad); }
+/* find drop target: prefer a true overlap, else accept within DROP_PAD px */
+const DROP_PAD=48;
+function findTarget(cardRect, els, extraFilter){
+  const list=[...els].filter(el2=>!extraFilter||extraFilter(el2));
+  return list.find(el2=>overlap(cardRect,rectOf(el2)))
+      || list.find(el2=>overlap(cardRect,rectOf(el2),DROP_PAD));
+}
 
 /* ============ chief dialogue ============ */
 const Chief = {
@@ -327,31 +335,50 @@ const G = {
 };
 
 /* ============ generic drag ============ */
+/* Smooth iPad drag: pointer capture + transform-follow (no left/top reflow while moving).
+   pointercancel (iOS stealing the gesture) drops the card gracefully back home. */
 function makeDraggable(cardEl, onDrop){
-  let sx,sy,ox,oy,drag=false;
+  let sx=0, sy=0, r0=null, baseTf="", drag=false, activeId=null, raf=0, lx=0, ly=0;
+  const followTf=(dx,dy)=>"translate("+dx+"px,"+dy+"px) scale(1.12) rotate(2deg)";
+  function paint(){ raf=0; if(drag) cardEl.style.transform=followTf(lx,ly); }
+  function endDrag(e,ok){
+    if(!drag)return;
+    drag=false; activeId=null;
+    if(raf){cancelAnimationFrame(raf);raf=0}
+    cardEl.classList.remove("drag");
+    cardEl.style.transition="";            /* 清掉残留过渡，位置立刻生效 */
+    if(ok&&r0){
+      cardEl.style.transform="";
+      cardEl.style.left=(r0.left+lx)+"px";
+      cardEl.style.top =(r0.top +ly)+"px";
+      onDrop(cardEl,e);
+    }else{
+      cardEl.style.transform=baseTf;
+    }
+  }
   cardEl.addEventListener("pointerdown",e=>{
+    if(drag) return;
     if(cardEl.classList.contains("ghost"))return;
-    drag=true; cardEl.setPointerCapture(e.pointerId);
+    drag=true; activeId=e.pointerId; lx=0; ly=0;
+    try{ cardEl.setPointerCapture(e.pointerId); }catch(err){}
+    cardEl.style.transition="none";        /* 关键：拖动时零延迟跟手 */
+    baseTf=cardEl.style.transform||"";
+    r0=rectOf(cardEl);
+    sx=e.clientX; sy=e.clientY;
     cardEl.classList.add("drag");
-    const r=rectOf(cardEl);
-    ox=e.clientX-r.left; oy=e.clientY-r.top;
-    cardEl.style.left=(e.clientX-ox)+"px";
-    cardEl.style.top=(e.clientY-oy)+"px";
-    cardEl.style.transform="scale(1.12) rotate(2deg)";
+    cardEl.style.transform=followTf(0,0);
     e.preventDefault();
   });
   cardEl.addEventListener("pointermove",e=>{
-    if(!drag)return;
-    cardEl.style.left=(e.clientX-ox)+"px";
-    cardEl.style.top=(e.clientY-oy)+"px";
+    if(!drag||e.pointerId!==activeId)return;
+    lx=e.clientX-sx; ly=e.clientY-sy;
+    if(!raf) raf=requestAnimationFrame(paint);   /* 每帧只画一次，顺滑 */
+    e.preventDefault();
   });
-  cardEl.addEventListener("pointerup",e=>{
-    if(!drag)return; drag=false;
-    cardEl.classList.remove("drag");
-    cardEl.style.transform="";
-    onDrop(cardEl,e);
-  });
-  cardEl.addEventListener("pointercancel",()=>{ drag=false; cardEl.classList.remove("drag"); cardEl.style.transform=""; });
+  cardEl.addEventListener("pointerup",e=>{ if(e.pointerId===activeId) endDrag(e,true) });
+  cardEl.addEventListener("pointercancel",e=>{ endDrag(e,false) });
+  cardEl.addEventListener("lostpointercapture",e=>{ if(drag&&e.pointerId===activeId) endDrag(e,true) });
+  window.addEventListener("pointerup",e=>{ if(drag&&e.pointerId===activeId) endDrag(e,true) });
 }
 
 /* ============ M1 : evidence sorting ============ */
@@ -429,7 +456,7 @@ const M1 = {
   tryDrop(card){
     if(this.demoRunning){ this.snapHome(card); return; }
     const cr=rectOf(card);
-    const cab=[...document.querySelectorAll(".cabinet")].find(c=>overlap(cr,rectOf(c)));
+    const cab=findTarget(cr,document.querySelectorAll(".cabinet"));
     if(!cab){ this.snapHome(card); return; }
     if(cab.dataset.cat===card.dataset.cat){
       this.settle(card,cab,false);
@@ -525,7 +552,7 @@ const M3 = {
 
   dropCat(card){
     const cr=rectOf(card);
-    const slot=[...document.querySelectorAll("[data-slot-cat]")].find(s=>!s.dataset.filled&&overlap(cr,rectOf(s)));
+    const slot=findTarget(cr,document.querySelectorAll("[data-slot-cat]"),s=>!s.dataset.filled);
     if(!slot){ this.floatBack(card); return; }
     // full scaffold: any glowing slot accepts the right card only if positions free — but P0 rookie level: slots are interchangeable, accept any cat card, one each
     slot.dataset.filled=card.dataset.cat;
@@ -625,7 +652,7 @@ const M3 = {
 
   dropAnimal(card){
     const cr=rectOf(card);
-    const slot=[...document.querySelectorAll("[data-kid-cat]")].find(s=>!s.dataset.filled&&overlap(cr,rectOf(s)));
+    const slot=findTarget(cr,document.querySelectorAll("[data-kid-cat]"),s=>!s.dataset.filled);
     if(!slot){ this.floatBack(card); return; }
     if(slot.dataset.kidCat!==card.dataset.cat){
       AU.buzz(); card.classList.add("shake"); G.resetCombo();
