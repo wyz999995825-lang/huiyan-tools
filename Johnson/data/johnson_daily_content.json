@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-06T19:00:00+08:00",
+  "updatedAt": "2026-09-07T19:00:00+08:00",
   "policy": "append-only-stable-ids",
   "packs": [
     {
@@ -1187,6 +1187,171 @@
           "marks": [
             "内容点：写出先分类、了解情况的重要。",
             "依据点：结合同一本书和不同册数系列书要用不同整理方法说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-07",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-07-001",
+          "title": "The Clock Before the Concert",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>On the morning of the school concert, Daniel discovered that the digital timer for his group's light display was running three minutes slow. His first thought was to tell the teacher immediately and wait for instructions. His teammate, Farah, pointed out that they still had time to compare the timer with the hall clock and test whether the problem affected every lighting cue.</p><p>Daniel wanted a quick answer, but Farah asked him to write down the times for the opening, middle and final cues. Their notes showed that the timer lost the same amount of time during each ten-minute test. They adjusted their rehearsal schedule, then told the teacher exactly what they had observed and what temporary change they had made.</p><p>During the concert, the lights changed at the intended moments. Afterwards, Daniel said that the useful part of the morning had not been finding a clever shortcut. It had been turning a worrying surprise into a clear problem that the team could test.</p>",
+          "q": "What did Daniel learn from the timer problem?",
+          "opts": [
+            "A team should always hide a problem until after a performance.",
+            "A repeated test can turn a worrying problem into evidence for a sensible action.",
+            "Digital timers never need to be compared with another clock.",
+            "The quickest answer is always more useful than a tested answer."
+          ],
+          "ans": 1,
+          "model": "Daniel learned that the team could test the timer repeatedly, use the observations as evidence, and then make a sensible adjustment instead of guessing.",
+          "evidence": "Their notes showed that the timer lost the same amount of time during each ten-minute test.",
+          "marks": [
+            "Meaning point: identifies that repeated testing provides reliable evidence.",
+            "Support point: links the repeated time loss to the team's adjustment."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-07-001",
+          "title": "Young Residents Trial a Sharing Shelf",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A group of pupil volunteers has set up a sharing shelf at a neighbourhood community club. Residents can place clean stationery, storybooks and small craft materials on the shelf for others to take. Before expanding the idea, the volunteers recorded which items were taken and which items stayed untouched during the first two weeks.</p><p>The team noticed that storybooks and unused exercise books were collected quickly, while partly used craft kits often remained. Instead of deciding that craft materials were not useful, the pupils asked residents why they hesitated. Several people said they could not tell whether the kits were complete.</p><p>The volunteers added simple labels listing the contents of each kit and planned to compare the records for another fortnight. They said the project had taught them that a low number alone does not explain a problem; people affected by it can help reveal the missing reason.</p>",
+          "q": "Why did the volunteers ask residents about the craft kits?",
+          "opts": [
+            "They wanted to prove that all craft materials should be thrown away.",
+            "They needed to understand the reason behind the low number of kits taken before changing the shelf.",
+            "They wanted residents to stop borrowing storybooks.",
+            "They had already shown that every craft kit was incomplete."
+          ],
+          "ans": 1,
+          "model": "The volunteers asked residents because the records only showed that fewer craft kits were taken. They needed to find the reason before choosing a useful change, such as clearer labels.",
+          "evidence": "A low number alone does not explain a problem; people affected by it can help reveal the missing reason.",
+          "marks": [
+            "Meaning point: explains the difference between an observation and its cause.",
+            "Support point: connects resident feedback to the decision to add labels."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-speed-2026-09-07-001",
+          "topic": "speed",
+          "kind": "thinking",
+          "title": "Speed · Two Delivery Routes",
+          "tag": "Compare total distance and total time, not one part only",
+          "q": "A cycling team travels 18 km in 45 minutes on Route A. On Route B, it travels 24 km in 1 hour. Which route has the greater average speed?",
+          "opts": [
+            "Route A, because 18 km is travelled in less than one hour.",
+            "Neither route; both have an average speed of 24 km/h.",
+            "Route B, because 24 km is a greater distance.",
+            "Route B, because one hour is longer than 45 minutes."
+          ],
+          "ans": 1,
+          "visual": "<div class=\"track-model\"><div class=\"track-line\"><span class=\"track-car\">🚴</span></div><div class=\"track-stats\"><span>Route A: 18 km in 45 min = 0.75 h</span><span>Route B: 24 km in 1 h</span></div></div>",
+          "model": "Route A has the greater average speed. Route A: 18 ÷ 0.75 = 24 km/h. Route B: 24 ÷ 1 = 24 km/h. Therefore, neither route is greater; both have the same average speed.",
+          "steps": [
+            "Convert 45 minutes to 0.75 hour before comparing.",
+            "Route A: 18 ÷ 0.75 = 24 km/h.",
+            "Route B: 24 ÷ 1 = 24 km/h.",
+            "Compare the calculated speeds: both routes are 24 km/h."
+          ],
+          "marks": [
+            "Method mark: converts the time unit and calculates both average speeds.",
+            "Answer mark: states that the two routes have the same average speed."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-water-2026-09-07-001",
+          "topic": "water",
+          "level": "P5 CORE · WATER CYCLE",
+          "focus": "compare evaporation conditions and link the controlled variable to the evidence",
+          "title": "Water Cycle · Drying Cloth Investigation",
+          "q": "Two identical wet cloths are hung outdoors for one hour. Cloth A is spread flat in a windy place. Cloth B is folded and hung in a sheltered place. Which is the best complete explanation for why Cloth A is likely to be drier?",
+          "opts": [
+            "Cloth A is drier because wind changes liquid water directly into ice.",
+            "Cloth A is drier because it has a larger exposed surface area and moving air carries away water vapour, so evaporation happens faster.",
+            "Cloth A is drier because folded cloths cannot contain water.",
+            "Cloth A is drier because sheltered places create more heat energy than windy places."
+          ],
+          "ans": 1,
+          "model": "Cloth A is likely to be drier because it is spread flat, giving it a <mark>larger exposed surface area</mark>. The <mark>moving air</mark> carries away water vapour near the cloth, so evaporation can happen faster.",
+          "visual": "<div class=\"system-map\"><div class=\"system-node\"><span>🧺</span>Cloth A: flat</div><span class=\"map-arrow\">+ moving air →</span><div class=\"system-node\"><span>💨</span>water vapour carried away</div><span class=\"map-arrow\">→</span><div class=\"system-node\"><span>☀️</span>faster evaporation</div></div>",
+          "steps": [
+            "Compare the exposed surface area: a flat cloth exposes more wet surface than a folded cloth.",
+            "Wind carries water vapour away from the surface instead of allowing humid air to build up.",
+            "Both conditions allow more liquid water to evaporate during the hour.",
+            "Therefore, Cloth A is likely to be drier."
+          ],
+          "marks": [
+            "Science point: names larger exposed surface area and/or moving air as conditions that increase evaporation.",
+            "Evidence link: connects those conditions to more water leaving Cloth A as water vapour."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-water-2026-09-07-001",
+          "group": "precision",
+          "term": "larger exposed surface area",
+          "meaning": "more of a material's surface is open to the surrounding air",
+          "example": "The flat cloth had a larger exposed surface area than the folded cloth.",
+          "note": "Name what is exposed before linking it to faster evaporation."
+        },
+        {
+          "id": "science-vocab-water-2026-09-07-002",
+          "group": "precision",
+          "term": "moving air carries away water vapour",
+          "meaning": "wind removes water vapour near a wet surface, allowing more water to evaporate",
+          "example": "Moving air carried away water vapour near Cloth A.",
+          "note": "Do not say wind sucks up liquid water."
+        },
+        {
+          "id": "science-vocab-water-2026-09-07-003",
+          "group": "precision",
+          "term": "evaporation happens faster",
+          "meaning": "liquid water changes into water vapour at a greater rate",
+          "example": "Evaporation happened faster from the flat cloth in the windy place.",
+          "note": "Use faster, not more, when comparing a rate."
+        },
+        {
+          "id": "science-vocab-water-2026-09-07-004",
+          "group": "precision",
+          "term": "water vapour in the surrounding air",
+          "meaning": "water in its gaseous state that is present in the air",
+          "example": "Water vapour in the surrounding air can slow evaporation when it builds up near a wet surface.",
+          "note": "Water vapour is invisible; it is not the same as visible cloud droplets."
+        },
+        {
+          "id": "science-vocab-water-2026-09-07-005",
+          "group": "precision",
+          "term": "condition → process → result",
+          "meaning": "an OEQ structure that states the changed condition, scientific process and observed outcome",
+          "example": "More exposed surface area → faster evaporation → the cloth becomes drier.",
+          "note": "Use this chain when writing a two-mark explanation."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-07-001",
+          "title": "P5 华文短文阅读 · 先看证据再下结论",
+          "q": "学校准备把几盆植物搬到走廊上。阿凯看见其中一盆叶子发黄，便说：‘一定是它没有浇水。’园艺小组的丽雯却先查看了浇水记录，又把花盆移开，发现盆底的排水孔被落叶堵住了。她说：‘土壤一直湿着，根部可能得不到足够的空气。’大家清理排水孔后，才决定继续观察几天。阿凯说：‘原来叶子发黄不一定只有一个原因，先找证据比较可靠。’",
+          "ask": "阿凯最后明白了什么？",
+          "opts": [
+            "看见植物叶子发黄时，应该立刻多浇水。",
+            "判断问题前要先收集证据，因为同一种现象可能有不同原因。",
+            "排水孔被落叶堵住后，土壤一定会变干。",
+            "园艺小组不需要继续观察植物的变化。"
+          ],
+          "ans": 1,
+          "model": "阿凯起初只凭叶子发黄就认为植物缺水。丽雯查看记录和排水孔后，发现土壤其实太湿，因此他明白同一种现象可能有不同原因，要先收集证据再判断。",
+          "marks": [
+            "内容点：写出先找证据、不能只凭现象下结论。",
+            "依据点：结合浇水记录和堵住的排水孔说明。"
           ]
         }
       ]
