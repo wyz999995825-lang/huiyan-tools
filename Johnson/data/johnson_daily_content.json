@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-05T19:00:00+08:00",
+  "updatedAt": "2026-09-06T19:00:00+08:00",
   "policy": "append-only-stable-ids",
   "packs": [
     {
@@ -1029,6 +1029,164 @@
           "marks": [
             "内容点：写出先听理由、了解完整情况的重要。",
             "依据点：结合大家写下喜欢和担心的原因，以及最后的折中设计说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-06",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-06-001",
+          "title": "The Missing Measurement",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>For the school garden challenge, Suri's team had to design a shade for a young tomato plant. Suri wanted to begin building immediately. Her teammate, Ben, suggested measuring how far the afternoon sunlight reached first, but Suri said that a rough guess would be quicker.</p><p>After lunch, the team set up their first shade. It looked neat, yet the plant was still in direct sunlight for much of the afternoon. Ben pointed out that they had measured the height of the plant but not the angle and length of the sunlight across the soil. Suri felt frustrated, but she fetched a measuring tape and helped Ben record the shadow's position every twenty minutes.</p><p>The next day, the team adjusted the shade using their measurements. Their final design was not the largest, but it protected the plant during the hottest part of the day. Suri wrote in the project journal that a measurement is useful only when it answers the exact problem being tested.</p>",
+          "q": "What did Suri learn from the team's first shade design?",
+          "opts": [
+            "A neat-looking design is always enough to protect a plant.",
+            "The team should avoid measuring anything before building.",
+            "They needed measurements that matched the sunlight problem, not only a measurement that was easy to take.",
+            "The largest shade always gives the best result in every garden."
+          ],
+          "ans": 2,
+          "model": "Suri learned that the team needed relevant measurements. Measuring the plant's height did not show where the afternoon sunlight fell, so they had to record the shadow's position to solve the actual problem.",
+          "evidence": "A measurement is useful only when it answers the exact problem being tested.",
+          "marks": [
+            "Meaning point: identifies that evidence must match the question being investigated.",
+            "Support point: links the shadow measurements to the afternoon sunlight problem."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-06-001",
+          "title": "Pupils Trial a Quieter Study Corner",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A pupil committee has tested a new study corner beside its school library. The corner has desk screens, a notice asking pupils to keep voices low, and a small rack for borrowed headphones. Before recommending the idea, the committee asked forty pupils to use the space at different times over one week.</p><p>Most pupils said the screens helped them concentrate when the nearby corridor was busy. However, several pupils said that the headphones were often unavailable after lunchtime. Instead of declaring the trial a success immediately, the committee counted how many headphones were returned each day and asked the librarian when the corner was busiest.</p><p>The committee recommended keeping the desk screens and adding a return tray near the entrance. It also suggested buying more headphones only after another week of records showed that the shortage continued.</p>",
+          "q": "Why did the committee wait for another week of records before recommending more headphones?",
+          "opts": [
+            "It wanted evidence that the shortage was a repeated problem, not just a one-day impression.",
+            "It believed that headphones can never help pupils study.",
+            "It wanted to remove the desk screens from the study corner.",
+            "It had already proved that every pupil lost a pair of headphones."
+          ],
+          "ans": 0,
+          "model": "The committee wanted to check whether the shortage happened repeatedly. More records would make its recommendation more reliable than relying on one busy lunchtime.",
+          "evidence": "It suggested buying more headphones only after another week of records showed that the shortage continued.",
+          "marks": [
+            "Meaning point: identifies the need for reliable repeated evidence.",
+            "Support point: links the extra records to checking whether the shortage continues."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-algebra-2026-09-06-001",
+          "topic": "algebra",
+          "kind": "thinking",
+          "title": "Algebra · Two Donation Boxes",
+          "tag": "Use equal operations to keep both sides balanced",
+          "q": "A class packs x cards into each of 3 donation boxes, then adds 7 extra cards. Another class packs x cards into each of 2 boxes, then adds 23 extra cards. Both classes have the same total number of cards. What is x?",
+          "opts": ["8", "16", "23", "30"],
+          "ans": 1,
+          "model": "Write the equal totals: 3x + 7 = 2x + 23. Subtract 2x from both sides: x + 7 = 23. Subtract 7 from both sides: x = 16.",
+          "steps": [
+            "Translate the two equal totals into 3x + 7 = 2x + 23.",
+            "Remove 2x from both sides, leaving x + 7 = 23.",
+            "Remove 7 from both sides, leaving x = 16.",
+            "Check: 3(16) + 7 = 55 and 2(16) + 23 = 55."
+          ],
+          "marks": [
+            "Method mark: forms an equation from two equal totals and keeps both sides balanced.",
+            "Answer mark: solves and checks x = 16."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p6-environment-2026-09-06-001",
+          "topic": "environment",
+          "level": "P6 BRIDGE · ENVIRONMENT",
+          "focus": "link a changed habitat condition to a food-web consequence using evidence",
+          "title": "Environment · Pond Plant Recovery",
+          "q": "Fertiliser-rich water from a nearby lawn enters a pond. Soon, a thick layer of algae covers much of the water surface and the number of aquatic plants on the pond floor falls. Which is the best complete explanation for why some fish populations may later decrease?",
+          "opts": [
+            "The algae make every fish a producer, so fish no longer need food.",
+            "The algae block light from reaching aquatic plants. Fewer plants photosynthesise, so less food and oxygen are available for organisms in the pond, affecting fish populations.",
+            "The algae turn directly into fish, causing every fish population to increase.",
+            "Fertiliser-rich water means that aquatic plants can make food without light."
+          ],
+          "ans": 1,
+          "model": "The thick algae layer <mark>blocks light</mark> from reaching aquatic plants. Fewer aquatic plants can <mark>photosynthesise</mark>, so less food and oxygen become available in the pond. This can reduce survival and affect fish populations.",
+          "steps": [
+            "Identify the changed condition: algae cover the water surface.",
+            "The algae reduce the light reaching aquatic plants below the surface.",
+            "With less light, fewer aquatic plants photosynthesise and produce food and oxygen.",
+            "Less food and oxygen can reduce survival of connected pond organisms, including fish."
+          ],
+          "marks": [
+            "Science point: links reduced light to reduced photosynthesis by aquatic plants.",
+            "Evidence link: explains how less plant food and oxygen can affect fish survival."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-environment-2026-09-06-001",
+          "group": "precision",
+          "term": "algae block light from reaching aquatic plants",
+          "meaning": "a thick algae layer at the water surface reduces the light available below it",
+          "example": "The algae blocked light from reaching the aquatic plants on the pond floor.",
+          "note": "State what changes first before explaining the effect."
+        },
+        {
+          "id": "science-vocab-environment-2026-09-06-002",
+          "group": "precision",
+          "term": "reduced photosynthesis",
+          "meaning": "plants make less food when a needed condition such as light is reduced",
+          "example": "With less light, the aquatic plants carried out reduced photosynthesis.",
+          "note": "Do not say plants photosynthesise without light."
+        },
+        {
+          "id": "science-vocab-environment-2026-09-06-003",
+          "group": "precision",
+          "term": "less food and oxygen available",
+          "meaning": "fewer photosynthesising plants can reduce both food production and oxygen released into the water",
+          "example": "Reduced photosynthesis meant that less food and oxygen were available to pond organisms.",
+          "note": "Name both linked resources when the evidence supports both."
+        },
+        {
+          "id": "science-vocab-environment-2026-09-06-004",
+          "group": "precision",
+          "term": "survival of connected organisms may decrease",
+          "meaning": "a change to one part of a habitat can affect organisms linked by food and oxygen needs",
+          "example": "With less food and oxygen, the survival of connected pond organisms may decrease.",
+          "note": "Use may when a question asks for a likely effect rather than a guaranteed one."
+        },
+        {
+          "id": "science-vocab-environment-2026-09-06-005",
+          "group": "precision",
+          "term": "cause-and-effect chain",
+          "meaning": "a linked explanation that shows how one condition leads step by step to an outcome",
+          "example": "Algae cover → less light → reduced photosynthesis → less food and oxygen → fewer fish may survive.",
+          "note": "Use arrows or connecting words so every link is visible."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-06-001",
+          "title": "P5 华文短文阅读 · 先找出真正的问题",
+          "q": "班级准备举办旧书交换日。志豪发现报名表上的书名有重复，便立刻提议把重复的书全部取消。他觉得这样最快。负责整理的敏慧却先把重复的书分成两类：一类是同一本故事书，另一类是同一个系列但不同册数。她还请同学在书名后写上适合的阅读年龄。整理后，大家发现有些重复的故事书可以放在同一张桌上，方便选择；不同册数的系列书则可以按顺序摆放。志豪看着新的分类表说：‘原来先弄清楚问题，办法才不会把有用的东西一起丢掉。’",
+          "ask": "志豪最后的话主要说明了什么？",
+          "opts": [
+            "遇到重复的资料时，应该全部取消，事情才会更快完成。",
+            "解决问题前要先仔细分类和了解情况，避免把不同的问题当成同一种。",
+            "旧书交换日只适合摆放同一本故事书。",
+            "同学不应该在书名后写上适合的阅读年龄。"
+          ],
+          "ans": 1,
+          "model": "志豪起初把所有重复书名都当成同一个问题。敏慧先分类后，发现有的是同一本书，有的是不同册数的系列书，因此可以用不同方法整理。志豪明白了解清楚情况后，才能作出合适的决定。",
+          "marks": [
+            "内容点：写出先分类、了解情况的重要。",
+            "依据点：结合同一本书和不同册数系列书要用不同整理方法说明。"
           ]
         }
       ]
