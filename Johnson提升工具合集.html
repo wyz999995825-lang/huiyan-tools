@@ -254,7 +254,7 @@ function loadState(){
   state.schemaVersion=4;ensureToday();inferHistoricalCheckins();saveState();
 }
 function saveState(){try{localStorage.setItem(STORE,JSON.stringify(state))}catch(e){}}
-function freshPetState(){return {schemaVersion:1,coins:0,pet:null,growth:0,sound:true,days:{},rewards:{},externalRewards:{},stickers:{owned:[],events:[]}}}
+function freshPetState(){return {schemaVersion:2,coins:0,pet:null,growth:0,fireUses:0,sound:true,days:{},rewards:{},externalRewards:{},stickers:{owned:[],events:[]}}}
 function readPetState(create=true){
   try{const saved=JSON.parse(localStorage.getItem(PET_STORE)||"null");if(saved)return Object.assign(freshPetState(),saved,{days:saved.days||{},rewards:saved.rewards||{},externalRewards:saved.externalRewards||{},stickers:Object.assign({owned:[],events:[]},saved.stickers||{})});if(create){const next=freshPetState();localStorage.setItem(PET_STORE,JSON.stringify(next));return next}}catch(e){}
   return create?freshPetState():null
@@ -264,7 +264,7 @@ function rewardPetCoins(questionId){
   pet.externalRewards[key]=5;pet.coins=(Number(pet.coins)||0)+5;try{localStorage.setItem(PET_STORE,JSON.stringify(pet))}catch(e){}return 5
 }
 function mergePetCompanionProgress(imported){
-  if(!imported||typeof imported!=="object")return;const local=readPetState(),next=Object.assign(freshPetState(),imported,local);
+  if(!imported||typeof imported!=="object")return;const local=readPetState(),next=Object.assign(freshPetState(),imported,local);next.fireUses=Math.max(Number(imported.fireUses)||0,Number(local.fireUses)||0);
   next.coins=Math.max(Number(local.coins)||0,Number(imported.coins)||0);next.growth=Math.max(Number(local.growth)||0,Number(imported.growth)||0);next.pet=local.pet||imported.pet||null;next.sound=local.sound;
   next.days={};union(Object.keys(imported.days||{}),Object.keys(local.days||{})).forEach(date=>{const a=imported.days?.[date]||{},b=local.days?.[date]||{};next.days[date]={words:(b.words&&b.words.length?b.words:a.words)||[],studied:union(a.studied,b.studied),answered:mergeObject(a.answered,b.answered),boxOpened:Boolean(a.boxOpened||b.boxOpened)}});
   next.rewards=mergeObject(imported.rewards,local.rewards);next.externalRewards=mergeObject(imported.externalRewards,local.externalRewards);next.stickers={owned:union(imported.stickers?.owned,local.stickers?.owned),events:[...(imported.stickers?.events||[]),...(local.stickers?.events||[])]};
@@ -468,7 +468,7 @@ function renderHome(){
 }
 function renderPetAcademy(){
   const pet=readPetState();pet.sound=state.sound;try{localStorage.setItem(PET_STORE,JSON.stringify(pet))}catch(e){}
-  $("screen").innerHTML=`<div class="page-title"><div class="page-icon">🐉</div><div><h1>PSLE Vocabulary Pet Academy</h1><p>Twenty useful words each day. Correct answers earn coins to grow a dragon or phoenix.</p></div></div><iframe class="embedded-tool-frame" src="Johnson/tools/Johnson_PSLE_Vocabulary_Pet_Academy.html?embedded=1&amp;v=20260906a" title="PSLE Vocabulary Pet Academy"></iframe>`;
+  $("screen").innerHTML=`<div class="page-title"><div class="page-icon">🐉</div><div><h1>PSLE Vocabulary Pet Academy</h1><p>Twenty useful words each day. Correct answers earn coins to grow a dragon or phoenix.</p></div></div><iframe class="embedded-tool-frame" src="Johnson/tools/Johnson_PSLE_Vocabulary_Pet_Academy.html?embedded=1&amp;v=20260907b" title="PSLE Vocabulary Pet Academy"></iframe>`;
 }
 function setAlbumFilter(tier){albumFilter=tier;renderStickerAlbum()}
 function renderStickerAlbum(){
