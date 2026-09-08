@@ -471,7 +471,7 @@ function renderHome(){
 }
 function renderPetAcademy(){
   const pet=readPetState();pet.sound=state.sound;try{localStorage.setItem(PET_STORE,JSON.stringify(pet))}catch(e){}
-  $("screen").innerHTML=`<div class="page-title"><div class="page-icon">🐉</div><div><h1>PSLE Vocabulary Pet Academy</h1><p>Twenty useful words each day. Correct answers earn coins to grow a dragon or phoenix.</p></div></div><iframe class="embedded-tool-frame" src="Johnson/tools/Johnson_PSLE_Vocabulary_Pet_Academy.html?embedded=1&amp;v=20260908c" title="PSLE Vocabulary Pet Academy"></iframe>`;
+  $("screen").innerHTML=`<div class="page-title"><div class="page-icon">🐉</div><div><h1>PSLE Vocabulary Pet Academy</h1><p>Twenty useful words each day. Correct answers earn coins to grow a dragon or phoenix.</p></div></div><iframe class="embedded-tool-frame" onload="syncPetCoinsToFrame(this)" src="Johnson/tools/Johnson_PSLE_Vocabulary_Pet_Academy.html?embedded=1&amp;v=20260908d" title="PSLE Vocabulary Pet Academy"></iframe>`;
 }
 function setAlbumFilter(tier){albumFilter=tier;renderStickerAlbum()}
 function renderStickerAlbum(){
@@ -1064,7 +1064,8 @@ const TOOLS=[
 ];
 function toolAction(t){if(!t[3])return "openView('home')";if(t[3].startsWith("view:")){const [,view,topic]=t[3].split(":");return `openView('${view}','${topic}')`}if(t[3].startsWith("http"))return `openExternal('${t[3]}')`;return `openTool('${t[3]}','${t[2].replace(/'/g,"\\'")}')`}
 function renderLibrary(topic){const list=TOOLS.filter(t=>t[0]===topic);$("screen").innerHTML=`<div class="page-title"><div class="page-icon">🦈</div><div><h1>Deep-Practice Library</h1><p>All existing Johnson tools remain available.</p></div></div><div class="topic-chips">${TOPICS.library.map(t=>`<button class="chip-btn ${topic===t.id?'active':''}" onclick="setTopic('${t.id}')">${t.label}</button>`).join("")}</div><div class="library-grid">${list.map(t=>`<button class="tool-card" onclick="${toolAction(t)}"><span class="tool-icon">${t[1]}</span><h3>${t[2]}</h3><p>${t[4]}</p></button>`).join("")}</div>`}
-function openTool(url,title){const pet=readPetState(false);if(pet){pet.sound=state.sound;try{localStorage.setItem(PET_STORE,JSON.stringify(pet))}catch(e){}}const frame=$("toolFrame");$("toolTitle").textContent=title;frame.onload=()=>broadcastFrameAudio({type:"johnson-hub-sound",value:state.sound});frame.src=url;$("toolOverlay").classList.add("show")}
+function syncPetCoinsToFrame(frame){const pet=readPetState(false);if(!pet)return;try{frame.contentWindow?.postMessage({type:"johnson-pet-coins-updated",coins:Number(pet.coins)||0,delta:0},"*")}catch(e){}broadcastFrameAudio({type:"johnson-hub-sound",value:state.sound})}
+function openTool(url,title){const pet=readPetState(false);if(pet){pet.sound=state.sound;try{localStorage.setItem(PET_STORE,JSON.stringify(pet))}catch(e){}}const frame=$("toolFrame");$("toolTitle").textContent=title;frame.onload=()=>{broadcastFrameAudio({type:"johnson-hub-sound",value:state.sound});syncPetCoinsToFrame(frame)};frame.src=url;$("toolOverlay").classList.add("show")}
 function openExternal(url){window.open(url,"_blank","noopener,noreferrer")}
 function closeTool(){$("toolOverlay").classList.remove("show");$("toolFrame").src="";if(currentView==="home")renderHome();if(currentView==="library")renderLibrary(currentTopic)}
 function mergeEnglishHubProgress(imported){
