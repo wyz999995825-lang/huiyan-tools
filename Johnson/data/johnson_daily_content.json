@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-07T19:00:00+08:00",
+  "updatedAt": "2026-09-08T19:00:00+08:00",
   "policy": "append-only-stable-ids",
   "packs": [
     {
@@ -1352,6 +1352,165 @@
           "marks": [
             "内容点：写出先找证据、不能只凭现象下结论。",
             "依据点：结合浇水记录和堵住的排水孔说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-08",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-08-001",
+          "title": "The Map with No Shortcut",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>When Mei's class prepared for an outdoor learning walk, she volunteered to draw the route map. She copied the main path quickly, but left out a narrow footbridge because it looked unimportant. On the morning of the walk, a fallen branch blocked the main path and the class had to find another way.</p><p>Mei opened her map and realised that the bridge would have helped them reach the next checkpoint. She wanted to pretend that she had never seen it, but instead asked her partner to check the route with her. They measured the distance, marked the bridge and added a note about the slippery boards. Their teacher approved the revised map after another group tested it.</p><p>Mei learnt that a useful map is not the one that looks fastest to draw. It is the one that includes details which help people make a safe decision when conditions change.</p>",
+          "q": "What made Mei's revised map more useful?",
+          "opts": [
+            "It removed every small detail so that nobody could question it.",
+            "It included a tested alternative route and a warning that helped others decide safely.",
+            "It showed only the route Mei preferred to use herself.",
+            "It guaranteed that no path would ever be blocked again."
+          ],
+          "ans": 1,
+          "model": "Mei's revised map was more useful because it included an alternative route that had been checked and a warning about the slippery bridge, so others could make a safer decision when the main path was blocked.",
+          "evidence": "They measured the distance, marked the bridge and added a note about the slippery boards before another group tested it.",
+          "marks": [
+            "Meaning point: explains that the revised map added a tested alternative and safety information.",
+            "Support point: links the bridge measurement and slippery-board warning to safer decisions."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-08-001",
+          "title": "A Cooler Route to School",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A student committee at a Singapore primary school has been studying how pupils feel during the walk from the gate to the classrooms. Instead of guessing which part was hottest, the pupils used the same thermometer at three shaded and three sunny points during recess.</p><p>Their first records showed that the open walkway was warmer, but the numbers changed when different pupils held the thermometer. The committee repeated the measurements with one person holding the thermometer at the same height and waited the same amount of time at every point.</p><p>The second set of records was more consistent. The school then placed a temporary shade cloth along the warmest section and planned to compare the readings again. The pupils said that a solution should be tested after it is introduced, because an improvement cannot be judged from one observation alone.</p>",
+          "q": "Why did the committee repeat the temperature measurements?",
+          "opts": [
+            "To make the walkway warmer before the school changed it.",
+            "To make the comparison fairer by controlling the measuring method and checking whether the pattern was consistent.",
+            "To prove that every shaded point had exactly the same temperature.",
+            "To avoid recording any readings from the sunny points."
+          ],
+          "ans": 1,
+          "model": "The committee repeated the measurements to make the comparison fairer and check that the pattern was consistent. They kept the person, thermometer height and waiting time the same so that the method would not affect the results.",
+          "evidence": "They used one person, the same thermometer height and the same waiting time at every point.",
+          "marks": [
+            "Meaning point: identifies the need for a fair and consistent comparison.",
+            "Support point: names at least one controlled measuring condition from the passage."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-algebra-2026-09-08-001",
+          "topic": "algebra",
+          "kind": "thinking",
+          "title": "Algebra · Balanced Machine",
+          "tag": "Undo the operations in reverse order",
+          "q": "A number is multiplied by 3 and then increased by 8. The final result is 41. What is the number?",
+          "opts": ["9", "10", "11", "13"],
+          "ans": 2,
+          "visual": "<div class=\"balance\"><div class=\"beam\"></div><div class=\"stand\"></div><div class=\"base\"></div><div class=\"pan left\">3x + 8</div><div class=\"pan right\">41</div></div>",
+          "model": "Write 3x + 8 = 41. Subtract 8 from both sides: 3x = 33. Divide both sides by 3: x = 11.",
+          "steps": [
+            "Represent the sentence as 3x + 8 = 41.",
+            "Undo the addition first: 41 − 8 = 33, so 3x = 33.",
+            "Undo the multiplication: 33 ÷ 3 = 11, so x = 11."
+          ],
+          "marks": [
+            "Method mark: undoes the addition and multiplication in the correct reverse order.",
+            "Answer mark: gives x = 11 and checks it in the original relationship."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-reproduction-2026-09-08-001",
+          "topic": "reproduction",
+          "level": "P5 CORE · PLANT REPRODUCTION",
+          "focus": "link pollination evidence to seed formation",
+          "title": "Plant Reproduction · Covered Flowers",
+          "q": "Two similar flowering plants are observed. Plant A is left uncovered so insects can visit its flowers. Plant B is covered with a fine mesh bag before the flowers open. Plant A forms many fruits, but Plant B forms very few. Which is the best complete explanation?",
+          "opts": [
+            "Plant B formed few fruits because the mesh bag gave the plant too much sunlight.",
+            "Plant A was more likely to receive pollen carried by insects, so pollination and later fertilisation could occur in more flowers.",
+            "Plant B could not form fruits because all covered flowers lose their petals immediately.",
+            "Plant A formed more fruits because insects produce seeds directly inside flowers."
+          ],
+          "ans": 1,
+          "model": "Plant A was more likely to receive pollen carried by insects. This increased the chance of <mark>pollination</mark> and subsequent <mark>fertilisation</mark>, so more flowers developed into fruits. The mesh reduced insect access to Plant B, so fewer flowers received pollen.",
+          "visual": "<div class=\"system-map\"><div class=\"system-node\"><span>🐝</span>insects visit A</div><span class=\"map-arrow\">carry pollen →</span><div class=\"system-node\"><span>🌼</span>pollination</div><span class=\"map-arrow\">→</span><div class=\"system-node\"><span>🍎</span>more fruits</div><div class=\"system-node\"><span>🕸️</span>mesh limits visits to B</div></div>",
+          "steps": [
+            "Compare the evidence: insects could visit Plant A but had limited access to Plant B.",
+            "Insects can carry pollen from the anther to the stigma, causing pollination.",
+            "After pollination, fertilisation can occur and the flower can develop into a fruit.",
+            "Therefore, Plant A formed more fruits because more flowers received pollen."
+          ],
+          "marks": [
+            "Science point: uses pollination and fertilisation accurately.",
+            "Evidence link: connects insect access and pollen transfer to the different number of fruits."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-reproduction-2026-09-08-001",
+          "group": "precision",
+          "term": "pollen transfer",
+          "meaning": "the movement of pollen grains from an anther to a stigma",
+          "example": "Insects can help with pollen transfer when they move between flowers.",
+          "note": "Name both the pollen and its movement when explaining pollination."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-08-002",
+          "group": "precision",
+          "term": "pollination",
+          "meaning": "the transfer of pollen grains from an anther to a stigma",
+          "example": "Pollination occurred when pollen reached the stigma of the flower.",
+          "note": "Do not use pollination to mean the fusion of reproductive cells."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-08-003",
+          "group": "precision",
+          "term": "fertilisation",
+          "meaning": "the fusion of a male reproductive cell with a female reproductive cell",
+          "example": "Fertilisation can occur after pollen reaches the stigma and the male reproductive cell travels to the ovule.",
+          "note": "Use this term when explaining how seeds can begin to form."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-08-004",
+          "group": "precision",
+          "term": "insect access was limited",
+          "meaning": "insects could not freely reach the flowers because a barrier was present",
+          "example": "Insect access was limited by the fine mesh bag around Plant B.",
+          "note": "Link the barrier to less pollen reaching the stigma."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-08-005",
+          "group": "precision",
+          "term": "condition → process → result",
+          "meaning": "an OEQ structure that connects a test condition to a scientific process and an observed outcome",
+          "example": "More insect access → more pollen transfer and pollination → more fruits formed.",
+          "note": "Use the arrow chain to make the evidence link visible."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-08-001",
+          "title": "P5 华文短文阅读 · 先试一试再判断",
+          "q": "学校的环保小组想减少午餐时间的食物浪费。志豪建议把所有剩菜都倒进同一个桶里，认为这样最方便。可是，思敏先观察了三天，发现有些同学只是把不喜欢的配菜留下，米饭却几乎都吃完。小组于是把配菜和米饭分开记录，并请同学说明原因。过了一星期，他们发现改进菜单比单纯增加垃圾桶更有帮助。志豪说：‘原来先观察和记录，才能找到真正的问题。’",
+          "ask": "志豪最后明白了什么？",
+          "opts": [
+            "只要增加垃圾桶，所有食物浪费都会消失。",
+            "处理问题前要先观察和记录，才能找出真正的原因并选择合适的方法。",
+            "同学留下配菜是因为他们完全不喜欢吃米饭。",
+            "环保小组不应该听取同学的意见。"
+          ],
+          "ans": 1,
+          "model": "志豪明白了不能只凭方便的想法处理问题。小组先观察、分开记录并了解同学的原因，才发现改进菜单比增加垃圾桶更有效，因此处理问题前要先找证据。",
+          "marks": [
+            "内容点：写出先观察、记录和了解原因，再选择方法。",
+            "依据点：结合配菜和米饭分开记录、改进菜单更有效说明。"
           ]
         }
       ]
