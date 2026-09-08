@@ -139,6 +139,7 @@ h1{font-size:32px;line-height:1.15;color:var(--royal-dark);letter-spacing:0}
   <div class="top-stats" aria-label="Learning progress">
     <div class="stat-pill" title="Learning streak">🔥 <span id="streakTop">0</span> days</div>
     <div class="stat-pill" title="Experience points">🫧 <span id="xpTop">0</span> XP</div>
+    <div class="stat-pill" title="Pet coins">🪙 <span id="coinTop">0</span> coins</div>
     <button class="icon-btn" id="soundBtn" onclick="toggleSound()" title="Mute all sound" aria-label="Mute all sound" aria-pressed="false">🔊</button>
   </div>
 </header>
@@ -249,7 +250,7 @@ function mergeObject(base,extra){return Object.assign({},base||{},extra||{})}
 function loadState(){
   try{
     const saved=JSON.parse(localStorage.getItem(STORE)||"null"),legacy=JSON.parse(localStorage.getItem(LEGACY_STORE)||"null"),source=saved||legacy;
-    if(source){state=Object.assign(freshState(),source);state.answers=mergeObject({},source.answers);state.daily=mergeObject({},source.daily);state.attempts=mergeObject({},source.attempts);state.questionArchive=mergeObject({},source.questionArchive);state.stickers=Object.assign({owned:[],opened:{}},source.stickers||{});state.stickers.owned=[...new Set(state.stickers.owned||[])];state.stickers.opened=mergeObject({},state.stickers.opened);const openedStickerIds=Object.values(state.stickers.opened).map(id=>STICKER_ALIASES[id]||id).filter(id=>STICKERS.some(s=>s.id===id));state.stickers.owned=[...new Set([...state.stickers.owned.map(id=>STICKER_ALIASES[id]||id),...openedStickerIds])];state.stories=Array.isArray(source.stories)?source.stories:[];state.focusDays=mergeObject({},source.focusDays);state.checkins=mergeObject({},source.checkins);state.goalCelebrated=mergeObject({},source.goalCelebrated);state.generated=mergeObject({},source.generated)}
+    if(source){state=Object.assign(freshState(),source);state.answers=mergeObject({},source.answers);state.daily=mergeObject({},source.daily);state.attempts=mergeObject({},source.attempts);state.questionArchive=mergeObject({},source.questionArchive);state.stickers=Object.assign({owned:[],opened:{}},source.stickers||{});state.stickers.owned=[...new Set(state.stickers.owned||[])];state.stickers.opened=mergeObject({},state.stickers.opened);state.stories=Array.isArray(source.stories)?source.stories:[];state.focusDays=mergeObject({},source.focusDays);state.checkins=mergeObject({},source.checkins);state.goalCelebrated=mergeObject({},source.goalCelebrated);state.generated=mergeObject({},source.generated)}
   }catch(e){state=freshState()}
   Object.values(state.focusDays||{}).forEach(f=>{if(f&&typeof f==="object")f.runningSince=0});
   state.schemaVersion=4;ensureToday();inferHistoricalCheckins();saveState();
@@ -262,8 +263,9 @@ function readPetState(create=true){
 }
 function rewardPetCoins(questionId){
   if(!questionId)return 0;const pet=readPetState(),key="question:"+questionId,legacyClaimed=Object.keys(pet.externalRewards||{}).some(savedKey=>savedKey===questionId||savedKey.endsWith(":"+questionId));if(pet.externalRewards[key]||legacyClaimed)return 0;
-  pet.externalRewards[key]=5;pet.coins=(Number(pet.coins)||0)+5;try{localStorage.setItem(PET_STORE,JSON.stringify(pet))}catch(e){}return 5
+  pet.externalRewards[key]=5;pet.coins=(Number(pet.coins)||0)+5;try{localStorage.setItem(PET_STORE,JSON.stringify(pet))}catch(e){}broadcastPetCoins(pet.coins,5);return 5
 }
+function broadcastPetCoins(coins,delta=0){document.querySelectorAll("#toolFrame,.embedded-tool-frame").forEach(frame=>{try{frame.contentWindow?.postMessage({type:"johnson-pet-coins-updated",coins:Number(coins)||0,delta:Number(delta)||0},"*")}catch(e){}})}
 function mergePetCompanionProgress(imported){
   if(!imported||typeof imported!=="object")return;const local=readPetState(),next=Object.assign(freshPetState(),imported,local);next.fireUses=Math.max(Number(imported.fireUses)||0,Number(local.fireUses)||0);
   next.coins=Math.max(Number(local.coins)||0,Number(imported.coins)||0);next.growth=Math.max(Number(local.growth)||0,Number(imported.growth)||0);next.pet=local.pet||imported.pet||null;next.sound=local.sound;
@@ -316,7 +318,7 @@ function award(points,message,celebrate=true,key="",subject=""){
   if(celebrate){playTone(true);speakEncouragement("Nice work. That thinking move is now yours.");sparkBurst(innerWidth/2,120,55,5)}
 }
 function renderChrome(){
-  const pct=dailyPercent();$("streakTop").textContent=state.streak;$("xpTop").textContent=state.xp;$("missionCount").textContent=pct+"%";$("missionFill").style.width=pct+"%";
+  const pct=dailyPercent(),pet=readPetState(false);$("streakTop").textContent=state.streak;$("xpTop").textContent=state.xp;$("coinTop").textContent=pet?Number(pet.coins)||0:0;$("missionCount").textContent=pct+"%";$("missionFill").style.width=pct+"%";
   $("questRows").innerHTML=DAILY_GOALS.map(g=>{const n=Math.min(g.goal,dailyCount(g.id)),done=n>=g.goal;return `<div class="quest-row ${done?'done':''}"><span class="quest-icon">${done?'✅':g.icon}</span><span><span class="quest-name">${g.name}</span><span class="quest-time">${g.time}</span></span><span class="quest-count">${n}/${g.goal}</span></div>`}).join("");
   $("soundBtn").textContent=state.sound?"🔊":"🔇";$("soundBtn").title=state.sound?"Mute all sound":"Turn all sound on";$("soundBtn").setAttribute("aria-label",$("soundBtn").title);$("soundBtn").setAttribute("aria-pressed",String(!state.sound));
   const claimed=state.rewardDate===localDay(),ready=pct===100;$("rewardBtn").disabled=!ready&&claimed;$("rewardBtn").textContent=claimed?"🎁 Today's sticker opened":ready?"🎁 Open today's blind box":"🔒 Finish today's route";
