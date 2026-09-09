@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-08T19:00:00+08:00",
+  "updatedAt": "2026-09-09T19:00:00+08:00",
   "policy": "append-only-stable-ids",
   "packs": [
     {
@@ -1514,6 +1514,79 @@
           ]
         }
       ]
+    },
+    {
+      "date": "2026-09-09",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-09-001",
+          "title": "The Evidence in the Empty Garden",
+          "meta": "P5/P6 PSLE-style reading · inference and evidence",
+          "q": "Mira wanted to water every plant in the school garden twice a day. Before changing the routine, she checked the soil at three times of day for a week. The pots beside the covered walkway stayed damp, while the pots in the open sun became dry by late afternoon. She changed the plan so that only the sunny pots received extra water. Why was this a better plan?",
+          "opts": ["It used observations from different places and times to match the watering to each plant's need.", "It proved that every plant grows best when it is kept completely wet.", "It allowed Mira to avoid checking the garden again.", "It showed that the covered walkway made all plants use more water."],
+          "ans": 0,
+          "model": "The better plan used evidence from repeated checks at different places and times. The sunny pots dried faster, so they needed extra water, while the covered pots did not.",
+          "steps": ["Compare the soil observations rather than the original guess.", "Link the sunny position to faster drying.", "Choose a plan that gives extra water only where the evidence shows it is needed."],
+          "marks": ["Inference: identifies the evidence-based change.", "Evidence link: connects sunlight and drying to the watering decision."]
+        },
+        "news": {
+          "id": "reading-news-2026-09-09-001",
+          "title": "A Shared Shade Map for Walkers",
+          "meta": "Singapore news-style reading · comparing fair measurements",
+          "q": "A student group in Singapore mapped shaded walking routes between a community club and a library. They measured each route at 12 noon on three weekdays and recorded the shaded minutes. Why did they measure at the same time?",
+          "opts": ["To make the route comparison fair because the sun's position changes during the day.", "To guarantee that every route had exactly the same amount of shade.", "To make the library open earlier than the community club.", "To avoid recording any route that had trees."],
+          "ans": 0,
+          "model": "They measured at the same time to keep the comparison fair. If one route were measured in the morning and another at noon, the different sun positions could affect the amount of shade.",
+          "steps": ["Identify the variable being compared: shaded minutes.", "Keep the time the same so sunlight is a fair comparison.", "Reject choices that do not affect measurement fairness."],
+          "marks": ["Method point: states that the same time controls a condition.", "Reason point: links sun position to shade and fair comparison."]
+        }
+      },
+      "math": [{
+        "id": "math-p5-logic-2026-09-09-001",
+        "topic": "logic",
+        "level": "P5/P6 reasoning",
+        "focus": "test all conditions systematically",
+        "title": "Four divers in a row",
+        "q": "Four divers A, B, C and D stand in a row. B is immediately to the right of A. C is somewhere to the right of D. A is not at either end. Which order is possible?",
+        "visual": "<svg class='geometry-diagram wide' viewBox='0 0 760 180' role='img' aria-label='Four numbered positions with a possible order D, A, B, C'><rect x='30' y='55' width='700' height='70' rx='12' fill='#f4fbff' stroke='#1554b8' stroke-width='4'/><path d='M205 55v70M380 55v70M555 55v70' stroke='#8bd1ee' stroke-width='3' stroke-dasharray='8 7'/><text x='117' y='98' text-anchor='middle' font-size='30' font-weight='700' fill='#1554b8'>D</text><text x='292' y='98' text-anchor='middle' font-size='30' font-weight='700' fill='#1554b8'>A</text><text x='467' y='98' text-anchor='middle' font-size='30' font-weight='700' fill='#1554b8'>B</text><text x='642' y='98' text-anchor='middle' font-size='30' font-weight='700' fill='#1554b8'>C</text><text x='292' y='35' text-anchor='middle' font-size='18' fill='#0a7d61'>A not at an end</text><text x='467' y='158' text-anchor='middle' font-size='18' fill='#0a7d61'>B immediately right of A</text><text x='642' y='35' text-anchor='middle' font-size='18' fill='#0a7d61'>C right of D</text></svg>",
+        "opts": ["A. A, B, D, C", "B. D, A, B, C", "C. C, D, A, B", "D. D, C, B, A"],
+        "ans": 1,
+        "model": "D, A, B, C is possible. A is not at an end, B is immediately to A's right, and C is to the right of D.",
+        "steps": ["Check A's position first: it cannot be position 1 or 4.", "Place the pair A-B together with B immediately after A.", "Test C and D, then keep the only order satisfying every clue."],
+        "marks": ["Method mark: translates each clue into a positional test.", "Reasoning mark: verifies the chosen order against all conditions."]
+      }],
+      "science": [{
+        "id": "science-p5-systems-2026-09-09-001",
+        "topic": "systems",
+        "level": "P5 CORE · HUMAN SYSTEMS",
+        "focus": "link two body systems to evidence",
+        "title": "Why breathing and heart rate increase",
+        "q": "After Johnson runs up a flight of stairs, his breathing and heart rates increase. Which is the best complete explanation?",
+        "visual": "<svg class='science-diagram wide' viewBox='0 0 820 250' role='img' aria-label='Respiratory system and circulatory system supplying working muscles'><rect x='38' y='72' width='180' height='112' rx='28' fill='#eaf7ff' stroke='#1554b8' stroke-width='4'/><path d='M128 92v75M128 105c-42-34-70 10-52 58 9 22 39 19 52-2M128 105c42-34 70 10 52 58-9 22-39 19-52-2' fill='none' stroke='#e34f61' stroke-width='8'/><text x='128' y='215' text-anchor='middle' font-size='21' font-weight='700' fill='#1554b8'>lungs</text><path d='M238 128h135' stroke='#0a7d61' stroke-width='6' marker-end='url(#arr)'/><text x='305' y='108' text-anchor='middle' font-size='18' fill='#0a7d61'>oxygen enters</text><circle cx='430' cy='128' r='55' fill='#fff1f1' stroke='#e34f61' stroke-width='5'/><path d='M430 165c-50-37-28-66-2-39 26-27 48 2 2 39z' fill='#e34f61'/><text x='430' y='215' text-anchor='middle' font-size='21' font-weight='700' fill='#1554b8'>heart pumps</text><path d='M490 128h135' stroke='#0a7d61' stroke-width='6' marker-end='url(#arr)'/><text x='558' y='108' text-anchor='middle' font-size='18' fill='#0a7d61'>blood transports</text><path d='M684 76l48 52-48 52-48-52z' fill='#fff7d6' stroke='#d58a00' stroke-width='5'/><text x='684' y='124' text-anchor='middle' font-size='18' font-weight='700' fill='#1554b8'>working</text><text x='684' y='148' text-anchor='middle' font-size='18' font-weight='700' fill='#1554b8'>muscles</text><defs><marker id='arr' markerWidth='10' markerHeight='10' refX='8' refY='5' orient='auto'><path d='M0 0L10 5L0 10z' fill='#0a7d61'/></marker></defs></svg>",
+        "opts": ["His muscles need less oxygen, so both systems slow down to save energy.", "His working muscles respire faster and need more oxygen. Faster breathing takes in more oxygen, and the heart pumps blood faster to carry oxygen to the muscles and carbon dioxide away.", "The heart makes oxygen after exercise, so breathing is only needed to cool the body.", "Breathing increases because blood cannot move through the body when muscles are resting."],
+        "ans": 1,
+        "model": "His working muscles respire faster and need more oxygen. Faster breathing takes in more oxygen, while the heart pumps blood faster to transport oxygen to the muscles and carry carbon dioxide away.",
+        "steps": ["Read the arrows: lungs supply oxygen and the heart transports it in blood.", "Link stair running to faster respiration in the working muscles.", "State both the increased supply and the removal of carbon dioxide."],
+        "marks": ["Mark 1: uses precise vocabulary such as respiration, oxygen and carbon dioxide.", "Mark 2: links the respiratory and circulatory systems to the exercise evidence.", "Answer pattern: system function -> evidence -> result."]
+      }],
+      "scienceVocab": [
+        {"id":"science-vocab-systems-2026-09-09-001","group":"precision","term":"respiratory system","meaning":"the body system that takes in oxygen and removes carbon dioxide","example":"The respiratory system takes in more oxygen during exercise.","note":"Do not write only 'breathing'; name the system and its function."},
+        {"id":"science-vocab-systems-2026-09-09-002","group":"precision","term":"circulatory system","meaning":"the body system that transports blood around the body","example":"The circulatory system transports oxygen to the working muscles.","note":"Use transport when explaining the heart and blood."},
+        {"id":"science-vocab-systems-2026-09-09-003","group":"cause-result","term":"respire faster","meaning":"release energy at a faster rate by breaking down food using oxygen","example":"The muscles respire faster when Johnson runs up the stairs.","note":"This is the process that explains the increased need for oxygen."},
+        {"id":"science-vocab-systems-2026-09-09-004","group":"cause-result","term":"transport oxygen to the muscles","meaning":"carry oxygen in the blood from the lungs to body cells","example":"The heart pumps blood to transport oxygen to the muscles.","note":"This is a strong evidence link for a two-mark answer."},
+        {"id":"science-vocab-systems-2026-09-09-005","group":"precision","term":"remove carbon dioxide","meaning":"carry away carbon dioxide produced by cells during respiration","example":"The blood carries carbon dioxide away from the muscles to the lungs.","note":"Complete the cycle: oxygen in, carbon dioxide out."}
+      ],
+      "chinese": [{
+        "id": "chinese-p5-reading-2026-09-09-001",
+        "title": "P5 华文短文阅读 · 把问题问清楚",
+        "q": "小杰负责整理班级图书角。他发现同学常常找不到想看的书，便打算把所有书都贴上红色标签。老师没有马上同意，而是请他记录一星期：同学最常找哪些书、找书时遇到什么困难。小杰发现真正的问题不是标签颜色，而是书架没有按照主题分类。于是，他和同学重新分区，并在每区放上一张目录。后来大家很快就能找到需要的书。",
+        "ask": "小杰最后采用什么方法解决问题？",
+        "opts": ["把所有书都贴上红色标签。", "先记录和找出真正原因，再按主题分类并制作目录。", "把同学不常看的书全部丢掉。", "请老师每天替大家找书。"],
+          "ans": 1,
+          "steps": ["找出文中小杰先记录的内容。", "定位真正的问题：书架没有按主题分类。", "联系最后的做法：重新分区并制作目录。"],
+          "model": "小杰先记录情况，发现问题在于书架没有按主题分类，于是重新分区并制作目录。这说明解决问题前要先找出真正原因，再采取合适的方法。",
+        "marks": ["内容点：写出先观察记录、找原因，再分类和制作目录。", "理解点：说明方法有效是因为针对真正的问题。"]
+      }]
     }
   ]
 }
