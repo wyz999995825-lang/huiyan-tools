@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-09T19:00:00+08:00",
+  "updatedAt": "2026-09-11T19:00:00+08:00",
   "policy": "append-only-stable-ids",
   "packs": [
     {
@@ -1586,6 +1586,79 @@
           "steps": ["找出文中小杰先记录的内容。", "定位真正的问题：书架没有按主题分类。", "联系最后的做法：重新分区并制作目录。"],
           "model": "小杰先记录情况，发现问题在于书架没有按主题分类，于是重新分区并制作目录。这说明解决问题前要先找出真正原因，再采取合适的方法。",
         "marks": ["内容点：写出先观察记录、找原因，再分类和制作目录。", "理解点：说明方法有效是因为针对真正的问题。"]
+      }]
+    },
+    {
+      "date": "2026-09-11",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-11-001",
+          "title": "The Bridge of Small Repairs",
+          "meta": "P5/P6 PSLE-style reading · inference and viewpoint",
+          "q": "When the model bridge collapsed, Amir wanted to rebuild it immediately with thicker sticks. His teammate Lina first examined where the joints had separated. She noticed that the sticks were strong but the tape had been wrapped loosely. The team kept the same sticks, tightened the joints and tested the bridge again. What did Lina's approach show?",
+          "opts": ["A problem is easier to solve when its evidence is checked before a change is made.", "The thickest sticks are always the best material for every bridge.", "A model bridge cannot be improved after it collapses.", "Tape is never useful for joining materials."],
+          "ans": 0,
+          "model": "Lina checked the evidence first and found that the loose joints, rather than the sticks, caused the collapse. This helped the team make a targeted repair and test it fairly.",
+          "steps": ["Locate what Lina examined: the separated joints.", "Link the loose tape to the collapse.", "Infer why changing only the joints made the repair targeted."],
+          "marks": ["Inference: identifies the evidence-first approach.", "Evidence link: connects loose tape to the bridge failure and repair."]
+        },
+        "news": {
+          "id": "reading-news-2026-09-11-001",
+          "title": "Library Makers Test Reusable Covers",
+          "meta": "Singapore news-style reading · fair test and conclusion",
+          "q": "A neighbourhood library tested two reusable book-cover materials. Volunteers covered books of similar size, used the same reading schedule and checked the covers after four weeks. Why did the library use books of similar size?",
+          "opts": ["To reduce the effect of book size, so the material comparison was fairer.", "To make one material look more colourful than the other.", "To ensure that readers would finish every book in one day.", "To prove that all reusable materials have identical strength."],
+          "ans": 0,
+          "model": "Books of similar size reduce the effect of size on wear. This allows the library to compare the durability of the two cover materials more fairly.",
+          "steps": ["Identify the result being compared: wear after four weeks.", "Notice that size could affect wear, so it is kept similar.", "State that controlling size makes the material comparison fair."],
+          "marks": ["Method point: identifies a controlled condition.", "Reason point: links similar size to a fair durability comparison."]
+        }
+      },
+      "math": [{
+        "id": "math-p5-angles-2026-09-11-001",
+        "topic": "angles",
+        "level": "P5/P6 geometry",
+        "focus": "use an exterior angle of a triangle",
+        "title": "The tilted sign",
+        "q": "In the diagram, A, B and D lie on a straight line. Triangle BCD has angle BCD = 27° and angle BDC = 52°. What is angle ABC?",
+        "visual": "<svg class='geometry-diagram wide' viewBox='0 0 760 300' role='img' aria-label='Triangle BCD with A, B and D on a straight line'><line x1='60' y1='220' x2='700' y2='220' stroke='#1554b8' stroke-width='5'/><line x1='360' y1='220' x2='500' y2='70' stroke='#1554b8' stroke-width='5'/><line x1='500' y1='70' x2='610' y2='220' stroke='#1554b8' stroke-width='5'/><path d='M318 220 A42 42 0 0 0 337 187' fill='none' stroke='#e34f61' stroke-width='4'/><path d='M470 92 A32 32 0 0 1 496 104' fill='none' stroke='#e34f61' stroke-width='4'/><path d='M580 220 A30 30 0 0 1 594 195' fill='none' stroke='#e34f61' stroke-width='4'/><text x='48' y='248' font-size='24' font-weight='700' fill='#1554b8'>A</text><text x='348' y='252' font-size='24' font-weight='700' fill='#1554b8'>B</text><text x='602' y='252' font-size='24' font-weight='700' fill='#1554b8'>D</text><text x='494' y='58' font-size='24' font-weight='700' fill='#1554b8'>C</text><text x='282' y='190' font-size='20' fill='#0a7d61'>x°</text><text x='445' y='111' font-size='20' fill='#0a7d61'>27°</text><text x='605' y='191' font-size='20' fill='#0a7d61'>52°</text><text x='430' y='282' font-size='18' fill='#5b6f82'>A, B and D are collinear</text></svg>",
+        "opts": ["A. 79°", "B. 101°", "C. 127°", "D. 153°"],
+        "ans": 0,
+        "model": "Angle CBD = 180° - 27° - 52° = 101°. Since A, B and D lie on a straight line, angle ABC and angle CBD add to 180°. Therefore angle ABC = 180° - 101° = 79°.",
+        "steps": ["Use the angle sum of triangle BCD: angle CBD = 180° - 27° - 52° = 101°.", "Use the straight-line fact: angle ABC + angle CBD = 180°.", "Calculate angle ABC = 180° - 101° = 79°.", "Check that the requested angle is the exterior angle at B, between BA and BC."],
+        "marks": ["Method mark: uses the triangle angle sum.", "Method mark: identifies the linear pair at B.", "Accuracy mark: obtains 79° and matches the diagram."]
+      }],
+      "science": [{
+        "id": "science-p5-photosynthesis-2026-09-11-001",
+        "topic": "photosynthesis",
+        "level": "P5/P6 PLANT SYSTEMS",
+        "focus": "infer the role of light using a fair test",
+        "title": "The covered leaf test",
+        "q": "Two similar leaves on the same plant are tested. A piece of black paper covers part of Leaf A for two days, while Leaf B is left uncovered. Both leaves receive water and are tested for starch. Which conclusion is best?",
+        "visual": "<svg class='science-diagram wide' viewBox='0 0 820 270' role='img' aria-label='Plant leaf fair test with one leaf partly covered and one uncovered'><path d='M410 250V140M410 180C330 160 260 120 250 45M410 180C500 155 590 115 650 45' fill='none' stroke='#287b4d' stroke-width='8'/><path d='M250 45C180 42 155 98 222 130c73 35 105-35 28-85z' fill='#b8e8b5' stroke='#287b4d' stroke-width='5'/><path d='M650 45c70-3 95 53 28 85-73 35-105-35-28-85z' fill='#b8e8b5' stroke='#287b4d' stroke-width='5'/><rect x='185' y='70' width='95' height='55' fill='#4d5660' opacity='.95' transform='rotate(-18 232 97)'/><text x='235' y='158' text-anchor='middle' font-size='20' font-weight='700' fill='#1554b8'>Leaf A</text><text x='645' y='158' text-anchor='middle' font-size='20' font-weight='700' fill='#1554b8'>Leaf B</text><text x='235' y='188' text-anchor='middle' font-size='17' fill='#5b6f82'>partly covered</text><text x='645' y='188' text-anchor='middle' font-size='17' fill='#5b6f82'>uncovered</text><path d='M310 92h92' stroke='#d58a00' stroke-width='5' marker-end='url(#sun)'/><text x='355' y='72' text-anchor='middle' font-size='18' fill='#d58a00'>light</text><defs><marker id='sun' markerWidth='10' markerHeight='10' refX='8' refY='5' orient='auto'><path d='M0 0L10 5L0 10z' fill='#d58a00'/></marker></defs></svg>",
+        "opts": ["The covered part is likely to contain less starch because it received less light for photosynthesis.", "The covered part must contain more starch because black paper makes food for the leaf.", "Both parts must contain the same starch because water is the only factor plants need.", "The uncovered leaf cannot contain starch because light removes all food from it."],
+        "ans": 0,
+        "model": "The covered part is likely to contain less starch because it received less light. Light is needed for photosynthesis, which makes food stored as starch in the leaf.",
+        "steps": ["Compare the only changed condition: light reaching the leaf.", "Link light to photosynthesis and food production.", "Predict less starch in the covered part while keeping the uncovered part as the comparison."],
+        "marks": ["Mark 1: states that light is needed for photosynthesis.", "Mark 2: links less light to less food made and less starch detected.", "Answer pattern: test condition -> scientific process -> predicted evidence."]
+      }],
+      "scienceVocab": [
+        {"id":"science-vocab-photosynthesis-2026-09-11-001","group":"precision","term":"photosynthesis","meaning":"the process by which green plants make food using light","example":"Photosynthesis occurs in the green parts of a plant when light is available.","note":"Name the process instead of writing only 'the plant eats'."},
+        {"id":"science-vocab-photosynthesis-2026-09-11-002","group":"evidence","term":"light is a necessary condition","meaning":"the process does not proceed normally without light","example":"The covered part received less light, so it made less food.","note":"Use necessary condition when explaining a fair test."},
+        {"id":"science-vocab-photosynthesis-2026-09-11-003","group":"precision","term":"food is stored as starch","meaning":"food made by a plant can be stored in the leaf as starch","example":"The starch test provides evidence that food was made and stored.","note":"Connect the test result to the process."},
+        {"id":"science-vocab-photosynthesis-2026-09-11-004","group":"method","term":"comparison leaf","meaning":"the similar leaf used as a reference in an investigation","example":"The uncovered leaf acted as the comparison leaf.","note":"A comparison makes the conclusion stronger."},
+        {"id":"science-vocab-photosynthesis-2026-09-11-005","group":"cause-result","term":"less light -> less food made","meaning":"a cause-and-effect statement linking light availability to photosynthesis","example":"Less light led to less food being made in the covered part.","note":"Use the arrow chain for a complete OEQ explanation."}
+      ],
+      "chinese": [{
+        "id": "chinese-p5-reading-2026-09-11-001",
+        "title": "P5 华文短文阅读 · 不急着下结论",
+        "q": "小雯发现窗台上的小盆栽有几片叶子变黄，便认定是因为没有浇水。爸爸建议她先查一查。她连续几天记录浇水量、阳光和叶子的变化，后来发现盆栽一直放在空调出风口附近，泥土很快变干。她把盆栽移开并调整浇水方法，叶子渐渐恢复了绿色。小雯明白，遇到问题时不能只凭第一次猜想下结论。",
+        "ask": "这篇短文主要说明什么道理？",
+        "opts": ["盆栽只能放在空调出风口附近。", "遇到问题要先观察和记录，找出原因后再采取行动。", "只要多浇水，所有植物都会马上变绿。", "第一次想到的原因通常就是正确答案。"],
+        "ans": 1,
+        "steps": ["找出小雯最初的猜想和后来记录的证据。", "定位真正原因：空调出风口使泥土很快变干。", "概括她得到的道理，而不是只重复盆栽的结果。"],
+        "model": "小雯先观察和记录，才发现盆栽变黄的真正原因，再调整摆放位置和浇水方法。因此，遇到问题不能急着下结论，要先找证据。",
+        "marks": ["内容点：写出先观察记录、找原因，再采取行动。", "主旨点：说明不能只凭猜想下结论。"]
       }]
     }
   ]
