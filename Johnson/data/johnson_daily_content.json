@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-27T19:00:00+08:00",
+  "updatedAt": "2026-09-11T19:00:00+08:00",
   "policy": "append-only-stable-ids",
   "packs": [
     {
@@ -170,7 +170,7 @@
             "The warm water in Chamber B freezes before it can reach the lid."
           ],
           "ans": 2,
-          "visual": "<div class='system-map'><div class='system-node'><span>🧊</span>Chamber A<small>8°C lid<br>18 drops</small></div><span class='map-arrow'>↔</span><div class='system-node'><span>🌡️</span>Same warm water<small>equal amount<br>same five minutes</small></div><span class='map-arrow'>↔</span><div class='system-node'><span>💧</span>Chamber B<small>25°C lid<br>3 drops</small></div></div>",
+          "visual": "<svg class='science-diagram' viewBox='0 0 760 220' role='img' aria-label='Two sealed rain chambers compared'><path class='diagram-line' d='M40 190H720'/><g><rect class='diagram-object' x='65' y='55' width='250' height='125' rx='8'/><path class='diagram-hot' d='M65 55h250v22H65z'/><path class='diagram-line' d='M105 105q20-28 40 0t40 0t40 0t40 0'/><text x='190' y='43' text-anchor='middle'>Chamber A · lid 8°C</text><text x='190' y='158' text-anchor='middle'>18 drops in 5 min</text><path class='diagram-ray' d='M130 84v-18M190 84v-18M250 84v-18'/></g><g><rect class='diagram-object' x='445' y='55' width='250' height='125' rx='8'/><path class='diagram-hot' d='M445 55h250v22H445z'/><path class='diagram-line' d='M485 105q20-28 40 0t40 0t40 0t40 0'/><text x='570' y='43' text-anchor='middle'>Chamber B · lid 25°C</text><text x='570' y='158' text-anchor='middle'>3 drops in 5 min</text><path class='diagram-ray' d='M515 84v-18M575 84v-18M635 84v-18'/></g><text class='diagram-small' x='380' y='205' text-anchor='middle'>Same warm water · same time · compare lid temperature</text></svg>",
           "model": "Water evaporates in both sealed chambers. In Chamber A, water vapour loses heat faster when it reaches the cooler 8°C lid, so it condenses into liquid water droplets more quickly. More droplets therefore combine and fall from the lid within five minutes.",
           "steps": [
             "Compare only the changed condition: the lid temperature is lower in Chamber A, while the amount of warm water and time are the same.",
@@ -245,6 +245,1421 @@
           ]
         }
       ]
+    },
+    {
+      "date": "2026-09-01",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-01-001",
+          "title": "The List Beside the Door",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>On the morning of the school innovation showcase, Soren checked his team's display three times. The model bridge stood neatly on the table, and every label was in place. When his teammate Hana suggested testing the bridge once more with the heaviest weight, Soren shook his head. The judges would arrive soon, and he did not want to disturb a display that already looked perfect.</p><p>Hana pointed to a small list taped beside the door. It was the team's test checklist: check the joints, add weights one at a time, and record what changes. Soren remembered that they had only tested the bridge with light wooden blocks. Reluctantly, he agreed. At the third heavier block, one joint bent downwards.</p><p>The team had only minutes left, but they used two short supports to strengthen that joint. During the showcase, the bridge held the full set of weights. Afterwards, Soren did not praise Hana for making the display look better. He thanked her for noticing that a neat-looking model was not the same as tested evidence.</p>",
+          "q": "Why did Soren change his mind about testing the bridge again?",
+          "opts": [
+            "He wanted to make the bridge look less neat before the judges arrived.",
+            "He realised that the bridge had not been tested with the heaviest weights, so its appearance was not enough evidence that it would work safely.",
+            "He believed that heavy wooden blocks always damage any bridge.",
+            "He wanted Hana to complete the whole showcase alone."
+          ],
+          "ans": 1,
+          "model": "Soren changed his mind because the checklist reminded him that the bridge had only been tested with light blocks. He realised that a neat appearance was not evidence that it could safely hold the heaviest weight.",
+          "evidence": "They had only tested the bridge with light wooden blocks.",
+          "marks": [
+            "Meaning point: states that Soren needed evidence from a heavier-weight test.",
+            "Support point: links the decision to the earlier test using only light blocks."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-01-001",
+          "title": "Pupils Help Plan a Safer Cycling Route",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>Pupils from a neighbourhood school have worked with residents to study a short cycling route near a community centre. The route is popular after school, but several adults said that younger riders sometimes turn quickly around a blind corner.</p><p>The pupils first counted riders at the same half-hour on five weekdays. They also drew where riders slowed down, rang their bells or stopped. The highest number of sudden stops happened near a hedge that blocked the view of people walking from the opposite direction.</p><p>Instead of asking only for a new sign, the pupils proposed trimming part of the hedge, painting a slower-speed marking before the corner and adding a small mirror. A town council representative said the group had made a useful recommendation because it connected observations with more than one possible safety measure.</p>",
+          "q": "Why did the pupils propose several safety measures instead of only a new sign?",
+          "opts": [
+            "They wanted to make the cycling route longer for every rider.",
+            "Their observations showed that the blind corner involved both poor visibility and sudden stopping, so they suggested measures that addressed more than one part of the problem.",
+            "They did not collect any information about the route.",
+            "The town council asked them to remove all bicycles from the neighbourhood."
+          ],
+          "ans": 1,
+          "model": "The pupils suggested several measures because their observations showed more than one safety issue: the hedge reduced visibility and riders often stopped suddenly. Trimming, road markings and a mirror address different parts of that problem.",
+          "evidence": "The highest number of sudden stops happened near a hedge that blocked the view.",
+          "marks": [
+            "Meaning point: identifies the linked visibility and stopping problem.",
+            "Support point: connects the observations to the range of suggested measures."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-percentage-2026-09-01-001",
+          "topic": "percentage",
+          "kind": "thinking",
+          "title": "Percentage · Club Donation Goal",
+          "tag": "Compare a completed percentage with the whole",
+          "q": "A school club has collected $168, which is 70% of its donation goal. After a parent adds $36, what percentage of the goal has the club collected?",
+          "opts": ["75%", "80%", "85%", "90%"],
+          "ans": 2,
+          "model": "If 70% is $168, then 10% is $24 and 100% is $240. After the extra $36, the club has $204. $204 is 85% of $240.",
+          "steps": [
+            "Use 70% = $168 to find 10%: $168 ÷ 7 = $24.",
+            "Find the whole goal: $24 × 10 = $240.",
+            "Add the donation: $168 + $36 = $204, then $204 ÷ $240 = 85%."
+          ],
+          "marks": [
+            "Method mark: finds the whole donation goal correctly.",
+            "Answer mark: states that $204 is 85% of $240."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-reproduction-2026-09-01-001",
+          "topic": "reproduction",
+          "level": "P5 CORE · PLANT REPRODUCTION",
+          "focus": "control variable and evidence link",
+          "title": "Plant Reproduction · Pollinator Access",
+          "q": "Three similar flowers were kept in the same garden. Flower A was covered with a fine mesh bag before it opened. Flower B was left uncovered. Flower C was covered only after insects had visited it. Later, A produced no fruit, while B and C produced fruit. Which is the best complete explanation?",
+          "opts": [
+            "The bag made Flower A too cold to grow leaves.",
+            "The bag prevented insects from transferring pollen to Flower A's stigma before it opened. Without pollination, fertilisation did not occur, so fruit did not form.",
+            "Flower B and C produced fruit because insects create seeds inside their bodies.",
+            "Flower A produced no fruit because all flowers need to be covered after insects visit."
+          ],
+          "ans": 1,
+          "model": "The mesh bag prevented insects from transferring pollen grains to Flower A's stigma before it opened. Without pollination, fertilisation could not occur, so the ovary did not develop into a fruit.",
+          "steps": [
+            "Compare when each flower was covered: only Flower A was blocked before insects could visit.",
+            "Insects transfer pollen from anthers to stigmas during pollination.",
+            "Without pollination and fertilisation, fruit and seeds cannot form."
+          ],
+          "marks": [
+            "Science point: uses pollination and fertilisation in the correct sequence.",
+            "Evidence link: connects the early mesh bag on A to its lack of fruit."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-reproduction-2026-09-01-001",
+          "group": "precision",
+          "term": "pollen grains are transferred to the stigma",
+          "meaning": "the pollination step in which pollen from an anther reaches a stigma of a flower of the same species",
+          "example": "An insect transfers pollen grains to the stigma when it visits another similar flower.",
+          "note": "OEQ order: pollen transfer happens before fertilisation."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-01-002",
+          "group": "precision",
+          "term": "pollination is prevented",
+          "meaning": "pollen cannot reach the stigma because an agent such as an insect is blocked",
+          "example": "The mesh bag prevents pollination by blocking insects from the flower.",
+          "note": "State what is blocked and why it matters."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-01-003",
+          "group": "precision",
+          "term": "fertilisation does not occur",
+          "meaning": "the male and female reproductive cells do not fuse after pollen fails to reach the stigma",
+          "example": "Without pollination, fertilisation does not occur in the flower.",
+          "note": "Do not use pollination and fertilisation as if they mean the same thing."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-01-004",
+          "group": "precision",
+          "term": "the ovary develops into a fruit",
+          "meaning": "after fertilisation, the ovary grows to form the fruit",
+          "example": "After fertilisation, the ovary develops into a fruit containing seeds.",
+          "note": "Useful paired fact: ovules develop into seeds."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-01-005",
+          "group": "precision",
+          "term": "evidence from the timing of a comparison",
+          "meaning": "a conclusion supported by noticing when a changed condition happened relative to the result",
+          "example": "Only the flower covered before insect visits produced no fruit, which is evidence that pollinator access mattered.",
+          "note": "OEQ pattern: name the different timing, then link it to the different result."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-01-001",
+          "title": "P5 华文短文阅读 · 从提醒到承担",
+          "q": "班级负责布置阅读角。开始时，俊豪只挑自己喜欢的海报设计，还嫌小敏一直核对书架编号太慢。活动前一天，老师发现有一箱新书没有分类。小敏拿出早已写好的编号表，带着大家一格一格放好。俊豪这才发现，如果没有小敏的细心，明天同学们根本找不到想看的书。活动结束后，他主动留下来，把自己设计的海报贴在正确的书架旁。",
+          "ask": "俊豪后来主动留下来贴海报，主要说明了什么？",
+          "opts": [
+            "他只想让大家看见自己的海报设计。",
+            "他认识到细心分类的重要，也愿意承担责任，让阅读角真正方便同学使用。",
+            "他认为小敏做事太慢，所以决定不再和她合作。",
+            "他不喜欢阅读角里的新书。"
+          ],
+          "ans": 1,
+          "model": "俊豪认识到小敏细心分类的重要，也明白阅读角要方便同学使用，不能只追求海报好看。因此他主动留下来，把海报贴在正确的书架旁，愿意承担责任。",
+          "marks": [
+            "内容点：写出俊豪认识到分类和责任的重要。",
+            "依据点：结合小敏的编号表和俊豪贴海报的行为说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-02",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-02-001",
+          "title": "The Question on the Clipboard",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>Leo had spent two weekends building a small automatic plant-watering device for the school fair. When it finally poured water into the pot, he took a short video and began preparing his display board. His sister watched the video twice, then asked why the device had watered the plant after only a few drops of rain.</p><p>Leo replied that the sensor had worked exactly as planned. Still, he wrote her question on a clipboard. The next afternoon, he placed the device outside while using a measuring cup to add small, equal amounts of water to the sensor tray. He discovered that water collected at one corner and touched both metal contacts earlier than he expected.</p><p>Leo raised the tray slightly and tested it again. This time, the pump started only after the amount of water he had chosen. At the fair, several visitors praised the device. Leo kept the first video too. It reminded him that a working result was not the end of an investigation; a good question could reveal what still needed checking.</p>",
+          "q": "Why did Leo keep the first video after improving the device?",
+          "opts": [
+            "He wanted to show that the first design was already perfect.",
+            "He wanted proof that visitors had praised him before the fair.",
+            "It reminded him that a result which seems to work can still need careful testing after a useful question is asked.",
+            "He planned to stop testing the device after recording the video."
+          ],
+          "ans": 2,
+          "model": "Leo kept the first video because it reminded him that the device appeared to work at first, but a useful question led him to test it more carefully and discover a problem with the water collecting too early.",
+          "evidence": "A working result was not the end of an investigation; a good question could reveal what still needed checking.",
+          "marks": [
+            "Meaning point: explains that Leo valued further testing, not just the first working result.",
+            "Support point: links the question to discovering water reached the contacts too early."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-02-001",
+          "title": "Student Garden Team Tracks Food-Waste Compost",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A school garden team has begun turning fruit peels and vegetable scraps from the canteen into compost. The pupils set up two covered compost boxes of the same size. Both boxes received equal amounts of food waste and dry leaves, but one box was mixed every three days while the other was left undisturbed.</p><p>For six weeks, the pupils recorded the temperature and appearance of the materials. The mixed box became darker and crumbly sooner. However, the group did not immediately claim that mixing was the only reason. They checked their records and noticed that both boxes had been kept in the same shaded area and had received the same amount of water.</p><p>The pupils will next test whether the compost helps bean plants grow. Their teacher said the project was strong because the team separated what they observed from what they could reasonably conclude.</p>",
+          "q": "Why did the pupils check that both compost boxes had the same location and amount of water?",
+          "opts": [
+            "To make the comparison fairer, so the different mixing routine could be linked more confidently to the different results.",
+            "To ensure that neither compost box would change during the six weeks.",
+            "To prove that water is more important than food waste in every garden.",
+            "To make the undisturbed box receive more dry leaves."
+          ],
+          "ans": 0,
+          "model": "The pupils kept the location and amount of water the same to make a fair comparison. This meant that the different mixing routine was the main changed condition they could link to the compost results.",
+          "evidence": "Both boxes had been kept in the same shaded area and had received the same amount of water.",
+          "marks": [
+            "Meaning point: identifies a fair comparison or controlled variables.",
+            "Support point: links the controlled conditions to testing the effect of mixing."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-fractions-2026-09-02-001",
+          "topic": "fractions",
+          "kind": "thinking",
+          "title": "Fractions · Reef Badge Box",
+          "tag": "Use the remaining fraction to rebuild the whole",
+          "q": "Johnson has used 3/8 of the badges in a box. There are 30 badges left. How many badges were in the box at first?",
+          "opts": ["40", "48", "60", "80"],
+          "ans": 1,
+          "model": "If 3/8 has been used, 5/8 remains. Therefore, 5/8 is 30 badges. One eighth is 30 ÷ 5 = 6 badges, so the whole box has 8 × 6 = 48 badges.",
+          "steps": [
+            "Find the remaining fraction: 1 − 3/8 = 5/8.",
+            "Use 5 equal parts = 30 to find one part: 30 ÷ 5 = 6.",
+            "Find all eight parts: 8 × 6 = 48."
+          ],
+          "marks": [
+            "Method mark: recognises that 30 represents 5/8, not 3/8.",
+            "Answer mark: finds the original total of 48 badges."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-systems-2026-09-02-001",
+          "topic": "systems",
+          "level": "P5 CORE · HUMAN SYSTEMS",
+          "focus": "trace a substance through linked body systems",
+          "title": "Human Systems · Fuel for a Race",
+          "q": "Before a race, Mina eats a banana and drinks water. During the race, her leg muscles need energy. Which is the best complete explanation of how the banana helps the muscles?",
+          "opts": [
+            "The banana stays in Mina's stomach and directly pushes her leg muscles faster.",
+            "The digestive system breaks the banana into small soluble nutrients. These are absorbed into the blood in the small intestine, and the circulatory system transports them to the leg muscles for respiration.",
+            "The lungs change the banana into oxygen before it reaches the muscles.",
+            "The heart digests the banana and stores all nutrients outside the body."
+          ],
+          "ans": 1,
+          "model": "The digestive system breaks the banana into small soluble nutrients. The nutrients are absorbed through the small intestine into the blood. The circulatory system then transports them to Mina's leg muscles, where they are used in respiration to release energy.",
+          "steps": [
+            "Food is digested into small soluble nutrients.",
+            "Nutrients are absorbed from the small intestine into the blood.",
+            "Blood transports nutrients to muscle cells, where respiration releases energy."
+          ],
+          "marks": [
+            "Science point: states digestion, absorption and transport in the correct order.",
+            "Evidence link: connects the nutrients from the banana to energy release in working leg muscles."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-systems-2026-09-02-001",
+          "group": "precision",
+          "term": "small soluble nutrients",
+          "meaning": "food substances made small enough by digestion to pass through the wall of the small intestine",
+          "example": "Digestion changes food into small soluble nutrients that can be absorbed.",
+          "note": "Do not write only 'small food'; use the word soluble."
+        },
+        {
+          "id": "science-vocab-systems-2026-09-02-002",
+          "group": "precision",
+          "term": "absorbed into the blood",
+          "meaning": "small soluble nutrients pass through the wall of the small intestine into blood vessels",
+          "example": "The digested nutrients are absorbed into the blood through the small intestine.",
+          "note": "OEQ chain: digestion -> absorption -> transport."
+        },
+        {
+          "id": "science-vocab-systems-2026-09-02-003",
+          "group": "precision",
+          "term": "transported to body cells",
+          "meaning": "blood carries useful substances such as oxygen and nutrients to cells around the body",
+          "example": "The circulatory system transports nutrients to the working muscle cells.",
+          "note": "Name what is carried and where it is carried to."
+        },
+        {
+          "id": "science-vocab-systems-2026-09-02-004",
+          "group": "precision",
+          "term": "used in respiration to release energy",
+          "meaning": "cells use nutrients and oxygen in respiration, releasing energy for activities",
+          "example": "Muscle cells use nutrients and oxygen in respiration to release energy for running.",
+          "note": "Energy is released, not created."
+        },
+        {
+          "id": "science-vocab-systems-2026-09-02-005",
+          "group": "precision",
+          "term": "linked body-system pathway",
+          "meaning": "an explanation that traces a substance through more than one body system in sequence",
+          "example": "Food is digested, nutrients are absorbed into blood, and blood transports them to body cells.",
+          "note": "For 2 marks, keep the pathway in order and name the systems involved."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-02-001",
+          "title": "P5 华文短文阅读 · 先听再判断",
+          "q": "班会要选出环保活动的负责人。大家都推荐说话响亮的凯翔，小恩却一直没有举手。凯翔以为小恩不愿意帮忙，便在讨论时不耐烦地说：‘你有意见就快点说。’小恩拿出一张记录表，原来他这几天已经问过同学们最想参加什么活动，还把大家的想法分成了节水、回收和校园清洁三类。凯翔看完后安静下来，建议大家先用小恩的记录表安排任务。",
+          "ask": "凯翔后来建议使用小恩的记录表，说明他有了什么改变？",
+          "opts": [
+            "他认识到不能只凭一个人的表现判断别人，也开始重视小恩认真收集的意见。",
+            "他决定以后不参加任何环保活动。",
+            "他认为说话响亮的人不需要准备资料。",
+            "他想把所有同学的意见都删掉。"
+          ],
+          "ans": 0,
+          "model": "凯翔原先只凭小恩没有举手就以为他不愿意帮忙。看了记录表后，他发现小恩已经认真收集和整理同学的意见，因此开始重视别人的实际贡献，不再轻易判断。",
+          "marks": [
+            "内容点：写出凯翔不再轻易判断别人，并重视实际贡献。",
+            "依据点：结合小恩收集、分类意见和凯翔采用记录表说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-03",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-03-001",
+          "title": "The Map of Quiet Corners",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>For a group project, Arjun and his classmates had to record the sounds around their school. Arjun wanted to finish quickly, so he stood near the canteen for two minutes, wrote ‘very noisy’ on the chart and suggested that the class use the library as the quietest place.</p><p>Mei did not disagree, but she asked to see the times of day on his chart. Arjun had not written them down. She showed him a map with small coloured dots. For three days, she had listened at the same five places before school, during recess and after dismissal. The library was quiet before school, but the corridor beside it became noisy when two classes changed rooms. The garden was not always silent, yet it was the quietest place during recess.</p><p>Arjun looked again at his single note from the canteen. He added the missing times to a new chart and thanked Mei for making the group’s conclusion more useful. When their teacher asked what they had improved, Arjun said, ‘We stopped treating one quick observation as the whole story.’</p>",
+          "q": "What did Arjun learn from Mei's map?",
+          "opts": [
+            "A conclusion about a place should be based on observations made at different relevant times, not on one quick observation.",
+            "The canteen is always quieter than every other part of the school.",
+            "A chart does not need labels if it uses coloured dots.",
+            "The group should only record sounds before school."
+          ],
+          "ans": 0,
+          "model": "Arjun learned that one quick observation was not enough. Mei's map compared the same places at different times, showing that noise levels changed and that their conclusion needed fuller evidence.",
+          "evidence": "For three days, she had listened at the same five places before school, during recess and after dismissal.",
+          "marks": [
+            "Meaning point: explains that evidence needs more than one observation or time.",
+            "Support point: links the idea to Mei's repeated observations at the same five places."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-03-001",
+          "title": "Pupils Test a Cooler Waiting Area",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A pupil council has worked with its school to test whether a shaded waiting area feels cooler in the afternoon. The group placed two identical thermometers at the same height: one under a newly installed shade sail and one on an open walkway nearby. They recorded the readings at 2 p.m. for five school days.</p><p>The shaded thermometer was lower on each day. The pupils also noted whether it had rained and whether the walkway was wet. Their report did not say that the shade sail was the only possible influence. Instead, it explained that the repeated lower readings supported the idea that blocking direct sunlight helped keep that area cooler under the tested conditions.</p><p>The council will next ask pupils where they wait after CCA. The principal said the project was helpful because it used measurements before making a practical suggestion.</p>",
+          "q": "Which statement best describes the pupils' conclusion?",
+          "opts": [
+            "The shade sail made every part of the school permanently cold.",
+            "The repeated lower readings support the idea that blocking direct sunlight helped keep the tested waiting area cooler under those conditions.",
+            "Rain can never affect a temperature reading outdoors.",
+            "One thermometer reading is enough to decide where all pupils should wait."
+          ],
+          "ans": 1,
+          "model": "The pupils could reasonably conclude that the shaded area was cooler under the tested conditions because the thermometer there gave lower readings repeatedly. They did not claim that shade was the only possible influence.",
+          "evidence": "The shaded thermometer was lower on each day.",
+          "marks": [
+            "Meaning point: states the supported conclusion without overclaiming.",
+            "Support point: uses the repeated lower readings as evidence."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-ratio-2026-09-03-001",
+          "topic": "ratio",
+          "kind": "thinking",
+          "title": "Ratio · Badge Exchange",
+          "tag": "Track both quantities before and after the exchange",
+          "q": "At first, the ratio of red badges to blue badges was 3 : 5. After 12 red badges and 4 blue badges were added, the ratio became 2 : 3. How many badges were there at first?",
+          "opts": ["168", "224", "252", "280"],
+          "ans": 1,
+          "model": "Let the first numbers be 3 units and 5 units. After the additions, the ratio is 2 : 3. Matching the two ratios gives 3 units = 84 red badges and 5 units = 140 blue badges. So there were 84 + 140 = 224 badges at first.",
+          "steps": [
+            "Let the first numbers be 3u red and 5u blue.",
+            "Use the new ratio: (3u + 12) : (5u + 4) = 2 : 3.",
+            "Cross-multiply: 3(3u + 12) = 2(5u + 4), so 9u + 36 = 10u + 8 and u = 28.",
+            "Find the first total: 3u + 5u = 8 × 28 = 224."
+          ],
+          "marks": [
+            "Method mark: represents both original amounts with the same ratio unit and includes both additions.",
+            "Answer mark: finds the original total of 224 badges."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-photosynthesis-2026-09-03-001",
+          "topic": "photosynthesis",
+          "level": "P6 BRIDGE · PHOTOSYNTHESIS",
+          "focus": "use a controlled comparison to link light, photosynthesis and starch",
+          "title": "Photosynthesis · Covered Leaf Test",
+          "q": "After keeping a green plant in darkness overnight to remove stored starch, a pupil covers part of one leaf with black paper. The plant is kept in sunlight for several hours. After the iodine test, the uncovered part turns blue-black but the covered part remains brown. Which is the best complete explanation?",
+          "opts": [
+            "The covered part made more starch because black paper adds food to the leaf.",
+            "The uncovered part received light and made starch by photosynthesis. The covered part did not receive light, so it did not make starch during the test.",
+            "Iodine changes every green leaf part blue-black, whether or not light reaches it.",
+            "The covered part used sunlight to move starch into the black paper."
+          ],
+          "ans": 1,
+          "model": "The uncovered part received light, so photosynthesis took place and starch was made. Iodine turns blue-black when starch is present. The covered part did not receive light, so it did not make starch during the test and remained brown.",
+          "steps": [
+            "First remove stored starch by keeping the plant in darkness overnight.",
+            "Keep one green leaf, so both parts have the same plant and similar conditions.",
+            "Change only light: black paper blocks light from the covered part.",
+            "Read the iodine result: blue-black shows starch; brown shows no starch.",
+            "Link evidence to conclusion: light is needed for photosynthesis to make starch."
+          ],
+          "marks": [
+            "Science point: states that light is needed for photosynthesis and starch production.",
+            "Evidence link: connects each iodine colour to the presence or absence of starch in the two leaf parts."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-photosynthesis-2026-09-03-001",
+          "group": "precision",
+          "term": "photosynthesis takes place",
+          "meaning": "green plants use light energy to make food from carbon dioxide and water",
+          "example": "Photosynthesis takes place in the uncovered green part of the leaf because it receives light.",
+          "note": "Name the condition: light must reach the green leaf part."
+        },
+        {
+          "id": "science-vocab-photosynthesis-2026-09-03-002",
+          "group": "precision",
+          "term": "starch is produced",
+          "meaning": "some food made by photosynthesis is stored in the leaf as starch",
+          "example": "Starch is produced in the leaf when photosynthesis occurs.",
+          "note": "Use 'produced' or 'made'; do not say the leaf absorbs starch from light."
+        },
+        {
+          "id": "science-vocab-photosynthesis-2026-09-03-003",
+          "group": "precision",
+          "term": "iodine turns blue-black in the presence of starch",
+          "meaning": "a test result showing that starch is present in the tested leaf part",
+          "example": "The uncovered part turned blue-black after iodine was added, showing that starch was present.",
+          "note": "State the observation first, then what it shows."
+        },
+        {
+          "id": "science-vocab-photosynthesis-2026-09-03-004",
+          "group": "precision",
+          "term": "light was the changed condition",
+          "meaning": "the covered and uncovered leaf parts are compared so that access to light is the key difference",
+          "example": "Light was the changed condition because black paper blocked it from only one leaf part.",
+          "note": "This is the fair-test link in a conclusion."
+        },
+        {
+          "id": "science-vocab-photosynthesis-2026-09-03-005",
+          "group": "precision",
+          "term": "evidence supports the conclusion",
+          "meaning": "the observed difference is used to justify, rather than merely repeat, a scientific claim",
+          "example": "The different iodine colours support the conclusion that light is needed to make starch by photosynthesis.",
+          "note": "OEQ pattern: condition -> observation -> what the observation shows."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-03-001",
+          "title": "P5 华文短文阅读 · 一次认真的核对",
+          "q": "班级准备义卖会时，子轩负责在海报上写价格。他很快写完，还说不用再检查。安琪发现其中一个玩具的价格和登记表不同，便请子轩一起核对。子轩起初觉得安琪太小心，后来却发现自己把两个数字的位置写反了。如果照原来的海报出售，班级可能会少收钱。子轩马上改正海报，并在义卖会结束后主动把登记表和收款记录逐项对照。",
+          "ask": "从子轩后来的做法，可以看出他明白了什么？",
+          "opts": [
+            "做事快就不需要别人提醒。",
+            "核对细节虽然花时间，却能避免错误，也要对自己的工作负责。",
+            "只要海报好看，价格是否正确并不重要。",
+            "登记表应该在义卖会后立刻丢掉。"
+          ],
+          "ans": 1,
+          "model": "子轩原先只求快，不愿检查。发现数字写反后，他马上改正，并主动逐项对照登记表和收款记录，说明他明白核对细节能避免错误，也要对自己的工作负责。",
+          "marks": [
+            "内容点：写出核对细节和承担责任的重要。",
+            "依据点：结合改正海报、逐项对照记录的行为说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-04",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-04-001",
+          "title": "The Shortcut List",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>On the morning of the inter-class challenge, Yusuf was chosen to organise the equipment table. His team needed tape, string, rulers and a box of wooden blocks. Yusuf made a list in neat handwriting, but when the bell rang, he saw that the items were still spread across three cupboards.</p><p>‘We can just take whatever we find first,’ he said. His teammate Hana pointed to the list and asked which group had borrowed the rulers the day before. Yusuf did not know. He was tempted to leave the question for later, yet he remembered that the challenge involved measuring a bridge model. He checked the return slip, found the rulers in the art room, and labelled each tray before the other teams arrived.</p><p>During the challenge, Yusuf's team was not the quickest to begin. However, nobody had to stop to search for missing equipment. When their bridge measurements matched on the first try, Yusuf smiled at the unused shortcut list. It was not a list of faster ways to move. It was a reminder to check what would matter later.</p>",
+          "q": "What does the phrase 'unused shortcut list' suggest about Yusuf at the end?",
+          "opts": [
+            "He understood that preparing and checking important details could save the team from bigger problems later.",
+            "He decided that lists always make a task slower than guessing.",
+            "He wanted to hide the rulers from the other teams.",
+            "He believed that the bridge did not need correct measurements."
+          ],
+          "ans": 0,
+          "model": "The phrase suggests that Yusuf no longer saw rushing as the best choice. By checking where the rulers were and organising the trays, he prevented later delays and helped the team measure accurately.",
+          "evidence": "Nobody had to stop to search for missing equipment. When their bridge measurements matched on the first try...",
+          "marks": [
+            "Meaning point: explains Yusuf's changed view of a shortcut.",
+            "Support point: links his preparation to avoiding searches or getting accurate measurements."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-04-001",
+          "title": "School Refill Station Measures Bottle Use",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A school has installed a water-refill station near its hall and is tracking whether it changes the number of disposable bottles used during CCA. For four Mondays before the station opened, student leaders counted bottles placed in the recycling bins after CCA. They continued the count for four Mondays after it opened, using the same bin locations and the same time for each count.</p><p>The total number of bottles in the selected bins was lower in the second four-week period. The leaders also recorded that one CCA had moved to another venue on one Monday, so they marked that count as unusual rather than treating it as proof of a trend.</p><p>The school will collect another term of data before deciding how many more refill stations to install. Its report says that the first results are encouraging, but a longer record will make the decision stronger.</p>",
+          "q": "Why did the student leaders mark one Monday's count as unusual?",
+          "opts": [
+            "They wanted to remove every result that was lower than expected.",
+            "A change in CCA venue could affect bottle use, so that count should not be treated as clear evidence of the refill station's effect.",
+            "They had forgotten where the recycling bins were located.",
+            "They had already proved that no more data was needed."
+          ],
+          "ans": 1,
+          "model": "The venue change could have changed how many pupils used that area or its bins. The leaders therefore treated the count carefully instead of assuming it showed only the effect of the refill station.",
+          "evidence": "One CCA had moved to another venue on one Monday, so they marked that count as unusual rather than treating it as proof of a trend.",
+          "marks": [
+            "Meaning point: identifies the venue change as another possible influence.",
+            "Support point: explains why the result is not clear evidence of the refill station alone."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-average-2026-09-04-001",
+          "topic": "average",
+          "kind": "thinking",
+          "title": "Average · Training Sessions",
+          "tag": "Connect two averages with a difference between the final scores",
+          "q": "Over 5 training sessions, Johnson scored an average of 68 points. His first 3 scores had an average of 64 points. His last 2 scores differed by 12 points. What was his higher score in the last 2 sessions?",
+          "opts": ["74", "80", "86", "92"],
+          "ans": 1,
+          "model": "The total for 5 sessions is 5 × 68 = 340. The total for the first 3 sessions is 3 × 64 = 192, so the last 2 total 148. Two scores with a total of 148 and a difference of 12 are 68 and 80. The higher score is 80.",
+          "steps": [
+            "Find the total for all 5 sessions: 5 × 68 = 340.",
+            "Find the total for the first 3: 3 × 64 = 192.",
+            "Find the total for the last 2: 340 − 192 = 148.",
+            "Split 148 into two scores 12 apart: 68 and 80, so the higher score is 80."
+          ],
+          "marks": [
+            "Method mark: finds the total for the final two sessions using both averages.",
+            "Answer mark: uses the difference of 12 to identify 80 as the higher score."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-energy-2026-09-04-001",
+          "topic": "energy",
+          "level": "P6 BRIDGE · ENERGY CONVERSION",
+          "focus": "trace useful and wasted energy through an electrical device",
+          "title": "Energy Conversion · Mini Fan",
+          "q": "A battery-operated mini fan is switched on. The blades turn and the motor becomes slightly warm. Which is the best complete description of the energy changes?",
+          "opts": [
+            "Chemical energy in the battery is changed directly into cold energy in the air only.",
+            "Chemical energy in the battery is changed to electrical energy in the circuit. The motor changes it mainly to kinetic energy in the turning blades, with some heat and sound energy also produced.",
+            "The turning blades create chemical energy and store it back in the battery.",
+            "The motor changes all energy into sound, so the blades cannot move."
+          ],
+          "ans": 1,
+          "model": "The battery stores chemical energy. When the circuit is complete, this becomes electrical energy. The motor converts much of it to kinetic energy that turns the blades, while some energy is transferred as heat and sound.",
+          "steps": [
+            "Identify the store: the battery contains chemical energy.",
+            "Trace the pathway: a complete circuit carries electrical energy to the motor.",
+            "Identify the useful output: kinetic energy turns the blades and moves air.",
+            "Use the evidence: the warm motor and audible fan show heat and sound energy are also produced."
+          ],
+          "marks": [
+            "Science point: gives the correct chemical -> electrical -> kinetic energy pathway.",
+            "Evidence link: accounts for the warm motor and sound as other energy outputs."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-energy-2026-09-04-001",
+          "group": "precision",
+          "term": "chemical energy store",
+          "meaning": "energy stored in a battery that can be released in a circuit",
+          "example": "The battery provides energy from its chemical energy store.",
+          "note": "Name the energy store before describing the change."
+        },
+        {
+          "id": "science-vocab-energy-2026-09-04-002",
+          "group": "precision",
+          "term": "electrical energy in the circuit",
+          "meaning": "energy transferred through a complete circuit from a cell to an electrical component",
+          "example": "Electrical energy is transferred through the circuit to the fan motor.",
+          "note": "A component needs a complete circuit to receive this energy."
+        },
+        {
+          "id": "science-vocab-energy-2026-09-04-003",
+          "group": "precision",
+          "term": "kinetic energy",
+          "meaning": "energy an object has because it is moving",
+          "example": "The turning fan blades have kinetic energy.",
+          "note": "Link kinetic energy to a visible movement."
+        },
+        {
+          "id": "science-vocab-energy-2026-09-04-004",
+          "group": "precision",
+          "term": "energy is transferred as heat and sound",
+          "meaning": "some energy from a device spreads to the surroundings as warming and sound",
+          "example": "The warm motor and fan noise show that energy is transferred as heat and sound.",
+          "note": "Use observations as evidence for energy outputs."
+        },
+        {
+          "id": "science-vocab-energy-2026-09-04-005",
+          "group": "precision",
+          "term": "useful energy output",
+          "meaning": "the energy change a device is designed to provide",
+          "example": "For a fan, kinetic energy in the blades is the useful energy output.",
+          "note": "A useful output can exist alongside heat and sound outputs."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-04-001",
+          "title": "P5 华文短文阅读 · 不只看结果",
+          "q": "学校举行纸桥比赛。承宇的纸桥一开始能承受最多的积木，他兴奋地说自己的方法一定最好。老师请各组写下制作过程，承宇才发现自己没有记录纸张折叠的次数和胶带的长度。后来，另一组虽然承受的积木较少，却把每一次调整都记录得很清楚，还能解释为什么桥面会变稳。承宇听完后，主动请对方教他怎样记录，并重新测试自己的纸桥。",
+          "ask": "承宇后来主动学习记录制作过程，最主要的原因是什么？",
+          "opts": [
+            "他明白了除了看结果，也要有清楚的过程和依据，才能知道方法为什么有效。",
+            "他决定以后不再参加任何比赛。",
+            "他认为积木越少，纸桥一定越好。",
+            "他只想把别人的纸桥带回家。"
+          ],
+          "ans": 0,
+          "model": "承宇原先只看纸桥能承受多少积木。听了另一组的说明后，他明白要记录调整过程和依据，才能知道方法为什么有效，也才能重新测试和改进自己的纸桥。",
+          "marks": [
+            "内容点：写出过程记录和依据的重要。",
+            "依据点：结合另一组清楚记录、承宇重新测试的行为说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-05",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-05-001",
+          "title": "The Label on the Sample Jar",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>For the school exhibition, Nia's group collected leaves from different parts of the campus. Nia found a leaf with silver spots near the field and hurried to place it in a sample jar. She wanted it to be the first specimen on their display.</p><p>Her partner, Tomas, asked where exactly she had found it. Nia pointed vaguely towards the field. Tomas then showed her the labels on the other jars: date, location, plant height and a sketch of nearby plants. Nia felt embarrassed. She had a beautiful leaf but no reliable way to help another pupil find the same plant again.</p><p>Instead of hiding the jar, Nia returned to the field with Tomas. They found the plant beside a drainage grate, measured it and added a clear label. At the exhibition, a visitor asked how they knew the leaf had come from that plant. Nia pointed to the label and the sketch. She had learnt that a good discovery becomes more useful when someone else can check it.</p>",
+          "q": "Why did Nia return to the field with Tomas?",
+          "opts": [
+            "She wanted to make the leaf look more colourful for the display.",
+            "She needed reliable details that would link the leaf to its source and allow others to check the discovery.",
+            "She hoped to remove all the other groups' sample jars.",
+            "She had decided that labels were less useful than memory."
+          ],
+          "ans": 1,
+          "model": "Nia returned to collect reliable details about the plant and its location. The label and sketch let other people connect the leaf to its source and check the group's discovery.",
+          "evidence": "She had a beautiful leaf but no reliable way to help another pupil find the same plant again.",
+          "marks": [
+            "Meaning point: identifies the need for reliable, checkable evidence.",
+            "Support point: links the label or sketch to locating the same plant."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-05-001",
+          "title": "Student Team Times a Safer Crossing Route",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A student team has compared two walking routes from a bus stop to its school gate. One route was shorter, while the other included an overhead bridge and a sheltered path. For five mornings, the team timed both routes from the same bus arrival point. They also recorded the number of road crossings and whether rain made either route slippery.</p><p>The shorter route usually took less time, but it required two road crossings. The longer route took about three more minutes on average and had only one controlled crossing. The team did not tell every pupil to use the longer route. Instead, it suggested that pupils who had heavy bags or were walking during rain should consider the sheltered route, while those choosing the shorter route should use the marked crossings.</p><p>The school's safety committee said the report was useful because it explained the trade-off instead of pretending that one route was best for every situation.</p>",
+          "q": "What does the report's recommendation show?",
+          "opts": [
+            "The team ignored time because every route takes exactly the same length of time.",
+            "The team considered evidence about both speed and safety, then gave different advice for different needs.",
+            "The longer route is always the only safe route for every pupil.",
+            "Rain makes road crossings disappear."
+          ],
+          "ans": 1,
+          "model": "The team used both travel-time and safety evidence. Because different pupils may face different conditions, it gave guidance that considered the trade-off instead of naming one route as best for everyone.",
+          "evidence": "The report was useful because it explained the trade-off instead of pretending that one route was best for every situation.",
+          "marks": [
+            "Meaning point: identifies the trade-off between time and safety.",
+            "Support point: explains why the advice differs by condition or need."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-speed-2026-09-05-001",
+          "topic": "speed",
+          "kind": "thinking",
+          "title": "Speed · Split Training Run",
+          "tag": "Find total distance and total time; do not average the two speeds",
+          "q": "Johnson runs the first 600 m of a training route at 4 m/s and the next 600 m at 6 m/s. What is his average speed for the whole 1 200 m route?",
+          "opts": ["4.8 m/s", "5 m/s", "5.2 m/s", "10 m/s"],
+          "ans": 0,
+          "model": "For the first 600 m, time = 600 ÷ 4 = 150 s. For the next 600 m, time = 600 ÷ 6 = 100 s. Total distance is 1 200 m and total time is 250 s. Average speed = 1 200 ÷ 250 = 4.8 m/s.",
+          "steps": [
+            "Find first time: 600 ÷ 4 = 150 seconds.",
+            "Find second time: 600 ÷ 6 = 100 seconds.",
+            "Add distances and times: 1 200 m in 250 seconds.",
+            "Use average speed = total distance ÷ total time = 4.8 m/s."
+          ],
+          "marks": [
+            "Method mark: adds the two travel times instead of averaging 4 and 6.",
+            "Answer mark: calculates the average speed as 4.8 m/s."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-forces-2026-09-05-001",
+          "topic": "forces",
+          "level": "P6 BRIDGE · FORCES",
+          "focus": "infer balanced forces from constant speed and predict a changed force",
+          "title": "Forces · Supply Trolley",
+          "q": "A pupil pulls a loaded trolley along a level floor with a force of 6 N. The trolley moves at a constant speed. The pupil then increases the pulling force to 8 N while the floor and load stay the same. What will most likely happen next, and why?",
+          "opts": [
+            "The trolley will continue at the same speed because there is no friction at all.",
+            "The trolley will speed up because the original 6 N pull balanced friction, but the 8 N pull gives a larger forward force than the opposing friction.",
+            "The trolley will move backwards because the pulling force became larger.",
+            "The trolley will stop immediately because a larger force always stops an object."
+          ],
+          "ans": 1,
+          "model": "When the trolley moved at constant speed, the 6 N pulling force was balanced by an equal frictional force in the opposite direction. Increasing the pull to 8 N gives a resultant forward force of 2 N, so the trolley speeds up.",
+          "steps": [
+            "Read constant speed as balanced forces: forward pull = opposing friction.",
+            "At first, friction is 6 N backwards because the pull is 6 N forwards.",
+            "The new pull is 8 N while friction stays 6 N on the same floor and load.",
+            "Resultant force is 2 N forwards, so the trolley accelerates forwards."
+          ],
+          "marks": [
+            "Science point: links constant speed to balanced forces and identifies friction as the opposing force.",
+            "Evidence link: compares 8 N forward with 6 N backward to predict speeding up."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-forces-2026-09-05-001",
+          "group": "precision",
+          "term": "balanced forces",
+          "meaning": "forces of equal size acting in opposite directions, giving no change in motion",
+          "example": "The trolley moves at constant speed when the pulling force and friction are balanced.",
+          "note": "Balanced forces do not mean there are no forces."
+        },
+        {
+          "id": "science-vocab-forces-2026-09-05-002",
+          "group": "precision",
+          "term": "friction acts in the opposite direction",
+          "meaning": "a contact force that opposes motion between touching surfaces",
+          "example": "Friction from the floor acts backwards while the trolley is pulled forwards.",
+          "note": "Always state the direction when explaining a force."
+        },
+        {
+          "id": "science-vocab-forces-2026-09-05-003",
+          "group": "precision",
+          "term": "resultant force",
+          "meaning": "the overall force after forces in different directions are combined",
+          "example": "An 8 N pull and 6 N friction give a resultant force of 2 N forwards.",
+          "note": "Show which force is larger and in which direction."
+        },
+        {
+          "id": "science-vocab-forces-2026-09-05-004",
+          "group": "precision",
+          "term": "accelerates in the direction of the resultant force",
+          "meaning": "an object speeds up, slows down or changes direction when forces are unbalanced",
+          "example": "The trolley accelerates forwards because the resultant force is forwards.",
+          "note": "Do not say a force automatically gives constant speed."
+        },
+        {
+          "id": "science-vocab-forces-2026-09-05-005",
+          "group": "precision",
+          "term": "same floor and same load",
+          "meaning": "conditions kept unchanged so the frictional comparison is fair",
+          "example": "With the same floor and load, the friction can be treated as unchanged in this prediction.",
+          "note": "Mention unchanged conditions when a question asks for a prediction."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-05-001",
+          "title": "P5 华文短文阅读 · 先听完整的意见",
+          "q": "班上讨论毕业册封面的设计。乐恩一听见同学提议用黑色背景，就立刻说：‘太暗了，一定不好看。’设计小组的嘉雯没有和他争辩，而是请大家把不同方案贴在墙上，再写下喜欢和担心的原因。乐恩后来发现，有些同学喜欢黑色背景，是因为照片上的亮色图案会更清楚；也有人担心字太小。经过讨论，小组决定保留深色边框，却把主要内容改成浅色底。乐恩主动说：‘原来先听完整的理由，才能提出有用的建议。’",
+          "ask": "乐恩最后的话主要说明了什么？",
+          "opts": [
+            "他明白了要先了解别人的理由和需要，才能提出更有根据的建议。",
+            "他认为所有封面都必须用黑色背景。",
+            "他不愿意再参加毕业册的讨论。",
+            "他觉得同学不应该写下担心的原因。"
+          ],
+          "ans": 0,
+          "model": "乐恩起初只凭自己的感觉否定黑色背景。听完同学们的理由后，他明白不同方案各有优点和需要改进的地方，因此要先了解完整情况，才能提出有根据的建议。",
+          "marks": [
+            "内容点：写出先听理由、了解完整情况的重要。",
+            "依据点：结合大家写下喜欢和担心的原因，以及最后的折中设计说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-06",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-06-001",
+          "title": "The Missing Measurement",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>For the school garden challenge, Suri's team had to design a shade for a young tomato plant. Suri wanted to begin building immediately. Her teammate, Ben, suggested measuring how far the afternoon sunlight reached first, but Suri said that a rough guess would be quicker.</p><p>After lunch, the team set up their first shade. It looked neat, yet the plant was still in direct sunlight for much of the afternoon. Ben pointed out that they had measured the height of the plant but not the angle and length of the sunlight across the soil. Suri felt frustrated, but she fetched a measuring tape and helped Ben record the shadow's position every twenty minutes.</p><p>The next day, the team adjusted the shade using their measurements. Their final design was not the largest, but it protected the plant during the hottest part of the day. Suri wrote in the project journal that a measurement is useful only when it answers the exact problem being tested.</p>",
+          "q": "What did Suri learn from the team's first shade design?",
+          "opts": [
+            "A neat-looking design is always enough to protect a plant.",
+            "The team should avoid measuring anything before building.",
+            "They needed measurements that matched the sunlight problem, not only a measurement that was easy to take.",
+            "The largest shade always gives the best result in every garden."
+          ],
+          "ans": 2,
+          "model": "Suri learned that the team needed relevant measurements. Measuring the plant's height did not show where the afternoon sunlight fell, so they had to record the shadow's position to solve the actual problem.",
+          "evidence": "A measurement is useful only when it answers the exact problem being tested.",
+          "marks": [
+            "Meaning point: identifies that evidence must match the question being investigated.",
+            "Support point: links the shadow measurements to the afternoon sunlight problem."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-06-001",
+          "title": "Pupils Trial a Quieter Study Corner",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A pupil committee has tested a new study corner beside its school library. The corner has desk screens, a notice asking pupils to keep voices low, and a small rack for borrowed headphones. Before recommending the idea, the committee asked forty pupils to use the space at different times over one week.</p><p>Most pupils said the screens helped them concentrate when the nearby corridor was busy. However, several pupils said that the headphones were often unavailable after lunchtime. Instead of declaring the trial a success immediately, the committee counted how many headphones were returned each day and asked the librarian when the corner was busiest.</p><p>The committee recommended keeping the desk screens and adding a return tray near the entrance. It also suggested buying more headphones only after another week of records showed that the shortage continued.</p>",
+          "q": "Why did the committee wait for another week of records before recommending more headphones?",
+          "opts": [
+            "It wanted evidence that the shortage was a repeated problem, not just a one-day impression.",
+            "It believed that headphones can never help pupils study.",
+            "It wanted to remove the desk screens from the study corner.",
+            "It had already proved that every pupil lost a pair of headphones."
+          ],
+          "ans": 0,
+          "model": "The committee wanted to check whether the shortage happened repeatedly. More records would make its recommendation more reliable than relying on one busy lunchtime.",
+          "evidence": "It suggested buying more headphones only after another week of records showed that the shortage continued.",
+          "marks": [
+            "Meaning point: identifies the need for reliable repeated evidence.",
+            "Support point: links the extra records to checking whether the shortage continues."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-algebra-2026-09-06-001",
+          "topic": "algebra",
+          "kind": "thinking",
+          "title": "Algebra · Two Donation Boxes",
+          "tag": "Use equal operations to keep both sides balanced",
+          "q": "A class packs x cards into each of 3 donation boxes, then adds 7 extra cards. Another class packs x cards into each of 2 boxes, then adds 23 extra cards. Both classes have the same total number of cards. What is x?",
+          "opts": ["8", "16", "23", "30"],
+          "ans": 1,
+          "model": "Write the equal totals: 3x + 7 = 2x + 23. Subtract 2x from both sides: x + 7 = 23. Subtract 7 from both sides: x = 16.",
+          "steps": [
+            "Translate the two equal totals into 3x + 7 = 2x + 23.",
+            "Remove 2x from both sides, leaving x + 7 = 23.",
+            "Remove 7 from both sides, leaving x = 16.",
+            "Check: 3(16) + 7 = 55 and 2(16) + 23 = 55."
+          ],
+          "marks": [
+            "Method mark: forms an equation from two equal totals and keeps both sides balanced.",
+            "Answer mark: solves and checks x = 16."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p6-environment-2026-09-06-001",
+          "topic": "environment",
+          "level": "P6 BRIDGE · ENVIRONMENT",
+          "focus": "link a changed habitat condition to a food-web consequence using evidence",
+          "title": "Environment · Pond Plant Recovery",
+          "q": "Fertiliser-rich water from a nearby lawn enters a pond. Soon, a thick layer of algae covers much of the water surface and the number of aquatic plants on the pond floor falls. Which is the best complete explanation for why some fish populations may later decrease?",
+          "opts": [
+            "The algae make every fish a producer, so fish no longer need food.",
+            "The algae block light from reaching aquatic plants. Fewer plants photosynthesise, so less food and oxygen are available for organisms in the pond, affecting fish populations.",
+            "The algae turn directly into fish, causing every fish population to increase.",
+            "Fertiliser-rich water means that aquatic plants can make food without light."
+          ],
+          "ans": 1,
+          "model": "The thick algae layer <mark>blocks light</mark> from reaching aquatic plants. Fewer aquatic plants can <mark>photosynthesise</mark>, so less food and oxygen become available in the pond. This can reduce survival and affect fish populations.",
+          "steps": [
+            "Identify the changed condition: algae cover the water surface.",
+            "The algae reduce the light reaching aquatic plants below the surface.",
+            "With less light, fewer aquatic plants photosynthesise and produce food and oxygen.",
+            "Less food and oxygen can reduce survival of connected pond organisms, including fish."
+          ],
+          "marks": [
+            "Science point: links reduced light to reduced photosynthesis by aquatic plants.",
+            "Evidence link: explains how less plant food and oxygen can affect fish survival."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-environment-2026-09-06-001",
+          "group": "precision",
+          "term": "algae block light from reaching aquatic plants",
+          "meaning": "a thick algae layer at the water surface reduces the light available below it",
+          "example": "The algae blocked light from reaching the aquatic plants on the pond floor.",
+          "note": "State what changes first before explaining the effect."
+        },
+        {
+          "id": "science-vocab-environment-2026-09-06-002",
+          "group": "precision",
+          "term": "reduced photosynthesis",
+          "meaning": "plants make less food when a needed condition such as light is reduced",
+          "example": "With less light, the aquatic plants carried out reduced photosynthesis.",
+          "note": "Do not say plants photosynthesise without light."
+        },
+        {
+          "id": "science-vocab-environment-2026-09-06-003",
+          "group": "precision",
+          "term": "less food and oxygen available",
+          "meaning": "fewer photosynthesising plants can reduce both food production and oxygen released into the water",
+          "example": "Reduced photosynthesis meant that less food and oxygen were available to pond organisms.",
+          "note": "Name both linked resources when the evidence supports both."
+        },
+        {
+          "id": "science-vocab-environment-2026-09-06-004",
+          "group": "precision",
+          "term": "survival of connected organisms may decrease",
+          "meaning": "a change to one part of a habitat can affect organisms linked by food and oxygen needs",
+          "example": "With less food and oxygen, the survival of connected pond organisms may decrease.",
+          "note": "Use may when a question asks for a likely effect rather than a guaranteed one."
+        },
+        {
+          "id": "science-vocab-environment-2026-09-06-005",
+          "group": "precision",
+          "term": "cause-and-effect chain",
+          "meaning": "a linked explanation that shows how one condition leads step by step to an outcome",
+          "example": "Algae cover → less light → reduced photosynthesis → less food and oxygen → fewer fish may survive.",
+          "note": "Use arrows or connecting words so every link is visible."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-06-001",
+          "title": "P5 华文短文阅读 · 先找出真正的问题",
+          "q": "班级准备举办旧书交换日。志豪发现报名表上的书名有重复，便立刻提议把重复的书全部取消。他觉得这样最快。负责整理的敏慧却先把重复的书分成两类：一类是同一本故事书，另一类是同一个系列但不同册数。她还请同学在书名后写上适合的阅读年龄。整理后，大家发现有些重复的故事书可以放在同一张桌上，方便选择；不同册数的系列书则可以按顺序摆放。志豪看着新的分类表说：‘原来先弄清楚问题，办法才不会把有用的东西一起丢掉。’",
+          "ask": "志豪最后的话主要说明了什么？",
+          "opts": [
+            "遇到重复的资料时，应该全部取消，事情才会更快完成。",
+            "解决问题前要先仔细分类和了解情况，避免把不同的问题当成同一种。",
+            "旧书交换日只适合摆放同一本故事书。",
+            "同学不应该在书名后写上适合的阅读年龄。"
+          ],
+          "ans": 1,
+          "model": "志豪起初把所有重复书名都当成同一个问题。敏慧先分类后，发现有的是同一本书，有的是不同册数的系列书，因此可以用不同方法整理。志豪明白了解清楚情况后，才能作出合适的决定。",
+          "marks": [
+            "内容点：写出先分类、了解情况的重要。",
+            "依据点：结合同一本书和不同册数系列书要用不同整理方法说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-07",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-07-001",
+          "title": "The Clock Before the Concert",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>On the morning of the school concert, Daniel discovered that the digital timer for his group's light display was running three minutes slow. His first thought was to tell the teacher immediately and wait for instructions. His teammate, Farah, pointed out that they still had time to compare the timer with the hall clock and test whether the problem affected every lighting cue.</p><p>Daniel wanted a quick answer, but Farah asked him to write down the times for the opening, middle and final cues. Their notes showed that the timer lost the same amount of time during each ten-minute test. They adjusted their rehearsal schedule, then told the teacher exactly what they had observed and what temporary change they had made.</p><p>During the concert, the lights changed at the intended moments. Afterwards, Daniel said that the useful part of the morning had not been finding a clever shortcut. It had been turning a worrying surprise into a clear problem that the team could test.</p>",
+          "q": "What did Daniel learn from the timer problem?",
+          "opts": [
+            "A team should always hide a problem until after a performance.",
+            "A repeated test can turn a worrying problem into evidence for a sensible action.",
+            "Digital timers never need to be compared with another clock.",
+            "The quickest answer is always more useful than a tested answer."
+          ],
+          "ans": 1,
+          "model": "Daniel learned that the team could test the timer repeatedly, use the observations as evidence, and then make a sensible adjustment instead of guessing.",
+          "evidence": "Their notes showed that the timer lost the same amount of time during each ten-minute test.",
+          "marks": [
+            "Meaning point: identifies that repeated testing provides reliable evidence.",
+            "Support point: links the repeated time loss to the team's adjustment."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-07-001",
+          "title": "Young Residents Trial a Sharing Shelf",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A group of pupil volunteers has set up a sharing shelf at a neighbourhood community club. Residents can place clean stationery, storybooks and small craft materials on the shelf for others to take. Before expanding the idea, the volunteers recorded which items were taken and which items stayed untouched during the first two weeks.</p><p>The team noticed that storybooks and unused exercise books were collected quickly, while partly used craft kits often remained. Instead of deciding that craft materials were not useful, the pupils asked residents why they hesitated. Several people said they could not tell whether the kits were complete.</p><p>The volunteers added simple labels listing the contents of each kit and planned to compare the records for another fortnight. They said the project had taught them that a low number alone does not explain a problem; people affected by it can help reveal the missing reason.</p>",
+          "q": "Why did the volunteers ask residents about the craft kits?",
+          "opts": [
+            "They wanted to prove that all craft materials should be thrown away.",
+            "They needed to understand the reason behind the low number of kits taken before changing the shelf.",
+            "They wanted residents to stop borrowing storybooks.",
+            "They had already shown that every craft kit was incomplete."
+          ],
+          "ans": 1,
+          "model": "The volunteers asked residents because the records only showed that fewer craft kits were taken. They needed to find the reason before choosing a useful change, such as clearer labels.",
+          "evidence": "A low number alone does not explain a problem; people affected by it can help reveal the missing reason.",
+          "marks": [
+            "Meaning point: explains the difference between an observation and its cause.",
+            "Support point: connects resident feedback to the decision to add labels."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-speed-2026-09-07-001",
+          "topic": "speed",
+          "kind": "thinking",
+          "title": "Speed · Two Delivery Routes",
+          "tag": "Compare total distance and total time, not one part only",
+          "q": "A cycling team travels 18 km in 45 minutes on Route A. On Route B, it travels 24 km in 1 hour. Which route has the greater average speed?",
+          "opts": [
+            "Route A, because 18 km is travelled in less than one hour.",
+            "Neither route; both have an average speed of 24 km/h.",
+            "Route B, because 24 km is a greater distance.",
+            "Route B, because one hour is longer than 45 minutes."
+          ],
+          "ans": 1,
+          "visual": "<div class=\"track-model\"><div class=\"track-line\"><span class=\"track-car\">🚴</span></div><div class=\"track-stats\"><span>Route A: 18 km in 45 min = 0.75 h</span><span>Route B: 24 km in 1 h</span></div></div>",
+          "model": "Route A has the greater average speed. Route A: 18 ÷ 0.75 = 24 km/h. Route B: 24 ÷ 1 = 24 km/h. Therefore, neither route is greater; both have the same average speed.",
+          "steps": [
+            "Convert 45 minutes to 0.75 hour before comparing.",
+            "Route A: 18 ÷ 0.75 = 24 km/h.",
+            "Route B: 24 ÷ 1 = 24 km/h.",
+            "Compare the calculated speeds: both routes are 24 km/h."
+          ],
+          "marks": [
+            "Method mark: converts the time unit and calculates both average speeds.",
+            "Answer mark: states that the two routes have the same average speed."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-water-2026-09-07-001",
+          "topic": "water",
+          "level": "P5 CORE · WATER CYCLE",
+          "focus": "compare evaporation conditions and link the controlled variable to the evidence",
+          "title": "Water Cycle · Drying Cloth Investigation",
+          "q": "Two identical wet cloths are hung outdoors for one hour. Cloth A is spread flat in a windy place. Cloth B is folded and hung in a sheltered place. Which is the best complete explanation for why Cloth A is likely to be drier?",
+          "opts": [
+            "Cloth A is drier because wind changes liquid water directly into ice.",
+            "Cloth A is drier because it has a larger exposed surface area and moving air carries away water vapour, so evaporation happens faster.",
+            "Cloth A is drier because folded cloths cannot contain water.",
+            "Cloth A is drier because sheltered places create more heat energy than windy places."
+          ],
+          "ans": 1,
+          "model": "Cloth A is likely to be drier because it is spread flat, giving it a <mark>larger exposed surface area</mark>. The <mark>moving air</mark> carries away water vapour near the cloth, so evaporation can happen faster.",
+          "visual": "<svg class='science-diagram' viewBox='0 0 760 220' role='img' aria-label='Flat wet cloth with moving air'><path class='diagram-line' d='M55 175H705'/><path class='diagram-object' d='M110 145l180-22 55 35-180 22z'/><path class='diagram-line' d='M112 145l-20-25M290 123l18-25M345 158l22-22'/><text x='215' y='205' text-anchor='middle'>Cloth A · flat wet surface</text><path class='diagram-line' d='M425 108h115'/><path class='diagram-line' d='M520 91l28 17-28 17'/><text x='480' y='78' text-anchor='middle'>moving air</text><path class='diagram-ray' d='M610 55v35M590 65l-20-20M630 65l20-20M580 90h-28M640 90h28'/><circle class='diagram-hot' cx='610' cy='55' r='18'/><text x='610' y='145' text-anchor='middle'>water vapour carried away</text><text class='diagram-small' x='380' y='20' text-anchor='middle'>larger exposed area + moving air → faster evaporation</text></svg>",
+          "steps": [
+            "Compare the exposed surface area: a flat cloth exposes more wet surface than a folded cloth.",
+            "Wind carries water vapour away from the surface instead of allowing humid air to build up.",
+            "Both conditions allow more liquid water to evaporate during the hour.",
+            "Therefore, Cloth A is likely to be drier."
+          ],
+          "marks": [
+            "Science point: names larger exposed surface area and/or moving air as conditions that increase evaporation.",
+            "Evidence link: connects those conditions to more water leaving Cloth A as water vapour."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-water-2026-09-07-001",
+          "group": "precision",
+          "term": "larger exposed surface area",
+          "meaning": "more of a material's surface is open to the surrounding air",
+          "example": "The flat cloth had a larger exposed surface area than the folded cloth.",
+          "note": "Name what is exposed before linking it to faster evaporation."
+        },
+        {
+          "id": "science-vocab-water-2026-09-07-002",
+          "group": "precision",
+          "term": "moving air carries away water vapour",
+          "meaning": "wind removes water vapour near a wet surface, allowing more water to evaporate",
+          "example": "Moving air carried away water vapour near Cloth A.",
+          "note": "Do not say wind sucks up liquid water."
+        },
+        {
+          "id": "science-vocab-water-2026-09-07-003",
+          "group": "precision",
+          "term": "evaporation happens faster",
+          "meaning": "liquid water changes into water vapour at a greater rate",
+          "example": "Evaporation happened faster from the flat cloth in the windy place.",
+          "note": "Use faster, not more, when comparing a rate."
+        },
+        {
+          "id": "science-vocab-water-2026-09-07-004",
+          "group": "precision",
+          "term": "water vapour in the surrounding air",
+          "meaning": "water in its gaseous state that is present in the air",
+          "example": "Water vapour in the surrounding air can slow evaporation when it builds up near a wet surface.",
+          "note": "Water vapour is invisible; it is not the same as visible cloud droplets."
+        },
+        {
+          "id": "science-vocab-water-2026-09-07-005",
+          "group": "precision",
+          "term": "condition → process → result",
+          "meaning": "an OEQ structure that states the changed condition, scientific process and observed outcome",
+          "example": "More exposed surface area → faster evaporation → the cloth becomes drier.",
+          "note": "Use this chain when writing a two-mark explanation."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-07-001",
+          "title": "P5 华文短文阅读 · 先看证据再下结论",
+          "q": "学校准备把几盆植物搬到走廊上。阿凯看见其中一盆叶子发黄，便说：‘一定是它没有浇水。’园艺小组的丽雯却先查看了浇水记录，又把花盆移开，发现盆底的排水孔被落叶堵住了。她说：‘土壤一直湿着，根部可能得不到足够的空气。’大家清理排水孔后，才决定继续观察几天。阿凯说：‘原来叶子发黄不一定只有一个原因，先找证据比较可靠。’",
+          "ask": "阿凯最后明白了什么？",
+          "opts": [
+            "看见植物叶子发黄时，应该立刻多浇水。",
+            "判断问题前要先收集证据，因为同一种现象可能有不同原因。",
+            "排水孔被落叶堵住后，土壤一定会变干。",
+            "园艺小组不需要继续观察植物的变化。"
+          ],
+          "ans": 1,
+          "model": "阿凯起初只凭叶子发黄就认为植物缺水。丽雯查看记录和排水孔后，发现土壤其实太湿，因此他明白同一种现象可能有不同原因，要先收集证据再判断。",
+          "marks": [
+            "内容点：写出先找证据、不能只凭现象下结论。",
+            "依据点：结合浇水记录和堵住的排水孔说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-08",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-08-001",
+          "title": "The Map with No Shortcut",
+          "meta": "P5/P6 PSLE-style narrative · 7-minute read · Original practice",
+          "body": "<p>When Mei's class prepared for an outdoor learning walk, she volunteered to draw the route map. She copied the main path quickly, but left out a narrow footbridge because it looked unimportant. On the morning of the walk, a fallen branch blocked the main path and the class had to find another way.</p><p>Mei opened her map and realised that the bridge would have helped them reach the next checkpoint. She wanted to pretend that she had never seen it, but instead asked her partner to check the route with her. They measured the distance, marked the bridge and added a note about the slippery boards. Their teacher approved the revised map after another group tested it.</p><p>Mei learnt that a useful map is not the one that looks fastest to draw. It is the one that includes details which help people make a safe decision when conditions change.</p>",
+          "q": "What made Mei's revised map more useful?",
+          "opts": [
+            "It removed every small detail so that nobody could question it.",
+            "It included a tested alternative route and a warning that helped others decide safely.",
+            "It showed only the route Mei preferred to use herself.",
+            "It guaranteed that no path would ever be blocked again."
+          ],
+          "ans": 1,
+          "model": "Mei's revised map was more useful because it included an alternative route that had been checked and a warning about the slippery bridge, so others could make a safer decision when the main path was blocked.",
+          "evidence": "They measured the distance, marked the bridge and added a note about the slippery boards before another group tested it.",
+          "marks": [
+            "Meaning point: explains that the revised map added a tested alternative and safety information.",
+            "Support point: links the bridge measurement and slippery-board warning to safer decisions."
+          ]
+        },
+        "news": {
+          "id": "reading-news-2026-09-08-001",
+          "title": "A Cooler Route to School",
+          "meta": "Singapore news-style reading · 6-minute read · Original practice",
+          "body": "<p>A student committee at a Singapore primary school has been studying how pupils feel during the walk from the gate to the classrooms. Instead of guessing which part was hottest, the pupils used the same thermometer at three shaded and three sunny points during recess.</p><p>Their first records showed that the open walkway was warmer, but the numbers changed when different pupils held the thermometer. The committee repeated the measurements with one person holding the thermometer at the same height and waited the same amount of time at every point.</p><p>The second set of records was more consistent. The school then placed a temporary shade cloth along the warmest section and planned to compare the readings again. The pupils said that a solution should be tested after it is introduced, because an improvement cannot be judged from one observation alone.</p>",
+          "q": "Why did the committee repeat the temperature measurements?",
+          "opts": [
+            "To make the walkway warmer before the school changed it.",
+            "To make the comparison fairer by controlling the measuring method and checking whether the pattern was consistent.",
+            "To prove that every shaded point had exactly the same temperature.",
+            "To avoid recording any readings from the sunny points."
+          ],
+          "ans": 1,
+          "model": "The committee repeated the measurements to make the comparison fairer and check that the pattern was consistent. They kept the person, thermometer height and waiting time the same so that the method would not affect the results.",
+          "evidence": "They used one person, the same thermometer height and the same waiting time at every point.",
+          "marks": [
+            "Meaning point: identifies the need for a fair and consistent comparison.",
+            "Support point: names at least one controlled measuring condition from the passage."
+          ]
+        }
+      },
+      "math": [
+        {
+          "id": "math-p5-algebra-2026-09-08-001",
+          "topic": "algebra",
+          "kind": "thinking",
+          "title": "Algebra · Balanced Machine",
+          "tag": "Undo the operations in reverse order",
+          "q": "A number is multiplied by 3 and then increased by 8. The final result is 41. What is the number?",
+          "opts": ["9", "10", "11", "13"],
+          "ans": 2,
+          "visual": "<div class=\"balance\"><div class=\"beam\"></div><div class=\"stand\"></div><div class=\"base\"></div><div class=\"pan left\">3x + 8</div><div class=\"pan right\">41</div></div>",
+          "model": "Write 3x + 8 = 41. Subtract 8 from both sides: 3x = 33. Divide both sides by 3: x = 11.",
+          "steps": [
+            "Represent the sentence as 3x + 8 = 41.",
+            "Undo the addition first: 41 − 8 = 33, so 3x = 33.",
+            "Undo the multiplication: 33 ÷ 3 = 11, so x = 11."
+          ],
+          "marks": [
+            "Method mark: undoes the addition and multiplication in the correct reverse order.",
+            "Answer mark: gives x = 11 and checks it in the original relationship."
+          ]
+        }
+      ],
+      "science": [
+        {
+          "id": "science-p5-reproduction-2026-09-08-001",
+          "topic": "reproduction",
+          "level": "P5 CORE · PLANT REPRODUCTION",
+          "focus": "link pollination evidence to seed formation",
+          "title": "Plant Reproduction · Covered Flowers",
+          "q": "Two similar flowering plants are observed. Plant A is left uncovered so insects can visit its flowers. Plant B is covered with a fine mesh bag before the flowers open. Plant A forms many fruits, but Plant B forms very few. Which is the best complete explanation?",
+          "opts": [
+            "Plant B formed few fruits because the mesh bag gave the plant too much sunlight.",
+            "Plant A was more likely to receive pollen carried by insects, so pollination and later fertilisation could occur in more flowers.",
+            "Plant B could not form fruits because all covered flowers lose their petals immediately.",
+            "Plant A formed more fruits because insects produce seeds directly inside flowers."
+          ],
+          "ans": 1,
+          "model": "Plant A was more likely to receive pollen carried by insects. This increased the chance of <mark>pollination</mark> and subsequent <mark>fertilisation</mark>, so more flowers developed into fruits. The mesh reduced insect access to Plant B, so fewer flowers received pollen.",
+          "visual": "<svg class='science-diagram' viewBox='0 0 760 220' role='img' aria-label='Insect pollination experiment'><defs><marker id='flowArrow' markerWidth='10' markerHeight='10' refX='8' refY='4' orient='auto'><path d='M0,0 L8,4 L0,8 Z' fill='#e4a62a'/></marker></defs><path class='diagram-line' d='M45 180H715'/><g><path class='diagram-line' d='M150 175v-70M150 120c-30-35-62-10-58 18 28 12 50 3 58-18ZM150 120c30-35 62-10 58 18-28 12-50 3-58-18Z'/><circle class='diagram-hot' cx='150' cy='95' r='16'/><text x='150' y='205' text-anchor='middle'>Plant A · insects visit</text></g><path class='diagram-ray' d='M215 95H330' marker-end='url(#flowArrow)'/><g><path class='diagram-line' d='M380 175v-72M380 118c-30-35-62-10-58 18 28 12 50 3 58-18ZM380 118c30-35 62-10 58 18-28 12-50 3-58-18Z'/><circle class='diagram-accent' cx='380' cy='92' r='16'/><text x='380' y='205' text-anchor='middle'>pollen reaches stigma</text></g><path class='diagram-ray' d='M445 95H560' marker-end='url(#flowArrow)'/><g><circle class='diagram-hot' cx='630' cy='128' r='38'/><path class='diagram-line' d='M600 128h60M630 98v60'/><text x='630' y='205' text-anchor='middle'>fruit forms</text></g><text class='diagram-small' x='380' y='24' text-anchor='middle'>pollination → fertilisation → fruit and seeds</text></svg>",
+          "steps": [
+            "Compare the evidence: insects could visit Plant A but had limited access to Plant B.",
+            "Insects can carry pollen from the anther to the stigma, causing pollination.",
+            "After pollination, fertilisation can occur and the flower can develop into a fruit.",
+            "Therefore, Plant A formed more fruits because more flowers received pollen."
+          ],
+          "marks": [
+            "Science point: uses pollination and fertilisation accurately.",
+            "Evidence link: connects insect access and pollen transfer to the different number of fruits."
+          ]
+        }
+      ],
+      "scienceVocab": [
+        {
+          "id": "science-vocab-reproduction-2026-09-08-001",
+          "group": "precision",
+          "term": "pollen transfer",
+          "meaning": "the movement of pollen grains from an anther to a stigma",
+          "example": "Insects can help with pollen transfer when they move between flowers.",
+          "note": "Name both the pollen and its movement when explaining pollination."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-08-002",
+          "group": "precision",
+          "term": "pollination",
+          "meaning": "the transfer of pollen grains from an anther to a stigma",
+          "example": "Pollination occurred when pollen reached the stigma of the flower.",
+          "note": "Do not use pollination to mean the fusion of reproductive cells."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-08-003",
+          "group": "precision",
+          "term": "fertilisation",
+          "meaning": "the fusion of a male reproductive cell with a female reproductive cell",
+          "example": "Fertilisation can occur after pollen reaches the stigma and the male reproductive cell travels to the ovule.",
+          "note": "Use this term when explaining how seeds can begin to form."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-08-004",
+          "group": "precision",
+          "term": "insect access was limited",
+          "meaning": "insects could not freely reach the flowers because a barrier was present",
+          "example": "Insect access was limited by the fine mesh bag around Plant B.",
+          "note": "Link the barrier to less pollen reaching the stigma."
+        },
+        {
+          "id": "science-vocab-reproduction-2026-09-08-005",
+          "group": "precision",
+          "term": "condition → process → result",
+          "meaning": "an OEQ structure that connects a test condition to a scientific process and an observed outcome",
+          "example": "More insect access → more pollen transfer and pollination → more fruits formed.",
+          "note": "Use the arrow chain to make the evidence link visible."
+        }
+      ],
+      "chinese": [
+        {
+          "id": "chinese-p5-reading-2026-09-08-001",
+          "title": "P5 华文短文阅读 · 先试一试再判断",
+          "q": "学校的环保小组想减少午餐时间的食物浪费。志豪建议把所有剩菜都倒进同一个桶里，认为这样最方便。可是，思敏先观察了三天，发现有些同学只是把不喜欢的配菜留下，米饭却几乎都吃完。小组于是把配菜和米饭分开记录，并请同学说明原因。过了一星期，他们发现改进菜单比单纯增加垃圾桶更有帮助。志豪说：‘原来先观察和记录，才能找到真正的问题。’",
+          "ask": "志豪最后明白了什么？",
+          "opts": [
+            "只要增加垃圾桶，所有食物浪费都会消失。",
+            "处理问题前要先观察和记录，才能找出真正的原因并选择合适的方法。",
+            "同学留下配菜是因为他们完全不喜欢吃米饭。",
+            "环保小组不应该听取同学的意见。"
+          ],
+          "ans": 1,
+          "model": "志豪明白了不能只凭方便的想法处理问题。小组先观察、分开记录并了解同学的原因，才发现改进菜单比增加垃圾桶更有效，因此处理问题前要先找证据。",
+          "marks": [
+            "内容点：写出先观察、记录和了解原因，再选择方法。",
+            "依据点：结合配菜和米饭分开记录、改进菜单更有效说明。"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-09",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-09-001",
+          "title": "The Evidence in the Empty Garden",
+          "meta": "P5/P6 PSLE-style reading · inference and evidence",
+          "q": "Mira wanted to water every plant in the school garden twice a day. Before changing the routine, she checked the soil at three times of day for a week. The pots beside the covered walkway stayed damp, while the pots in the open sun became dry by late afternoon. She changed the plan so that only the sunny pots received extra water. Why was this a better plan?",
+          "opts": ["It used observations from different places and times to match the watering to each plant's need.", "It proved that every plant grows best when it is kept completely wet.", "It allowed Mira to avoid checking the garden again.", "It showed that the covered walkway made all plants use more water."],
+          "ans": 0,
+          "model": "The better plan used evidence from repeated checks at different places and times. The sunny pots dried faster, so they needed extra water, while the covered pots did not.",
+          "steps": ["Compare the soil observations rather than the original guess.", "Link the sunny position to faster drying.", "Choose a plan that gives extra water only where the evidence shows it is needed."],
+          "marks": ["Inference: identifies the evidence-based change.", "Evidence link: connects sunlight and drying to the watering decision."]
+        },
+        "news": {
+          "id": "reading-news-2026-09-09-001",
+          "title": "A Shared Shade Map for Walkers",
+          "meta": "Singapore news-style reading · comparing fair measurements",
+          "q": "A student group in Singapore mapped shaded walking routes between a community club and a library. They measured each route at 12 noon on three weekdays and recorded the shaded minutes. Why did they measure at the same time?",
+          "opts": ["To make the route comparison fair because the sun's position changes during the day.", "To guarantee that every route had exactly the same amount of shade.", "To make the library open earlier than the community club.", "To avoid recording any route that had trees."],
+          "ans": 0,
+          "model": "They measured at the same time to keep the comparison fair. If one route were measured in the morning and another at noon, the different sun positions could affect the amount of shade.",
+          "steps": ["Identify the variable being compared: shaded minutes.", "Keep the time the same so sunlight is a fair comparison.", "Reject choices that do not affect measurement fairness."],
+          "marks": ["Method point: states that the same time controls a condition.", "Reason point: links sun position to shade and fair comparison."]
+        }
+      },
+      "math": [{
+        "id": "math-p5-logic-2026-09-09-001",
+        "topic": "logic",
+        "level": "P5/P6 reasoning",
+        "focus": "test all conditions systematically",
+        "title": "Four divers in a row",
+        "q": "Four divers A, B, C and D stand in a row. B is immediately to the right of A. C is somewhere to the right of D. A is not at either end. Which order is possible?",
+        "visual": "<svg class='geometry-diagram wide' viewBox='0 0 760 180' role='img' aria-label='Four numbered positions with a possible order D, A, B, C'><rect x='30' y='55' width='700' height='70' rx='12' fill='#f4fbff' stroke='#1554b8' stroke-width='4'/><path d='M205 55v70M380 55v70M555 55v70' stroke='#8bd1ee' stroke-width='3' stroke-dasharray='8 7'/><text x='117' y='98' text-anchor='middle' font-size='30' font-weight='700' fill='#1554b8'>D</text><text x='292' y='98' text-anchor='middle' font-size='30' font-weight='700' fill='#1554b8'>A</text><text x='467' y='98' text-anchor='middle' font-size='30' font-weight='700' fill='#1554b8'>B</text><text x='642' y='98' text-anchor='middle' font-size='30' font-weight='700' fill='#1554b8'>C</text><text x='292' y='35' text-anchor='middle' font-size='18' fill='#0a7d61'>A not at an end</text><text x='467' y='158' text-anchor='middle' font-size='18' fill='#0a7d61'>B immediately right of A</text><text x='642' y='35' text-anchor='middle' font-size='18' fill='#0a7d61'>C right of D</text></svg>",
+        "opts": ["A. A, B, D, C", "B. D, A, B, C", "C. C, D, A, B", "D. D, C, B, A"],
+        "ans": 1,
+        "model": "D, A, B, C is possible. A is not at an end, B is immediately to A's right, and C is to the right of D.",
+        "steps": ["Check A's position first: it cannot be position 1 or 4.", "Place the pair A-B together with B immediately after A.", "Test C and D, then keep the only order satisfying every clue."],
+        "marks": ["Method mark: translates each clue into a positional test.", "Reasoning mark: verifies the chosen order against all conditions."]
+      }],
+      "science": [{
+        "id": "science-p5-systems-2026-09-09-001",
+        "topic": "systems",
+        "level": "P5 CORE · HUMAN SYSTEMS",
+        "focus": "link two body systems to evidence",
+        "title": "Why breathing and heart rate increase",
+        "q": "After Johnson runs up a flight of stairs, his breathing and heart rates increase. Which is the best complete explanation?",
+        "visual": "<svg class='science-diagram wide' viewBox='0 0 820 250' role='img' aria-label='Respiratory system and circulatory system supplying working muscles'><rect x='38' y='72' width='180' height='112' rx='28' fill='#eaf7ff' stroke='#1554b8' stroke-width='4'/><path d='M128 92v75M128 105c-42-34-70 10-52 58 9 22 39 19 52-2M128 105c42-34 70 10 52 58-9 22-39 19-52-2' fill='none' stroke='#e34f61' stroke-width='8'/><text x='128' y='215' text-anchor='middle' font-size='21' font-weight='700' fill='#1554b8'>lungs</text><path d='M238 128h135' stroke='#0a7d61' stroke-width='6' marker-end='url(#arr)'/><text x='305' y='108' text-anchor='middle' font-size='18' fill='#0a7d61'>oxygen enters</text><circle cx='430' cy='128' r='55' fill='#fff1f1' stroke='#e34f61' stroke-width='5'/><path d='M430 165c-50-37-28-66-2-39 26-27 48 2 2 39z' fill='#e34f61'/><text x='430' y='215' text-anchor='middle' font-size='21' font-weight='700' fill='#1554b8'>heart pumps</text><path d='M490 128h135' stroke='#0a7d61' stroke-width='6' marker-end='url(#arr)'/><text x='558' y='108' text-anchor='middle' font-size='18' fill='#0a7d61'>blood transports</text><path d='M684 76l48 52-48 52-48-52z' fill='#fff7d6' stroke='#d58a00' stroke-width='5'/><text x='684' y='124' text-anchor='middle' font-size='18' font-weight='700' fill='#1554b8'>working</text><text x='684' y='148' text-anchor='middle' font-size='18' font-weight='700' fill='#1554b8'>muscles</text><defs><marker id='arr' markerWidth='10' markerHeight='10' refX='8' refY='5' orient='auto'><path d='M0 0L10 5L0 10z' fill='#0a7d61'/></marker></defs></svg>",
+        "opts": ["His muscles need less oxygen, so both systems slow down to save energy.", "His working muscles respire faster and need more oxygen. Faster breathing takes in more oxygen, and the heart pumps blood faster to carry oxygen to the muscles and carbon dioxide away.", "The heart makes oxygen after exercise, so breathing is only needed to cool the body.", "Breathing increases because blood cannot move through the body when muscles are resting."],
+        "ans": 1,
+        "model": "His working muscles respire faster and need more oxygen. Faster breathing takes in more oxygen, while the heart pumps blood faster to transport oxygen to the muscles and carry carbon dioxide away.",
+        "steps": ["Read the arrows: lungs supply oxygen and the heart transports it in blood.", "Link stair running to faster respiration in the working muscles.", "State both the increased supply and the removal of carbon dioxide."],
+        "marks": ["Mark 1: uses precise vocabulary such as respiration, oxygen and carbon dioxide.", "Mark 2: links the respiratory and circulatory systems to the exercise evidence.", "Answer pattern: system function -> evidence -> result."]
+      }],
+      "scienceVocab": [
+        {"id":"science-vocab-systems-2026-09-09-001","group":"precision","term":"respiratory system","meaning":"the body system that takes in oxygen and removes carbon dioxide","example":"The respiratory system takes in more oxygen during exercise.","note":"Do not write only 'breathing'; name the system and its function."},
+        {"id":"science-vocab-systems-2026-09-09-002","group":"precision","term":"circulatory system","meaning":"the body system that transports blood around the body","example":"The circulatory system transports oxygen to the working muscles.","note":"Use transport when explaining the heart and blood."},
+        {"id":"science-vocab-systems-2026-09-09-003","group":"cause-result","term":"respire faster","meaning":"release energy at a faster rate by breaking down food using oxygen","example":"The muscles respire faster when Johnson runs up the stairs.","note":"This is the process that explains the increased need for oxygen."},
+        {"id":"science-vocab-systems-2026-09-09-004","group":"cause-result","term":"transport oxygen to the muscles","meaning":"carry oxygen in the blood from the lungs to body cells","example":"The heart pumps blood to transport oxygen to the muscles.","note":"This is a strong evidence link for a two-mark answer."},
+        {"id":"science-vocab-systems-2026-09-09-005","group":"precision","term":"remove carbon dioxide","meaning":"carry away carbon dioxide produced by cells during respiration","example":"The blood carries carbon dioxide away from the muscles to the lungs.","note":"Complete the cycle: oxygen in, carbon dioxide out."}
+      ],
+      "chinese": [{
+        "id": "chinese-p5-reading-2026-09-09-001",
+        "title": "P5 华文短文阅读 · 把问题问清楚",
+        "q": "小杰负责整理班级图书角。他发现同学常常找不到想看的书，便打算把所有书都贴上红色标签。老师没有马上同意，而是请他记录一星期：同学最常找哪些书、找书时遇到什么困难。小杰发现真正的问题不是标签颜色，而是书架没有按照主题分类。于是，他和同学重新分区，并在每区放上一张目录。后来大家很快就能找到需要的书。",
+        "ask": "小杰最后采用什么方法解决问题？",
+        "opts": ["把所有书都贴上红色标签。", "先记录和找出真正原因，再按主题分类并制作目录。", "把同学不常看的书全部丢掉。", "请老师每天替大家找书。"],
+          "ans": 1,
+          "steps": ["找出文中小杰先记录的内容。", "定位真正的问题：书架没有按主题分类。", "联系最后的做法：重新分区并制作目录。"],
+          "model": "小杰先记录情况，发现问题在于书架没有按主题分类，于是重新分区并制作目录。这说明解决问题前要先找出真正原因，再采取合适的方法。",
+        "marks": ["内容点：写出先观察记录、找原因，再分类和制作目录。", "理解点：说明方法有效是因为针对真正的问题。"]
+      }]
+    },
+    {
+      "date": "2026-09-11",
+      "english": {
+        "psle": {
+          "id": "reading-psle-2026-09-11-001",
+          "title": "The Bridge of Small Repairs",
+          "meta": "P5/P6 PSLE-style reading · inference and viewpoint",
+          "q": "When the model bridge collapsed, Amir wanted to rebuild it immediately with thicker sticks. His teammate Lina first examined where the joints had separated. She noticed that the sticks were strong but the tape had been wrapped loosely. The team kept the same sticks, tightened the joints and tested the bridge again. What did Lina's approach show?",
+          "opts": ["A problem is easier to solve when its evidence is checked before a change is made.", "The thickest sticks are always the best material for every bridge.", "A model bridge cannot be improved after it collapses.", "Tape is never useful for joining materials."],
+          "ans": 0,
+          "model": "Lina checked the evidence first and found that the loose joints, rather than the sticks, caused the collapse. This helped the team make a targeted repair and test it fairly.",
+          "steps": ["Locate what Lina examined: the separated joints.", "Link the loose tape to the collapse.", "Infer why changing only the joints made the repair targeted."],
+          "marks": ["Inference: identifies the evidence-first approach.", "Evidence link: connects loose tape to the bridge failure and repair."]
+        },
+        "news": {
+          "id": "reading-news-2026-09-11-001",
+          "title": "Library Makers Test Reusable Covers",
+          "meta": "Singapore news-style reading · fair test and conclusion",
+          "q": "A neighbourhood library tested two reusable book-cover materials. Volunteers covered books of similar size, used the same reading schedule and checked the covers after four weeks. Why did the library use books of similar size?",
+          "opts": ["To reduce the effect of book size, so the material comparison was fairer.", "To make one material look more colourful than the other.", "To ensure that readers would finish every book in one day.", "To prove that all reusable materials have identical strength."],
+          "ans": 0,
+          "model": "Books of similar size reduce the effect of size on wear. This allows the library to compare the durability of the two cover materials more fairly.",
+          "steps": ["Identify the result being compared: wear after four weeks.", "Notice that size could affect wear, so it is kept similar.", "State that controlling size makes the material comparison fair."],
+          "marks": ["Method point: identifies a controlled condition.", "Reason point: links similar size to a fair durability comparison."]
+        }
+      },
+      "math": [{
+        "id": "math-p5-angles-2026-09-11-001",
+        "topic": "angles",
+        "level": "P5/P6 geometry",
+        "focus": "use an exterior angle of a triangle",
+        "title": "The tilted sign",
+        "q": "In the diagram, A, B and D lie on a straight line. Triangle BCD has angle BCD = 27° and angle BDC = 52°. What is angle ABC?",
+        "visual": "<svg class='geometry-diagram wide' viewBox='0 0 760 300' role='img' aria-label='Triangle BCD with A, B and D on a straight line'><line x1='60' y1='220' x2='700' y2='220' stroke='#1554b8' stroke-width='5'/><line x1='360' y1='220' x2='500' y2='70' stroke='#1554b8' stroke-width='5'/><line x1='500' y1='70' x2='610' y2='220' stroke='#1554b8' stroke-width='5'/><path d='M318 220 A42 42 0 0 0 337 187' fill='none' stroke='#e34f61' stroke-width='4'/><path d='M470 92 A32 32 0 0 1 496 104' fill='none' stroke='#e34f61' stroke-width='4'/><path d='M580 220 A30 30 0 0 1 594 195' fill='none' stroke='#e34f61' stroke-width='4'/><text x='48' y='248' font-size='24' font-weight='700' fill='#1554b8'>A</text><text x='348' y='252' font-size='24' font-weight='700' fill='#1554b8'>B</text><text x='602' y='252' font-size='24' font-weight='700' fill='#1554b8'>D</text><text x='494' y='58' font-size='24' font-weight='700' fill='#1554b8'>C</text><text x='282' y='190' font-size='20' fill='#0a7d61'>x°</text><text x='445' y='111' font-size='20' fill='#0a7d61'>27°</text><text x='605' y='191' font-size='20' fill='#0a7d61'>52°</text><text x='430' y='282' font-size='18' fill='#5b6f82'>A, B and D are collinear</text></svg>",
+        "opts": ["A. 79°", "B. 101°", "C. 127°", "D. 153°"],
+        "ans": 0,
+        "model": "Angle CBD = 180° - 27° - 52° = 101°. Since A, B and D lie on a straight line, angle ABC and angle CBD add to 180°. Therefore angle ABC = 180° - 101° = 79°.",
+        "steps": ["Use the angle sum of triangle BCD: angle CBD = 180° - 27° - 52° = 101°.", "Use the straight-line fact: angle ABC + angle CBD = 180°.", "Calculate angle ABC = 180° - 101° = 79°.", "Check that the requested angle is the exterior angle at B, between BA and BC."],
+        "marks": ["Method mark: uses the triangle angle sum.", "Method mark: identifies the linear pair at B.", "Accuracy mark: obtains 79° and matches the diagram."]
+      }],
+      "science": [{
+        "id": "science-p5-photosynthesis-2026-09-11-001",
+        "topic": "photosynthesis",
+        "level": "P5/P6 PLANT SYSTEMS",
+        "focus": "infer the role of light using a fair test",
+        "title": "The covered leaf test",
+        "q": "Two similar leaves on the same plant are tested. A piece of black paper covers part of Leaf A for two days, while Leaf B is left uncovered. Both leaves receive water and are tested for starch. Which conclusion is best?",
+        "visual": "<svg class='science-diagram wide' viewBox='0 0 820 270' role='img' aria-label='Plant leaf fair test with one leaf partly covered and one uncovered'><path d='M410 250V140M410 180C330 160 260 120 250 45M410 180C500 155 590 115 650 45' fill='none' stroke='#287b4d' stroke-width='8'/><path d='M250 45C180 42 155 98 222 130c73 35 105-35 28-85z' fill='#b8e8b5' stroke='#287b4d' stroke-width='5'/><path d='M650 45c70-3 95 53 28 85-73 35-105-35-28-85z' fill='#b8e8b5' stroke='#287b4d' stroke-width='5'/><rect x='185' y='70' width='95' height='55' fill='#4d5660' opacity='.95' transform='rotate(-18 232 97)'/><text x='235' y='158' text-anchor='middle' font-size='20' font-weight='700' fill='#1554b8'>Leaf A</text><text x='645' y='158' text-anchor='middle' font-size='20' font-weight='700' fill='#1554b8'>Leaf B</text><text x='235' y='188' text-anchor='middle' font-size='17' fill='#5b6f82'>partly covered</text><text x='645' y='188' text-anchor='middle' font-size='17' fill='#5b6f82'>uncovered</text><path d='M310 92h92' stroke='#d58a00' stroke-width='5' marker-end='url(#sun)'/><text x='355' y='72' text-anchor='middle' font-size='18' fill='#d58a00'>light</text><defs><marker id='sun' markerWidth='10' markerHeight='10' refX='8' refY='5' orient='auto'><path d='M0 0L10 5L0 10z' fill='#d58a00'/></marker></defs></svg>",
+        "opts": ["The covered part is likely to contain less starch because it received less light for photosynthesis.", "The covered part must contain more starch because black paper makes food for the leaf.", "Both parts must contain the same starch because water is the only factor plants need.", "The uncovered leaf cannot contain starch because light removes all food from it."],
+        "ans": 0,
+        "model": "The covered part is likely to contain less starch because it received less light. Light is needed for photosynthesis, which makes food stored as starch in the leaf.",
+        "steps": ["Compare the only changed condition: light reaching the leaf.", "Link light to photosynthesis and food production.", "Predict less starch in the covered part while keeping the uncovered part as the comparison."],
+        "marks": ["Mark 1: states that light is needed for photosynthesis.", "Mark 2: links less light to less food made and less starch detected.", "Answer pattern: test condition -> scientific process -> predicted evidence."]
+      }],
+      "scienceVocab": [
+        {"id":"science-vocab-photosynthesis-2026-09-11-001","group":"precision","term":"photosynthesis","meaning":"the process by which green plants make food using light","example":"Photosynthesis occurs in the green parts of a plant when light is available.","note":"Name the process instead of writing only 'the plant eats'."},
+        {"id":"science-vocab-photosynthesis-2026-09-11-002","group":"evidence","term":"light is a necessary condition","meaning":"the process does not proceed normally without light","example":"The covered part received less light, so it made less food.","note":"Use necessary condition when explaining a fair test."},
+        {"id":"science-vocab-photosynthesis-2026-09-11-003","group":"precision","term":"food is stored as starch","meaning":"food made by a plant can be stored in the leaf as starch","example":"The starch test provides evidence that food was made and stored.","note":"Connect the test result to the process."},
+        {"id":"science-vocab-photosynthesis-2026-09-11-004","group":"method","term":"comparison leaf","meaning":"the similar leaf used as a reference in an investigation","example":"The uncovered leaf acted as the comparison leaf.","note":"A comparison makes the conclusion stronger."},
+        {"id":"science-vocab-photosynthesis-2026-09-11-005","group":"cause-result","term":"less light -> less food made","meaning":"a cause-and-effect statement linking light availability to photosynthesis","example":"Less light led to less food being made in the covered part.","note":"Use the arrow chain for a complete OEQ explanation."}
+      ],
+      "chinese": [{
+        "id": "chinese-p5-reading-2026-09-11-001",
+        "title": "P5 华文短文阅读 · 不急着下结论",
+        "q": "小雯发现窗台上的小盆栽有几片叶子变黄，便认定是因为没有浇水。爸爸建议她先查一查。她连续几天记录浇水量、阳光和叶子的变化，后来发现盆栽一直放在空调出风口附近，泥土很快变干。她把盆栽移开并调整浇水方法，叶子渐渐恢复了绿色。小雯明白，遇到问题时不能只凭第一次猜想下结论。",
+        "ask": "这篇短文主要说明什么道理？",
+        "opts": ["盆栽只能放在空调出风口附近。", "遇到问题要先观察和记录，找出原因后再采取行动。", "只要多浇水，所有植物都会马上变绿。", "第一次想到的原因通常就是正确答案。"],
+        "ans": 1,
+        "steps": ["找出小雯最初的猜想和后来记录的证据。", "定位真正原因：空调出风口使泥土很快变干。", "概括她得到的道理，而不是只重复盆栽的结果。"],
+        "model": "小雯先观察和记录，才发现盆栽变黄的真正原因，再调整摆放位置和浇水方法。因此，遇到问题不能急着下结论，要先找证据。",
+        "marks": ["内容点：写出先观察记录、找原因，再采取行动。", "主旨点：说明不能只凭猜想下结论。"]
+      }]
     }
   ]
 }
