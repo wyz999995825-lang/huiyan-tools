@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>EYO 备考作战室 · Johnson</title>
+<style>
+:root{--bg:#f5fafe;--bg2:#e9f4fc;--card:#fff;--line:#cfe6f7;--ink:#183b4d;--ink2:#5c7e93;
+--pri:#3f8fd0;--pri2:#2a6fa8;--go:#2fae82;--go2:#e3f6ee;--warn:#e8823c;--warn2:#fdf0e4;
+--gold:#d9a22b;--r:16px;--sh:0 3px 14px rgba(24,59,77,.09)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC",sans-serif;
+background:var(--bg);color:var(--ink);font-size:17px;line-height:1.65;padding-bottom:40px}
+.wrap{max-width:900px;margin:0 auto;padding:0 14px}
+header{background:linear-gradient(135deg,#4e9ad8,#2a6fa8);color:#fff;padding:16px 0 14px}
+header .wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+h1{font-size:21px;font-weight:800;letter-spacing:.3px}
+.sub{font-size:13px;opacity:.9}
+.tabs{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
+.tab{background:rgba(255,255,255,.18);border:0;color:#fff;padding:11px 15px;border-radius:12px;
+font-size:14px;font-weight:700;cursor:pointer;min-height:46px}
+.tab.on{background:#fff;color:var(--pri2)}
+.cd{display:flex;gap:8px;overflow-x:auto;padding:12px 0 2px;-webkit-overflow-scrolling:touch}
+.cdi{flex:0 0 auto;background:var(--card);border:1.5px solid var(--line);border-radius:14px;
+padding:9px 13px;box-shadow:var(--sh);min-width:132px}
+.cdi b{display:block;font-size:14px}
+.cdi .n{font-size:24px;font-weight:900;color:var(--pri2);line-height:1.1}
+.cdi .d{font-size:12px;color:var(--ink2)}
+.cdi.soon{border-color:var(--warn);background:var(--warn2)}
+.cdi.done{opacity:.45}
+.phase{background:linear-gradient(90deg,#fff6e0,var(--bg2));border:1.5px dashed var(--gold);
+border-radius:14px;padding:11px 15px;margin:14px 0;font-size:14px;font-weight:700;color:#8a6a1e}
+.day{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);
+padding:16px;box-shadow:var(--sh);margin-bottom:14px}
+.dayhd{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.dayhd h2{font-size:19px;font-weight:800}
+.pill{font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--bg2);color:var(--pri2)}
+.pill.exam{background:#ffe9e0;color:#c4522a}
+.bar{height:9px;border-radius:99px;background:var(--bg2);overflow:hidden;margin:10px 0 4px}
+.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--go));transition:width .4s}
+.tk{border:1.5px solid var(--line);border-radius:14px;padding:13px;margin-top:11px;background:#fcfeff}
+.tk.ok{border-color:var(--go);background:var(--go2)}
+.tkhd{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.badge{font-size:12px;font-weight:800;padding:4px 9px;border-radius:8px;background:var(--bg2);color:var(--pri2);flex:0 0 auto}
+.tkname{font-size:18px;font-weight:800;flex:1;min-width:150px}
+.mins{font-size:12px;color:var(--ink2);font-weight:700}
+.det{font-size:15px;color:var(--ink2);margin:7px 0 0;line-height:1.7}
+.row{display:flex;gap:9px;flex-wrap:wrap;margin-top:11px;align-items:center}
+.btn{border:0;border-radius:12px;padding:12px 16px;font-size:15px;font-weight:800;cursor:pointer;min-height:46px}
+.btn.p{background:var(--pri);color:#fff}
+.btn.p:active{background:var(--pri2)}
+.btn.g{background:var(--go);color:#fff}
+.btn.o{background:#fff;color:var(--pri2);border:1.5px solid var(--pri)}
+.btn.s{background:var(--bg2);color:var(--ink2)}
+.tmr{font-variant-numeric:tabular-nums;font-weight:900;font-size:20px;color:var(--pri2);min-width:74px;text-align:center}
+.note{font-size:13px;color:var(--warn);font-weight:700}
+.cal{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);margin-bottom:16px}
+.crow{display:grid;grid-template-columns:92px 1fr 64px;gap:8px;padding:11px 13px;border-top:1px solid var(--bg2);align-items:center;cursor:pointer}
+.crow:first-child{border-top:0}
+.crow:active{background:var(--bg2)}
+.crow .dt{font-size:13px;font-weight:800;color:var(--ink2)}
+.crow .ts{font-size:14px;line-height:1.5}
+.crow .st{text-align:right;font-size:13px;font-weight:800;color:var(--ink2)}
+.crow.full{background:var(--go2)}
+.crow.exday{background:#fff4ee}
+.crow.today{outline:3px solid var(--warn);outline-offset:-3px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:11px;margin:12px 0}
+.stat{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:13px;text-align:center;box-shadow:var(--sh)}
+.stat b{display:block;font-size:27px;font-weight:900;color:var(--pri2);line-height:1.15}
+.stat span{font-size:12px;color:var(--ink2)}
+.hm{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.hmc{width:34px;height:34px;border-radius:9px;background:var(--bg2);display:flex;align-items:center;
+justify-content:center;font-size:11px;font-weight:800;color:var(--ink2);border:1px solid var(--line)}
+.hmc.p1{background:#dff0e8}.hmc.p2{background:#bce6d3}.hmc.p3{background:var(--go);color:#fff}
+h3{font-size:17px;margin:16px 0 6px}
+.tip{font-size:14px;color:var(--ink2);background:var(--bg2);border-radius:12px;padding:11px 13px;margin-top:10px}
+.cf{position:fixed;pointer-events:none;z-index:99;border-radius:50%}
+footer{text-align:center;font-size:12px;color:#9ab6c8;padding:18px 0 4px}
+@media(max-width:560px){.crow{grid-template-columns:76px 1fr 52px}.tkname{font-size:17px}}
+</style></head><body>
+<header><div class="wrap">
+  <div><h1>🎯 EYO 备考作战室</h1><div class="sub">Johnson · P5 年终考 · 每天 3 件事 × 30 分钟</div></div>
+  <div class="tabs">
+    <button class="tab on" id="tb-today" onclick="go('today')">今日</button>
+    <button class="tab" id="tb-cal" onclick="go('cal')">全程</button>
+    <button class="tab" id="tb-parent" onclick="go('parent')">妈妈看板</button>
+  </div>
+</div></header>
+<div class="wrap"><div class="cd" id="cd"></div><div id="app"></div>
+<footer>进度保存在本设备 · 任务只增不清零</footer></div>
+<script>
+const PLAN={"exams":[{"date":"2026-09-21","name":"英语口试"},{"date":"2026-09-22","name":"普华口试"},{"date":"2026-10-05","name":"英语 写作+听力"},{"date":"2026-10-06","name":"普华 写作+听力"},{"date":"2026-10-21","name":"高华 写作+听力"},{"date":"2026-10-22","name":"英文 Paper 2"},{"date":"2026-10-23","name":"普华 Paper 2"},{"date":"2026-10-26","name":"数学"},{"date":"2026-10-27","name":"科学"}],"phases":[{"id":"P1","name":"口试冲刺","from":"2026-09-16","to":"2026-09-22","icon":"🎙️","focus":"把朗读、看图说话和问答练到敢开口、说得完整"},{"id":"P2","name":"作文与听力","from":"2026-09-23","to":"2026-10-06","icon":"✍️","focus":"英文作文骨架+细节，华文看图作文开头/转折/收束"},{"id":"P3","name":"高华与 Paper 2","from":"2026-10-07","to":"2026-10-21","icon":"📖","focus":"理解题定位证据、cloze 连接词、高华限字概括"},{"id":"P4","name":"数理决战","from":"2026-10-22","to":"2026-10-27","icon":"🔢","focus":"分数剩余量、转移逆推、科学 OEQ 得分点"}],"days":[{"date":"2026-09-16","dow":"三","phase":"P1","exam":"","tasks":[{"id":"2026-09-16#0","tid":"EO1","subj":"英语口试","name":"朗读：停顿+重音","detail":"拿一段180字文章，先用铅笔标停顿符/重音词，再朗读录音2遍，回听挑1处改进","tool":"oral_en","min":30},{"id":"2026-09-16#1","tid":"CO1","subj":"华文口试","name":"朗读：多音字+停顿","detail":"标出易错多音字拼音和停顿，朗读录音回听，圈出念错的字","tool":"oral_zh","min":30},{"id":"2026-09-16#2","tid":"ER1","subj":"英语理解","name":"Command word圈画","detail":"10道题只做一件事：圈command word+标时间线，不写答案","tool":"en_oe","min":30}]},{"date":"2026-09-17","dow":"四","phase":"P1","exam":"","tasks":[{"id":"2026-09-17#0","tid":"EO2","subj":"英语口试","name":"看图说话三层法","detail":"2张图：①描述看到什么 ②推断发生什么 ③联系自己经历。每层至少2句","tool":"oral_en","min":30},{"id":"2026-09-17#1","tid":"CO2","subj":"华文口试","name":"看图说话对范例","detail":"先自己说完整一段，再看范例，圈出自己漏掉的3个点补说一遍","tool":"oral_zh","min":30},{"id":"2026-09-17#2","tid":"M1","subj":"数学·分数","name":"剩余量专练","detail":"5题「第二次取剩余的几分之几」，每题先画bar model再算","tool":"math_hub","min":30}]},{"date":"2026-09-18","dow":"五","phase":"P1","exam":"","tasks":[{"id":"2026-09-18#0","tid":"EO3","subj":"英语口试","name":"AI考官完整对练","detail":"用英文口试对练链接走一遍完整流程：朗读+看图+问答","tool":"oral_en_ai","min":30},{"id":"2026-09-18#1","tid":"CO3","subj":"华文口试","name":"AI考官完整对练","detail":"用华文口试对练链接走一遍：朗读+看图说话+老师提问","tool":"oral_zh_ai","min":30},{"id":"2026-09-18#2","tid":"S1","subj":"科学·OEQ","name":"万能句式模板","detail":"学3个句式（因为…所以…／当…时…因此…／由于…导致…），各套用2题","tool":"sci_hub","min":30}]},{"date":"2026-09-19","dow":"六","phase":"P1","exam":"","tasks":[{"id":"2026-09-19#0","tid":"EO4","subj":"英语口试","name":"常考话题速答","detail":"学校活动/家庭/环保各说1分钟，每个必须有1个具体例子（不要空话）","tool":"oral_en","min":30},{"id":"2026-09-19#1","tid":"CO4","subj":"华文口试","name":"万能例子储备","detail":"准备3个万能事例（帮助他人/坚持到底/爱护环境），每个40秒说完","tool":"oral_zh","min":30},{"id":"2026-09-19#2","tid":"ER6","subj":"Cloze","name":"连接词通读法","detail":"1篇comprehension cloze：先通读找逻辑连接词，再填，填完回读检查搭配","tool":"en_hub","min":30}]},{"date":"2026-09-20","dow":"日","phase":"P1","exam":"","tasks":[{"id":"2026-09-20#0","tid":"EO1","subj":"英语口试","name":"朗读：停顿+重音","detail":"拿一段180字文章，先用铅笔标停顿符/重音词，再朗读录音2遍，回听挑1处改进","tool":"oral_en","min":30},{"id":"2026-09-20#1","tid":"EO3","subj":"英语口试","name":"AI考官完整对练","detail":"用英文口试对练链接走一遍完整流程：朗读+看图+问答","tool":"oral_en_ai","min":30},{"id":"2026-09-20#2","tid":"R2","subj":"考前调整","name":"考前轻装","detail":"轻量过一遍要点清单，收拾文具，今天早睡（只做15-20分钟）","tool":"none","min":30}]},{"date":"2026-09-21","dow":"一","phase":"P1","exam":"英语口试","tasks":[{"id":"2026-09-21#0","tid":"CO3","subj":"华文口试","name":"AI考官完整对练","detail":"用华文口试对练链接走一遍：朗读+看图说话+老师提问","tool":"oral_zh_ai","min":30},{"id":"2026-09-21#1","tid":"CO2","subj":"华文口试","name":"看图说话对范例","detail":"先自己说完整一段，再看范例，圈出自己漏掉的3个点补说一遍","tool":"oral_zh","min":30},{"id":"2026-09-21#2","tid":"R2","subj":"考前调整","name":"考前轻装","detail":"轻量过一遍要点清单，收拾文具，今天早睡（只做15-20分钟）","tool":"none","min":30}]},{"date":"2026-09-22","dow":"二","phase":"P1","exam":"普华口试","tasks":[{"id":"2026-09-22#0","tid":"EW1","subj":"英语作文","name":"5分钟骨架计划法","detail":"读题圈3张图关键词→写6句骨架（开头/起因/发展/高潮/解决/收束），只写骨架","tool":"en_comp","min":30},{"id":"2026-09-22#1","tid":"ER6","subj":"Cloze","name":"连接词通读法","detail":"1篇comprehension cloze：先通读找逻辑连接词，再填，填完回读检查搭配","tool":"en_hub","min":30},{"id":"2026-09-22#2","tid":"M2","subj":"数学·分数","name":"四则混合+验算","detail":"8题分数加减乘除混合，最后一步必须代回原题验算","tool":"math_hub","min":30}]},{"date":"2026-09-23","dow":"三","phase":"P2","exam":"","tasks":[{"id":"2026-09-23#0","tid":"CW1","subj":"华文作文","name":"三图连线中心句","detail":"三格图各写1句（谁在哪做什么），再写1句把三格串起来的中心句","tool":"zh_comp","min":30},{"id":"2026-09-23#1","tid":"ER2","subj":"英语理解","name":"PEE三步答题","detail":"3道2分题：Point+原文证据+解释，写完数一数有没有两个准确细节","tool":"en_oe","min":30},{"id":"2026-09-23#2","tid":"S2","subj":"科学·电路","name":"因果链完整表达","detail":"5题，答案必须写完整链条：开关闭合→电路完整→灯亮","tool":"sci_hub","min":30}]},{"date":"2026-09-24","dow":"四","phase":"P2","exam":"","tasks":[{"id":"2026-09-24#0","tid":"EW2","subj":"英语作文","name":"高潮段扩写","detail":"取骨架高潮段写8-10句，必须含1句对话+1个动作细节+1处心理描写","tool":"en_comp","min":30},{"id":"2026-09-24#1","tid":"CR1","subj":"华文理解","name":"词语成语语境辨析","detail":"10题，每题必须写出上下文线索词","tool":"zh_hub","min":30},{"id":"2026-09-24#2","tid":"M3","subj":"数学","name":"转移问题两边都变","detail":"4题（一人给另一人x，差变2x），画before/after双条形图","tool":"math_hub","min":30}]},{"date":"2026-09-25","dow":"五","phase":"P2","exam":"","tasks":[{"id":"2026-09-25#0","tid":"CW2","subj":"华文作文","name":"开头聚焦练习","detail":"同题写3个开头，都要点明时间地点人物+一个引人的动作","tool":"zh_comp","min":30},{"id":"2026-09-25#1","tid":"ER4","subj":"英语理解","name":"词义题回文找线索","detail":"8道vocabulary-in-context，每题必须写出段落里的线索词","tool":"en_oe","min":30},{"id":"2026-09-25#2","tid":"S4","subj":"科学·光影","name":"空间关系画图答","detail":"5题：先画光源-物体-屏幕位置图再作答","tool":"sci_hub","min":30}]},{"date":"2026-09-26","dow":"六","phase":"P2","exam":"","tasks":[{"id":"2026-09-26#0","tid":"EW3","subj":"英语作文","name":"开头三写法对比","detail":"同题写3种开头（动作/对话/环境切入），选最好的并说出理由","tool":"en_comp","min":30},{"id":"2026-09-26#1","tid":"ER7","subj":"Cloze","name":"常错搭配词库","detail":"整理10个易错搭配（介词/固定短语）做成小卡，当天默写一遍","tool":"en_vocab","min":30},{"id":"2026-09-26#2","tid":"M7","subj":"数学·几何","name":"重叠角·高·周长","detail":"5题：先画图标上所有已知数值再算","tool":"math_hub","min":30}]},{"date":"2026-09-27","dow":"日","phase":"P2","exam":"","tasks":[{"id":"2026-09-27#0","tid":"CW3","subj":"华文作文","name":"转折与细节加工","detail":"给经过段加2个细节动词+1处心理描写+1个转折（没想到/突然）","tool":"zh_comp","min":30},{"id":"2026-09-27#1","tid":"EL1","subj":"英语听力","name":"抓数字与名字","detail":"听5段（妈妈提供音频/课本CD），只记数字、人名、地点","tool":"en_hub","min":30},{"id":"2026-09-27#2","tid":"R1","subj":"复盘","name":"周复盘","detail":"看错题本+妈妈看板：写下本周3个进步 + 下周1个重点","tool":"mistakes","min":30}]},{"date":"2026-09-28","dow":"一","phase":"P2","exam":"","tasks":[{"id":"2026-09-28#0","tid":"EW4","subj":"英语作文","name":"范文拆解建句库","detail":"读1篇范文，标出每段功能，抄5个好句式进自己的句库","tool":"en_model","min":30},{"id":"2026-09-28#1","tid":"ER3","subj":"英语理解","name":"哪一句真正回答问题","detail":"5题只挑出证据句，并说明其他句为什么不对","tool":"en_oe","min":30},{"id":"2026-09-28#2","tid":"S3","subj":"科学·电路","name":"导体绝缘体与串联","detail":"5题，注意「没测试过的材料不能当事实」","tool":"sci_hub","min":30}]},{"date":"2026-09-29","dow":"二","phase":"P2","exam":"","tasks":[{"id":"2026-09-29#0","tid":"CW4","subj":"华文作文","name":"收束呼应主题","detail":"写3种结尾（感受/道理/呼应开头），挑最贴题的一个说理由","tool":"zh_comp","min":30},{"id":"2026-09-29#1","tid":"ER6","subj":"Cloze","name":"连接词通读法","detail":"1篇comprehension cloze：先通读找逻辑连接词，再填，填完回读检查搭配","tool":"en_hub","min":30},{"id":"2026-09-29#2","tid":"M4","subj":"数学","name":"逆推与倍数","detail":"4题：从变化后的结果回推原数，先画关系图","tool":"math_hub","min":30}]},{"date":"2026-09-30","dow":"三","phase":"P2","exam":"","tasks":[{"id":"2026-09-30#0","tid":"EW5","subj":"英语作文","name":"限时全文+自检","detail":"25分钟写完1篇，最后5分钟按清单自检：时态/拼写/段落/结尾呼应","tool":"en_comp","min":30},{"id":"2026-09-30#1","tid":"CR2","subj":"华文理解","name":"人物心理三段式","detail":"5题用「动作→心理词→原因」三段式作答","tool":"zh_hub","min":30},{"id":"2026-09-30#2","tid":"S6","subj":"科学·技能","name":"变量控制三问","detail":"4题写清：改变什么／保持什么／测量什么","tool":"sci_hub","min":30}]},{"date":"2026-10-01","dow":"四","phase":"P2","exam":"","tasks":[{"id":"2026-10-01#0","tid":"CW5","subj":"华文作文","name":"限时全文+自查","detail":"30分钟写1篇看图作文，写完自查：开头聚焦/有转折/有细节/结尾收束","tool":"zh_comp","min":30},{"id":"2026-10-01#1","tid":"ER5","subj":"英语理解","name":"时间线陷阱题","detail":"专练「先前感受 vs 后来感受」5题，先画时间轴再答","tool":"en_oe","min":30},{"id":"2026-10-01#2","tid":"M5","subj":"数学","name":"约束与最省组合","detail":"3题（每种都要有/最少包数），先列条件清单再逐项核对","tool":"math_hub","min":30}]},{"date":"2026-10-02","dow":"五","phase":"P2","exam":"","tasks":[{"id":"2026-10-02#0","tid":"EW6","subj":"英语作文","name":"自检清单打靶","detail":"拿上次作文按清单逐项改：时态一致/避免重复词/对话标点/结尾呼应开头","tool":"en_comp","min":30},{"id":"2026-10-02#1","tid":"ER8","subj":"英语语法","name":"语法专项打靶","detail":"grammar trainer 20题，错的抄下规则并造1句","tool":"en_grammar","min":30},{"id":"2026-10-02#2","tid":"S5","subj":"科学·光影","name":"影子形状与大小","detail":"4题：说明距离变化如何影响影子大小/形状","tool":"sci_hub","min":30}]},{"date":"2026-10-03","dow":"六","phase":"P2","exam":"","tasks":[{"id":"2026-10-03#0","tid":"CW6","subj":"华文作文","name":"好词好句抄造句","detail":"抄10个动词或成语，每个造1句（句子必须有具体画面）","tool":"zh_comp","min":30},{"id":"2026-10-03#1","tid":"EL2","subj":"英语听力","name":"先看选项再听","detail":"做1套听力：听前30秒先圈出选项差异，再听着对","tool":"en_hub","min":30},{"id":"2026-10-03#2","tid":"M6","subj":"数学","name":"阶梯收费+限制产量","detail":"4题：先分段再乘人数；各材料分别算再取最小值","tool":"math_hub","min":30}]},{"date":"2026-10-04","dow":"日","phase":"P2","exam":"","tasks":[{"id":"2026-10-04#0","tid":"EW5","subj":"英语作文","name":"限时全文+自检","detail":"25分钟写完1篇，最后5分钟按清单自检：时态/拼写/段落/结尾呼应","tool":"en_comp","min":30},{"id":"2026-10-04#1","tid":"EW6","subj":"英语作文","name":"自检清单打靶","detail":"拿上次作文按清单逐项改：时态一致/避免重复词/对话标点/结尾呼应开头","tool":"en_comp","min":30},{"id":"2026-10-04#2","tid":"R1","subj":"复盘","name":"周复盘","detail":"看错题本+妈妈看板：写下本周3个进步 + 下周1个重点","tool":"mistakes","min":30}]},{"date":"2026-10-05","dow":"一","phase":"P2","exam":"英语 写作+听力","tasks":[{"id":"2026-10-05#0","tid":"CW5","subj":"华文作文","name":"限时全文+自查","detail":"30分钟写1篇看图作文，写完自查：开头聚焦/有转折/有细节/结尾收束","tool":"zh_comp","min":30},{"id":"2026-10-05#1","tid":"CW4","subj":"华文作文","name":"收束呼应主题","detail":"写3种结尾（感受/道理/呼应开头），挑最贴题的一个说理由","tool":"zh_comp","min":30},{"id":"2026-10-05#2","tid":"R2","subj":"考前调整","name":"考前轻装","detail":"轻量过一遍要点清单，收拾文具，今天早睡（只做15-20分钟）","tool":"none","min":30}]},{"date":"2026-10-06","dow":"二","phase":"P2","exam":"普华 写作+听力","tasks":[{"id":"2026-10-06#0","tid":"CR5","subj":"高华阅读","name":"探险营一天任务","detail":"完成高华阅读探险营1天（短语解释/人物感受/限字概括/变化原因/道理迁移）","tool":"gaohua","min":30},{"id":"2026-10-06#1","tid":"ER6","subj":"Cloze","name":"连接词通读法","detail":"1篇comprehension cloze：先通读找逻辑连接词，再填，填完回读检查搭配","tool":"en_hub","min":30},{"id":"2026-10-06#2","tid":"M8","subj":"数学","name":"终检操练","detail":"把前一天做过的6题只做「检查」这一步：单位/是否答所问/代回验算","tool":"math_hub","min":30}]},{"date":"2026-10-07","dow":"三","phase":"P3","exam":"","tasks":[{"id":"2026-10-07#0","tid":"ER2","subj":"英语理解","name":"PEE三步答题","detail":"3道2分题：Point+原文证据+解释，写完数一数有没有两个准确细节","tool":"en_oe","min":30},{"id":"2026-10-07#1","tid":"CR3","subj":"华文理解","name":"原因与建议题","detail":"5题：题目问原因就答原因，问建议就答建议，先圈题干要求","tool":"zh_hub","min":30},{"id":"2026-10-07#2","tid":"S7","subj":"科学·技能","name":"证据不足怎么答","detail":"4题练not possible to tell：说明还缺什么证据","tool":"sci_hub","min":30}]},{"date":"2026-10-08","dow":"四","phase":"P3","exam":"","tasks":[{"id":"2026-10-08#0","tid":"ER6","subj":"Cloze","name":"连接词通读法","detail":"1篇comprehension cloze：先通读找逻辑连接词，再填，填完回读检查搭配","tool":"en_hub","min":30},{"id":"2026-10-08#1","tid":"CR5","subj":"高华阅读","name":"探险营一天任务","detail":"完成高华阅读探险营1天（短语解释/人物感受/限字概括/变化原因/道理迁移）","tool":"gaohua","min":30},{"id":"2026-10-08#2","tid":"M9","subj":"数学","name":"错题回炉","detail":"从错题本挑5题重做，做对才算修补成功","tool":"mistakes","min":30}]},{"date":"2026-10-09","dow":"五","phase":"P3","exam":"","tasks":[{"id":"2026-10-09#0","tid":"ER4","subj":"英语理解","name":"词义题回文找线索","detail":"8道vocabulary-in-context，每题必须写出段落里的线索词","tool":"en_oe","min":30},{"id":"2026-10-09#1","tid":"CR6","subj":"高华阅读","name":"限字概括留主干","detail":"3题15-20字概括，练「留主干、去修饰」","tool":"gaohua","min":30},{"id":"2026-10-09#2","tid":"S8","subj":"科学·OEQ","name":"2分题得分镜头","detail":"4道2分题，逐题数自己写了几个得分点，补齐到2个","tool":"sci_hub","min":30}]},{"date":"2026-10-10","dow":"六","phase":"P3","exam":"","tasks":[{"id":"2026-10-10#0","tid":"ER8","subj":"英语语法","name":"语法专项打靶","detail":"grammar trainer 20题，错的抄下规则并造1句","tool":"en_grammar","min":30},{"id":"2026-10-10#1","tid":"CR1","subj":"华文理解","name":"词语成语语境辨析","detail":"10题，每题必须写出上下文线索词","tool":"zh_hub","min":30},{"id":"2026-10-10#2","tid":"M1","subj":"数学·分数","name":"剩余量专练","detail":"5题「第二次取剩余的几分之几」，每题先画bar model再算","tool":"math_hub","min":30}]},{"date":"2026-10-11","dow":"日","phase":"P3","exam":"","tasks":[{"id":"2026-10-11#0","tid":"CR5","subj":"高华阅读","name":"探险营一天任务","detail":"完成高华阅读探险营1天（短语解释/人物感受/限字概括/变化原因/道理迁移）","tool":"gaohua","min":30},{"id":"2026-10-11#1","tid":"ER3","subj":"英语理解","name":"哪一句真正回答问题","detail":"5题只挑出证据句，并说明其他句为什么不对","tool":"en_oe","min":30},{"id":"2026-10-11#2","tid":"R1","subj":"复盘","name":"周复盘","detail":"看错题本+妈妈看板：写下本周3个进步 + 下周1个重点","tool":"mistakes","min":30}]},{"date":"2026-10-12","dow":"一","phase":"P3","exam":"","tasks":[{"id":"2026-10-12#0","tid":"ER6","subj":"Cloze","name":"连接词通读法","detail":"1篇comprehension cloze：先通读找逻辑连接词，再填，填完回读检查搭配","tool":"en_hub","min":30},{"id":"2026-10-12#1","tid":"CR4","subj":"华文理解","name":"人物评价题","detail":"3题：答「品质词+文中事例」，不能只写品质词","tool":"zh_hub","min":30},{"id":"2026-10-12#2","tid":"S2","subj":"科学·电路","name":"因果链完整表达","detail":"5题，答案必须写完整链条：开关闭合→电路完整→灯亮","tool":"sci_hub","min":30}]},{"date":"2026-10-13","dow":"二","phase":"P3","exam":"","tasks":[{"id":"2026-10-13#0","tid":"ER5","subj":"英语理解","name":"时间线陷阱题","detail":"专练「先前感受 vs 后来感受」5题，先画时间轴再答","tool":"en_oe","min":30},{"id":"2026-10-13#1","tid":"CR5","subj":"高华阅读","name":"探险营一天任务","detail":"完成高华阅读探险营1天（短语解释/人物感受/限字概括/变化原因/道理迁移）","tool":"gaohua","min":30},{"id":"2026-10-13#2","tid":"M3","subj":"数学","name":"转移问题两边都变","detail":"4题（一人给另一人x，差变2x），画before/after双条形图","tool":"math_hub","min":30}]},{"date":"2026-10-14","dow":"三","phase":"P3","exam":"","tasks":[{"id":"2026-10-14#0","tid":"ER7","subj":"Cloze","name":"常错搭配词库","detail":"整理10个易错搭配（介词/固定短语）做成小卡，当天默写一遍","tool":"en_vocab","min":30},{"id":"2026-10-14#1","tid":"CR2","subj":"华文理解","name":"人物心理三段式","detail":"5题用「动作→心理词→原因」三段式作答","tool":"zh_hub","min":30},{"id":"2026-10-14#2","tid":"S4","subj":"科学·光影","name":"空间关系画图答","detail":"5题：先画光源-物体-屏幕位置图再作答","tool":"sci_hub","min":30}]},{"date":"2026-10-15","dow":"四","phase":"P3","exam":"","tasks":[{"id":"2026-10-15#0","tid":"ER2","subj":"英语理解","name":"PEE三步答题","detail":"3道2分题：Point+原文证据+解释，写完数一数有没有两个准确细节","tool":"en_oe","min":30},{"id":"2026-10-15#1","tid":"CR6","subj":"高华阅读","name":"限字概括留主干","detail":"3题15-20字概括，练「留主干、去修饰」","tool":"gaohua","min":30},{"id":"2026-10-15#2","tid":"M5","subj":"数学","name":"约束与最省组合","detail":"3题（每种都要有/最少包数），先列条件清单再逐项核对","tool":"math_hub","min":30}]},{"date":"2026-10-16","dow":"五","phase":"P3","exam":"","tasks":[{"id":"2026-10-16#0","tid":"ER6","subj":"Cloze","name":"连接词通读法","detail":"1篇comprehension cloze：先通读找逻辑连接词，再填，填完回读检查搭配","tool":"en_hub","min":30},{"id":"2026-10-16#1","tid":"CR5","subj":"高华阅读","name":"探险营一天任务","detail":"完成高华阅读探险营1天（短语解释/人物感受/限字概括/变化原因/道理迁移）","tool":"gaohua","min":30},{"id":"2026-10-16#2","tid":"S6","subj":"科学·技能","name":"变量控制三问","detail":"4题写清：改变什么／保持什么／测量什么","tool":"sci_hub","min":30}]},{"date":"2026-10-17","dow":"六","phase":"P3","exam":"","tasks":[{"id":"2026-10-17#0","tid":"ER4","subj":"英语理解","name":"词义题回文找线索","detail":"8道vocabulary-in-context，每题必须写出段落里的线索词","tool":"en_oe","min":30},{"id":"2026-10-17#1","tid":"CR3","subj":"华文理解","name":"原因与建议题","detail":"5题：题目问原因就答原因，问建议就答建议，先圈题干要求","tool":"zh_hub","min":30},{"id":"2026-10-17#2","tid":"M7","subj":"数学·几何","name":"重叠角·高·周长","detail":"5题：先画图标上所有已知数值再算","tool":"math_hub","min":30}]},{"date":"2026-10-18","dow":"日","phase":"P3","exam":"","tasks":[{"id":"2026-10-18#0","tid":"CR5","subj":"高华阅读","name":"探险营一天任务","detail":"完成高华阅读探险营1天（短语解释/人物感受/限字概括/变化原因/道理迁移）","tool":"gaohua","min":30},{"id":"2026-10-18#1","tid":"CR6","subj":"高华阅读","name":"限字概括留主干","detail":"3题15-20字概括，练「留主干、去修饰」","tool":"gaohua","min":30},{"id":"2026-10-18#2","tid":"R1","subj":"复盘","name":"周复盘","detail":"看错题本+妈妈看板：写下本周3个进步 + 下周1个重点","tool":"mistakes","min":30}]},{"date":"2026-10-19","dow":"一","phase":"P3","exam":"","tasks":[{"id":"2026-10-19#0","tid":"CR5","subj":"高华阅读","name":"探险营一天任务","detail":"完成高华阅读探险营1天（短语解释/人物感受/限字概括/变化原因/道理迁移）","tool":"gaohua","min":30},{"id":"2026-10-19#1","tid":"CW3","subj":"华文作文","name":"转折与细节加工","detail":"给经过段加2个细节动词+1处心理描写+1个转折（没想到/突然）","tool":"zh_comp","min":30},{"id":"2026-10-19#2","tid":"ER6","subj":"Cloze","name":"连接词通读法","detail":"1篇comprehension cloze：先通读找逻辑连接词，再填，填完回读检查搭配","tool":"en_hub","min":30}]},{"date":"2026-10-20","dow":"二","phase":"P3","exam":"","tasks":[{"id":"2026-10-20#0","tid":"CR6","subj":"高华阅读","name":"限字概括留主干","detail":"3题15-20字概括，练「留主干、去修饰」","tool":"gaohua","min":30},{"id":"2026-10-20#1","tid":"CW4","subj":"华文作文","name":"收束呼应主题","detail":"写3种结尾（感受/道理/呼应开头），挑最贴题的一个说理由","tool":"zh_comp","min":30},{"id":"2026-10-20#2","tid":"R2","subj":"考前调整","name":"考前轻装","detail":"轻量过一遍要点清单，收拾文具，今天早睡（只做15-20分钟）","tool":"none","min":30}]},{"date":"2026-10-21","dow":"三","phase":"P3","exam":"高华 写作+听力","tasks":[{"id":"2026-10-21#0","tid":"ER6","subj":"Cloze","name":"连接词通读法","detail":"1篇comprehension cloze：先通读找逻辑连接词，再填，填完回读检查搭配","tool":"en_hub","min":30},{"id":"2026-10-21#1","tid":"ER2","subj":"英语理解","name":"PEE三步答题","detail":"3道2分题：Point+原文证据+解释，写完数一数有没有两个准确细节","tool":"en_oe","min":30},{"id":"2026-10-21#2","tid":"R2","subj":"考前调整","name":"考前轻装","detail":"轻量过一遍要点清单，收拾文具，今天早睡（只做15-20分钟）","tool":"none","min":30}]},{"date":"2026-10-22","dow":"四","phase":"P4","exam":"英文 Paper 2","tasks":[{"id":"2026-10-22#0","tid":"CR1","subj":"华文理解","name":"词语成语语境辨析","detail":"10题，每题必须写出上下文线索词","tool":"zh_hub","min":30},{"id":"2026-10-22#1","tid":"CR3","subj":"华文理解","name":"原因与建议题","detail":"5题：题目问原因就答原因，问建议就答建议，先圈题干要求","tool":"zh_hub","min":30},{"id":"2026-10-22#2","tid":"R2","subj":"考前调整","name":"考前轻装","detail":"轻量过一遍要点清单，收拾文具，今天早睡（只做15-20分钟）","tool":"none","min":30}]},{"date":"2026-10-23","dow":"五","phase":"P4","exam":"普华 Paper 2","tasks":[{"id":"2026-10-23#0","tid":"M9","subj":"数学","name":"错题回炉","detail":"从错题本挑5题重做，做对才算修补成功","tool":"mistakes","min":30},{"id":"2026-10-23#1","tid":"S8","subj":"科学·OEQ","name":"2分题得分镜头","detail":"4道2分题，逐题数自己写了几个得分点，补齐到2个","tool":"sci_hub","min":30},{"id":"2026-10-23#2","tid":"R2","subj":"考前调整","name":"考前轻装","detail":"轻量过一遍要点清单，收拾文具，今天早睡（只做15-20分钟）","tool":"none","min":30}]},{"date":"2026-10-24","dow":"六","phase":"P4","exam":"","tasks":[{"id":"2026-10-24#0","tid":"M10","subj":"数学","name":"限时Paper 2模拟","detail":"30分钟做5道大题（用妈妈提供的练习卷/真题），严格计时","tool":"paper","min":30},{"id":"2026-10-24#1","tid":"M1","subj":"数学·分数","name":"剩余量专练","detail":"5题「第二次取剩余的几分之几」，每题先画bar model再算","tool":"math_hub","min":30},{"id":"2026-10-24#2","tid":"S2","subj":"科学·电路","name":"因果链完整表达","detail":"5题，答案必须写完整链条：开关闭合→电路完整→灯亮","tool":"sci_hub","min":30}]},{"date":"2026-10-25","dow":"日","phase":"P4","exam":"","tasks":[{"id":"2026-10-25#0","tid":"M3","subj":"数学","name":"转移问题两边都变","detail":"4题（一人给另一人x，差变2x），画before/after双条形图","tool":"math_hub","min":30},{"id":"2026-10-25#1","tid":"M5","subj":"数学","name":"约束与最省组合","detail":"3题（每种都要有/最少包数），先列条件清单再逐项核对","tool":"math_hub","min":30},{"id":"2026-10-25#2","tid":"S10","subj":"科学·OEQ","name":"限时Section B","detail":"25分钟做5题Section B（妈妈提供真题），写完自评得分点","tool":"paper","min":30}]},{"date":"2026-10-26","dow":"一","phase":"P4","exam":"数学","tasks":[{"id":"2026-10-26#0","tid":"S8","subj":"科学·OEQ","name":"2分题得分镜头","detail":"4道2分题，逐题数自己写了几个得分点，补齐到2个","tool":"sci_hub","min":30},{"id":"2026-10-26#1","tid":"S9","subj":"科学·词汇","name":"术语速记+造句","detail":"20个术语速记，每个用规范科学句说一句","tool":"sci_vocab","min":30},{"id":"2026-10-26#2","tid":"R2","subj":"考前调整","name":"考前轻装","detail":"轻量过一遍要点清单，收拾文具，今天早睡（只做15-20分钟）","tool":"none","min":30}]},{"date":"2026-10-27","dow":"二","phase":"P4","exam":"科学","tasks":[{"id":"2026-10-27#0","tid":"R1","subj":"复盘","name":"周复盘","detail":"看错题本+妈妈看板：写下本周3个进步 + 下周1个重点","tool":"mistakes","min":30},{"id":"2026-10-27#1","tid":"R1","subj":"复盘","name":"周复盘","detail":"看错题本+妈妈看板：写下本周3个进步 + 下周1个重点","tool":"mistakes","min":30},{"id":"2026-10-27#2","tid":"R1","subj":"复盘","name":"周复盘","detail":"看错题本+妈妈看板：写下本周3个进步 + 下周1个重点","tool":"mistakes","min":30}]}]};
+const TOOLS={"oral_en": ["./Johnson驯龙少年口试训练.html", "🐉 口试训练器"], "oral_zh": ["./Johnson驯龙少年口试训练.html", "🐉 口试训练器"], "oral_en_ai": ["https://chatgpt.com/share/6a8f932d-1d40-83ec-812e-7d613a9a73cd", "🗣️ 英文口试AI对练"], "oral_zh_ai": ["https://chatgpt.com/share/6a8f92e5-4a0c-83ec-b807-684ac7ad9ea1", "🎙️ 华文口试AI对练"], "en_comp": ["./Johnson_PSLE英文作文练习.html", "✍️ 英文作文练习"], "en_model": ["./model_composition_studio.html", "📚 范文工作室"], "en_oe": ["./Johnson_OE_Comprehension_Training.html", "🔍 理解题训练"], "en_hub": ["../../Johnson提升工具合集.html#english", "📘 English 题库"], "en_vocab": ["./vocab_trainer.html", "🔤 词汇训练"], "en_grammar": ["./grammar-trainer.html", "📐 语法训练"], "zh_comp": ["./Johnson_PSLE华文作文练习.html", "🖌️ 华文作文练习"], "zh_hub": ["../../Johnson提升工具合集.html#chinese", "📕 华文题库"], "gaohua": ["./Johnson_高华阅读探险营.html", "🐾 高华阅读探险营"], "math_hub": ["../../Johnson提升工具合集.html#math", "📐 数学题库"], "sci_hub": ["../../Johnson提升工具合集.html#science", "🔬 科学题库"], "sci_vocab": ["../../Johnson提升工具合集.html#science", "🔬 科学词汇"], "mistakes": ["../../Johnson提升工具合集.html#mistakes", "🎯 错题本"], "paper": ["", ""], "none": ["", ""]};
+const KEY="johnson_eyo_plan";
+function ld(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function sv(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+let S=ld(); S.done=S.done||{}; S.focus=S.focus||{};
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function dayOf(k){return PLAN.days.find(d=>d.date===k)}
+function diffDays(a,b){return Math.round((new Date(b+"T00:00:00")-new Date(a+"T00:00:00"))/864e5)}
+let view="today", viewDate=null;
+function muted(){try{return localStorage.getItem("johnson_tts_on")==="0"||localStorage.getItem("jenny_tts_on")==="0"}catch(e){return false}}
+function chime(ok){ if(muted())return; try{const c=new (window.AudioContext||window.webkitAudioContext)();
+  [ok?660:440,ok?880:0].forEach((f,i)=>{if(!f)return;const o=c.createOscillator(),g=c.createGain();
+  o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.001,c.currentTime);
+  g.gain.exponentialRampToValueAtTime(.16,c.currentTime+.02+i*.11);
+  g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.42+i*.11);
+  o.start(c.currentTime+i*.11);o.stop(c.currentTime+.5+i*.11)});}catch(e){} }
+function boom(){const C=["#3f8fd0","#2fae82","#d9a22b","#e8823c","#7db8e8"];
+ for(let i=0;i<34;i++){const e=document.createElement("div");e.className="cf";
+  const s=5+Math.random()*7;e.style.cssText="width:"+s+"px;height:"+s+"px;background:"+C[i%5]+";left:"+(20+Math.random()*60)+"%;top:"+(30+Math.random()*20)+"%;opacity:1;transition:all .9s cubic-bezier(.2,.7,.3,1)";
+  document.body.appendChild(e);requestAnimationFrame(()=>{e.style.top=(5+Math.random()*80)+"%";e.style.left=(5+Math.random()*90)+"%";e.style.opacity="0";e.style.transform="scale("+(1+Math.random()*2.4)+") rotate("+(Math.random()*360)+"deg)"});
+  setTimeout(()=>e.remove(),1000)} }
+
+/* ===== 倒计时条 ===== */
+function renderCD(){
+  const t=today();
+  document.getElementById("cd").innerHTML=PLAN.exams.map(e=>{
+    const n=diffDays(t,e.date);
+    const cls=n<0?"done":(n<=3?"soon":"");
+    const label=n<0?"已考完":(n===0?"就是今天":n+" 天");
+    return '<div class="cdi '+cls+'"><b>'+e.name+'</b><div class="n">'+label+'</div><div class="d">'+e.date.slice(5).replace("-","/")+'</div></div>';
+  }).join("");
+}
+/* ===== 今日 ===== */
+function renderToday(){
+  const k=viewDate||today();
+  let d=dayOf(k);
+  const app=document.getElementById("app");
+  if(!d){
+    const first=PLAN.days[0].date, last=PLAN.days[PLAN.days.length-1].date;
+    app.innerHTML='<div class="day"><h2>🎉 备考期已结束</h2><p class="det">计划覆盖 '+first+' 至 '+last+'。想回看任何一天，点上面的「全程」。</p></div>';
+    return;
+  }
+  const ph=PLAN.phases.find(p=>p.id===d.phase);
+  const done=d.tasks.filter(t=>S.done[t.id]).length;
+  let h='<div class="phase">'+ph.icon+' 阶段 '+ph.id+'｜'+ph.name+' · '+ph.focus+'</div>';
+  h+='<div class="day"><div class="dayhd"><h2>'+k.slice(5).replace("-","月")+'日 星期'+d.dow+'</h2>'
+    +(k===today()?'<span class="pill">今天</span>':'<span class="pill">回看/补做</span>')
+    +(d.exam?'<span class="pill exam">📝 '+(k===today()?'今天考：':'这天考：')+d.exam+'</span>':'')
+    +'<span class="mins" style="margin-left:auto">'+done+'/3 完成 · 今日专注 '+fmt(S.focus[k]||0)+'</span></div>';
+  h+='<div class="bar"><span style="width:'+(done/3*100)+'%"></span></div>';
+  if(d.exam)h+='<div class="tip">📝 '+(k===today()?'今天有考试':'这天有考试')+'（'+d.exam+'）。'+(k===today()?'先安心考完，任务是为<b>下一场</b>做准备，做不完没关系。':'考试日任务量已自动调轻。')+'</div>';
+  d.tasks.forEach((t,i)=>{
+    const ok=!!S.done[t.id], tl=TOOLS[t.tool]||["",""];
+    h+='<div class="tk'+(ok?' ok':'')+'" id="tk'+i+'"><div class="tkhd"><span class="badge">'+t.subj+'</span>'
+      +'<span class="tkname">'+(ok?'✅ ':'')+t.name+'</span><span class="mins">⏱ '+t.min+' 分钟</span></div>'
+      +'<div class="det">'+t.detail+'</div><div class="row">';
+    if(!ok){
+      h+='<span class="tmr" id="tm'+i+'">'+fmt(0)+'</span>'
+        +'<button class="btn p" id="go'+i+'" onclick="tgl('+i+')">▶ 开始专注</button>'
+        +'<button class="btn g" onclick="fin(\''+t.id+'\','+i+')">✓ 完成</button>';
+    }else{
+      h+='<button class="btn s" onclick="undo(\''+t.id+'\')">↩ 撤销完成</button>';
+    }
+    if(tl[0])h+='<button class="btn o" onclick="open2(\''+tl[0]+'\')">'+tl[1]+'</button>';
+    if(t.tool==="paper")h+='<span class="note">需要妈妈提供练习卷/真题</span>';
+    h+='</div></div>';
+  });
+  h+='</div>';
+  if(done===3)h+='<div class="day" style="border-color:var(--go);background:var(--go2)"><h2>🏅 今天三件事全部完成！</h2><p class="det">连续完成 '+streak()+' 天。想加练就点「全程」挑一天提前做，考前每一次加练都在拉开差距。</p></div>';
+  app.innerHTML=h;
+  tickAll();
+}
+function fmt(s){s=Math.max(0,s|0);return String((s/60)|0).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+/* 计时器 */
+let tmr={},raf=null;
+function tgl(i){
+  if(tmr[i]){clearInterval(tmr[i].h);delete tmr[i];const b=document.getElementById("go"+i);if(b)b.textContent="▶ 继续专注";return}
+  const b=document.getElementById("go"+i); if(b)b.textContent="⏸ 暂停";
+  tmr[i]={s:tmr[i]?tmr[i].s:0,h:setInterval(()=>{
+    const k=viewDate||today(); S.focus[k]=(S.focus[k]||0)+1; sv(S);
+    const el=document.getElementById("tm"+i);
+    const cur=(+(el&&el.dataset.s||0))+1; if(el){el.dataset.s=cur;el.textContent=fmt(cur);
+      if(cur===1800){chime(true);el.style.color="var(--go)";el.textContent="30:00 ✓"}}
+  },1000)};
+}
+function tickAll(){Object.keys(tmr).forEach(i=>{const el=document.getElementById("tm"+i);if(el&&tmr[i])el.dataset.s=el.dataset.s||0})}
+function fin(id,i){
+  if(tmr[i]){clearInterval(tmr[i].h);delete tmr[i]}
+  S.done[id]={ts:Date.now()}; sv(S); chime(true);
+  const k=viewDate||today(); const d=dayOf(k);
+  if(d&&d.tasks.every(t=>S.done[t.id])){boom();setTimeout(boom,320)}
+  renderToday(); renderCD();
+}
+function undo(id){delete S.done[id];sv(S);renderToday()}
+function open2(u){try{window.open(u,"_blank","noopener")}catch(e){location.href=u}}
+/* ===== 全程 ===== */
+function renderCal(){
+  const t=today();
+  let h="";
+  PLAN.phases.forEach(p=>{
+    const ds=PLAN.days.filter(d=>d.phase===p.id);
+    const tot=ds.length*3, dn=ds.reduce((a,d)=>a+d.tasks.filter(x=>S.done[x.id]).length,0);
+    h+='<div class="phase">'+p.icon+' 阶段 '+p.id+'｜'+p.name+' · '+p.from.slice(5)+' ~ '+p.to.slice(5)+' · 完成 '+dn+'/'+tot+'</div><div class="cal">';
+    ds.forEach(d=>{
+      const n=d.tasks.filter(x=>S.done[x.id]).length;
+      h+='<div class="crow'+(n===3?" full":"")+(d.exam?" exday":"")+(d.date===t?" today":"")+'" onclick="pick(\''+d.date+'\')">'
+        +'<div class="dt">'+d.date.slice(5).replace("-","/")+' 周'+d.dow+(d.exam?'<br><span style="color:#c4522a">📝考试</span>':'')+'</div>'
+        +'<div class="ts">'+d.tasks.map(x=>'<span class="badge" style="margin-right:5px">'+x.subj+'</span>'+x.name).join('<br>')+'</div>'
+        +'<div class="st">'+(n===3?"✅":n+"/3")+'</div></div>';
+    });
+    h+='</div>';
+  });
+  document.getElementById("app").innerHTML=h;
+}
+function pick(k){viewDate=k;go("today")}
+/* ===== 妈妈看板 ===== */
+function renderParent(){
+  const t=today();
+  const total=PLAN.days.length*3, dn=Object.keys(S.done).length;
+  const past=PLAN.days.filter(d=>d.date<=t);
+  const pastTot=past.length*3, pastDn=past.reduce((a,d)=>a+d.tasks.filter(x=>S.done[x.id]).length,0);
+  const bySubj={}; PLAN.days.forEach(d=>d.tasks.forEach(x=>{if(S.done[x.id]){const k=x.subj.split("·")[0];bySubj[k]=(bySubj[k]||0)+1}}));
+  const focusTot=Object.values(S.focus).reduce((a,b)=>a+b,0);
+  let h='<div class="grid2">'
+   +'<div class="stat"><b>'+pastDn+'/'+pastTot+'</b><span>至今应做/已做</span></div>'
+   +'<div class="stat"><b>'+(pastTot?Math.round(pastDn/pastTot*100):0)+'%</b><span>执行率</span></div>'
+   +'<div class="stat"><b>'+streak()+'</b><span>连续全勤天</span></div>'
+   +'<div class="stat"><b>'+Math.round(focusTot/60)+'</b><span>累计专注(分钟)</span></div>'
+   +'<div class="stat"><b>'+dn+'/'+total+'</b><span>全程进度</span></div></div>';
+  h+='<h3>最近 14 天</h3><div class="cal" style="padding:12px 13px"><div class="hm">';
+  for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);
+    const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    const dd=dayOf(k); const n=dd?dd.tasks.filter(x=>S.done[x.id]).length:0;
+    h+='<div class="hmc '+(n>=3?"p3":n===2?"p2":n===1?"p1":"")+'" title="'+k+'">'+k.slice(8)+'</div>';}
+  h+='</div></div>';
+  h+='<h3>各科已完成任务数</h3><div class="cal" style="padding:12px 13px">'
+   +(Object.keys(bySubj).length?Object.entries(bySubj).sort((a,b)=>b[1]-a[1]).map(x=>'<span class="badge" style="margin:4px 6px 4px 0;display:inline-block">'+x[0]+' · '+x[1]+'</span>').join(""):'<span class="det">还没有完成记录</span>')+'</div>';
+  const miss=past.filter(d=>d.tasks.filter(x=>S.done[x.id]).length<3&&!d.exam).slice(-5);
+  h+='<h3>可以补做的日子</h3><div class="cal">'+(miss.length?miss.map(d=>{
+    const n=d.tasks.filter(x=>S.done[x.id]).length;
+    return '<div class="crow" onclick="pick(\''+d.date+'\')"><div class="dt">'+d.date.slice(5)+'</div><div class="ts">'+d.tasks.filter(x=>!S.done[x.id]).map(x=>x.subj+"·"+x.name).join("；")+'</div><div class="st">'+n+'/3</div></div>';
+  }).join(""):'<div class="crow"><div class="dt">👍</div><div class="ts">没有欠账，全部跟上了</div><div class="st">✅</div></div>')+'</div>';
+  h+='<div class="tip">📌 四科重点（按诊断）：英文=理解定位证据+作文细节；华文=看图作文开头/转折/收束；数学=分数剩余量、转移与逆推、终检；科学=OEQ 完整因果链与 2 分得分点。</div>';
+  document.getElementById("app").innerHTML=h;
+}
+function streak(){
+  let n=0; const d=new Date();
+  for(;;){const k=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    const dd=dayOf(k); if(!dd)break;
+    if(dd.tasks.every(x=>S.done[x.id])){n++;d.setDate(d.getDate()-1)}else break; if(n>200)break}
+  return n;
+}
+function go(v){
+  view=v; if(v!=="today")viewDate=null;
+  ["today","cal","parent"].forEach(x=>{const b=document.getElementById("tb-"+x);if(b)b.className="tab"+(x===v?" on":"")});
+  if(v==="today")renderToday(); else if(v==="cal")renderCal(); else renderParent();
+  window.scrollTo(0,0);
+}
+renderCD(); go("today");
+window.addEventListener("storage",()=>{S=ld();S.done=S.done||{};S.focus=S.focus||{};go(view)});
+</script></body></html>
