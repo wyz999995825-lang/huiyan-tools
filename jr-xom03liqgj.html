@@ -250,6 +250,9 @@ $("watch").onclick=()=>{ watching=true; $("wv").hidden=false; document.body.styl
 $("wv-close").onclick=()=>{ watching=false; $("wv").hidden=true; document.body.style.overflow="" };
 setInterval(ping,150000);
 render(true); renderNow(); poll().then(renderNow); stream();
+// pick up a newer version of this page by itself (phones keep old copies for a while)
+const PAGE_VER="v4";
+setInterval(async()=>{ try{ const t=await (await fetch(location.pathname+"?t="+Date.now(),{cache:"no-store"})).text(); const m=/PAGE_VER="(v\d+)"/.exec(t); if(m&&m[1]!==PAGE_VER&&!watching)location.replace(location.pathname+"?v="+m[1]) }catch{} },5*60e3);
 setInterval(()=>{ if(!esOK)poll().then(renderNow); else renderNow() },10000);
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ poll().then(renderNow); ping() } });
 </script>
