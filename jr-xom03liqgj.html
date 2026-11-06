@@ -250,8 +250,18 @@ $("q").addEventListener("input",()=>render(true));
 let ES=null, esOK=false;
 function stream(){ if(ES)return; try{ ES=new EventSource(NT+"/sse"); ES.onopen=()=>{esOK=true}; ES.onmessage=async e=>{ try{ const m=JSON.parse(e.data); await handle(m); if(m.id)LASTID=m.id; render(); renderNow() }catch{} }; ES.onerror=()=>{ esOK=false; try{ES.close()}catch{} ES=null; setTimeout(stream,15000) } }catch{} }
 const ICE={iceServers:[{urls:["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302","stun:stun.cloudflare.com:3478"]}]};
-const MIR={ok:false,imgs:{},css:null,ink:null,w:1400,h:900};
-const vidOn=()=>PC&&PC.connectionState==="connected"&&MIR.ok;
+const MIR={ok:false,imgs:{},css:null,ink:null,w:1400,h:900,last:null,at:0};
+const vidOn=()=>MIR.ok&&MQ.c&&MQ.c.connected&&Date.now()-MIR.at<30000;
+// live mirror arrives through a public MQTT relay (works in any browser or network)
+const MQ={c:null,id:Math.random().toString(36).slice(2,10),topic:"mcj/"+TOPIC.slice(4)};
+function mqLoad(){ return window.mqtt?Promise.resolve():new Promise((ok,no)=>{ const sc=document.createElement("script"); sc.src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"; sc.onload=ok; sc.onerror=no; document.head.append(sc) }) }
+async function mqStart(){ if(MQ.c||MQ.loading)return; MQ.loading=true; try{ await mqLoad();
+    const c=window.mqtt.connect("wss://broker.hivemq.com:8884/mqtt",{clientId:"mcjv_"+MQ.id,keepalive:30,reconnectPeriod:3000,connectTimeout:8000,clean:true}); MQ.c=c;
+    c.on("connect",()=>{ c.subscribe(MQ.topic+"/down"); hello(true) });
+    c.on("message",(t,buf)=>{ try{ const m=JSON.parse(String(buf)); if(NOW&&NOW.dev&&m.dv&&m.dv!==NOW.dev)return; if(!MQ.dv&&m.dv)MQ.dv=m.dv; MIR.at=Date.now(); mirApply(m) }catch{} });
+  }catch{} finally{ MQ.loading=false } }
+function hello(full){ try{ if(MQ.c&&MQ.c.connected&&watching)MQ.c.publish(MQ.topic+"/up",JSON.stringify({t:"hello",id:MQ.id,full:!!full}),{qos:0}) }catch{} }
+setInterval(()=>hello(false),8000);
 function mirFit(){ const box=$("mir"), f=$("mirf"), zoom=$("wv-vidbox").classList.contains("zoom"); box.style.width=""; const W=box.clientWidth||360; let k=W/MIR.w;
   if(!zoom){ const availH=Math.max(240,innerHeight-130); if(MIR.h*k>availH){ k=availH/MIR.h; box.style.width=Math.round(MIR.w*k)+"px" } }
   f.style.width=MIR.w+"px"; f.style.height=MIR.h+"px"; f.style.transform="scale("+k+")"; box.style.height=Math.round(MIR.h*k)+"px" }
@@ -263,7 +273,8 @@ function mirApply(m){ const f=$("mirf"), doc=f.contentDocument; if(!doc)return;
   if(m.t==="s"){ if(m.id==="#win"){ try{ doc.defaultView.scrollTo(m.left,m.top) }catch{} } else { const e=doc.getElementById(m.id); if(e){ e.scrollTop=m.top; e.scrollLeft=m.left } } return }
   if(m.t==="css"){ MIR.css=m; doc.open(); doc.write("<!doctype html><html"+(m.theme?' data-theme="'+m.theme+'"':"")+"><head><meta charset=utf-8><style>"+m.css+"</style><style>*{animation:none!important;transition:none!important;caret-color:transparent;scroll-behavior:auto!important}html,body{margin:0}html{overflow:hidden}</style></head><body></body></html>"); doc.close(); return }
   if(m.t==="img"){ try{ const b=m.u.split(","), bin=atob(b[1]), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); MIR.imgs[m.id]=URL.createObjectURL(new Blob([u],{type:(b[0].match(/data:([^;]+)/)||[])[1]||"image/jpeg"})) }catch{ MIR.imgs[m.id]=m.u } return }
-  if(m.t!=="f"||!doc.body)return;
+  if(m.t==="d"){ if(MIR.last==null){ hello(true); return } m={...m,t:"f",html:MIR.last.slice(0,m.p)+m.x+MIR.last.slice(MIR.last.length-m.s)} }
+  if(m.t!=="f"||!doc.body)return; MIR.last=m.html;
   if(m.ink){ const im=new Image(); im.src=m.ink; MIR.ink=im }
   MIR.w=m.w; MIR.h=m.h; mirFit();
   const html=m.html.replace(/data-mid="([^"]+)"/g,(x,id)=>'src="'+(MIR.imgs[id]||"")+'"'), cur=doc.body.firstElementChild;
@@ -282,7 +293,7 @@ async function startRTC(){ if(!window.RTCPeerConnection||offers>=12)return; if(v
     await new Promise(r=>{ if(pc.iceGatheringState==="complete")return r(); const t=setTimeout(r,3000); pc.addEventListener("icegatheringstatechange",()=>{ if(pc.iceGatheringState==="complete"){clearTimeout(t);r()} }) });
     const data=await zip(JSON.stringify({sid:SID,sdp:pc.localDescription.sdp})), id=Date.now().toString(36), N=Math.ceil(data.length/3600)||1;
     for(let k=0;k<N;k++)await fetch(NT,{method:"POST",body:"MC1|offer|"+id+"|"+k+"|"+N+"|"+data.slice(k*3600,(k+1)*3600)}) }catch{} }
-function stopRTC(){ try{PC&&PC.close()}catch{} PC=null; MIR.ok=false; offers=0; offerAt=0 }
+function stopRTC(){ MIR.ok=false; MIR.last=null }
 function ping(){ if(watching&&!document.hidden)fetch(NT,{method:"POST",body:"MC1|ping|"+Date.now().toString(36)+"|0|1|x"}).catch(()=>{}) }
 const onNow=()=>NOW&&NOW.on&&Date.now()-NOW.ts<16*60e3;
 const openNow=()=>NOW&&NOW.open!==false&&(NOW.on||NOW.open)&&Date.now()-NOW.ts<13*60e3;
@@ -297,7 +308,7 @@ function renderNow(){ const box=$("now"), on=onNow(), opened=openNow(); box.clas
   $("wv-board").replaceChildren(...((WATCH&&on&&WATCH.board)||[]).map(t=>Object.assign(document.createElement("span"),{textContent:t})));
   const chat=(WATCH&&WATCH.chat)||[]; $("wv-chat").replaceChildren(...chat.map(c=>{ const d=document.createElement("div"); d.className="bub "+c.w; if(c.w!=="x"){ const w=document.createElement("span"); w.className="who"; w.textContent=c.w==="t"?"老师":"Johnny"; d.append(w) } d.append(document.createTextNode(c.t)); return d }));
   $("wv-wait").hidden=on&&!!chat.length; $("wv-chat").hidden=!on; $("wv-wait").textContent=opened&&!on?"课堂页面开着，正在接通实时画面……":on?"已连上课堂，等老师和 Johnny 说下一句话……（大约每 15 秒更新一次）":"课程暂未开始";
-  if(opened&&watching)startRTC();
+  if(watching)mqStart();
   const hasVid=(on||opened)&&vidOn(); const wasHidden=$("wv-vidbox").hidden; $("wv-vidbox").hidden=!hasVid; if(hasVid&&wasHidden)mirFit();
   if(hasVid){ $("wv-shotbox").hidden=true; $("wv-qbox").hidden=true; $("wv-board").replaceChildren(); $("wv-chat").hidden=true; $("wv-wait").hidden=true; $("wv-where").textContent=""; return }
   const hasShot=on&&SHOT&&Date.now()/1000-SHOT.time<600;
@@ -308,12 +319,12 @@ function renderNow(){ const box=$("now"), on=onNow(), opened=openNow(); box.clas
   const b=document.querySelector(".wv-body"); b.scrollTop=b.scrollHeight }
 $("wv-img").onclick=()=>$("wv-shotbox").classList.toggle("zoom");
 $("mir").onclick=()=>{ $("wv-vidbox").classList.toggle("zoom"); setTimeout(mirFit,0) };
-$("watch").onclick=()=>{ watching=true; $("wv").hidden=false; document.body.style.overflow="hidden"; ping(); renderNow() };
+$("watch").onclick=()=>{ watching=true; mqStart(); hello(true); $("wv").hidden=false; document.body.style.overflow="hidden"; ping(); renderNow() };
 $("wv-close").onclick=()=>{ watching=false; stopRTC(); $("wv").hidden=true; document.body.style.overflow="" };
 setInterval(ping,150000);
 render(true); renderNow(); poll().then(renderNow); stream();
 // pick up a newer version of this page by itself (phones keep old copies for a while)
-const PAGE_VER="v12";
+const PAGE_VER="v13";
 setInterval(async()=>{ try{ const t=await (await fetch(location.pathname+"?t="+Date.now(),{cache:"no-store"})).text(); const m=/PAGE_VER="(v\d+)"/.exec(t); if(m&&m[1]!==PAGE_VER&&!watching)location.replace(location.pathname+"?v="+m[1]) }catch{} },5*60e3);
 setInterval(()=>{ if(!esOK)poll().then(renderNow); else renderNow() },10000);
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ poll().then(renderNow); ping() } });
