@@ -88,6 +88,11 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .mir{position:relative;width:100%;margin:0 auto;overflow:hidden;border-radius:10px;border:1px solid var(--line);background:var(--panel)}
 .mir iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0;pointer-events:none;background:#fff}
 .wv-shot.zoom .mir{width:240%}
+.cur{position:absolute;left:0;top:0;width:22px;height:22px;margin:-3px 0 0 -3px;pointer-events:none;z-index:2;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 2l7 19 2.6-7.4L20 11z' fill='%23111' stroke='%23fff' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E");filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
+.cur.down{transform:scale(.85)}
+.ripple{position:absolute;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;border:3px solid #e0453a;pointer-events:none;z-index:2;animation:rip .6s ease-out forwards}
+@keyframes rip{from{transform:scale(.3);opacity:1}to{transform:scale(1.6);opacity:0}}
+.away{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:3;background:#e0453a;color:#fff;font-size:14px;font-weight:600;padding:6px 14px;border-radius:999px;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis}
 .wv-shot img{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);background:var(--panel);display:block}
 .wv-wait{color:var(--muted);text-align:center;padding:24px 8px}
 </style>
@@ -156,7 +161,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <div class="wv-head"><span class="dot" id="wv-dot" style="width:10px;height:10px;border-radius:50%;background:var(--muted)"></span><h2 id="wv-title">监视课堂</h2><span class="ro">只能看，不能操作</span><button class="wv-close" id="wv-close" type="button">关闭</button></div>
   <div class="wv-body">
     <p class="note" id="wv-where"></p>
-    <figure class="wv-shot" id="wv-vidbox" hidden><div class="mir" id="mir"><iframe id="mirf" sandbox="allow-same-origin" tabindex="-1" title="课堂实时画面"></iframe></div><figcaption class="note" id="wv-vidnote">实时画面 · 只能看，不能操作 · 点画面可以放大</figcaption></figure>
+    <figure class="wv-shot" id="wv-vidbox" hidden><div class="mir" id="mir"><iframe id="mirf" sandbox="allow-same-origin" tabindex="-1" title="课堂实时画面"></iframe><div class="cur" id="cur" hidden></div><div class="away" id="away" hidden>Johnny 离开了课堂画面（切到了别的窗口或程序）</div></div><figcaption class="note" id="wv-vidnote">实时画面 · 只能看，不能操作 · 点画面可以放大</figcaption></figure>
     <figure class="wv-shot" id="wv-shotbox" hidden><img id="wv-img" alt="课堂画面" title="点一下放大/缩小"><figcaption class="note" id="wv-shottime"></figcaption></figure>
     <div class="wv-q" id="wv-qbox" hidden><span class="lab">正在讲的题</span><span id="wv-q"></span></div>
     <div class="wv-board" id="wv-board"></div>
@@ -249,7 +254,11 @@ const vidOn=()=>PC&&PC.connectionState==="connected"&&MIR.ok;
 function mirFit(){ const box=$("mir"), f=$("mirf"), zoom=$("wv-vidbox").classList.contains("zoom"); box.style.width=""; const W=box.clientWidth||360; let k=W/MIR.w;
   if(!zoom){ const availH=Math.max(240,innerHeight-130); if(MIR.h*k>availH){ k=availH/MIR.h; box.style.width=Math.round(MIR.w*k)+"px" } }
   f.style.width=MIR.w+"px"; f.style.height=MIR.h+"px"; f.style.transform="scale("+k+")"; box.style.height=Math.round(MIR.h*k)+"px" }
+function mirK(){ const f=$("mirf"); const t=/scale\(([\d.]+)\)/.exec(f.style.transform||""); return t?+t[1]:1 }
 function mirApply(m){ const f=$("mirf"), doc=f.contentDocument; if(!doc)return;
+  if(m.t==="p"){ const c=$("cur"); if(m.x<0){ c.hidden=true; return } const k=mirK(); c.hidden=false; c.style.left=(m.x*k)+"px"; c.style.top=(m.y*k)+"px"; c.classList.toggle("down",!!m.d); return }
+  if(m.t==="c"){ const k=mirK(), r=document.createElement("div"); r.className="ripple"; r.style.left=(m.x*k)+"px"; r.style.top=(m.y*k)+"px"; $("mir").append(r); setTimeout(()=>r.remove(),700); return }
+  if(m.t==="v"){ $("away").hidden=!(m.hidden||!m.focus); return }
   if(m.t==="css"){ MIR.css=m; doc.open(); doc.write("<!doctype html><html"+(m.theme?' data-theme="'+m.theme+'"':"")+"><head><meta charset=utf-8><style>"+m.css+"</style><style>*{animation:none!important;transition:none!important;caret-color:transparent}html,body{margin:0;height:100%;overflow:hidden}</style></head><body></body></html>"); doc.close(); return }
   if(m.t==="img"){ try{ const b=m.u.split(","), bin=atob(b[1]), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); MIR.imgs[m.id]=URL.createObjectURL(new Blob([u],{type:(b[0].match(/data:([^;]+)/)||[])[1]||"image/jpeg"})) }catch{ MIR.imgs[m.id]=m.u } return }
   if(m.t!=="f"||!doc.body)return;
@@ -300,7 +309,7 @@ $("wv-close").onclick=()=>{ watching=false; stopRTC(); $("wv").hidden=true; docu
 setInterval(ping,150000);
 render(true); renderNow(); poll().then(renderNow); stream();
 // pick up a newer version of this page by itself (phones keep old copies for a while)
-const PAGE_VER="v8";
+const PAGE_VER="v9";
 setInterval(async()=>{ try{ const t=await (await fetch(location.pathname+"?t="+Date.now(),{cache:"no-store"})).text(); const m=/PAGE_VER="(v\d+)"/.exec(t); if(m&&m[1]!==PAGE_VER&&!watching)location.replace(location.pathname+"?v="+m[1]) }catch{} },5*60e3);
 setInterval(()=>{ if(!esOK)poll().then(renderNow); else renderNow() },10000);
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ poll().then(renderNow); ping() } });
