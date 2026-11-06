@@ -84,8 +84,10 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .bub.s{background:var(--accent-soft);justify-self:end}
 .bub.x{justify-self:center;background:transparent;color:var(--muted);font-size:12.5px;max-width:100%}
 .wv-shot{margin:0;display:grid;gap:6px;overflow:auto}
-.wv-shot.zoom img,.wv-shot.zoom video{width:240%;max-width:none}
-.wv-shot video{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);background:#000;display:block}
+.wv-shot.zoom img{width:240%;max-width:none}
+.mir{position:relative;width:100%;overflow:hidden;border-radius:10px;border:1px solid var(--line);background:var(--panel)}
+.mir iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0;pointer-events:none;background:#fff}
+.wv-shot.zoom .mir{width:240%}
 .wv-shot img{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);background:var(--panel);display:block}
 .wv-wait{color:var(--muted);text-align:center;padding:24px 8px}
 </style>
@@ -154,7 +156,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <div class="wv-head"><span class="dot" id="wv-dot" style="width:10px;height:10px;border-radius:50%;background:var(--muted)"></span><h2 id="wv-title">监视课堂</h2><span class="ro">只能看，不能操作</span><button class="wv-close" id="wv-close" type="button">关闭</button></div>
   <div class="wv-body">
     <p class="note" id="wv-where"></p>
-    <figure class="wv-shot" id="wv-vidbox" hidden><video id="wv-video" playsinline muted autoplay></video><figcaption class="note" id="wv-vidnote">实时画面 · 只能看，不能操作 · 点画面可以放大</figcaption></figure>
+    <figure class="wv-shot" id="wv-vidbox" hidden><div class="mir" id="mir"><iframe id="mirf" sandbox="allow-same-origin" tabindex="-1" title="课堂实时画面"></iframe></div><figcaption class="note" id="wv-vidnote">实时画面 · 只能看，不能操作 · 点画面可以放大</figcaption></figure>
     <figure class="wv-shot" id="wv-shotbox" hidden><img id="wv-img" alt="课堂画面" title="点一下放大/缩小"><figcaption class="note" id="wv-shottime"></figcaption></figure>
     <div class="wv-q" id="wv-qbox" hidden><span class="lab">正在讲的题</span><span id="wv-q"></span></div>
     <div class="wv-board" id="wv-board"></div>
@@ -242,17 +244,31 @@ $("q").addEventListener("input",()=>render(true));
 let ES=null, esOK=false;
 function stream(){ if(ES)return; try{ ES=new EventSource(NT+"/sse"); ES.onopen=()=>{esOK=true}; ES.onmessage=async e=>{ try{ const m=JSON.parse(e.data); await handle(m); if(m.id)LASTID=m.id; render(); renderNow() }catch{} }; ES.onerror=()=>{ esOK=false; try{ES.close()}catch{} ES=null; setTimeout(stream,15000) } }catch{} }
 const ICE={iceServers:[{urls:["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302"]}]};
-const vidOn=()=>PC&&PC.connectionState==="connected"&&$("wv-video").srcObject;
+const MIR={ok:false,imgs:{},css:null,ink:null,w:1400,h:900};
+const vidOn=()=>PC&&PC.connectionState==="connected"&&MIR.ok;
+function mirFit(){ const box=$("mir"), f=$("mirf"); const W=box.clientWidth||360, k=W/MIR.w; f.style.width=MIR.w+"px"; f.style.height=MIR.h+"px"; f.style.transform="scale("+k+")"; box.style.height=Math.round(MIR.h*k)+"px" }
+function mirApply(m){ const f=$("mirf"), doc=f.contentDocument; if(!doc)return;
+  if(m.t==="css"){ MIR.css=m; doc.open(); doc.write("<!doctype html><html"+(m.theme?' data-theme="'+m.theme+'"':"")+"><head><meta charset=utf-8><style>"+m.css+"</style><style>*{animation:none!important;transition:none!important;caret-color:transparent}html,body{margin:0;height:100%;overflow:hidden}</style></head><body></body></html>"); doc.close(); return }
+  if(m.t==="img"){ try{ const b=m.u.split(","), bin=atob(b[1]), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); MIR.imgs[m.id]=URL.createObjectURL(new Blob([u],{type:(b[0].match(/data:([^;]+)/)||[])[1]||"image/jpeg"})) }catch{ MIR.imgs[m.id]=m.u } return }
+  if(m.t!=="f"||!doc.body)return;
+  if(m.ink){ const im=new Image(); im.src=m.ink; MIR.ink=im }
+  MIR.w=m.w; MIR.h=m.h; mirFit();
+  doc.body.innerHTML=m.html.replace(/data-mid="([^"]+)"/g,(x,id)=>'src="'+(MIR.imgs[id]||"")+'"');
+  const c=doc.getElementById("ink"); const draw=()=>{ try{ const im=MIR.ink; if(c&&im&&im.complete&&im.naturalWidth){ c.width=im.naturalWidth; c.height=im.naturalHeight; c.getContext("2d").drawImage(im,0,0) } }catch{} }; if(MIR.ink&&!MIR.ink.complete)MIR.ink.onload=draw; draw();
+  for(const [id,[t,l]] of Object.entries(m.sc||{})){ const e=doc.getElementById(id); if(e){ e.scrollTop=t; e.scrollLeft=l } }
+  if(!MIR.ok){ MIR.ok=true; renderNow() } }
+addEventListener("resize",()=>{ if(MIR.ok)mirFit() });
 async function startRTC(){ if(!window.RTCPeerConnection||offers>=6)return; if(vidOn())return; if(PC&&Date.now()-offerAt<30000)return;
   try{ PC&&PC.close() }catch{} offers++; offerAt=Date.now(); SID=Math.random().toString(36).slice(2,10); const pc=new RTCPeerConnection(ICE); PC=pc;
-  pc.addTransceiver("video",{direction:"recvonly"});
-  pc.ontrack=e=>{ const v=$("wv-video"); v.srcObject=e.streams&&e.streams[0]?e.streams[0]:new MediaStream([e.track]); v.play().catch(()=>{}); renderNow() };
-  pc.onconnectionstatechange=()=>{ if(/failed|closed/.test(pc.connectionState)&&PC===pc){ $("wv-video").srcObject=null } renderNow() };
+  const ch=pc.createDataChannel("m",{negotiated:true,id:0}); MIR.ch=ch; MIR.ok=false; const parts={};
+  ch.onmessage=e=>{ let d=e.data; if(typeof d!=="string")return; if(d[0]==="#"){ const [id,i,n]=d.slice(1).split("|",3), body=d.split("|").slice(3).join("|"), g=parts[id]||(parts[id]={n:+n,p:{}}); g.p[+i]=body; if(Object.keys(g.p).length<g.n)return; delete parts[id]; d=Array.from({length:g.n},(_,k)=>g.p[k]).join("") } try{ mirApply(JSON.parse(d)) }catch{} };
+  ch.onclose=()=>{ if(PC===pc){ MIR.ok=false; renderNow() } };
+  pc.onconnectionstatechange=()=>{ if(/failed|closed/.test(pc.connectionState)&&PC===pc){ MIR.ok=false } renderNow() };
   try{ await pc.setLocalDescription(await pc.createOffer());
     await new Promise(r=>{ if(pc.iceGatheringState==="complete")return r(); const t=setTimeout(r,3000); pc.addEventListener("icegatheringstatechange",()=>{ if(pc.iceGatheringState==="complete"){clearTimeout(t);r()} }) });
     const data=await zip(JSON.stringify({sid:SID,sdp:pc.localDescription.sdp})), id=Date.now().toString(36), N=Math.ceil(data.length/3600)||1;
     for(let k=0;k<N;k++)await fetch(NT,{method:"POST",body:"MC1|offer|"+id+"|"+k+"|"+N+"|"+data.slice(k*3600,(k+1)*3600)}) }catch{} }
-function stopRTC(){ try{PC&&PC.close()}catch{} PC=null; $("wv-video").srcObject=null; offers=0; offerAt=0 }
+function stopRTC(){ try{PC&&PC.close()}catch{} PC=null; MIR.ok=false; offers=0; offerAt=0 }
 function ping(){ if(watching&&!document.hidden)fetch(NT,{method:"POST",body:"MC1|ping|"+Date.now().toString(36)+"|0|1|x"}).catch(()=>{}) }
 const onNow=()=>NOW&&NOW.on&&Date.now()-NOW.ts<16*60e3;
 function renderNow(){ const box=$("now"), on=onNow(); box.classList.toggle("on",!!on);
@@ -267,7 +283,7 @@ function renderNow(){ const box=$("now"), on=onNow(); box.classList.toggle("on",
   const chat=(WATCH&&WATCH.chat)||[]; $("wv-chat").replaceChildren(...chat.map(c=>{ const d=document.createElement("div"); d.className="bub "+c.w; if(c.w!=="x"){ const w=document.createElement("span"); w.className="who"; w.textContent=c.w==="t"?"老师":"Johnny"; d.append(w) } d.append(document.createTextNode(c.t)); return d }));
   $("wv-wait").hidden=on&&!!chat.length; $("wv-chat").hidden=!on; $("wv-wait").textContent=on?"已连上课堂，等老师和 Johnny 说下一句话……（大约每 15 秒更新一次）":"课程暂未开始";
   if(on&&watching)startRTC();
-  const hasVid=on&&vidOn(); $("wv-vidbox").hidden=!hasVid;
+  const hasVid=on&&vidOn(); const wasHidden=$("wv-vidbox").hidden; $("wv-vidbox").hidden=!hasVid; if(hasVid&&wasHidden)mirFit();
   if(hasVid){ $("wv-shotbox").hidden=true; $("wv-qbox").hidden=true; $("wv-board").replaceChildren(); $("wv-chat").hidden=true; $("wv-wait").hidden=true; $("wv-where").textContent=""; return }
   const hasShot=on&&SHOT&&Date.now()/1000-SHOT.time<600;
   $("wv-shotbox").hidden=!hasShot;
@@ -276,13 +292,13 @@ function renderNow(){ const box=$("now"), on=onNow(); box.classList.toggle("on",
   if(on&&!chat.length){ $("wv-wait").textContent="已连上课堂，正在接通实时画面……"; }
   const b=document.querySelector(".wv-body"); b.scrollTop=b.scrollHeight }
 $("wv-img").onclick=()=>$("wv-shotbox").classList.toggle("zoom");
-$("wv-video").onclick=()=>$("wv-vidbox").classList.toggle("zoom");
+$("mir").onclick=()=>{ $("wv-vidbox").classList.toggle("zoom"); setTimeout(mirFit,0) };
 $("watch").onclick=()=>{ watching=true; $("wv").hidden=false; document.body.style.overflow="hidden"; ping(); renderNow() };
 $("wv-close").onclick=()=>{ watching=false; stopRTC(); $("wv").hidden=true; document.body.style.overflow="" };
 setInterval(ping,150000);
 render(true); renderNow(); poll().then(renderNow); stream();
 // pick up a newer version of this page by itself (phones keep old copies for a while)
-const PAGE_VER="v6";
+const PAGE_VER="v7";
 setInterval(async()=>{ try{ const t=await (await fetch(location.pathname+"?t="+Date.now(),{cache:"no-store"})).text(); const m=/PAGE_VER="(v\d+)"/.exec(t); if(m&&m[1]!==PAGE_VER&&!watching)location.replace(location.pathname+"?v="+m[1]) }catch{} },5*60e3);
 setInterval(()=>{ if(!esOK)poll().then(renderNow); else renderNow() },10000);
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ poll().then(renderNow); ping() } });
