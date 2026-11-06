@@ -236,12 +236,12 @@ function renderNow(){ const box=$("now"), on=onNow(); box.classList.toggle("on",
   else if(NOW){ $("now-t").textContent="现在没在上课"; $("now-s").textContent="上一次："+NOW.subj+" · "+new Date(NOW.ts).toLocaleString("zh-CN",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"})+(NOW.page?" · 停在 "+NOW.page:"") }
   else { $("now-t").textContent="现在没在上课"; $("now-s").textContent="Johnny 打开学习课堂上课时，这里会显示他正在学的科目" }
   if(!watching)return;
-  $("wv-dot").style.background=on?"#e0453a":"var(--muted)"; $("wv-title").textContent=on?"监视课堂 · 正在上 "+NOW.subj:"监视课堂 · 现在没在上课";
-  $("wv-where").textContent=NOW?[NOW.book,NOW.page,NOW.title].filter(Boolean).join(" · "):"";
+  $("wv-dot").style.background=on?"#e0453a":"var(--muted)"; $("wv-title").textContent=on?"监视课堂 · 正在上 "+NOW.subj:"监视课堂 · 课程暂未开始";
+  $("wv-where").textContent=on&&NOW?[NOW.book,NOW.page,NOW.title].filter(Boolean).join(" · "):"";
   const q=(WATCH&&WATCH.now&&WATCH.now.q)||(NOW&&NOW.q)||""; $("wv-qbox").hidden=!q||!on; $("wv-q").textContent=(NOW&&NOW.item?NOW.item+"：":"")+q;
   $("wv-board").replaceChildren(...((WATCH&&on&&WATCH.board)||[]).map(t=>Object.assign(document.createElement("span"),{textContent:t})));
   const chat=(WATCH&&WATCH.chat)||[]; $("wv-chat").replaceChildren(...chat.map(c=>{ const d=document.createElement("div"); d.className="bub "+c.w; if(c.w!=="x"){ const w=document.createElement("span"); w.className="who"; w.textContent=c.w==="t"?"老师":"Johnny"; d.append(w) } d.append(document.createTextNode(c.t)); return d }));
-  $("wv-wait").hidden=!!chat.length; $("wv-wait").textContent=on?"已连上课堂，等老师和 Johnny 说下一句话……（大约每 15 秒更新一次）":"现在没在上课。Johnny 一开始上课，这里就会自动出现课堂内容。";
+  $("wv-wait").hidden=on&&!!chat.length; $("wv-chat").hidden=!on; $("wv-wait").textContent=on?"已连上课堂，等老师和 Johnny 说下一句话……（大约每 15 秒更新一次）":"课程暂未开始";
   const b=document.querySelector(".wv-body"); b.scrollTop=b.scrollHeight }
 $("watch").onclick=()=>{ watching=true; $("wv").hidden=false; document.body.style.overflow="hidden"; ping(); renderNow() };
 $("wv-close").onclick=()=>{ watching=false; $("wv").hidden=true; document.body.style.overflow="" };
