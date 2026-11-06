@@ -195,7 +195,7 @@ async function handle(m){ if(m.event!=="message"||!m.message||!m.message.startsW
   if(type==="full"||type==="live"){ if(type==="full")lastFullSeen=Math.max(lastFullSeen,g.time*1000); apply(obj,type) }
   else if(type==="now"){ if(!NOW||obj.ts>=NOW.ts){ NOW=obj; try{localStorage.setItem("jr:now",JSON.stringify(NOW))}catch{} } }
   else if(type==="shot"){ if(!NOW||obj.ts>=NOW.ts){ NOW=obj; try{localStorage.setItem("jr:now",JSON.stringify(NOW))}catch{} } if(g.att&&(!SHOT||g.time>=SHOT.time))SHOT={url:g.att,time:g.time} }
-  else if(type==="answer"){ if(PC&&obj.sid===SID&&PC.signalingState==="have-local-offer"){ try{ await PC.setRemoteDescription({type:"answer",sdp:obj.sdp}) }catch{} } }
+  else if(type==="answer"){ if(PC&&obj.sid===SID&&obj.v>=3&&obj.on&&(!NOW||!NOW.dev||!NOW.on||obj.dev===NOW.dev)&&/m=application/.test(obj.sdp||"")&&PC.signalingState==="have-local-offer"){ try{ await PC.setRemoteDescription({type:"answer",sdp:obj.sdp}); MIR.dev=obj.dev }catch{} } }
   else if(type==="offer"){ }
   else if(type==="watch"){ if(!NOW||obj.now.ts>=NOW.ts){ NOW=obj.now; try{localStorage.setItem("jr:now",JSON.stringify(NOW))}catch{} } WATCH=obj; if(obj.rows&&obj.rows.length)apply({updated:obj.updated,rows:obj.rows},"live") } }
 async function poll(){ if(polling)return; polling=true;
@@ -248,7 +248,7 @@ $("q").addEventListener("input",()=>render(true));
 // live stream (falls back to polling if the stream drops)
 let ES=null, esOK=false;
 function stream(){ if(ES)return; try{ ES=new EventSource(NT+"/sse"); ES.onopen=()=>{esOK=true}; ES.onmessage=async e=>{ try{ const m=JSON.parse(e.data); await handle(m); if(m.id)LASTID=m.id; render(); renderNow() }catch{} }; ES.onerror=()=>{ esOK=false; try{ES.close()}catch{} ES=null; setTimeout(stream,15000) } }catch{} }
-const ICE={iceServers:[{urls:["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302"]}]};
+const ICE={iceServers:[{urls:["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302","stun:stun.cloudflare.com:3478"]}]};
 const MIR={ok:false,imgs:{},css:null,ink:null,w:1400,h:900};
 const vidOn=()=>PC&&PC.connectionState==="connected"&&MIR.ok;
 function mirFit(){ const box=$("mir"), f=$("mirf"), zoom=$("wv-vidbox").classList.contains("zoom"); box.style.width=""; const W=box.clientWidth||360; let k=W/MIR.w;
@@ -269,7 +269,7 @@ function mirApply(m){ const f=$("mirf"), doc=f.contentDocument; if(!doc)return;
   for(const [id,[t,l]] of Object.entries(m.sc||{})){ const e=doc.getElementById(id); if(e){ e.scrollTop=t; e.scrollLeft=l } }
   if(!MIR.ok){ MIR.ok=true; renderNow() } }
 addEventListener("resize",()=>{ if(MIR.ok)mirFit() });
-async function startRTC(){ if(!window.RTCPeerConnection||offers>=6)return; if(vidOn())return; if(PC&&Date.now()-offerAt<30000)return;
+async function startRTC(){ if(!window.RTCPeerConnection||offers>=12)return; if(vidOn())return; if(PC&&Date.now()-offerAt<(PC.connectionState==="failed"?3000:15000))return;
   try{ PC&&PC.close() }catch{} offers++; offerAt=Date.now(); SID=Math.random().toString(36).slice(2,10); const pc=new RTCPeerConnection(ICE); PC=pc;
   const ch=pc.createDataChannel("m",{negotiated:true,id:0}); MIR.ch=ch; MIR.ok=false; const parts={};
   ch.onmessage=e=>{ let d=e.data; if(typeof d!=="string")return; if(d[0]==="#"){ const [id,i,n]=d.slice(1).split("|",3), body=d.split("|").slice(3).join("|"), g=parts[id]||(parts[id]={n:+n,p:{}}); g.p[+i]=body; if(Object.keys(g.p).length<g.n)return; delete parts[id]; d=Array.from({length:g.n},(_,k)=>g.p[k]).join("") } try{ mirApply(JSON.parse(d)) }catch{} };
@@ -309,7 +309,7 @@ $("wv-close").onclick=()=>{ watching=false; stopRTC(); $("wv").hidden=true; docu
 setInterval(ping,150000);
 render(true); renderNow(); poll().then(renderNow); stream();
 // pick up a newer version of this page by itself (phones keep old copies for a while)
-const PAGE_VER="v9";
+const PAGE_VER="v10";
 setInterval(async()=>{ try{ const t=await (await fetch(location.pathname+"?t="+Date.now(),{cache:"no-store"})).text(); const m=/PAGE_VER="(v\d+)"/.exec(t); if(m&&m[1]!==PAGE_VER&&!watching)location.replace(location.pathname+"?v="+m[1]) }catch{} },5*60e3);
 setInterval(()=>{ if(!esOK)poll().then(renderNow); else renderNow() },10000);
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ poll().then(renderNow); ping() } });
