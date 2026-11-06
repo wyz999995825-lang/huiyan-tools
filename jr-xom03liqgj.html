@@ -68,11 +68,11 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .watchbtn{font:inherit;font-weight:600;border:0;border-radius:10px;padding:9px 16px;background:var(--accent);color:#fff;cursor:pointer}
 .watchbtn:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 .wv{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;flex-direction:column;padding:max(12px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
-.wv-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:860px;width:100%;margin:0 auto}
+.wv-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;max-width:1800px;width:100%;margin:0 auto}
 .wv-head h2{margin:0;font-size:18px;flex:1 1 auto}
 .wv-head .ro{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 10px}
 .wv-close{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:10px;padding:6px 14px;cursor:pointer}
-.wv-body{flex:1;overflow:auto;max-width:860px;width:100%;margin:10px auto 0;display:grid;gap:12px;align-content:start}
+.wv-body{flex:1;overflow:auto;max-width:1800px;width:100%;margin:10px auto 0;display:grid;gap:12px;align-content:start}
 .wv-q{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;white-space:pre-wrap}
 .wv-q .lab{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
 .wv-board{display:flex;flex-wrap:wrap;gap:6px}
@@ -85,7 +85,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .bub.x{justify-self:center;background:transparent;color:var(--muted);font-size:12.5px;max-width:100%}
 .wv-shot{margin:0;display:grid;gap:6px;overflow:auto}
 .wv-shot.zoom img{width:240%;max-width:none}
-.mir{position:relative;width:100%;overflow:hidden;border-radius:10px;border:1px solid var(--line);background:var(--panel)}
+.mir{position:relative;width:100%;margin:0 auto;overflow:hidden;border-radius:10px;border:1px solid var(--line);background:var(--panel)}
 .mir iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0;pointer-events:none;background:#fff}
 .wv-shot.zoom .mir{width:240%}
 .wv-shot img{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);background:var(--panel);display:block}
@@ -246,7 +246,9 @@ function stream(){ if(ES)return; try{ ES=new EventSource(NT+"/sse"); ES.onopen=(
 const ICE={iceServers:[{urls:["stun:stun.l.google.com:19302","stun:stun1.l.google.com:19302"]}]};
 const MIR={ok:false,imgs:{},css:null,ink:null,w:1400,h:900};
 const vidOn=()=>PC&&PC.connectionState==="connected"&&MIR.ok;
-function mirFit(){ const box=$("mir"), f=$("mirf"); const W=box.clientWidth||360, k=W/MIR.w; f.style.width=MIR.w+"px"; f.style.height=MIR.h+"px"; f.style.transform="scale("+k+")"; box.style.height=Math.round(MIR.h*k)+"px" }
+function mirFit(){ const box=$("mir"), f=$("mirf"), zoom=$("wv-vidbox").classList.contains("zoom"); box.style.width=""; const W=box.clientWidth||360; let k=W/MIR.w;
+  if(!zoom){ const availH=Math.max(240,innerHeight-130); if(MIR.h*k>availH){ k=availH/MIR.h; box.style.width=Math.round(MIR.w*k)+"px" } }
+  f.style.width=MIR.w+"px"; f.style.height=MIR.h+"px"; f.style.transform="scale("+k+")"; box.style.height=Math.round(MIR.h*k)+"px" }
 function mirApply(m){ const f=$("mirf"), doc=f.contentDocument; if(!doc)return;
   if(m.t==="css"){ MIR.css=m; doc.open(); doc.write("<!doctype html><html"+(m.theme?' data-theme="'+m.theme+'"':"")+"><head><meta charset=utf-8><style>"+m.css+"</style><style>*{animation:none!important;transition:none!important;caret-color:transparent}html,body{margin:0;height:100%;overflow:hidden}</style></head><body></body></html>"); doc.close(); return }
   if(m.t==="img"){ try{ const b=m.u.split(","), bin=atob(b[1]), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); MIR.imgs[m.id]=URL.createObjectURL(new Blob([u],{type:(b[0].match(/data:([^;]+)/)||[])[1]||"image/jpeg"})) }catch{ MIR.imgs[m.id]=m.u } return }
@@ -298,7 +300,7 @@ $("wv-close").onclick=()=>{ watching=false; stopRTC(); $("wv").hidden=true; docu
 setInterval(ping,150000);
 render(true); renderNow(); poll().then(renderNow); stream();
 // pick up a newer version of this page by itself (phones keep old copies for a while)
-const PAGE_VER="v7";
+const PAGE_VER="v8";
 setInterval(async()=>{ try{ const t=await (await fetch(location.pathname+"?t="+Date.now(),{cache:"no-store"})).text(); const m=/PAGE_VER="(v\d+)"/.exec(t); if(m&&m[1]!==PAGE_VER&&!watching)location.replace(location.pathname+"?v="+m[1]) }catch{} },5*60e3);
 setInterval(()=>{ if(!esOK)poll().then(renderNow); else renderNow() },10000);
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ poll().then(renderNow); ping() } });
