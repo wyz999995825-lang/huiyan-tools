@@ -83,6 +83,9 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 .bub.t{background:var(--panel);border:1px solid var(--line);justify-self:start}
 .bub.s{background:var(--accent-soft);justify-self:end}
 .bub.x{justify-self:center;background:transparent;color:var(--muted);font-size:12.5px;max-width:100%}
+.wv-shot{margin:0;display:grid;gap:6px;overflow:auto}
+.wv-shot.zoom img{width:240%;max-width:none}
+.wv-shot img{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);background:var(--panel);display:block}
 .wv-wait{color:var(--muted);text-align:center;padding:24px 8px}
 </style>
 </head>
@@ -150,6 +153,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
   <div class="wv-head"><span class="dot" id="wv-dot" style="width:10px;height:10px;border-radius:50%;background:var(--muted)"></span><h2 id="wv-title">监视课堂</h2><span class="ro">只能看，不能操作</span><button class="wv-close" id="wv-close" type="button">关闭</button></div>
   <div class="wv-body">
     <p class="note" id="wv-where"></p>
+    <figure class="wv-shot" id="wv-shotbox" hidden><img id="wv-img" alt="课堂画面" title="点一下放大/缩小"><figcaption class="note" id="wv-shottime"></figcaption></figure>
     <div class="wv-q" id="wv-qbox" hidden><span class="lab">正在讲的题</span><span id="wv-q"></span></div>
     <div class="wv-board" id="wv-board"></div>
     <div class="wv-chat" id="wv-chat"></div>
@@ -172,15 +176,16 @@ function apply(snap,type){ const t=Date.parse(snap.updated)||0;
   if(type==="full"){ if(CACHE&&CACHE.fullAt&&CACHE.fullAt>t)return; const m={}; snap.rows.forEach(r=>m[keyOf(r)]=r); const keepLive=CACHE&&CACHE.updated>t?Object.values(CACHE.map).filter(r=>r.date&&r.date>=(snap.rows.filter(x=>x.kind==="day").map(x=>x.date).sort().pop()||"")):[]; keepLive.forEach(r=>m[keyOf(r)]=r); CACHE={map:m,updated:Math.max(t,CACHE?CACHE.updated:0),fullAt:t} }
   else { if(!CACHE)CACHE={map:{},updated:0,fullAt:0}; if(t<CACHE.updated)return; snap.rows.forEach(r=>CACHE.map[keyOf(r)]=r); CACHE.updated=t }
   try{ localStorage.setItem("jr:cache",JSON.stringify(CACHE)) }catch{} }
-let LASTID="", lastFullSeen=0, polling=false, netOK=true, NOW=null, WATCH=null, watching=false;
+let SHOT=null, LASTID="", lastFullSeen=0, polling=false, netOK=true, NOW=null, WATCH=null, watching=false;
 try{ NOW=JSON.parse(localStorage.getItem("jr:now")||"null") }catch{}
 const GROUPS={};
 async function handle(m){ if(m.event!=="message"||!m.message||!m.message.startsWith("MC1|"))return;
   const [,type,id,i,n]=m.message.split("|",5), data=m.message.split("|").slice(5).join("|"); if(type==="ping")return;
-  const g=GROUPS[id]||(GROUPS[id]={type,n:+n,parts:{},time:m.time}); g.parts[+i]=data; if(Object.keys(g.parts).length!==g.n||g.done)return; g.done=true;
+  const g=GROUPS[id]||(GROUPS[id]={type,n:+n,parts:{},time:m.time}); g.parts[+i]=data; if(m.attachment&&m.attachment.url)g.att=m.attachment.url; if(Object.keys(g.parts).length!==g.n||g.done)return; g.done=true;
   let obj; try{ obj=await unz(Array.from({length:g.n},(_,k)=>g.parts[k]).join("")) }catch{ return }
   if(type==="full"||type==="live"){ if(type==="full")lastFullSeen=Math.max(lastFullSeen,g.time*1000); apply(obj,type) }
   else if(type==="now"){ if(!NOW||obj.ts>=NOW.ts){ NOW=obj; try{localStorage.setItem("jr:now",JSON.stringify(NOW))}catch{} } }
+  else if(type==="shot"){ if(!NOW||obj.ts>=NOW.ts){ NOW=obj; try{localStorage.setItem("jr:now",JSON.stringify(NOW))}catch{} } if(g.att&&(!SHOT||g.time>=SHOT.time))SHOT={url:g.att,time:g.time} }
   else if(type==="watch"){ if(!NOW||obj.now.ts>=NOW.ts){ NOW=obj.now; try{localStorage.setItem("jr:now",JSON.stringify(NOW))}catch{} } WATCH=obj; if(obj.rows&&obj.rows.length)apply({updated:obj.updated,rows:obj.rows},"live") } }
 async function poll(){ if(polling)return; polling=true;
   try{ const r=await fetch(NT+"/json?poll=1&since="+(LASTID||"12h"),{cache:"no-store"}); const txt=await r.text(); netOK=r.ok;
@@ -245,13 +250,19 @@ function renderNow(){ const box=$("now"), on=onNow(); box.classList.toggle("on",
   $("wv-board").replaceChildren(...((WATCH&&on&&WATCH.board)||[]).map(t=>Object.assign(document.createElement("span"),{textContent:t})));
   const chat=(WATCH&&WATCH.chat)||[]; $("wv-chat").replaceChildren(...chat.map(c=>{ const d=document.createElement("div"); d.className="bub "+c.w; if(c.w!=="x"){ const w=document.createElement("span"); w.className="who"; w.textContent=c.w==="t"?"老师":"Johnny"; d.append(w) } d.append(document.createTextNode(c.t)); return d }));
   $("wv-wait").hidden=on&&!!chat.length; $("wv-chat").hidden=!on; $("wv-wait").textContent=on?"已连上课堂，等老师和 Johnny 说下一句话……（大约每 15 秒更新一次）":"课程暂未开始";
+  const hasShot=on&&SHOT&&Date.now()/1000-SHOT.time<600;
+  $("wv-shotbox").hidden=!hasShot;
+  if(hasShot){ if($("wv-img").dataset.u!==SHOT.url){ $("wv-img").dataset.u=SHOT.url; $("wv-img").src=SHOT.url } $("wv-shottime").textContent="课堂画面 · "+new Date(SHOT.time*1000).toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit",second:"2-digit"})+" · 大约每 20 秒更新一次 · 点画面可以放大";
+    $("wv-qbox").hidden=true; $("wv-board").replaceChildren(); $("wv-chat").hidden=true; $("wv-wait").hidden=true; $("wv-where").textContent=""; return }
+  if(on&&!chat.length){ $("wv-wait").textContent="已连上课堂，正在传课堂画面过来……"; }
   const b=document.querySelector(".wv-body"); b.scrollTop=b.scrollHeight }
+$("wv-img").onclick=()=>$("wv-shotbox").classList.toggle("zoom");
 $("watch").onclick=()=>{ watching=true; $("wv").hidden=false; document.body.style.overflow="hidden"; ping(); renderNow() };
 $("wv-close").onclick=()=>{ watching=false; $("wv").hidden=true; document.body.style.overflow="" };
 setInterval(ping,150000);
 render(true); renderNow(); poll().then(renderNow); stream();
 // pick up a newer version of this page by itself (phones keep old copies for a while)
-const PAGE_VER="v4";
+const PAGE_VER="v5";
 setInterval(async()=>{ try{ const t=await (await fetch(location.pathname+"?t="+Date.now(),{cache:"no-store"})).text(); const m=/PAGE_VER="(v\d+)"/.exec(t); if(m&&m[1]!==PAGE_VER&&!watching)location.replace(location.pathname+"?v="+m[1]) }catch{} },5*60e3);
 setInterval(()=>{ if(!esOK)poll().then(renderNow); else renderNow() },10000);
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ poll().then(renderNow); ping() } });
