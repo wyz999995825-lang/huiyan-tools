@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Johnny 学习日报</title>
+<style>
+/* layout: one calm column — today's summary first, then the week, then everything learned */
+:root{
+  --bg:#f6f7f4; --panel:#ffffff; --fg:#1d2420; --muted:#66716a; --line:#e1e5df; --accent:#2f7d5b; --accent-soft:#e3f1ea; --warm:#b7791f; --warm-soft:#fbf0dc;
+  --serif:"Noto Serif SC","Songti SC",Georgia,serif; --sans:"Noto Sans SC","PingFang SC","Helvetica Neue",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{--bg:#141a17;--panel:#1c2420;--fg:#e8ede9;--muted:#9aa69f;--line:#2c3631;--accent:#5fbf92;--accent-soft:#1f3a2e;--warm:#e0a94f;--warm-soft:#3a2f1c;color-scheme:dark}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.main{display:grid;gap:18px}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.55;padding:24px max(16px,env(safe-area-inset-left)) 48px max(16px,env(safe-area-inset-right))}
+.wrap{max-width:1040px;margin:0 auto;display:grid;gap:18px}
+h1{font-family:var(--serif);font-weight:500;font-size:30px;margin:0;letter-spacing:.02em}
+.top{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:end;justify-content:space-between}
+.take{margin:4px 0 0;color:var(--muted)}
+.take b{color:var(--fg)}
+.days{display:flex;gap:6px;flex-wrap:wrap}
+.days button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:999px;padding:4px 12px;cursor:pointer}
+.days button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.days button:focus-visible,.search:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:10px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:2px}
+.tile .lab{font-size:12px;color:var(--muted)}
+.tile .num{font-family:var(--serif);font-size:30px;line-height:1.15;font-variant-numeric:tabular-nums}
+.tile .unit{font-size:12px;color:var(--muted);margin-left:3px;font-family:var(--sans)}
+.tile.main{background:var(--accent-soft);border-color:transparent}
+.tile.main .num{color:var(--accent)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:10px;min-width:0;align-content:start}
+.card h2{margin:0;font-size:17px;font-weight:600}
+.note{margin:0;font-size:12.5px;color:var(--muted)}
+.comment{font-size:16px;line-height:1.85;margin:0;border-left:3px solid var(--warm);padding:2px 0 2px 14px}
+.hi{display:flex;flex-wrap:wrap;gap:8px}
+.hi span{font-size:13px;background:var(--warm-soft);color:var(--warm);border-radius:999px;padding:3px 12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:18px}
+.asked{margin:0;padding-left:1.3em;display:grid;gap:6px}
+.chart svg{width:100%;height:auto;display:block}
+.tbox{overflow:auto;max-height:460px;border-top:1px solid var(--line)}
+table{width:100%;min-width:640px;border-collapse:collapse;font-size:14px}
+th{position:sticky;top:0;background:var(--panel);text-align:left;font-weight:500;color:var(--muted);font-size:12px;padding:8px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.st{font-size:12px;border-radius:999px;padding:1px 9px;white-space:nowrap;background:var(--accent-soft);color:var(--accent)}
+.st.go{background:var(--warm-soft);color:var(--warm)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.subj{display:flex;flex-wrap:wrap;gap:6px}
+.subj span{font-size:12.5px;border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.search{flex:1 1 200px;min-width:0;font:inherit;padding:7px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.empty{background:var(--panel);border:1px dashed var(--line);border-radius:14px;padding:28px;text-align:center;color:var(--muted)}
+.live{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block}
+@media (prefers-reduced-motion:no-preference){.live i{animation:pulse 2s ease-in-out infinite}@keyframes pulse{50%{opacity:.35}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>Johnny 学习日报</h1>
+      <p class="take" id="take">还没有学习记录。</p>
+    </div>
+    <div class="live"><i></i><span id="upd">实时同步中</span></div>
+  </div>
+  <div class="days" id="days" aria-label="选择日期"></div>
+
+  <div class="empty" id="empty">正在读取学习记录……如果一直是这句话，说明 Johnny 最近 12 小时还没上课。只要他打开「学习课堂」上课，这里会自动出现，不用刷新。</div>
+
+  <div id="main" class="main" hidden>
+    <section class="tiles">
+      <div class="tile main"><span class="lab">专注学习</span><span><span class="num" id="t-min">0</span><span class="unit">分钟</span></span></div>
+      <div class="tile"><span class="lab">学了几道题</span><span><span class="num" id="t-tried">0</span><span class="unit">题</span></span></div>
+      <div class="tile"><span class="lab">完整学完</span><span><span class="num" id="t-done">0</span><span class="unit">题</span></span></div>
+      <div class="tile"><span class="lab">答对</span><span><span class="num" id="t-right">0</span><span class="unit">题</span></span></div>
+      <div class="tile"><span class="lab">跟老师对话</span><span><span class="num" id="t-said">0</span><span class="unit">次</span></span></div>
+      <div class="tile"><span class="lab">主动提问</span><span><span class="num" id="t-asked">0</span><span class="unit">次</span></span></div>
+    </section>
+
+    <section class="card">
+      <h2>老师评语</h2>
+      <p class="note" id="when"></p>
+      <p class="comment" id="comment"></p>
+      <div class="hi" id="hi"></div>
+    </section>
+
+    <div class="grid2">
+      <section class="card">
+        <h2>最近 7 天学习时长</h2>
+        <p class="note">每天专注学习的分钟数</p>
+        <div class="chart" id="chart"></div>
+      </section>
+      <section class="card">
+        <h2>Johnny 主动问老师的问题</h2>
+        <p class="note">这一天他自己提出的问题</p>
+        <ol class="asked" id="asked"></ol>
+        <p class="note" id="askednone" hidden>这一天他一直跟着老师一题一题做，可以鼓励他下次多问一个"为什么"。</p>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2>这一天学了什么</h2>
+      <p class="note">按上课顺序列出每一道题</p>
+      <div class="tbox"><table><thead><tr><th>时间</th><th>科目</th><th>页</th><th>题目</th><th>知识点</th><th>来回讨论</th><th>情况</th></tr></thead><tbody id="items"></tbody></table></div>
+    </section>
+
+    <section class="card">
+      <h2>学过的全部内容</h2>
+      <p class="note" id="tot"></p>
+      <div class="tools"><div class="subj" id="subj"></div><input class="search" id="q" type="search" placeholder="搜索知识点、章节、题目" aria-label="搜索学过的内容"></div>
+      <div class="tbox"><table><thead><tr><th>日期</th><th>科目</th><th>章节</th><th>知识点</th><th>页</th><th>题目</th><th>情况</th></tr></thead><tbody id="learned"></tbody></table></div>
+    </section>
+  </div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const WD=["周日","周一","周二","周三","周四","周五","周六"];
+const fd=s=>{const d=new Date(s+"T00:00:00");return (d.getMonth()+1)+"月"+d.getDate()+"日（"+WD[d.getDay()]+"）"};
+let pick=null, lastSig="";
+const TOPIC="mcj-3t4lform02kzsx7lcu30y7zcv2", NT="https://ntfy.sh/"+TOPIC;
+let CACHE=null; try{ CACHE=JSON.parse(localStorage.getItem("jr:cache")||"null") }catch{}
+const keyOf=r=>r.kind==="day"?"day|"+r.date:r.kind+"|"+r.k;
+async function unz(b64){ const bin=atob(b64), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); const ds=new DecompressionStream("deflate-raw"), w=ds.writable.getWriter(); w.write(u); w.close(); return JSON.parse(new TextDecoder().decode(await new Response(ds.readable).arrayBuffer())) }
+async function zip(str){ const cs=new CompressionStream("deflate-raw"), w=cs.writable.getWriter(); w.write(new TextEncoder().encode(str)); w.close(); const buf=new Uint8Array(await new Response(cs.readable).arrayBuffer()); let b=""; for(let i=0;i<buf.length;i+=8192)b+=String.fromCharCode(...buf.subarray(i,i+8192)); return btoa(b) }
+function apply(snap,type){ const t=Date.parse(snap.updated)||0;
+  if(type==="full"){ if(CACHE&&CACHE.fullAt&&CACHE.fullAt>t)return; const m={}; snap.rows.forEach(r=>m[keyOf(r)]=r); const keepLive=CACHE&&CACHE.updated>t?Object.values(CACHE.map).filter(r=>r.date&&r.date>=(snap.rows.filter(x=>x.kind==="day").map(x=>x.date).sort().pop()||"")):[]; keepLive.forEach(r=>m[keyOf(r)]=r); CACHE={map:m,updated:Math.max(t,CACHE?CACHE.updated:0),fullAt:t} }
+  else { if(!CACHE)CACHE={map:{},updated:0,fullAt:0}; if(t<CACHE.updated)return; snap.rows.forEach(r=>CACHE.map[keyOf(r)]=r); CACHE.updated=t }
+  try{ localStorage.setItem("jr:cache",JSON.stringify(CACHE)) }catch{} }
+let lastFullSeen=0, polling=false, netOK=true;
+async function poll(){ if(polling)return; polling=true;
+  try{ const r=await fetch(NT+"/json?poll=1&since=12h",{cache:"no-store"}); const txt=await r.text(); netOK=r.ok;
+    const groups={}; txt.split("\n").forEach(l=>{ if(!l.trim())return; let m; try{m=JSON.parse(l)}catch{return} if(m.event!=="message"||!m.message||!m.message.startsWith("MC1|"))return;
+      const [,type,id,i,n]=m.message.split("|",5), data=m.message.split("|").slice(5).join("|"); const g=groups[id]||(groups[id]={type,n:+n,parts:{},time:m.time}); g.parts[+i]=data });
+    const ids=Object.keys(groups).sort((a,b)=>parseInt(a,36)-parseInt(b,36));
+    for(const id of ids){ const g=groups[id]; if(Object.keys(g.parts).length!==g.n)continue; if(g.type==="full")lastFullSeen=Math.max(lastFullSeen,g.time*1000);
+      try{ apply(await unz(Array.from({length:g.n},(_,k)=>g.parts[k]).join("")),g.type) }catch{} }
+    // keep the record alive: if the relay has no recent full copy, put ours back
+    if(CACHE&&Date.now()-lastFullSeen>8*3600e3&&Object.keys(CACHE.map).length){ lastFullSeen=Date.now(); const data=await zip(JSON.stringify({updated:new Date(CACHE.updated).toISOString(),rows:Object.values(CACHE.map)})), id=Date.now().toString(36), N=Math.ceil(data.length/3600)||1;
+      for(let k=0;k<N;k++)await fetch(NT,{method:"POST",body:"MC1|full|"+id+"|"+k+"|"+N+"|"+data.slice(k*3600,(k+1)*3600)}) }
+  }catch{ netOK=false } finally{ polling=false; render() } }
+function load(){ return CACHE?{updated:new Date(CACHE.updated).toISOString(),rows:Object.values(CACHE.map)}:null }
+function td(t,cls){ const e=document.createElement("td"); if(cls)e.className=cls; e.textContent=t==null?"":String(t); return e }
+function stTd(s){ const e=document.createElement("td"); const b=document.createElement("span"); b.className="st"+(/答对|学完|完成/.test(s||"")?"":" go"); b.textContent=s||""; e.append(b); return e }
+function render(force){
+  const d=load(), sig=d?d.updated+"|"+(pick||""):"none"; if(!force&&sig===lastSig)return; lastSig=sig;
+  const rows=(d&&d.rows)||[], days=rows.filter(r=>r.kind==="day").sort((a,b)=>a.date<b.date?-1:1);
+  $("empty").hidden=!!days.length; $("main").hidden=!days.length;
+  $("upd").textContent=(netOK?"实时同步中":"网络断开，显示的是上次的记录")+(d&&d.updated?" · 最后更新 "+new Date(d.updated).toLocaleString("zh-CN",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}):"");
+  if(!days.length){ $("take").textContent="还没有学习记录。"; $("days").replaceChildren(); return }
+  if(!pick||!days.some(x=>x.date===pick))pick=days[days.length-1].date;
+  const T=days.find(x=>x.date===pick);
+  // date chips (latest 10)
+  $("days").replaceChildren(...days.slice(-10).reverse().map(x=>{ const b=document.createElement("button"); b.type="button"; b.textContent=fd(x.date).replace(/（.*/,"")+" · "+x.minutes+"分"; b.className=x.date===pick?"on":""; b.onclick=()=>{pick=x.date; render(true)}; return b }));
+  $("take").innerHTML=""; $("take").append(fd(T.date)+"，Johnny 认真学习了 ",Object.assign(document.createElement("b"),{textContent:T.minutes+" 分钟"}),"，学了 ",Object.assign(document.createElement("b"),{textContent:T.tried+" 道题"}),"，答对 ",Object.assign(document.createElement("b"),{textContent:T.right+" 题"}),"。");
+  $("t-min").textContent=T.minutes; $("t-tried").textContent=T.tried; $("t-done").textContent=T.done; $("t-right").textContent=T.right; $("t-said").textContent=T.said; $("t-asked").textContent=T.asked;
+  $("when").textContent="上课时间 "+(T.start||"")+(T.end?" – "+T.end:"")+(T.books?"　·　"+T.books:"");
+  $("comment").textContent=T.comment||("今天 Johnny 认真上了 "+T.minutes+" 分钟的课，跟老师来回讨论了 "+T.said+" 次，一题一题跟着老师思考。坚持就是进步！");
+  $("hi").replaceChildren(...String(T.hi||"").split(" ｜ ").filter(Boolean).map(t=>Object.assign(document.createElement("span"),{textContent:"★ "+t})));
+  const qs=String(T.questions||"").split(" ｜ ").filter(Boolean); $("asked").replaceChildren(...qs.map(t=>Object.assign(document.createElement("li"),{textContent:t}))); $("askednone").hidden=!!qs.length;
+  // items of that day
+  const its=rows.filter(r=>r.kind==="item"&&r.date===pick).sort((a,b)=>a.time<b.time?-1:1);
+  $("items").replaceChildren(...its.map(r=>{ const tr=document.createElement("tr"); tr.append(td(r.time,"n"),td(r.subject),td(r.page,"n"),td(r.label),td(r.topic),td(r.tries,"n"),stTd(r.status)); return tr }));
+  // 7-day chart ending at picked day
+  const by=new Map(days.map(x=>[x.date,+x.minutes||0])), end=new Date(pick+"T00:00:00"), w=[];
+  for(let i=6;i>=0;i--){ const t=new Date(end); t.setDate(end.getDate()-i); const k=t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"); w.push({k,m:by.get(k)||0,wd:WD[t.getDay()]}) }
+  const W=420,H=190,L=34,B=26,Tp=16,max=Math.max(10,...w.map(x=>x.m)), step=max<=30?10:max<=60?15:max<=120?30:60, top=Math.ceil(max/step)*step, y=v=>H-B-(H-B-Tp)*v/top, bw=(W-L-8)/7;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="最近7天每天的学习分钟数">`;
+  for(let v=0;v<=top;v+=step)s+=`<line x1="${L}" x2="${W-8}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${v}</text>`;
+  w.forEach((x,i)=>{ const cx=L+bw*i+bw/2, bwid=Math.min(30,bw*.6); s+=`<rect x="${cx-bwid/2}" y="${y(x.m)}" width="${bwid}" height="${Math.max(0,H-B-y(x.m))}" rx="4" fill="${x.k===pick?"var(--accent)":"var(--accent-soft)"}"><title>${x.k}：${x.m} 分钟</title></rect><text x="${cx}" y="${H-8}" text-anchor="middle" font-size="11" fill="var(--muted)">${x.wd}</text>`; if(x.m)s+=`<text x="${cx}" y="${y(x.m)-5}" text-anchor="middle" font-size="11" fill="var(--fg)">${x.m}</text>` });
+  $("chart").innerHTML=s+"</svg>";
+  // everything learned
+  const all=rows.filter(r=>r.kind==="learned").sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:String(a.page).localeCompare(String(b.page),undefined,{numeric:true}));
+  const cnt=new Map(); all.forEach(r=>cnt.set(r.subject,(cnt.get(r.subject)||0)+1));
+  $("subj").replaceChildren(...[...cnt].map(([k,n])=>Object.assign(document.createElement("span"),{textContent:k+" "+n+" 题"})));
+  $("tot").textContent="从开始上课到现在：累计上课 "+days.length+" 天，共 "+days.reduce((a,x)=>a+(+x.minutes||0),0)+" 分钟，学完 "+all.length+" 道题。";
+  const q=$("q").value.trim().toLowerCase(), list=q?all.filter(r=>[r.subject,r.chapter,r.topic,r.page,r.label,r.date].join(" ").toLowerCase().includes(q)):all;
+  $("learned").replaceChildren(...list.map(r=>{ const tr=document.createElement("tr"); tr.append(td(r.date,"n"),td(r.subject),td(r.chapter),td(r.topic),td(r.page,"n"),td(r.label),stTd(r.status)); return tr }));
+}
+$("q").addEventListener("input",()=>render(true));
+render(true); poll(); setInterval(poll,8000);
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden)poll() });
+</script>
+</body>
+</html>
