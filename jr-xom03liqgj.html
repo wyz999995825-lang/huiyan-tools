@@ -145,6 +145,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
     </section>
   </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 <div class="wv" id="wv" hidden role="dialog" aria-label="监视课堂">
   <div class="wv-head"><span class="dot" id="wv-dot" style="width:10px;height:10px;border-radius:50%;background:var(--muted)"></span><h2 id="wv-title">监视课堂</h2><span class="ro">只能看，不能操作</span><button class="wv-close" id="wv-close" type="button">关闭</button></div>
   <div class="wv-body">
@@ -163,13 +164,15 @@ let pick=null, lastSig="";
 const TOPIC="mcj-3t4lform02kzsx7lcu30y7zcv2", NT="https://ntfy.sh/"+TOPIC;
 let CACHE=null; try{ CACHE=JSON.parse(localStorage.getItem("jr:cache")||"null") }catch{}
 const keyOf=r=>r.kind==="day"?"day|"+r.date:r.kind+"|"+r.k;
-async function unz(b64){ const bin=atob(b64), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); const ds=new DecompressionStream("deflate-raw"), w=ds.writable.getWriter(); w.write(u); w.close(); return JSON.parse(new TextDecoder().decode(await new Response(ds.readable).arrayBuffer())) }
-async function zip(str){ const cs=new CompressionStream("deflate-raw"), w=cs.writable.getWriter(); w.write(new TextEncoder().encode(str)); w.close(); const buf=new Uint8Array(await new Response(cs.readable).arrayBuffer()); let b=""; for(let i=0;i<buf.length;i+=8192)b+=String.fromCharCode(...buf.subarray(i,i+8192)); return btoa(b) }
+async function unz(b64){ const bin=atob(b64), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  if(typeof DecompressionStream==="undefined"){ if(!window.pako)throw new Error("no inflate"); return JSON.parse(new TextDecoder().decode(window.pako.inflateRaw(u))) }
+  const ds=new DecompressionStream("deflate-raw"), w=ds.writable.getWriter(); w.write(u); w.close(); return JSON.parse(new TextDecoder().decode(await new Response(ds.readable).arrayBuffer())) }
+async function zip(str){ if(typeof CompressionStream==="undefined"){ const buf=window.pako.deflateRaw(new TextEncoder().encode(str)); let b=""; for(let i=0;i<buf.length;i+=8192)b+=String.fromCharCode(...buf.subarray(i,i+8192)); return btoa(b) } const cs=new CompressionStream("deflate-raw"), w=cs.writable.getWriter(); w.write(new TextEncoder().encode(str)); w.close(); const buf=new Uint8Array(await new Response(cs.readable).arrayBuffer()); let b=""; for(let i=0;i<buf.length;i+=8192)b+=String.fromCharCode(...buf.subarray(i,i+8192)); return btoa(b) }
 function apply(snap,type){ const t=Date.parse(snap.updated)||0;
   if(type==="full"){ if(CACHE&&CACHE.fullAt&&CACHE.fullAt>t)return; const m={}; snap.rows.forEach(r=>m[keyOf(r)]=r); const keepLive=CACHE&&CACHE.updated>t?Object.values(CACHE.map).filter(r=>r.date&&r.date>=(snap.rows.filter(x=>x.kind==="day").map(x=>x.date).sort().pop()||"")):[]; keepLive.forEach(r=>m[keyOf(r)]=r); CACHE={map:m,updated:Math.max(t,CACHE?CACHE.updated:0),fullAt:t} }
   else { if(!CACHE)CACHE={map:{},updated:0,fullAt:0}; if(t<CACHE.updated)return; snap.rows.forEach(r=>CACHE.map[keyOf(r)]=r); CACHE.updated=t }
   try{ localStorage.setItem("jr:cache",JSON.stringify(CACHE)) }catch{} }
-let lastFullSeen=0, polling=false, netOK=true, NOW=null, WATCH=null, watching=false;
+let LASTID="", lastFullSeen=0, polling=false, netOK=true, NOW=null, WATCH=null, watching=false;
 try{ NOW=JSON.parse(localStorage.getItem("jr:now")||"null") }catch{}
 const GROUPS={};
 async function handle(m){ if(m.event!=="message"||!m.message||!m.message.startsWith("MC1|"))return;
@@ -180,9 +183,9 @@ async function handle(m){ if(m.event!=="message"||!m.message||!m.message.startsW
   else if(type==="now"){ if(!NOW||obj.ts>=NOW.ts){ NOW=obj; try{localStorage.setItem("jr:now",JSON.stringify(NOW))}catch{} } }
   else if(type==="watch"){ if(!NOW||obj.now.ts>=NOW.ts){ NOW=obj.now; try{localStorage.setItem("jr:now",JSON.stringify(NOW))}catch{} } WATCH=obj; if(obj.rows&&obj.rows.length)apply({updated:obj.updated,rows:obj.rows},"live") } }
 async function poll(){ if(polling)return; polling=true;
-  try{ const r=await fetch(NT+"/json?poll=1&since=12h",{cache:"no-store"}); const txt=await r.text(); netOK=r.ok;
+  try{ const r=await fetch(NT+"/json?poll=1&since="+(LASTID||"12h"),{cache:"no-store"}); const txt=await r.text(); netOK=r.ok;
     const ms=[]; txt.split("\n").forEach(l=>{ if(!l.trim())return; try{ms.push(JSON.parse(l))}catch{} });
-    ms.sort((a,b)=>a.time-b.time); for(const m of ms)await handle(m);
+    ms.sort((a,b)=>a.time-b.time); for(const m of ms){ await handle(m); if(m.id)LASTID=m.id }
     // keep the record alive: if the relay has no recent full copy, put ours back
     if(CACHE&&Date.now()-lastFullSeen>8*3600e3&&Object.keys(CACHE.map).length){ lastFullSeen=Date.now(); const data=await zip(JSON.stringify({updated:new Date(CACHE.updated).toISOString(),rows:Object.values(CACHE.map)})), id=Date.now().toString(36), N=Math.ceil(data.length/3600)||1;
       for(let k=0;k<N;k++)await fetch(NT,{method:"POST",body:"MC1|full|"+id+"|"+k+"|"+N+"|"+data.slice(k*3600,(k+1)*3600)}) }
@@ -228,7 +231,7 @@ function render(force){
 $("q").addEventListener("input",()=>render(true));
 // live stream (falls back to polling if the stream drops)
 let ES=null, esOK=false;
-function stream(){ if(ES)return; try{ ES=new EventSource(NT+"/sse"); ES.onopen=()=>{esOK=true}; ES.onmessage=async e=>{ try{ await handle(JSON.parse(e.data)); render(); renderNow() }catch{} }; ES.onerror=()=>{ esOK=false; try{ES.close()}catch{} ES=null; setTimeout(stream,15000) } }catch{} }
+function stream(){ if(ES)return; try{ ES=new EventSource(NT+"/sse"); ES.onopen=()=>{esOK=true}; ES.onmessage=async e=>{ try{ const m=JSON.parse(e.data); await handle(m); if(m.id)LASTID=m.id; render(); renderNow() }catch{} }; ES.onerror=()=>{ esOK=false; try{ES.close()}catch{} ES=null; setTimeout(stream,15000) } }catch{} }
 function ping(){ if(watching&&!document.hidden)fetch(NT,{method:"POST",body:"MC1|ping|"+Date.now().toString(36)+"|0|1|x"}).catch(()=>{}) }
 const onNow=()=>NOW&&NOW.on&&Date.now()-NOW.ts<16*60e3;
 function renderNow(){ const box=$("now"), on=onNow(); box.classList.toggle("on",!!on);
