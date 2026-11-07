@@ -138,11 +138,11 @@ button,.card{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
   </header>
 
   <section class="cards" aria-label="选择学习端口">
-    <button class="card c1" type="button" data-k="math">
+    <button class="card c1" type="button" data-k="class">
       <span class="ic">📐</span>
       <span class="no">端口 1</span>
-      <h2>学习课堂 · 学习日报</h2>
-      <p class="sub">数学课堂家长端：今天学了几道题、老师评语、7 天学习时长，还能「👁 监视课堂」。</p>
+      <h2>学习课堂 · 数学 1B</h2>
+      <p class="sub">Johnny 上语音数学课的课堂（New Discovering Mathematics 1B 练习册）。文件比较大，第一次打开要等一会儿。</p>
       <span class="go">进入 →</span>
     </button>
     <button class="card c2" type="button" data-k="words">
@@ -201,7 +201,8 @@ button,.card{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 (function(){
   "use strict";
   var $ = function(id){ return document.getElementById(id); };
-  var NAMES = {math:"学习课堂 · 学习日报", words:"每日 20 词 · 学习看板", writing:"英文写作工作室 · 家长看板"};
+  var NAMES = {"class":"学习课堂 · 数学 1B", words:"每日 20 词 · 学习看板", writing:"英文写作工作室 · 家长看板"};
+  var CLASS_URL = "Johnny数学课堂.html";   // 课堂文件放在总部旁边，点进去时才加载
   var has = function(k){ return Object.prototype.hasOwnProperty.call(NAMES, k); };
   var FR = {};
   var store = { get:function(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }, set:function(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
@@ -215,15 +216,15 @@ button,.card{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
   function frame(k){
     if (FR[k]) return FR[k];
     var f = document.createElement("iframe");
-    f.title = NAMES[k];
-    f.setAttribute("allow", "autoplay; fullscreen; clipboard-read; clipboard-write");
-    f.srcdoc = page(k);
+    f.title = k === "report" ? "学习日报（后台数据）" : NAMES[k];
+    f.setAttribute("allow", "microphone; camera; autoplay; fullscreen; clipboard-read; clipboard-write");
+    if (k === "class") f.src = CLASS_URL; else f.srcdoc = page(k === "report" ? "math" : k);
     $("view").append(f);
     return (FR[k] = f);
   }
   // 链接末尾带 #ws=连接码 时：存到这台设备（写作看板用），不把钥匙写进文件
   (function(){ var m = /[#&]ws=([^&]+)/.exec(location.hash || ""); if (m) store.set("ws_conn", m[1]); })();
-  frame("math"); frame("words"); frame("writing");
+  frame("report"); frame("words"); frame("writing");   // 学习日报不显示，只在后台给总结 AI 提供数学课记录
 
   // ---------- 显示方式：Mac版 / 手机版（默认按设备自动选） ----------
   var PHONE_W = 430, MAC_W = 1280;
@@ -300,7 +301,7 @@ button,.card{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
   var pick = function(o, ks){ var r = {}; ks.forEach(function(k){ if (o[k] != null && o[k] !== "") r[k] = o[k]; }); return r; };
 
   function mathData(){
-    var d = ev("math", "typeof load==='function'?load():null"), NOW = ev("math", "typeof NOW!=='undefined'?NOW:null"), on = ev("math", "(function(){try{return !!onNow()}catch(e){return false}})()");
+    var d = ev("report", "typeof load==='function'?load():null"), NOW = ev("report", "typeof NOW!=='undefined'?NOW:null"), on = ev("report", "(function(){try{return !!onNow()}catch(e){return false}})()");
     if (!d) return null;
     var rows = d.rows || [], days = rows.filter(function(r){ return r.kind === "day"; }).sort(function(a,b){ return a.date < b.date ? -1 : 1; });
     var recent = days.slice(-3).map(function(x){ return x.date; });
@@ -314,7 +315,7 @@ button,.card{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
       itemsRecent: rows.filter(function(r){ return r.kind === "item" && recent.indexOf(r.date) >= 0; }).sort(function(a,b){ return (a.date + a.time) < (b.date + b.time) ? -1 : 1; }).map(function(x){ return pick(x, ["date","time","subject","page","label","topic","tries","status"]); }),
       learnedTotalBySubject: bySub,
       learnedLatest: learned.slice(0, 60).map(function(x){ return pick(x, ["date","subject","chapter","topic","page","label","status"]); }),
-      screen: txt("math", "take", 400)
+      screen: txt("report", "take", 400)
     };
   }
   function wordsData(){
