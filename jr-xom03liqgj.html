@@ -24,6 +24,11 @@ h1{font-family:var(--serif);font-weight:500;font-size:30px;margin:0;letter-spaci
 .take{margin:4px 0 0;color:var(--muted)}
 .take b{color:var(--fg)}
 .days{display:flex;gap:6px;flex-wrap:wrap}
+.subjtabs{display:flex;gap:8px;flex-wrap:wrap}
+.subjtabs button{font:inherit;font-size:15px;font-weight:600;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:10px;padding:7px 16px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.subjtabs button.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.subjtabs button .live{width:8px;height:8px;border-radius:50%;background:#e0453a;display:inline-block}
+.subjtabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .days button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:999px;padding:4px 12px;cursor:pointer}
 .days button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .days button:focus-visible,.search:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -107,6 +112,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
     <div class="live"><i></i><span id="upd">实时同步中</span></div>
   </div>
   <section class="now" id="now"><span class="dot"></span><div class="what"><b id="now-t">正在查看课堂状态…</b><span id="now-s"></span></div><button class="watchbtn" id="watch" type="button">👁 监视课堂</button></section>
+  <div class="subjtabs" id="subjtabs" role="tablist" aria-label="选择科目"></div>
   <div class="days" id="days" aria-label="选择日期"></div>
 
   <div class="empty" id="empty">正在读取学习记录……如果一直是这句话，说明 Johnny 最近 12 小时还没上课。只要他打开「学习课堂」上课，这里会自动出现，不用刷新。</div>
@@ -174,7 +180,7 @@ td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
 const $=id=>document.getElementById(id);
 const WD=["周日","周一","周二","周三","周四","周五","周六"];
 const fd=s=>{const d=new Date(s+"T00:00:00");return (d.getMonth()+1)+"月"+d.getDate()+"日（"+WD[d.getDay()]+"）"};
-let pick=null, lastSig="";
+let pick=null, lastSig="", SUBJ="全部", subjAt=0;
 const TOPIC="mcj-3t4lform02kzsx7lcu30y7zcv2", NT="https://ntfy.sh/"+TOPIC;
 let CACHE=null; try{ CACHE=JSON.parse(localStorage.getItem("jr:cache")||"null") }catch{}
 const keyOf=r=>r.kind==="day"?"day|"+r.date:r.kind+"|"+r.k;
@@ -211,26 +217,32 @@ function load(){ return CACHE?{updated:new Date(CACHE.updated).toISOString(),row
 function td(t,cls){ const e=document.createElement("td"); if(cls)e.className=cls; e.textContent=t==null?"":String(t); return e }
 function stTd(s){ const e=document.createElement("td"); const b=document.createElement("span"); b.className="st"+(/答对|学完|完成/.test(s||"")?"":" go"); b.textContent=s||""; e.append(b); return e }
 function render(force){
-  const d=load(), sig=d?d.updated+"|"+(pick||""):"none"; if(!force&&sig===lastSig)return; lastSig=sig;
+  const d=load(); let on=false; try{ on=!!onNow() }catch{}
+  if(on&&NOW.subj&&Date.now()-subjAt>120000&&SUBJ!==NOW.subj)SUBJ=NOW.subj;   // follow the subject being taught now (unless the parent just picked one)
+  const sig=d?d.updated+"|"+(pick||"")+"|"+SUBJ+"|"+(on?NOW.subj:""):"none"; if(!force&&sig===lastSig)return; lastSig=sig;
   const rows=(d&&d.rows)||[], days=rows.filter(r=>r.kind==="day").sort((a,b)=>a.date<b.date?-1:1);
   $("empty").hidden=!!days.length; $("main").hidden=!days.length;
   $("upd").textContent=(netOK?"实时同步中":"网络断开，显示的是上次的记录")+(d&&d.updated?" · 最后更新 "+new Date(d.updated).toLocaleString("zh-CN",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}):"");
   if(!days.length){ $("take").textContent="还没有学习记录。"; $("days").replaceChildren(); return }
   if(!pick||!days.some(x=>x.date===pick))pick=days[days.length-1].date;
-  const T=days.find(x=>x.date===pick);
+  const subjects=[...new Set(rows.filter(r=>r.subject).map(r=>r.subject))];
+  $("subjtabs").replaceChildren(...["全部",...subjects].map(sj=>{ const b=document.createElement("button"); b.type="button"; b.setAttribute("role","tab"); b.setAttribute("aria-selected",sj===SUBJ); b.className=sj===SUBJ?"on":""; if(on&&NOW.subj===sj){ const i=document.createElement("i"); i.className="live"; i.title="正在上"; b.append(i) } b.append(sj); b.onclick=()=>{ SUBJ=sj; subjAt=Date.now(); render(true) }; return b }));
+  if(SUBJ!=="全部"&&!subjects.includes(SUBJ))SUBJ="全部";
+  const D=days.find(x=>x.date===pick), ds=rows.find(r=>r.kind==="dsub"&&r.date===pick&&r.subject===SUBJ);
+  const T=SUBJ==="全部"?D:{...D,...(ds||{minutes:0,said:0,asked:0,questions:"",tried:0,done:0,right:0,books:""}),comment:D.comment,hi:D.hi,start:D.start,end:D.end};
   // date chips (latest 10)
   $("days").replaceChildren(...days.slice(-10).reverse().map(x=>{ const b=document.createElement("button"); b.type="button"; b.textContent=fd(x.date).replace(/（.*/,"")+" · "+x.minutes+"分"; b.className=x.date===pick?"on":""; b.onclick=()=>{pick=x.date; render(true)}; return b }));
-  $("take").innerHTML=""; $("take").append(fd(T.date)+"，Johnny 认真学习了 ",Object.assign(document.createElement("b"),{textContent:T.minutes+" 分钟"}),"，学了 ",Object.assign(document.createElement("b"),{textContent:T.tried+" 道题"}),"，答对 ",Object.assign(document.createElement("b"),{textContent:T.right+" 题"}),"。");
+  $("take").innerHTML=""; $("take").append(fd(T.date)+(SUBJ==="全部"?"":"「"+SUBJ+"」")+"，Johnny 认真学习了 ",Object.assign(document.createElement("b"),{textContent:T.minutes+" 分钟"}),"，学了 ",Object.assign(document.createElement("b"),{textContent:T.tried+" 道题"}),"，答对 ",Object.assign(document.createElement("b"),{textContent:T.right+" 题"}),"。");
   $("t-min").textContent=T.minutes; $("t-tried").textContent=T.tried; $("t-done").textContent=T.done; $("t-right").textContent=T.right; $("t-said").textContent=T.said; $("t-asked").textContent=T.asked;
   $("when").textContent="上课时间 "+(T.start||"")+(T.end?" – "+T.end:"")+(T.books?"　·　"+T.books:"");
   $("comment").textContent=T.comment||("今天 Johnny 认真上了 "+T.minutes+" 分钟的课，跟老师来回讨论了 "+T.said+" 次，一题一题跟着老师思考。坚持就是进步！");
   $("hi").replaceChildren(...String(T.hi||"").split(" ｜ ").filter(Boolean).map(t=>Object.assign(document.createElement("span"),{textContent:"★ "+t})));
   const qs=String(T.questions||"").split(" ｜ ").filter(Boolean); $("asked").replaceChildren(...qs.map(t=>Object.assign(document.createElement("li"),{textContent:t}))); $("askednone").hidden=!!qs.length;
   // items of that day
-  const its=rows.filter(r=>r.kind==="item"&&r.date===pick).sort((a,b)=>a.time<b.time?-1:1);
+  const its=rows.filter(r=>r.kind==="item"&&r.date===pick&&(SUBJ==="全部"||r.subject===SUBJ)).sort((a,b)=>a.time<b.time?-1:1);
   $("items").replaceChildren(...its.map(r=>{ const tr=document.createElement("tr"); tr.append(td(r.time,"n"),td(r.subject),td(r.page,"n"),td(r.label),td(r.topic),td(r.tries,"n"),stTd(r.status)); return tr }));
   // 7-day chart ending at picked day
-  const by=new Map(days.map(x=>[x.date,+x.minutes||0])), end=new Date(pick+"T00:00:00"), w=[];
+  const by=new Map(SUBJ==="全部"?days.map(x=>[x.date,+x.minutes||0]):rows.filter(r=>r.kind==="dsub"&&r.subject===SUBJ).map(x=>[x.date,+x.minutes||0])), end=new Date(pick+"T00:00:00"), w=[];
   for(let i=6;i>=0;i--){ const t=new Date(end); t.setDate(end.getDate()-i); const k=t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"); w.push({k,m:by.get(k)||0,wd:WD[t.getDay()]}) }
   const W=420,H=190,L=34,B=26,Tp=16,max=Math.max(10,...w.map(x=>x.m)), step=max<=30?10:max<=60?15:max<=120?30:60, top=Math.ceil(max/step)*step, y=v=>H-B-(H-B-Tp)*v/top, bw=(W-L-8)/7;
   let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="最近7天每天的学习分钟数">`;
@@ -238,7 +250,7 @@ function render(force){
   w.forEach((x,i)=>{ const cx=L+bw*i+bw/2, bwid=Math.min(30,bw*.6); s+=`<rect x="${cx-bwid/2}" y="${y(x.m)}" width="${bwid}" height="${Math.max(0,H-B-y(x.m))}" rx="4" fill="${x.k===pick?"var(--accent)":"var(--accent-soft)"}"><title>${x.k}：${x.m} 分钟</title></rect><text x="${cx}" y="${H-8}" text-anchor="middle" font-size="11" fill="var(--muted)">${x.wd}</text>`; if(x.m)s+=`<text x="${cx}" y="${y(x.m)-5}" text-anchor="middle" font-size="11" fill="var(--fg)">${x.m}</text>` });
   $("chart").innerHTML=s+"</svg>";
   // everything learned
-  const all=rows.filter(r=>r.kind==="learned").sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:String(a.page).localeCompare(String(b.page),undefined,{numeric:true}));
+  const all=rows.filter(r=>r.kind==="learned"&&(SUBJ==="全部"||r.subject===SUBJ)).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:String(a.page).localeCompare(String(b.page),undefined,{numeric:true}));
   const cnt=new Map(); all.forEach(r=>cnt.set(r.subject,(cnt.get(r.subject)||0)+1));
   $("subj").replaceChildren(...[...cnt].map(([k,n])=>Object.assign(document.createElement("span"),{textContent:k+" "+n+" 题"})));
   $("tot").textContent="从开始上课到现在：累计上课 "+days.length+" 天，共 "+days.reduce((a,x)=>a+(+x.minutes||0),0)+" 分钟，学完 "+all.length+" 道题。";
@@ -257,8 +269,10 @@ const MQ={c:null,id:Math.random().toString(36).slice(2,10),topic:"mcj/"+TOPIC.sl
 function mqLoad(){ return window.mqtt?Promise.resolve():new Promise((ok,no)=>{ const sc=document.createElement("script"); sc.src="https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js"; sc.onload=ok; sc.onerror=no; document.head.append(sc) }) }
 async function mqStart(){ if(MQ.c||MQ.loading)return; MQ.loading=true; try{ await mqLoad();
     const c=window.mqtt.connect("wss://broker.hivemq.com:8884/mqtt",{clientId:"mcjv_"+MQ.id,keepalive:30,reconnectPeriod:3000,connectTimeout:8000,clean:true}); MQ.c=c;
-    c.on("connect",()=>{ c.subscribe(MQ.topic+"/down"); hello(true) });
-    c.on("message",(t,buf)=>{ try{ const m=JSON.parse(String(buf)); if(NOW&&NOW.dev&&m.dv&&m.dv!==NOW.dev)return; if(!MQ.dv&&m.dv)MQ.dv=m.dv; MIR.at=Date.now(); mirApply(m) }catch{} });
+    c.on("connect",()=>{ c.subscribe([MQ.topic+"/down",MQ.topic+"/rec",MQ.topic+"/now"]); hello(true) });
+    c.on("message",(t,buf)=>{ try{ const m=JSON.parse(String(buf));
+      if(t.endsWith("/rec")){ if(m.rows&&m.updated)apply({updated:m.updated,rows:m.rows},"full"); render(); renderNow(); return }
+      if(t.endsWith("/now")){ if(m.ts&&(!NOW||m.ts>=NOW.ts)){ NOW=m; try{localStorage.setItem("jr:now",JSON.stringify(NOW))}catch{} } render(); renderNow(); return } if(NOW&&NOW.dev&&m.dv&&m.dv!==NOW.dev)return; if(!MQ.dv&&m.dv)MQ.dv=m.dv; MIR.at=Date.now(); mirApply(m) }catch{} });
   }catch{} finally{ MQ.loading=false } }
 function hello(full){ try{ if(MQ.c&&MQ.c.connected&&watching)MQ.c.publish(MQ.topic+"/up",JSON.stringify({t:"hello",id:MQ.id,full:!!full}),{qos:0}) }catch{} }
 setInterval(()=>hello(false),8000);
@@ -271,7 +285,7 @@ function mirApply(m){ const f=$("mirf"), doc=f.contentDocument; if(!doc)return;
   if(m.t==="c"){ const k=mirK(), r=document.createElement("div"); r.className="ripple"; r.style.left=(m.x*k)+"px"; r.style.top=(m.y*k)+"px"; $("mir").append(r); setTimeout(()=>r.remove(),700); return }
   if(m.t==="v"){ $("away").hidden=!(m.hidden||!m.focus); return }
   if(m.t==="s"){ if(m.id==="#win"){ try{ doc.defaultView.scrollTo(m.left,m.top) }catch{} } else { const e=doc.getElementById(m.id); if(e){ e.scrollTop=m.top; e.scrollLeft=m.left } } return }
-  if(m.t==="css"){ MIR.css=m; doc.open(); doc.write("<!doctype html><html"+(m.theme?' data-theme="'+m.theme+'"':"")+"><head><meta charset=utf-8><style>"+m.css+"</style><style>*{animation:none!important;transition:none!important;caret-color:transparent;scroll-behavior:auto!important}html,body{margin:0}html{overflow:hidden}</style></head><body></body></html>"); doc.close(); return }
+  if(m.t==="css"){ MIR.css=m; doc.open(); doc.write("<!doctype html><html"+(m.theme?' data-theme="'+m.theme+'"':"")+"><head><meta charset=utf-8><style>"+m.css+"</style><style>*{animation-duration:0s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition:none!important;caret-color:transparent;scroll-behavior:auto!important}svg *{stroke-dashoffset:0!important}html,body{margin:0}html{overflow:hidden}</style></head><body></body></html>"); doc.close(); return }
   if(m.t==="img"){ try{ const b=m.u.split(","), bin=atob(b[1]), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i); MIR.imgs[m.id]=URL.createObjectURL(new Blob([u],{type:(b[0].match(/data:([^;]+)/)||[])[1]||"image/jpeg"})) }catch{ MIR.imgs[m.id]=m.u } return }
   if(m.t==="d"){ if(MIR.last==null){ hello(true); return } m={...m,t:"f",html:MIR.last.slice(0,m.p)+m.x+MIR.last.slice(MIR.last.length-m.s)} }
   if(m.t!=="f"||!doc.body)return; MIR.last=m.html;
@@ -322,9 +336,9 @@ $("mir").onclick=()=>{ $("wv-vidbox").classList.toggle("zoom"); setTimeout(mirFi
 $("watch").onclick=()=>{ watching=true; mqStart(); hello(true); $("wv").hidden=false; document.body.style.overflow="hidden"; ping(); renderNow() };
 $("wv-close").onclick=()=>{ watching=false; stopRTC(); $("wv").hidden=true; document.body.style.overflow="" };
 setInterval(ping,150000);
-render(true); renderNow(); poll().then(renderNow); stream();
+render(true); renderNow(); poll().then(renderNow); stream(); mqStart();
 // pick up a newer version of this page by itself (phones keep old copies for a while)
-const PAGE_VER="v13";
+const PAGE_VER="v14";
 setInterval(async()=>{ try{ const t=await (await fetch(location.pathname+"?t="+Date.now(),{cache:"no-store"})).text(); const m=/PAGE_VER="(v\d+)"/.exec(t); if(m&&m[1]!==PAGE_VER&&!watching)location.replace(location.pathname+"?v="+m[1]) }catch{} },5*60e3);
 setInterval(()=>{ if(!esOK)poll().then(renderNow); else renderNow() },10000);
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden){ poll().then(renderNow); ping() } });
