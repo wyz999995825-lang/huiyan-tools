@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Jenny's Dream Diary 梦幻日记本</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Patrick+Hand&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<style>
+:root{--pink:#ff7eb9;--pink2:#ffb3d9;--lav:#a98bff;--lav2:#d9ccff;--mint:#5fd3b3;--mint2:#c4f3e4;--gold:#ffc94d;--ink:#5a4478;--ink2:#8a78a8;--card:#ffffffd9;--r:22px;
+--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{font-family:Fredoka,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:linear-gradient(160deg,#ffe3f3 0%,#f0e6ff 45%,#e2f4ff 100%) fixed;overflow-x:hidden}
+.zh{font-family:"ZCOOL KuaiLe","PingFang SC","Microsoft YaHei",sans-serif}
+button{font-family:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,textarea,select{font-family:inherit;color:var(--ink)}
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+#sky span{position:absolute;color:#fff;text-shadow:0 0 8px #ffd1ec,0 0 14px #c9b6ff;animation:tw 3s ease-in-out infinite;opacity:.8}
+@keyframes tw{0%,100%{opacity:.2;transform:scale(.6) rotate(0)}50%{opacity:1;transform:scale(1.1) rotate(20deg)}}
+#app{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:calc(12px + var(--sat)) 14px calc(96px + var(--sab))}
+/* top bar */
+.top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.logo{font-weight:700;font-size:22px;display:flex;align-items:center;gap:8px;background:linear-gradient(90deg,#ff6fb5,#a07bff,#5fc8ff);-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+.top .sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:5px;background:#fff;border-radius:99px;padding:6px 12px;font-weight:600;box-shadow:0 3px 10px #c9a9ff40;font-size:15px;white-space:nowrap}
+.cloud{font-size:12px;color:var(--ink2)}
+/* nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;gap:2px;padding:8px 8px calc(8px + var(--sab));background:#ffffffe8;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 -4px 20px #b9a6ff30}
+.nav button{flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:11px;font-weight:600;padding:4px 2px;border-radius:14px;color:var(--ink2)}
+.nav button b{font-size:23px;line-height:1.1}
+.nav button.on{background:linear-gradient(135deg,#ffe0f0,#ece3ff);color:var(--ink)}
+/* cards */
+.card{background:var(--card);border-radius:var(--r);padding:16px;box-shadow:0 8px 28px #b99ce030;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);position:relative}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+h2{margin:0 0 10px;font-size:20px}h3{margin:0 0 8px;font-size:17px}
+.muted{color:var(--ink2);font-size:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 18px;border-radius:16px;font-weight:600;font-size:16px;background:linear-gradient(135deg,#ff8cc6,#b18bff);color:#fff;box-shadow:0 5px 14px #ff8cc650;transition:transform .12s}
+.btn:active{transform:scale(.96)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:0 3px 10px #c9a9ff40}
+.btn.mint{background:linear-gradient(135deg,#55d6b4,#7fb8ff);box-shadow:0 5px 14px #55d6b450}
+.btn.sm{padding:7px 12px;font-size:14px;border-radius:12px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:7px 12px;border-radius:99px;background:#fff;font-size:14px;font-weight:500;box-shadow:0 2px 8px #c9a9ff35;margin:3px;border:2px solid transparent}
+.chip.on{border-color:var(--pink);background:#fff0f8}
+.chip.gem{background:linear-gradient(135deg,#fff,#f3ecff)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+/* home */
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:14px}
+.books{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.book{position:relative;border-radius:14px 26px 26px 14px;min-height:210px;padding:18px 16px 16px 30px;color:#fff;text-align:left;overflow:hidden;box-shadow:0 12px 26px #c38cd860,inset 10px 0 0 #ffffff40;transition:transform .2s}
+.book:hover{transform:translateY(-3px) rotate(-.6deg)}
+.book.en{background:linear-gradient(145deg,#ff9fcf,#ff7eb9 40%,#c38cff)}
+.book.zh{background:linear-gradient(145deg,#7fe8cc,#5fd3b3 40%,#78a8ff)}
+.book::before{content:"";position:absolute;left:12px;top:0;bottom:0;border-left:3px dotted #ffffffaa}
+.book::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,#ffffff70 48%,transparent 62%);background-size:260% 100%;animation:shine 4s linear infinite}
+@keyframes shine{0%{background-position:130% 0}100%{background-position:-130% 0}}
+.book .t{font-size:24px;font-weight:700;line-height:1.15;text-shadow:0 2px 6px #0002}
+.book .s{opacity:.95;font-size:14px;margin-top:4px}
+.book .deco{position:absolute;right:10px;bottom:6px;font-size:54px;filter:drop-shadow(0 4px 6px #0003)}
+.book .state{display:inline-block;margin-top:12px;background:#ffffff40;border-radius:99px;padding:5px 12px;font-weight:600;font-size:14px}
+.stat{display:flex;gap:8px;flex-wrap:wrap}
+.stat .pill{font-size:14px}
+.week{display:flex;gap:6px;margin-top:6px}
+.week div{flex:1;text-align:center;font-size:11px;color:var(--ink2)}
+.week i{display:block;height:34px;border-radius:10px;background:#f1eaff;margin-bottom:3px;font-style:normal;font-size:15px;line-height:34px}
+.week i.d1{background:linear-gradient(135deg,#ffd0e8,#e2d6ff)}
+.week i.d2{background:linear-gradient(135deg,#ff9fcf,#9ee6d1)}
+.lvl{height:12px;border-radius:9px;background:#f0e8ff;overflow:hidden}
+.lvl b{display:block;height:100%;background:linear-gradient(90deg,#ff8cc6,#b18bff,#6fd0ff);border-radius:9px}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.quick button{background:#fff;border-radius:18px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:600;font-size:13px;box-shadow:0 4px 14px #c9a9ff30;position:relative}
+.quick button b{font-size:28px}
+.dot{position:absolute;top:6px;right:10px;background:#ff5fa2;color:#fff;border-radius:99px;font-size:11px;padding:1px 6px}
+/* fairy */
+.fairy{display:flex;gap:10px;align-items:flex-start;margin:6px 0 12px}
+.fairy .ava{font-size:40px;animation:bob 2.6s ease-in-out infinite;filter:drop-shadow(0 4px 8px #ffb3e6)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.bubble{background:#fff;border-radius:6px 20px 20px 20px;padding:11px 14px;box-shadow:0 4px 14px #c9a9ff35;font-size:16px;line-height:1.45;flex:1}
+.say{margin-left:6px;font-size:16px;vertical-align:middle;background:#f3ecff;border-radius:99px;width:28px;height:28px}
+/* write */
+.steps{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.steps::-webkit-scrollbar{display:none}
+.steps button{flex:1;min-width:76px;padding:8px 6px;border-radius:14px;background:#ffffffa0;font-size:13px;font-weight:600;color:var(--ink2);white-space:nowrap}
+.steps button.on{background:#fff;color:var(--ink);box-shadow:0 3px 10px #ff8cc640;outline:2px solid var(--pink2)}
+.steps button.done{color:var(--mint)}
+.emo{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:8px}
+.emo button{background:#fff;border-radius:18px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:13px;font-weight:600;border:3px solid transparent;box-shadow:0 3px 10px #c9a9ff30}
+.emo button b{font-size:32px}
+.emo button.on{border-color:var(--pink);background:#fff2f9;transform:scale(1.04)}
+.sparks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.spark{background:#fff;border-radius:20px;padding:16px 14px;text-align:left;box-shadow:0 5px 16px #c9a9ff35;border:3px solid transparent;position:relative;overflow:hidden;min-height:128px}
+.spark b{font-size:38px;display:block}
+.spark .c{font-size:12px;color:var(--ink2);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.spark .tt{font-weight:600;font-size:17px;margin-top:4px;line-height:1.25}
+.spark.on{border-color:var(--pink)}
+.spark::after{content:"✦";position:absolute;right:12px;top:8px;color:#ffc6e6;font-size:20px}
+.cats{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.ta{width:100%;border:3px solid #f1e3ff;border-radius:18px;padding:12px 14px;font-size:19px;line-height:1.55;background:#fff;resize:vertical;min-height:110px;outline:none}
+.ta:focus{border-color:var(--pink2)}
+.en .ta,.en .paperTA{font-family:"Patrick Hand",Fredoka,cursive;font-size:22px}
+.zh-mode .ta,.zh-mode .paperTA{font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;font-size:20px}
+.qtitle{font-size:20px;font-weight:600;margin:4px 0 8px}
+.prog{font-size:13px;color:var(--ink2);font-weight:600}
+.helpers{margin:8px 0}
+.helpers .lab{font-size:13px;color:var(--ink2);font-weight:600;margin:6px 0 2px}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;align-items:start}
+.sofar{white-space:pre-wrap;font-size:18px;line-height:1.6;max-height:360px;overflow:auto}
+.en .sofar{font-family:"Patrick Hand",cursive;font-size:21px}
+/* paper */
+.paperWrap{position:relative}
+.paper{position:relative;border-radius:10px 24px 24px 10px;padding:18px 18px 22px 46px;box-shadow:0 14px 34px #b49ad850;overflow:hidden;--line:#f6c3dc;--bg:#fffafd;background:var(--bg)}
+.paper::before{content:"";position:absolute;left:30px;top:0;bottom:0;border-left:2px solid #ffb3cf80}
+.paper[data-p=pink]{--line:#f8c6de;--bg:#fff8fc}
+.paper[data-p=lav]{--line:#d9ccff;--bg:#fbf8ff}
+.paper[data-p=ocean]{--line:#bfe3f5;--bg:#f6fcff}
+.paper[data-p=mint]{--line:#bdebdc;--bg:#f7fffb}
+.paper[data-p=lemon]{--line:#f8e3a6;--bg:#fffdf3}
+.paper .holes{position:absolute;left:9px;top:20px;bottom:20px;display:flex;flex-direction:column;justify-content:space-around}
+.paper .holes i{width:12px;height:12px;border-radius:50%;background:#efe4ff;box-shadow:inset 0 2px 3px #0002}
+.phead{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;font-size:15px;color:var(--ink2);border-bottom:2px dashed var(--line);padding-bottom:8px;margin-bottom:6px}
+.ptitle{width:100%;border:0;background:transparent;font-size:24px;font-weight:700;color:var(--ink);outline:none;padding:4px 0}
+.en .ptitle{font-family:"Patrick Hand",cursive;font-size:27px}
+.paperTA{width:100%;border:0;outline:none;resize:none;background:transparent;line-height:38px;padding:0 2px;min-height:304px;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 37px,var(--line) 37px,var(--line) 38px);background-attachment:local;color:#4a3a66;display:block}
+.zh-mode .paperTA{text-indent:2em}
+.readBody{white-space:pre-wrap;line-height:38px;font-size:20px;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 37px,var(--line) 37px,var(--line) 38px);min-height:152px;color:#4a3a66}
+.en .readBody{font-family:"Patrick Hand",cursive;font-size:22px}
+.zh-mode .readBody{text-indent:2em}
+.stLayer{position:absolute;inset:0;pointer-events:none;z-index:5}
+.stLayer .placed{position:absolute;pointer-events:none;transform-origin:center;touch-action:none}
+.decor .stLayer .placed{pointer-events:auto;cursor:grab}
+.placed.sel{outline:3px dashed var(--pink);outline-offset:4px;border-radius:50%}
+.tools{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.tools .btn.on{outline:3px solid #fff;box-shadow:0 0 0 3px var(--pink)}
+.counter{display:flex;align-items:center;gap:10px;margin:10px 0}
+.counter .bar{flex:1;height:14px;background:#f2eaff;border-radius:9px;overflow:hidden}
+.counter .bar b{display:block;height:100%;background:linear-gradient(90deg,#ffb3d9,#ff7eb9,#b18bff);transition:width .3s}
+.counter .bar b.ok{background:linear-gradient(90deg,#7fe8cc,#5fd3b3,#78a8ff)}
+.check{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.check div{background:#fff;border-radius:12px;padding:7px 10px;font-size:13.5px;font-weight:500;opacity:.55}
+.check div.ok{opacity:1;background:#effcf6;color:#2c8f73}
+.palette{display:flex;gap:8px;overflow-x:auto;padding:8px 2px;scrollbar-width:thin}
+.palette button{flex:0 0 auto}
+.selbar{display:flex;gap:6px;justify-content:center;margin:6px 0}
+.polaroid{background:#fff;padding:10px 10px 30px;box-shadow:0 6px 18px #0002;transform:rotate(-1.5deg);max-width:340px;margin:14px auto 4px;border-radius:4px}
+.polaroid img{width:100%;display:block;border-radius:2px}
+.drawBox{background:#fff;border-radius:18px;padding:10px}
+#cv{width:100%;aspect-ratio:3/2;background:#fffefc;border-radius:12px;border:2px dashed #e7dcff;touch-action:none;display:block}
+.colors{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.colors button{width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px #0002}
+.colors button.on{box-shadow:0 0 0 3px var(--pink)}
+/* stickers */
+.stk{--g:linear-gradient(135deg,#fbc2eb,#a6c1ee);position:relative;width:var(--sz,64px);height:var(--sz,64px);border-radius:50%;background:var(--g);display:grid;place-items:center;font-size:calc(var(--sz,64px)*.58);box-shadow:0 0 0 calc(var(--sz,64px)*.07) #fff,0 4px 10px #a37ccf55;overflow:hidden;line-height:1}
+.stk.sq{border-radius:30%}
+.stk.cl{border-radius:48% 52% 44% 56%/58% 56% 44% 42%}
+.stk::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,#fff 1px,transparent 1.6px),radial-gradient(circle,#fff9 1px,transparent 1.5px);background-size:13px 13px,9px 9px;background-position:0 0,5px 6px;opacity:.55;animation:gl 2.2s ease-in-out infinite}
+.stk::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 35%,#ffffffcc 50%,transparent 65%);background-size:300% 100%;animation:shine 3s linear infinite}
+@keyframes gl{0%,100%{opacity:.25}50%{opacity:.8}}
+.stk span{position:relative;z-index:2;filter:drop-shadow(0 2px 2px #0002)}
+.stk.rare{box-shadow:0 0 0 calc(var(--sz,64px)*.07) #ffd86b,0 0 14px #ffd86b,0 4px 10px #a37ccf55}
+.stk.lock{background:#eee6f7;box-shadow:0 0 0 calc(var(--sz,64px)*.07) #fff}
+.stk.lock span{filter:grayscale(1) brightness(1.6) opacity(.35)}
+.stk.lock::before,.stk.lock::after{display:none}
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:14px 8px;justify-items:center}
+.album .it{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11.5px;text-align:center;font-weight:500}
+/* gems */
+.gemList{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.gemC{background:#fff;border-radius:18px;padding:12px 14px;box-shadow:0 4px 12px #c9a9ff30;position:relative;border-left:6px solid var(--gc,#ffb3d9)}
+.gemC .tx{font-size:18px;font-weight:600;line-height:1.35;padding-right:30px}
+.py,.gemC .mn{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;}
+.gemC .mn{font-size:13.5px;color:var(--ink2);margin-top:3px}
+.gemC .ex{font-size:14px;margin-top:6px;background:#faf6ff;border-radius:10px;padding:6px 9px}
+.gemC .ft{display:flex;gap:6px;align-items:center;margin-top:8px;font-size:12px;color:var(--ink2);flex-wrap:wrap}
+.gemC .star{position:absolute;right:10px;top:8px;font-size:21px}
+.tabs{display:flex;gap:6px;background:#ffffff90;padding:5px;border-radius:16px;width:max-content;max-width:100%}
+.tabs button{padding:8px 16px;border-radius:12px;font-weight:600;font-size:15px}
+.tabs button.on{background:#fff;box-shadow:0 2px 8px #c9a9ff40}
+.search{width:100%;border:3px solid #f1e3ff;border-radius:14px;padding:10px 14px;font-size:16px;outline:none;background:#fff}
+/* shelf */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center}
+.cal .h{font-size:12px;color:var(--ink2);font-weight:600}
+.cal .d{aspect-ratio:1;border-radius:12px;background:#ffffff90;font-size:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative}
+.cal .d.today{outline:2px solid var(--pink)}
+.cal .d .dots{display:flex;gap:3px}
+.cal .d .dots i{width:7px;height:7px;border-radius:50%}
+.ent{display:flex;gap:12px;align-items:center;background:#fff;border-radius:18px;padding:12px 14px;box-shadow:0 4px 12px #c9a9ff30;text-align:left;width:100%}
+.ent .ic{font-size:34px}
+.ent .bd{flex:1;min-width:0}
+.ent .tt{font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{display:inline-block;font-size:11px;font-weight:600;border-radius:99px;padding:2px 8px}
+.tag.en{background:#ffe0f0;color:#d24d8f}.tag.zh{background:#d8f6ec;color:#22977a}.tag.dr{background:#fff1cc;color:#a8790c}
+/* letters */
+.letter{background:linear-gradient(135deg,#fff,#fff4fa);border-radius:18px;padding:14px 16px;box-shadow:0 5px 14px #ffb3d940;border:2px dashed #ffc6e2;position:relative}
+.letter .to{font-weight:700;font-size:15px}
+.letter .msg{font-size:18px;line-height:1.5;margin:6px 0;white-space:pre-wrap}
+.en .letter .msg,.letter.en .msg{font-family:"Patrick Hand",cursive;font-size:21px}
+.reply{background:#eefcf7;border-radius:12px;padding:8px 12px;margin-top:6px;font-size:15px}
+.secret{background:linear-gradient(135deg,#efe6ff,#ffe6f3);border-radius:16px;padding:14px;text-align:center;font-weight:600}
+/* modal */
+.mask{position:fixed;inset:0;background:#3c2b5a66;z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.modal{background:#fff;border-radius:26px;padding:20px;max-width:520px;width:100%;max-height:88vh;overflow:auto;box-shadow:0 20px 50px #5a447860;animation:pop .25s ease}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+.field{margin:8px 0}
+.field label{display:block;font-size:13px;font-weight:600;color:var(--ink2);margin-bottom:3px}
+.field input,.field textarea,.field select{width:100%;border:3px solid #f1e3ff;border-radius:12px;padding:9px 12px;font-size:16px;outline:none;background:#fff}
+.toast{position:fixed;left:50%;bottom:calc(100px + var(--sab));transform:translateX(-50%);background:#5a4478;color:#fff;padding:10px 18px;border-radius:99px;z-index:80;font-weight:600;font-size:15px;box-shadow:0 8px 20px #0003;animation:pop .2s;max-width:90vw;text-align:center}
+.box{font-size:96px;display:inline-block;animation:shake .5s ease-in-out infinite}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+.reveal{animation:rev .7s cubic-bezier(.2,1.6,.4,1)}
+@keyframes rev{from{transform:scale(0) rotate(-180deg)}to{transform:none}}
+.confetti{position:fixed;top:-20px;z-index:70;font-size:22px;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.big{font-size:34px;font-weight:700}
+.bars{display:flex;align-items:flex-end;gap:4px;height:110px;padding-top:6px}
+.bars div{flex:1;max-width:44px;border-radius:6px 6px 2px 2px;min-height:3px;position:relative}
+.bars div span{position:absolute;bottom:-17px;left:0;right:0;text-align:center;font-size:10px;color:var(--ink2)}
+.hide{display:none!important}
+.mk{line-height:2.1;font-size:20px;white-space:pre-wrap;color:#4a3a66}
+.en .mk{font-family:"Patrick Hand",cursive;font-size:23px}
+.mk del{color:#e5484d;text-decoration:line-through 2px #e5484d}
+.mk ins{color:#15803d;text-decoration:none;background:#dcfce7;border-radius:6px;padding:0 4px;font-weight:600;margin-left:2px}
+.mk .todo{background:#ffe4e6;border-bottom:3px wavy #e5484d;border-radius:4px;cursor:pointer;padding:0 2px}
+.mk .spk{background:#efe6ff;border-bottom:3px dotted #9b6bff;border-radius:4px;cursor:pointer;padding:0 2px}
+.mk sup,.fx .n{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#ff7eb9;color:#fff;font-size:11px;font-family:Fredoka,sans-serif;font-weight:700;vertical-align:super;margin-left:1px}
+.fx{display:flex;gap:10px;align-items:flex-start;background:#fff;border-radius:16px;padding:10px 12px;box-shadow:0 3px 10px #c9a9ff30;margin:8px 0}
+.fx .n{vertical-align:middle;margin-top:3px;flex:0 0 auto;width:24px;height:24px;font-size:13px}
+.fx .w{color:#e5484d;text-decoration:line-through;font-weight:600}.fx .r{color:#15803d;font-weight:700}
+.fx.done{opacity:.65;background:#f3fdf7}
+.spin{display:inline-block;animation:bob 1s ease-in-out infinite;font-size:40px}
+.micB.on{background:#ff5fa2!important;color:#fff!important;animation:shake 1.2s infinite}
+@media (max-width:820px){
+ .hero,.split,.g2{grid-template-columns:1fr}
+ .sparks{grid-template-columns:1fr 1fr}
+ .g3{grid-template-columns:1fr 1fr}
+}
+@media (max-width:520px){
+ #app{padding-left:10px;padding-right:10px}
+ .logo{font-size:18px}
+ .books{gap:10px}
+ .book{min-height:178px;padding:14px 10px 12px 24px}
+ .book .t{font-size:19px}.book .deco{font-size:32px;bottom:4px;right:6px}.book .state{font-size:12px;padding:4px 9px}
+ .sparks{grid-template-columns:1fr}
+ .spark{min-height:0;display:flex;gap:12px;align-items:center}
+ .spark b{font-size:34px}
+ .quick{grid-template-columns:repeat(4,1fr);gap:7px}
+ .quick button{padding:10px 2px;font-size:11.5px}
+ .quick button b{font-size:24px}
+ .paper{padding:14px 12px 18px 34px}
+ .paper::before{left:22px}.paper .holes{left:5px}
+ .check{grid-template-columns:1fr}
+ .emo{grid-template-columns:repeat(3,1fr)}
+ .gemList{grid-template-columns:1fr}
+ .ta{font-size:18px}
+}
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<div id="app">
+ <div class="top">
+  <div class="logo">✨ Jenny's Dream Diary</div>
+  <div class="sp"></div>
+  <span class="pill" id="pStars">⭐ 0</span>
+  <span class="pill" id="pStreak">🔥 0</span>
+ </div>
+ <div id="main"></div>
+ <div class="cloud" id="cloud" style="text-align:center;margin-top:18px"></div>
+</div>
+<nav class="nav" id="nav">
+ <button data-act="go" data-v="home"><b>🏠</b>Home</button>
+ <button data-act="go" data-v="shelf"><b>📚</b>My Diaries</button>
+ <button data-act="go" data-v="gems"><b>💎</b>Gem Box</button>
+ <button data-act="go" data-v="album"><b>🌟</b>Stickers</button>
+ <button data-act="go" data-v="mail"><b>💌</b>Mailbox</button>
+</nav>
+<div id="layer"></div>
+<script>
+'use strict';
+/* ================= DATA BANKS ================= */
+const STICKER_SERIES=[
+ {k:'sea',n:'Mermaid Lagoon',zh:'美人鱼海湾',g:'linear-gradient(135deg,#a8edea,#c3b1e1,#fbc2eb)',sh:'',items:[['🧜‍♀️','Little Mermaid'],['🐚','Pearl Shell'],['🐠','Rainbow Fish'],['🐬','Dolphin Friend'],['🐳','Happy Whale'],['🦀','Crabby'],['🐙','Octo Hug'],['🐡','Puffy'],['🌊','Big Wave'],['🏝️','Treasure Island']]},
+ {k:'uni',n:'Unicorn Dream',zh:'独角兽梦境',g:'linear-gradient(135deg,#fbc2eb,#a6c1ee,#fdfbfb,#fcd5ce)',sh:'cl',items:[['🦄','Unicorn'],['🌈','Rainbow'],['☁️','Cloud Puff'],['⭐','Wish Star'],['🌙','Moon Smile'],['✨','Sparkles'],['💫','Shooting Star'],['🎀','Pink Bow'],['👑','Princess Crown'],['🔮','Crystal Ball']]},
+ {k:'sweet',n:'Sweet Café',zh:'甜甜咖啡馆',g:'linear-gradient(135deg,#ffd1dc,#fff1c1,#ffc8dd)',sh:'sq',items:[['🧁','Cupcake'],['🍩','Donut'],['🍓','Strawberry'],['🍦','Ice Cream'],['🍭','Lollipop'],['🍬','Candy'],['🍪','Cookie'],['🍰','Cake Slice'],['🍒','Cherries'],['🍫','Chocolate']]},
+ {k:'garden',n:'Flower Garden',zh:'花花园',g:'linear-gradient(135deg,#d4fc79,#fbc2eb,#ffe5a5)',sh:'',items:[['🌸','Sakura'],['🌷','Tulip'],['🌻','Sunflower'],['🌼','Daisy'],['🦋','Butterfly'],['🐝','Busy Bee'],['🍀','Lucky Clover'],['🌹','Rose'],['🐞','Ladybug'],['🌺','Hibiscus']]},
+ {k:'love',n:'Sparkle Love',zh:'闪闪爱心',g:'linear-gradient(135deg,#ff9a9e,#fecfef,#f6d365)',sh:'cl',items:[['💖','Sparkle Heart'],['💝','Gift Heart'],['💗','Growing Heart'],['💌','Love Letter'],['💎','Diamond'],['🎁','Surprise'],['🌟','Glow Star'],['🧸','Teddy'],['🎈','Balloon'],['🎠','Carousel']]},
+ {k:'pets',n:'Cuddly Pets',zh:'萌萌宠物',g:'linear-gradient(135deg,#ffecd2,#fcb69f,#e0c3fc)',sh:'sq',items:[['🐰','Bunny'],['🐱','Kitty'],['🐶','Puppy'],['🐼','Panda'],['🐨','Koala'],['🐹','Hamster'],['🦊','Fox'],['🐧','Penguin'],['🦔','Hedgehog'],['🐥','Chick']]}
+];
+const STICKERS=[];STICKER_SERIES.forEach(s=>s.items.forEach((it,i)=>STICKERS.push({id:s.k+i,e:it[0],n:it[1],s:s.k,g:s.g,sh:s.sh,rare:i>=8})));
+const STK=Object.fromEntries(STICKERS.map(s=>[s.id,s]));
+const STARTER_STICKERS=['sea0','uni0','sweet0','garden0','love0','pets0'];
+
+const MOODS={en:[['😄','happy'],['🥰','loved'],['🤩','excited'],['😌','calm'],['😮','surprised'],['😢','sad'],['😠','cross'],['😰','nervous'],['😴','tired']],
+ zh:[['😄','开心'],['🥰','温暖'],['🤩','激动'],['😌','平静'],['😮','惊讶'],['😢','难过'],['😠','生气'],['😰','紧张'],['😴','累']]};
+const WEATHER={en:[['☀️','sunny'],['⛅','cloudy'],['🌧️','rainy'],['⛈️','stormy'],['🌈','rainbow'],['🌬️','windy']],
+ zh:[['☀️','晴天'],['⛅','多云'],['🌧️','下雨'],['⛈️','雷雨'],['🌈','彩虹'],['🌬️','刮风']]};
+const CATS={en:{school:['🏫','School'],family:['🏠','Family'],friends:['👭','Friends'],food:['🍜','Food'],play:['🎲','Play'],nature:['🌿','Nature'],feel:['💗','Feelings'],imagine:['🦄','Imagine'],holiday:['✈️','Holiday'],learn:['📚','Learning']},
+ zh:{school:['🏫','学校'],family:['🏠','家人'],friends:['👭','朋友'],food:['🍜','美食'],play:['🎲','玩耍'],nature:['🌿','大自然'],feel:['💗','心情'],imagine:['🦄','想象'],holiday:['✈️','假期'],learn:['📚','学习']}};
+const GQ={en:{
+ when:['When did it happen?',['This morning,','After school,','In the evening,','Today,']],
+ where:['Where were you?',['I was at','We went to','At home,']],
+ who:['Who was with you?',['I was with','My friend','Mummy and I']],
+ what1:['What happened first?',['First,','At first,','When I arrived,']],
+ what2:['And then what happened?',['Then,','After that,','Suddenly,']],
+ sense:['What did you see, hear or smell? 👀👂👃',['I saw','I heard','It smelled like','It looked like']],
+ taste:['How did it taste or feel? 👅✋',['It tasted','It felt as soft as','It was crunchy and']],
+ feel:['How did you feel? Why? 💗',['I felt','because','I was so','It made me feel']],
+ end:['How did it end?',['Finally,','In the end,','At last,']],
+ learn:['What did you learn? What will you do next time?',['I learnt that','Next time, I will','Now I know']],
+ wish:['What do you wish for?',['I wish','I hope','One day, I want to']],
+ look:['What does it look like? 🎨',['It is','It has','It looks like']],
+ do:['What would you do?',['I would','First, I would','Then I would']],
+ take:['Who would you take with you? Why?',['I would take','because','Together, we']],
+ funny:['What is the funniest or most magical part?',['The funniest part is','Everyone would','It would be so']]},
+zh:{
+ when:['这件事是什么时候发生的？',['今天早上，','放学后，','晚上，','今天，']],
+ where:['你在哪里？',['我在','我们去了','在家里，']],
+ who:['和谁在一起？',['我和','妈妈带我','我的好朋友']],
+ what1:['先发生了什么？',['一开始，','首先，','我们一到，']],
+ what2:['接着呢？后来怎么样了？',['然后，','接着，','突然，']],
+ sense:['你看到、听到、闻到了什么？👀👂👃',['我看到','我听到','闻起来','它好像']],
+ taste:['吃起来、摸起来怎么样？👅✋',['吃起来','摸起来软软的','甜甜的']],
+ feel:['你的心情怎么样？为什么？💗',['我觉得很','因为','我开心极了','这让我']],
+ end:['最后怎么样了？',['最后，','终于，','到了晚上，']],
+ learn:['你学到了什么？下次会怎么做？',['我明白了','下次我要','原来']],
+ wish:['你有什么愿望？',['我希望','我真想','长大后我要']],
+ look:['它是什么样子的？🎨',['它是','它有','它看起来像']],
+ do:['你会做什么？',['我会','首先我会','然后我还要']],
+ take:['你会带谁一起去？为什么？',['我会带','因为','我们一起']],
+ funny:['最好玩、最神奇的是什么？',['最好玩的是','大家都','那一定']]}};
+const SPARKS={en:[
+ ['school','🏫','The best part of my school day',['What was the best part of today at school?',['The best part of today was','My favourite part was']],'when,who,what2,feel,end'],
+ ['school','✏️','Something new I learnt',['What new thing did you learn today?',['Today I learnt','I found out that']],'who,what1,feel,learn'],
+ ['school','🍙','Recess time!',['What did you do at recess?',['At recess,','During recess, I']],'who,what2,taste,feel'],
+ ['school','👩‍🏫','My teacher today',['What did your teacher say or do today?',['My teacher','Today, my teacher']],'what2,feel,learn'],
+ ['family','🏠','A cosy time with my family',['What did your family do together?',['My family and I','After dinner, we']],'when,where,sense,feel,end'],
+ ['family','🧹','I helped at home',['How did you help at home?',['Today I helped','I helped Mummy to']],'what1,what2,feel,learn'],
+ ['family','👫','Me and my brother or sister',['What did you do with your brother or sister?',['My brother and I','My sister and I']],'where,what2,funny,feel'],
+ ['family','☎️','A call or a visit',['Who did you talk to or visit?',['Today I talked to','We visited']],'when,what2,feel,wish'],
+ ['friends','👭','Playing with my friend',['Who did you play with? What did you play?',['I played with','My friend and I']],'where,what1,what2,feel,end'],
+ ['friends','🤝','A kind thing someone did',['What kind thing did someone do for you?',['Someone was so kind to me.','My friend helped me']],'who,what2,feel,learn'],
+ ['friends','💝','A kind thing I did',['What kind thing did you do for someone?',['I helped','I shared']],'who,feel,learn'],
+ ['food','🍜','The yummiest thing I ate',['What was the yummiest thing you ate today?',['The yummiest thing I ate was','For lunch, I had']],'where,who,sense,taste,feel'],
+ ['food','🧁','Cooking or baking',['What did you cook or bake?',['Today I made','We baked']],'who,what1,what2,taste,end'],
+ ['food','🥢','A new food I tried',['What new food did you try?',['Today I tried','I tasted']],'where,look,taste,feel'],
+ ['play','🎲','My favourite game today',['What game did you play?',['Today I played','My favourite game was']],'who,what1,what2,feel'],
+ ['play','🎨','Something I made',['What did you make or draw?',['I made','I drew']],'look,what1,feel,wish'],
+ ['play','🛝','At the playground',['What did you do at the playground or park?',['At the playground,','I went down the slide']],'who,sense,what2,feel,end'],
+ ['nature','🌦️','The weather today',['What was the weather like? What did the sky look like?',['The sky was','It was raining']],'sense,what2,feel'],
+ ['nature','🐦','An animal I saw',['What animal did you see?',['I saw a','There was a']],'where,look,what2,feel'],
+ ['nature','🌳','A walk outside',['Where did you go for a walk?',['I went for a walk','We walked to']],'who,sense,what2,feel'],
+ ['feel','😂','Something that made me laugh',['What made you laugh today?',['I laughed when','The funniest thing was']],'who,what2,feel'],
+ ['feel','🥺','Something that made me sad or cross',['What happened that made you sad or cross?',['I felt sad when','I was cross because']],'what2,feel,learn'],
+ ['feel','🏅','Something I am proud of',['What are you proud of today?',['I am proud that','Today I did it!']],'what1,what2,feel,wish'],
+ ['feel','😬','Something that made me nervous',['What made you nervous or scared?',['I was nervous when','My heart beat fast because']],'what2,feel,end,learn'],
+ ['imagine','🧜‍♀️','If I were a mermaid for one day',['Where would you swim?',['If I were a mermaid, I would','I would swim to']],'look,take,do,funny,feel'],
+ ['imagine','✨','If I had a magic wand',['What would you wish for with your magic wand?',['If I had a magic wand,','First, I would wish for']],'do,take,funny,feel'],
+ ['imagine','🧸','If my toy could talk',['Which toy would talk? What would it say?',['My toy','It would say']],'look,do,funny,feel'],
+ ['imagine','🏰','My dream bedroom',['What would your dream bedroom look like?',['My dream bedroom has','In my dream bedroom,']],'look,do,funny,feel'],
+ ['imagine','🦋','If I could fly',['Where would you fly to?',['If I could fly, I would','I would fly over']],'look,take,sense,feel'],
+ ['holiday','✈️','A holiday adventure',['Where did you go or what did you do this holiday?',['This holiday,','Today we went to']],'who,sense,what2,feel,end'],
+ ['holiday','❄️','Snow and cold places',['Have you seen snow? What do you think it feels like?',['Snow is','When I touch the snow,']],'look,taste,do,feel'],
+ ['holiday','🧳','Packing my suitcase',['What would you pack for a trip? Why?',['In my suitcase, I packed','I must bring']],'what1,feel,wish'],
+ ['holiday','🗺️','A new place I visited',['What new place did you visit?',['Today I visited','We arrived at']],'who,sense,look,feel,learn'],
+ ['learn','📖','A book I am reading',['What book are you reading? What is it about?',['I am reading','The story is about']],'look,funny,feel,learn'],
+ ['learn','🎹','Something I practised',['What did you practise today?',['Today I practised','I kept trying to']],'what1,what2,feel,learn'],
+ ['learn','❓','A question I wonder about',['What question do you wonder about?',['I wonder why','I wonder how']],'look,do,wish']],
+zh:[
+ ['school','🏫','今天学校最开心的事',['今天在学校，最开心的是什么？',['今天最开心的是','我最喜欢的是']],'when,who,what2,feel,end'],
+ ['school','✏️','我学到的新本领',['今天你学会了什么新东西？',['今天我学会了','我知道了']],'who,what1,feel,learn'],
+ ['school','🍙','下课休息时间',['休息的时候你做了什么？',['休息的时候，','下课了，我']],'who,what2,taste,feel'],
+ ['school','👩‍🏫','我的老师',['今天老师说了什么、做了什么？',['今天老师','我的华文老师']],'what2,feel,learn'],
+ ['family','🏠','和家人在一起',['今天你和家人一起做了什么？',['今天我和家人','吃完晚饭，我们']],'when,where,sense,feel,end'],
+ ['family','🧹','我帮家里做事',['今天你帮家里做了什么事？',['今天我帮妈妈','我自己']],'what1,what2,feel,learn'],
+ ['family','👫','我和哥哥姐姐',['你和哥哥或姐姐一起做了什么？',['我和哥哥','我和姐姐']],'where,what2,funny,feel'],
+ ['family','☎️','打电话或去做客',['今天你和谁说话或去了谁家？',['今天我给','我们去了']],'when,what2,feel,wish'],
+ ['friends','👭','和好朋友一起玩',['你和谁一起玩？玩了什么？',['我和好朋友','今天我们一起']],'where,what1,what2,feel,end'],
+ ['friends','🤝','别人帮助了我',['今天谁帮助了你？',['今天','我的同学帮我']],'who,what2,feel,learn'],
+ ['friends','💝','我帮助了别人',['今天你帮助了谁？',['我帮','我把我的']],'who,feel,learn'],
+ ['food','🍜','今天最好吃的东西',['今天你吃到最好吃的东西是什么？',['今天最好吃的是','午饭我吃了']],'where,who,sense,taste,feel'],
+ ['food','🧁','做饭或做蛋糕',['你做了什么好吃的？',['今天我做了','我们一起做']],'who,what1,what2,taste,end'],
+ ['food','🥢','第一次吃的东西',['你第一次吃了什么？',['今天我第一次吃','我尝了尝']],'where,look,taste,feel'],
+ ['play','🎲','我最喜欢的游戏',['今天你玩了什么游戏？',['今天我玩了','我最喜欢玩']],'who,what1,what2,feel'],
+ ['play','🎨','我做的小手工',['你做了什么或画了什么？',['我做了一个','我画了']],'look,what1,feel,wish'],
+ ['play','🛝','在游乐场',['你在游乐场或公园玩了什么？',['在游乐场，','我从滑梯上']],'who,sense,what2,feel,end'],
+ ['nature','🌦️','今天的天气',['今天的天气怎么样？天空是什么样子的？',['今天的天空','下雨了，']],'sense,what2,feel'],
+ ['nature','🐦','我看到的小动物',['你看到了什么小动物？',['我看到一只','树上有']],'where,look,what2,feel'],
+ ['nature','🌳','出去散步',['你去哪里散步了？',['我去','我们一边走一边']],'who,sense,what2,feel'],
+ ['feel','😂','让我哈哈大笑的事',['今天什么事让你笑了？',['我笑了，因为','最好笑的是']],'who,what2,feel'],
+ ['feel','🥺','让我难过或生气的事',['发生了什么事让你难过或生气？',['我很难过，因为','我生气了，因为']],'what2,feel,learn'],
+ ['feel','🏅','让我骄傲的事',['今天你为自己做的什么事感到骄傲？',['我真为自己骄傲，因为','今天我做到了！']],'what1,what2,feel,wish'],
+ ['feel','😬','让我紧张的事',['什么事让你紧张或害怕？',['我很紧张，因为','我的心怦怦地跳']],'what2,feel,end,learn'],
+ ['imagine','🧜‍♀️','如果我是美人鱼',['你会游到哪里去？',['如果我是美人鱼，我会','我会游到']],'look,take,do,funny,feel'],
+ ['imagine','✨','如果我有魔法棒',['你会用魔法棒变出什么？',['如果我有一根魔法棒，','我要变出']],'do,take,funny,feel'],
+ ['imagine','🧸','如果玩具会说话',['哪个玩具会说话？它会说什么？',['我的玩具','它会对我说']],'look,do,funny,feel'],
+ ['imagine','🏰','我梦想中的房间',['你梦想中的房间是什么样子的？',['我梦想中的房间','房间里有']],'look,do,funny,feel'],
+ ['imagine','🦋','如果我会飞',['你会飞到哪里去？',['如果我会飞，我要','我会飞过']],'look,take,sense,feel'],
+ ['holiday','✈️','假期去玩',['假期你去了哪里、做了什么？',['这个假期，','今天我们去了']],'who,sense,what2,feel,end'],
+ ['holiday','❄️','下雪啦',['你见过雪吗？你觉得雪摸起来怎么样？',['雪是','我摸了摸雪，']],'look,taste,do,feel'],
+ ['holiday','🧳','收拾行李箱',['出去旅行你要带什么？为什么？',['我的行李箱里有','我一定要带']],'what1,feel,wish'],
+ ['holiday','🗺️','去了一个新地方',['今天你去了什么新地方？',['今天我去了','我们来到了']],'who,sense,look,feel,learn'],
+ ['learn','📖','我在读的书',['你在读什么书？讲了什么故事？',['我在读','这个故事讲的是']],'look,funny,feel,learn'],
+ ['learn','🎹','我练习的事',['今天你练习了什么？',['今天我练习了','我一遍又一遍地']],'what1,what2,feel,learn'],
+ ['learn','❓','我想知道的问题',['你在想什么问题？',['我想知道为什么','我很好奇']],'look,do,wish']]};
+const ENDINGS={en:[
+ ['mum','💌','To Mummy',['Dear Mummy, thank you for','Mummy, I love you because','Mummy, can we']],
+ ['dad','💙','To Daddy',['Dear Daddy, thank you for','Daddy, I want to tell you','Daddy, can we']],
+ ['secret','🔒','My little secret',['Shh... my little secret is','I have a secret.']],
+ ['wish','🌠','My wish',['I wish','Tomorrow I hope','One day, I will']],
+ ['ask','❓','A question for Mum or Dad',['Mummy, when you were small, did you','Daddy, what is your favourite']]],
+zh:[
+ ['mum','💌','给妈妈的话',['亲爱的妈妈，谢谢您','妈妈，我爱您，因为','妈妈，我们可以']],
+ ['dad','💙','给爸爸的话',['亲爱的爸爸，谢谢您','爸爸，我想告诉您','爸爸，我们可以']],
+ ['secret','🔒','我的小秘密',['嘘……我的小秘密是','告诉你一个小秘密：']],
+ ['wish','🌠','我的愿望',['我希望','明天我想','长大后我要']],
+ ['ask','❓','问爸爸妈妈一个问题',['妈妈，您小时候','爸爸，您最喜欢']]]};
+const GEMCATS={en:{feel:['💗','Feeling Words','#ffb3d9'],describe:['🎨','Describing Words','#ffcf8a'],action:['🏃','Action Words','#8fd8ff'],senses:['👀','Senses','#a6e8c9'],simile:['✨','Similes (as…as / like)','#d4b8ff'],opener:['🚪','Openers','#ffd6a5'],joining:['🔗','Joining Words','#b5d8ff'],ending:['🌙','Endings','#cdb4ff'],sentence:['💎','Lovely Sentences','#ff9fc8'],other:['📝','Other','#d6d6e7']},
+ zh:{dieci:['🎈','叠词','#ffb3d9'],chengyu:['🧧','四字词语','#ffcf8a'],xinqing:['💗','心情词','#ff9fc8'],dongzuo:['🏃','动作词','#8fd8ff'],biyu:['✨','比喻句','#d4b8ff'],niren:['🌸','拟人句','#a6e8c9'],kaitou:['🚪','开头句','#ffd6a5'],lianjie:['🔗','连接词','#b5d8ff'],jiewei:['🌙','结尾句','#cdb4ff'],haoju:['💎','好句','#ffa8d0'],qita:['📝','其他','#d6d6e7']}};
+const BANK={en:[
+ ['feel','delighted','非常高兴'],['feel','excited','兴奋'],['feel','cheerful','快乐的'],['feel','proud','骄傲'],['feel','nervous','紧张'],['feel','worried','担心'],['feel','disappointed','失望'],['feel','grumpy','闷闷不乐'],['feel','calm','平静'],['feel','surprised','惊讶'],['feel','thrilled','激动极了'],['feel','grateful','感激'],['feel','frightened','害怕'],['feel','embarrassed','不好意思'],
+ ['describe','sparkling','闪闪发光的'],['describe','fluffy','毛茸茸的'],['describe','enormous','巨大的'],['describe','tiny','小小的'],['describe','colourful','五颜六色的'],['describe','delicious','美味的'],['describe','gentle','温柔的'],['describe','noisy','吵闹的'],['describe','shiny','亮晶晶的'],['describe','cosy','温暖舒服的'],['describe','crunchy','脆脆的'],['describe','gloomy','阴沉沉的'],['describe','gorgeous','非常漂亮的'],['describe','juicy','多汁的'],
+ ['action','giggled','咯咯地笑'],['action','whispered','小声说'],['action','skipped','蹦蹦跳跳'],['action','rushed','急忙跑'],['action','peeked','偷偷看'],['action','tiptoed','踮着脚走'],['action','shouted','大喊'],['action','grinned','咧嘴笑'],['action','hugged','拥抱'],['action','splashed','溅水、扑通'],['action','wandered','闲逛'],['action','gobbled','狼吞虎咽'],
+ ['senses','It smelled like freshly baked bread.','闻起来像刚烤好的面包'],['senses','as soft as a cloud','像云一样软'],['senses','The rain went pitter-patter.','雨滴滴答答地下'],['senses','The bell rang loudly.','铃声响亮'],['senses','crunchy and sweet','又脆又甜'],['senses','My tummy rumbled.','我的肚子咕咕叫'],['senses','warm and fuzzy','暖暖的、毛茸茸的'],
+ ['simile','as quiet as a mouse','像老鼠一样安静'],['simile','as busy as a bee','像蜜蜂一样忙'],['simile','as bright as the sun','像太阳一样明亮'],['simile','as cold as ice','像冰一样冷'],['simile','as light as a feather','像羽毛一样轻'],['simile','as fast as lightning','像闪电一样快'],['simile','as gentle as a lamb','像小羊一样温柔'],['simile','The clouds looked like candy floss.','云朵像棉花糖'],
+ ['opener','One sunny morning,','一个阳光明媚的早上'],['opener','As soon as I woke up,','我一醒来'],['opener','Guess what happened today!','猜猜今天发生了什么！'],['opener','It was a day I will never forget.','这是我永远不会忘记的一天'],['opener','After school,','放学后'],['opener','Suddenly,','突然'],
+ ['joining','First,','首先'],['joining','Then,','然后'],['joining','After that,','之后'],['joining','Next,','接下来'],['joining','Finally,','最后'],['joining','because','因为'],['joining','but','但是'],['joining','so','所以'],['joining','while','当……的时候'],
+ ['ending','It was the best day ever!','这是最棒的一天！'],['ending',"I can't wait to do it again.",'我等不及再来一次'],['ending','I went to bed with a big smile.','我带着大大的笑容睡觉了'],['ending','What a wonderful day!','多么美好的一天！'],['ending','I will never forget this day.','我永远不会忘记这一天'],
+ ['sentence','The sky turned pink and orange like a big ice cream.','天空变成粉色和橙色，像一个大冰淇淋'],['sentence','My heart was jumping with joy.','我的心高兴得跳起来'],['sentence','The waves danced and sparkled in the sun.','海浪在阳光下跳舞、闪闪发光']],
+zh:[
+ ['dieci','红彤彤','hóng tóng tóng'],['dieci','绿油油','lǜ yóu yóu'],['dieci','亮晶晶','liàng jīng jīng'],['dieci','胖乎乎','pàng hū hū'],['dieci','香喷喷','xiāng pēn pēn'],['dieci','笑眯眯','xiào mī mī'],['dieci','静悄悄','jìng qiāo qiāo'],['dieci','白花花','bái huā huā'],['dieci','高高兴兴','gāo gāo xìng xìng'],['dieci','干干净净','gān gān jìng jìng'],['dieci','开开心心','kāi kāi xīn xīn'],['dieci','认认真真','rèn rèn zhēn zhēn'],['dieci','热热闹闹','rè rè nào nào'],['dieci','蹦蹦跳跳','bèng bèng tiào tiào'],
+ ['chengyu','五颜六色','wǔ yán liù sè'],['chengyu','兴高采烈','xìng gāo cǎi liè'],['chengyu','津津有味','jīn jīn yǒu wèi'],['chengyu','手舞足蹈','shǒu wǔ zú dǎo'],['chengyu','欢天喜地','huān tiān xǐ dì'],['chengyu','七上八下','qī shàng bā xià'],['chengyu','助人为乐','zhù rén wéi lè'],['chengyu','目不转睛','mù bù zhuǎn jīng'],['chengyu','争先恐后','zhēng xiān kǒng hòu'],['chengyu','迫不及待','pò bù jí dài'],['chengyu','依依不舍','yī yī bù shě'],['chengyu','自言自语','zì yán zì yǔ'],
+ ['xinqing','开心','kāi xīn'],['xinqing','激动','jī dòng'],['xinqing','骄傲','jiāo ào'],['xinqing','紧张','jǐn zhāng'],['xinqing','害怕','hài pà'],['xinqing','难过','nán guò'],['xinqing','生气','shēng qì'],['xinqing','惊讶','jīng yà'],['xinqing','着急','zháo jí'],['xinqing','失望','shī wàng'],['xinqing','温暖','wēn nuǎn'],['xinqing','感动','gǎn dòng'],
+ ['dongzuo','悄悄地','qiāo qiāo de'],['dongzuo','轻轻地','qīng qīng de'],['dongzuo','大声地喊','dà shēng de hǎn'],['dongzuo','紧紧地抱住','jǐn jǐn de bào zhù'],['dongzuo','拍手','pāi shǒu'],['dongzuo','跑来跑去','pǎo lái pǎo qù'],['dongzuo','笑眯眯地说','xiào mī mī de shuō'],
+ ['biyu','弯弯的月亮像小船。',''],['biyu','天上的白云像棉花糖。',''],['biyu','小雨点像在跳舞。',''],['biyu','太阳像个大火球。',''],['biyu','她的脸红得像苹果。',''],
+ ['niren','花儿在向我点头微笑。',''],['niren','小草从地里探出头来。',''],['niren','风姐姐轻轻地吹着。',''],['niren','星星在天上眨眼睛。',''],
+ ['kaitou','今天是一个阳光明媚的日子。',''],['kaitou','一大早，我就醒来了。',''],['kaitou','你猜今天发生了什么事？',''],['kaitou','放学后，',''],
+ ['lianjie','首先','shǒu xiān'],['lianjie','然后','rán hòu'],['lianjie','接着','jiē zhe'],['lianjie','后来','hòu lái'],['lianjie','最后','zuì hòu'],['lianjie','因为……所以……','yīn wèi … suǒ yǐ …'],['lianjie','一边……一边……','yì biān … yì biān …'],['lianjie','先……再……','xiān … zài …'],
+ ['jiewei','今天真是开心的一天！',''],['jiewei','我真希望明天还能这样。',''],['jiewei','我带着甜甜的笑容进入了梦乡。',''],['jiewei','这一天我永远也忘不了。',''],
+ ['haoju','我高兴得跳了起来。',''],['haoju','大家一边唱歌，一边拍手。',''],['haoju','我的心里像吃了蜜一样甜。','']]};
+const HELPCAT={en:{feel:['feel'],sense:['senses','describe','simile'],taste:['senses','describe'],look:['describe','simile'],what1:['joining','opener'],what2:['joining','action'],end:['ending','joining'],when:['opener'],do:['action'],funny:['describe','action'],x:['opener','describe']},
+ zh:{feel:['xinqing'],sense:['biyu','dieci','niren'],taste:['dieci'],look:['dieci','biyu','chengyu'],what1:['lianjie','kaitou'],what2:['lianjie','dongzuo','chengyu'],end:['jiewei','lianjie'],when:['kaitou'],do:['dongzuo'],funny:['chengyu','dieci'],x:['kaitou','chengyu']}};
+const LEVELS=[[0,'🌱','Seedling'],[300,'🌷','Little Bud'],[1000,'🌸','Blossom Writer'],[2500,'🦋','Butterfly Writer'],[5000,'🧜‍♀️','Mermaid Writer'],[10000,'👑','Diary Princess']];
+const PAPERS=[['pink','🌸'],['lav','🦄'],['ocean','🐚'],['mint','🍀'],['lemon','⭐']];
+const T={en:{name:'My English Diary',fairy:'Luna',hello:'Hi Jenny! I am Luna, your diary fairy. Let\'s write today\'s story together!',
+  s1:'1 Mood',s2:'2 Idea',s3:'3 Tell me',s4:'4 My page',s5:'5 Ending',
+  moodQ:'How do you feel today? And what is the weather like?',sparkQ:'Pick an idea spark! ✨ Or tap 🎲 for more ideas.',own:'I know what to write!',more:'🎲 More ideas',
+  next:'Add to my diary ➜',skip:'Skip',done:'Go to my page ➜',sofar:'My diary so far',unit:'words',goal:'Goal',
+  tellMore:'✨ Tell me more',save:'💎 Save as a gem',read:'🔊 Read to me',write:'✏️ Write',decor:'🌟 Decorate',draw:'🎨 Draw',
+  endQ:'Finish with a little note! Who do you want to talk to?',finish:'🎉 Finish my diary',titleP:'Give your diary a title…',
+  checks:['When / Where / Who','A feeling word 💗','See / hear / smell 👀','Joining words (First, Then…)','"because" — tell why','A gem from my Gem Box 💎'],
+  share:'Mummy can read it',onlyMe:'Only me 🔒'},
+ zh:{name:'我的华文日记',fairy:'露娜',hello:'嗨，Jenny！我是日记小精灵露娜。我们一起把今天写下来吧！',
+  s1:'1 心情',s2:'2 点子',s3:'3 说一说',s4:'4 日记页',s5:'5 结尾',
+  moodQ:'今天你的心情怎么样？天气怎么样？',sparkQ:'选一个点子吧！✨ 不喜欢就点 🎲 换一换。',own:'我知道要写什么！',more:'🎲 换一换',
+  next:'写进日记 ➜',skip:'跳过',done:'去日记页 ➜',sofar:'我的日记',unit:'字',goal:'目标',
+  tellMore:'✨ 再多说一点',save:'💎 收藏好词好句',read:'🔊 读给我听',write:'✏️ 写',decor:'🌟 贴贴纸',draw:'🎨 画画',
+  endQ:'最后写一句话吧！你想对谁说？',finish:'🎉 完成日记',titleP:'给日记起个题目……',
+  checks:['什么时候 / 在哪里 / 和谁','心情词 💗','看到 / 听到 / 闻到 👀','连接词（首先、然后……）','“因为” —— 说说为什么','用了宝盒里的好词 💎'],
+  share:'妈妈可以看',onlyMe:'只有我 🔒'}};
+
+/* ================= STATE ================= */
+const KEY='jenny_dream_diary_v1';
+const DEF=()=>({v:1,entries:{},gems:{},owned:[...STARTER_STICKERS],boxOrder:[],stars:0,rewarded:{},bonus:{},settings:{enGoal:30,zhGoal:40,reward:'',rewardStars:30},created:Date.now()});
+let S=load();
+function load(){let d=null;try{d=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
+ const b=DEF();if(!d)return b;
+ d.entries=d.entries||{};d.gems=d.gems||{};d.owned=Array.isArray(d.owned)?d.owned:b.owned;d.rewarded=d.rewarded||{};d.bonus=d.bonus||{};
+ d.settings=Object.assign(b.settings,d.settings||{});d.stars=d.stars||0;d.boxOrder=d.boxOrder||[];return d}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const dstr=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const today=()=>dstr(new Date());
+const parseD=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const WD_EN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],MO_EN=['January','February','March','April','May','June','July','August','September','October','November','December'],WD_ZH=['日','一','二','三','四','五','六'];
+const fmtD=(s,lang)=>{const d=parseD(s);return lang==='zh'?(d.getMonth()+1)+'月'+d.getDate()+'日　星期'+WD_ZH[d.getDay()]:WD_EN[d.getDay()]+', '+d.getDate()+' '+MO_EN[d.getMonth()]+' '+d.getFullYear()};
+const cnt=(t,lang)=>lang==='zh'?((t||'').match(/[㐀-鿿]/g)||[]).length:((t||'').match(/[A-Za-z]+(?:'[A-Za-z]+)?/g)||[]).length;
+function rng(seed){let h=1779033703^seed.length;for(let i=0;i<seed.length;i++){h=Math.imul(h^seed.charCodeAt(i),3432918353);h=h<<13|h>>>19}return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296}}
+function shuffle(a,r){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor((r?r():Math.random())*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const liveEntries=()=>Object.values(S.entries).filter(e=>!e.del);
+const liveGems=lang=>Object.values(S.gems).filter(g=>!g.del&&(!lang||g.lang===lang));
+function totalWords(){return liveEntries().reduce((a,e)=>a+cnt((e.body||'')+' '+((e.ending&&e.ending.text)||''),e.lang),0)}
+function doneDays(){const s=new Set();Object.keys(S.rewarded).forEach(k=>s.add(k.split('|')[0]));return s}
+function streak(){const s=doneDays();let n=0;const d=new Date();if(!s.has(dstr(d)))d.setDate(d.getDate()-1);while(s.has(dstr(d))){n++;d.setDate(d.getDate()-1)}return n}
+function level(){const w=totalWords();let i=0;LEVELS.forEach((l,k)=>{if(w>=l[0])i=k});const cur=LEVELS[i],nx=LEVELS[i+1];return{w,cur,nx,pct:nx?Math.min(100,(w-cur[0])/(nx[0]-cur[0])*100):100}}
+
+/* ============ UI helpers ============ */
+const $=s=>document.querySelector(s);
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2300)}
+function modal(html,onMount){const L=$('#layer');L.innerHTML='<div class="mask" data-act="maskClose"><div class="modal">'+html+'</div></div>';if(onMount)onMount(L.querySelector('.modal'))}
+function closeModal(){$('#layer').innerHTML=''}
+function ask(msg,yes,yesLabel){modal('<h3>'+msg+'</h3><div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn ghost sm" data-act="closeModal">Cancel 取消</button><button class="btn sm" id="askYes">'+(yesLabel||'OK')+'</button></div>',m=>m.querySelector('#askYes').onclick=()=>{closeModal();yes()})}
+function speak(text,lang){const clean=String(text).replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]/gu,'');if(TTS){TTS.speak(clean.slice(0,2000),{language:lang==='zh'?'zh-CN':'en',rate:.9}).catch(()=>speak0(clean,lang));return}speak0(clean,lang)}
+function speak0(text,lang){try{const u=new SpeechSynthesisUtterance(text.replace(/[\u{1F300}-\u{1FAFF}☀-➿]/gu,''));u.lang=lang==='zh'?'zh-CN':'en-GB';u.rate=lang==='zh'?.85:.9;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){toast('🔇')}}
+function stk(id,sz,extra){const s=STK[id];if(!s)return'';return '<div class="stk '+(s.sh||'')+(s.rare?' rare':'')+' '+(extra||'')+'" style="--g:'+s.g+';--sz:'+(sz||64)+'px"><span>'+s.e+'</span></div>'}
+function fairy(text,lang){return '<div class="fairy"><div class="ava">🧚‍♀️</div><div class="bubble '+(lang==='zh'?'':'')+'">'+text+'<button class="say" data-act="say" data-t="'+esc(text.replace(/<[^>]+>/g,''))+'" data-l="'+(lang||'en')+'">🔊</button></div></div>'}
+function confetti(){const e=['✨','💖','⭐','🌸','💎','🎀','🫧'.length?'🌟':'🌟'];for(let i=0;i<34;i++){const c=document.createElement('div');c.className='confetti';c.textContent=e[i%e.length];c.style.left=Math.random()*100+'vw';c.style.animationDuration=(1.8+Math.random()*1.8)+'s';c.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),4200)}}
+(function sky(){const k=$('#sky');let h='';for(let i=0;i<26;i++)h+='<span style="left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;font-size:'+(8+Math.random()*16)+'px;animation-delay:'+(Math.random()*3)+'s">'+(i%3?'✦':'✧')+'</span>';k.innerHTML=h})();
+
+/* ============ ROUTER ============ */
+let VIEW='home',W=null,PARENT=false;
+function go(v,arg){VIEW=v;if(v!=='write')stopDraw();window.scrollTo(0,0);render(arg)}
+function render(arg){
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===VIEW));
+ $('#pStars').textContent='⭐ '+S.stars;$('#pStreak').textContent='🔥 '+streak();
+ const m=$('#main');m.className='';
+ ({home:vHome,write:vWrite,shelf:vShelf,gems:vGems,album:vAlbum,mail:vMail,parent:vParent,read:vRead})[VIEW](m,arg);
+}
+
+/* ============ HOME ============ */
+function todayEntry(lang){return liveEntries().filter(e=>e.lang===lang&&e.date===today()).sort((a,b)=>b.updated-a.updated)[0]}
+function vHome(m){
+ const t=today(),lv=level(),en=todayEntry('en'),zh=todayEntry('zh');
+ const st=(lang,e)=>S.rewarded[t+'|'+lang]?(lang==='zh'?'✅ 今天写好啦！':'✅ Done today!'):e?(lang==='zh'?'📝 继续写':'📝 Keep writing'):(lang==='zh'?'✨ 今天还没写':'✨ Not yet today');
+ const unread=liveEntries().filter(e=>e.reply&&!e.reply.seen).length;
+ let wk='';for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const s=dstr(d);const n=(S.rewarded[s+'|en']?1:0)+(S.rewarded[s+'|zh']?1:0);wk+='<div><i class="'+(n===2?'d2':n?'d1':'')+'">'+(n===2?'💖':n?'⭐':'')+'</i>'+['S','M','T','W','T','F','S'][d.getDay()]+'</div>'}
+ const gem=todayGem();
+ const hr=new Date().getHours();
+ const hi=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+ m.innerHTML=
+ fairy(hi+', Jenny! 🌸 What story will you keep today? <br><span class="muted">Tip: tell Mummy your story out loud first, then write it! 先说一说，再写一写。</span>','en')+
+ (unread?'<button class="card" data-act="go" data-v="mail" style="width:100%;margin-bottom:14px;text-align:left;background:linear-gradient(135deg,#fff0f8,#efe6ff)"><b style="font-size:18px">💌 You have '+unread+' new letter'+(unread>1?'s':'')+' from Mummy/Daddy!</b> <span class="muted">Tap to read 点我看看</span></button>':'')+
+ '<div class="hero"><div class="books">'+
+  '<button class="book en" data-act="openDiary" data-l="en"><div class="t">My English<br>Diary</div><div class="s">'+fmtD(t,'en')+'</div><div class="state">'+st('en',en)+'</div><div class="deco">🦄</div></button>'+
+  '<button class="book zh zh" data-act="openDiary" data-l="zh"><div class="t">我的<br>华文日记</div><div class="s">'+fmtD(t,'zh')+'</div><div class="state">'+st('zh',zh)+'</div><div class="deco">🧜‍♀️</div></button>'+
+ '</div><div class="card"><div class="row between"><h3 style="margin:0">'+lv.cur[1]+' '+lv.cur[2]+'</h3><span class="muted">'+lv.w+' words/字</span></div>'+
+  '<div class="lvl" style="margin:8px 0 4px"><b style="width:'+lv.pct+'%"></b></div><div class="muted">'+(lv.nx?'Next: '+lv.nx[1]+' '+lv.nx[2]+' at '+lv.nx[0]:'Top level! 最高级！')+'</div>'+
+  '<div style="margin-top:12px" class="muted"><b>This week 这周</b></div><div class="week">'+wk+'</div>'+
+  '<div class="stat" style="margin-top:12px"><span class="pill">📔 '+liveEntries().filter(e=>e.done).length+'</span><span class="pill">💎 '+liveGems().length+'</span><span class="pill">🌟 '+new Set(S.owned).size+'/'+STICKERS.length+'</span></div>'+
+  (S.settings.reward?'<div class="muted" style="margin-top:10px">🎁 '+esc(S.settings.reward)+' — ⭐ '+S.stars+'/'+S.settings.rewardStars+'</div><div class="lvl" style="margin-top:4px"><b style="width:'+Math.min(100,S.stars/S.settings.rewardStars*100)+'%"></b></div>':'')+
+ '</div></div>'+
+ '<div class="card" style="margin-top:14px;background:linear-gradient(135deg,#fffaf0cc,#fff0f8cc)"><div class="row between"><h3 style="margin:0">💎 Today\'s Gem 今日好词</h3><span class="muted">Use it today: +1 ⭐</span></div>'+
+  (gem?'<div style="font-size:22px;font-weight:600;margin-top:6px" class="'+(gem.lang==='zh'?'zh':'')+'">'+esc(gem.text)+' <button class="say" data-act="say" data-t="'+esc(gem.text)+'" data-l="'+gem.lang+'">🔊</button></div><div class="muted py">'+esc(gem.meaning||'')+'</div>':'')+'</div>'+
+ '<div class="quick" style="margin-top:14px">'+
+  '<button data-act="go" data-v="shelf"><b>📚</b>My Diaries</button>'+
+  '<button data-act="go" data-v="gems"><b>💎</b>Gem Box</button>'+
+  '<button data-act="go" data-v="album"><b>🌟</b>Stickers</button>'+
+  '<button data-act="go" data-v="mail"><b>💌</b>Mailbox'+(unread?'<span class="dot">'+unread+'</span>':'')+'</button>'+
+ '</div>'+
+ '<div style="text-align:center;margin-top:16px"><button class="btn ghost sm" data-act="parentGate">👩 家长角 Parent Corner</button></div>';
+}
+function todayGem(){const t=today();const mine=liveGems();const pool=mine.length>=3?mine:BANK.en.slice(0,30).map(b=>({lang:'en',text:b[1],meaning:b[2]})).concat(BANK.zh.slice(0,26).map(b=>({lang:'zh',text:b[1],meaning:b[2]})));const r=rng('gem'+t);return pool[Math.floor(r()*pool.length)]}
+
+/* ============ WRITE ============ */
+function newEntry(lang){return{id:uid(),lang,date:today(),mood:null,weather:null,spark:null,title:'',body:'',ending:{type:null,text:'',share:true},stickers:[],paper:lang==='zh'?'mint':'pink',drawing:null,done:false,created:Date.now(),updated:Date.now()}}
+function openEntry(e,step){W={e,lang:e.lang,step:step||1,q:0,sparkSeed:0,mode:'write',sel:-1};go('write')}
+function saveW(silent){const e=W.e;e.updated=Date.now();S.entries[e.id]=e;persist();markDirty('e_'+e.id);if(!silent){const s=$('#saveSt');if(s)s.textContent='✓ saved'}}
+function vWrite(m){
+ const e=W.e,L=T[W.lang];m.className=W.lang==='zh'?'zh-mode':'en';
+ const steps=[L.s1,L.s2,L.s3,L.s4,L.s5];
+ const doneS=[e.mood!=null,!!e.spark||!!e.body,!!e.body,cnt(e.body,e.lang)>0,!!e.ending.text];
+ let h='<div class="row between" style="margin-bottom:10px"><button class="btn ghost sm" data-act="go" data-v="home">⬅ Home</button><b style="font-size:18px">'+(W.lang==='zh'?'📗 ':'📕 ')+L.name+'</b><span class="muted" id="saveSt">'+(e.done?'⭐ done':'')+'</span></div>';
+ h+='<div class="steps">'+steps.map((s,i)=>'<button class="'+(W.step===i+1?'on ':'')+(doneS[i]?'done':'')+'" data-act="step" data-s="'+(i+1)+'">'+(doneS[i]&&W.step!==i+1?'✓ ':'')+s+'</button>').join('')+'</div><div style="height:12px"></div>';
+ h+='<div id="stepBody"></div>';m.innerHTML=h;
+ [st1,st2,st3,st4,st5,st6][W.step-1]($('#stepBody'));
+}
+function st1(b){const e=W.e,L=T[W.lang],lg=W.lang;
+ b.innerHTML=fairy(W.lang==='zh'?L.hello+'<br>'+L.moodQ:L.hello+'<br>'+L.moodQ,lg)+
+ '<div class="card"><h3>'+(lg==='zh'?'💗 心情':'💗 My mood')+'</h3><div class="emo">'+MOODS[lg].map((x,i)=>'<button class="'+(e.mood===i?'on':'')+'" data-act="mood" data-i="'+i+'"><b>'+x[0]+'</b>'+x[1]+'</button>').join('')+'</div>'+
+ '<h3 style="margin-top:16px">'+(lg==='zh'?'🌤️ 天气':'🌤️ Weather')+'</h3><div class="emo">'+WEATHER[lg].map((x,i)=>'<button class="'+(e.weather===i?'on':'')+'" data-act="weather" data-i="'+i+'"><b>'+x[0]+'</b>'+x[1]+'</button>').join('')+'</div>'+
+ '<div style="text-align:right;margin-top:16px"><button class="btn" data-act="step" data-s="2" '+(e.mood==null?'disabled':'')+'>'+(lg==='zh'?'下一步 ➜':'Next ➜')+'</button></div></div>';}
+function sparkPicks(){const lg=W.lang,all=SPARKS[lg];const r=rng(today()+lg+W.sparkSeed);let pool=all;if(W.cat)pool=all.filter(s=>s[0]===W.cat);
+ const mood=W.e.mood;let ord=shuffle(pool.map((s,i)=>all.indexOf(s)),r);
+ if(!W.cat&&mood!=null&&W.sparkSeed===0){const fi=mood>=5?all.findIndex(s=>s[0]==='feel'&&/sad|cross|难过|生气|nervous|紧张/.test(s[2])):-1;if(fi>=0){ord=[fi].concat(ord.filter(x=>x!==fi))}}
+ return ord.slice(0,3)}
+function st2(b){const e=W.e,L=T[W.lang],lg=W.lang;const picks=sparkPicks();
+ b.innerHTML=fairy(L.sparkQ,lg)+'<div class="sparks">'+picks.map(i=>{const s=SPARKS[lg][i];return '<button class="spark '+(e.spark===i?'on':'')+'" data-act="pickSpark" data-i="'+i+'"><b>'+s[1]+'</b><div><div class="c">'+CATS[lg][s[0]][1]+'</div><div class="tt">'+esc(s[2])+'</div></div></button>'}).join('')+'</div>'+
+ '<div class="row" style="margin-top:12px"><button class="btn ghost" data-act="moreSpark">'+L.more+'</button><button class="btn ghost" data-act="ownIdea">💡 '+L.own+'</button></div>'+
+ '<div class="cats">'+'<button class="chip '+(!W.cat?'on':'')+'" data-act="sparkCat" data-c="">🌈 '+(lg==='zh'?'全部':'All')+'</button>'+Object.entries(CATS[lg]).map(([k,v])=>'<button class="chip '+(W.cat===k?'on':'')+'" data-act="sparkCat" data-c="'+k+'">'+v[0]+' '+v[1]+'</button>').join('')+'</div>';}
+function questions(){const lg=W.lang,e=W.e;if(e.spark==null||e.spark<0){return['what1','what2','sense','feel','end'].map(k=>({k,q:GQ[lg][k][0],s:GQ[lg][k][1]}))}
+ const s=SPARKS[lg][e.spark];return[{k:'x',q:s[3][0],s:s[3][1]}].concat(s[4].split(',').map(k=>({k,q:GQ[lg][k][0],s:GQ[lg][k][1]})))}
+function helperWords(k){const lg=W.lang,cats=(HELPCAT[lg][k]||[]);const mine=liveGems(lg).filter(g=>cats.includes(g.cat));const bank=BANK[lg].filter(b=>cats.includes(b[0])&&!mine.some(g=>g.text===b[1])).map(b=>({text:b[1],meaning:b[2],cat:b[0]}));
+ const r=rng(today()+k+W.q);return{mine:shuffle(mine,r).slice(0,6),bank:shuffle(bank,r).slice(0,6)}}
+function st3(b){const e=W.e,L=T[W.lang],lg=W.lang,qs=questions();if(W.q>=qs.length)W.q=qs.length-1;const q=qs[W.q];const hw=helperWords(q.k);
+ const cheer=lg==='zh'?['说得真好！','哇，好有意思！','我好像看到了！','继续说～','真棒！']:['Great answer!','Ooh, tell me more!','I can picture it!','Lovely!','You are a super writer!'];
+ b.innerHTML='<div class="split"><div>'+fairy(esc(q.q),lg)+'<div class="card"><div class="row between"><span class="prog">'+(lg==='zh'?'问题 ':'Question ')+(W.q+1)+' / '+qs.length+'</span><span class="prog">'+(W.lastCheer?cheer[W.q%cheer.length]:'')+'</span></div>'+
+ '<textarea class="ta" id="ans" placeholder="'+(lg==='zh'?'在这里写……可以用下面的句子开头':'Write here… tap a sentence starter below')+'">'+esc(W.ans||'')+'</textarea>'+
+ micBtn('ans')+'<div class="helpers"><div class="lab">'+(lg==='zh'?'✏️ 句子开头（点一下放进去）':'✏️ Sentence starters (tap to use)')+'</div>'+q.s.map(s=>'<button class="chip" data-act="ins" data-t="'+esc(s)+'">'+esc(s)+'</button>').join('')+
+ (hw.mine.length?'<div class="lab">💎 '+(lg==='zh'?'我宝盒里的好词':'From MY Gem Box')+'</div>'+hw.mine.map(g=>'<button class="chip gem" data-act="ins" data-t="'+esc(g.text)+'">💎 '+esc(g.text)+'</button>').join(''):'')+
+ (hw.bank.length?'<div class="lab">✨ '+(lg==='zh'?'好词魔法袋':'Magic word bag')+'</div>'+hw.bank.map(g=>'<button class="chip" data-act="ins" data-t="'+esc(g.text)+'" title="'+esc(g.meaning)+'">'+esc(g.text)+'</button>').join(''):'')+
+ '</div><div class="row between"><button class="btn ghost sm" data-act="qSkip">'+L.skip+' ⤼</button><div class="row"><button class="btn ghost sm" data-act="step" data-s="4">'+L.done+'</button><button class="btn" data-act="qNext">'+L.next+'</button></div></div></div></div>'+
+ '<div class="card"><h3>📖 '+L.sofar+' <span class="muted">('+cnt(e.body,lg)+' '+L.unit+')</span></h3><div class="sofar '+(lg==='zh'?'':'')+'">'+(esc(e.body)||'<span class="muted">'+(lg==='zh'?'回答问题，日记就会一句一句长出来哦 🌱':'Answer the questions and your diary will grow, sentence by sentence 🌱')+'</span>')+'</div></div></div>';
+ const ta=$('#ans');ta.oninput=()=>W.ans=ta.value;}
+function insertAt(ta,t){const lg=W.lang;const s=ta.selectionStart??ta.value.length,en=ta.selectionEnd??s;let pre=ta.value.slice(0,s),post=ta.value.slice(en);
+ let ins=t;if(lg!=='zh'){if(pre&&!/\s$/.test(pre))ins=' '+ins;if(!/[\s,]$/.test(ins)&&!/^[\s.,!?]/.test(post))ins=ins+' '}
+ ta.value=pre+ins+post;const p=(pre+ins).length;ta.focus();ta.setSelectionRange(p,p);ta.dispatchEvent(new Event('input'))}
+function appendBody(t){const e=W.e;t=t.trim();if(!t)return;if(W.lang==='zh'){e.body=(e.body||'')+t}else{e.body=((e.body||'').trim()?e.body.trim()+' ':'')+t}}
+function st4(b){const e=W.e,L=T[W.lang],lg=W.lang;
+ const goal=lg==='zh'?S.settings.zhGoal:S.settings.enGoal;
+ b.innerHTML='<div class="split"><div>'+
+ '<div class="tools"><button class="btn sm '+(W.mode==='write'?'on':'ghost')+'" data-act="mode" data-m="write">'+L.write+'</button><button class="btn sm '+(W.mode==='decor'?'on':'ghost')+'" data-act="mode" data-m="decor">'+L.decor+'</button><button class="btn sm '+(W.mode==='draw'?'on':'ghost')+'" data-act="mode" data-m="draw">'+L.draw+'</button>'+
+ '<span style="flex:1"></span>'+PAPERS.map(p=>'<button class="chip '+(e.paper===p[0]?'on':'')+'" style="padding:4px 8px" data-act="paper" data-p="'+p[0]+'">'+p[1]+'</button>').join('')+'</div>'+
+ '<div class="paperWrap '+(W.mode==='decor'?'decor':'')+'" id="pw">'+paperHTML(e,true)+'</div>'+
+ (W.mode==='decor'?decorBar():'')+(W.mode==='draw'?drawBar():'')+
+ '</div><div>'+
+ '<div class="card"><div class="counter"><b id="cn">'+cnt(e.body,lg)+'</b><span class="muted">/ '+goal+' '+L.unit+'</span><div class="bar"><b id="cb"></b></div></div>'+
+ '<div class="row"><button class="btn mint sm" data-act="tellMore">'+L.tellMore+'</button>'+micBtn('pb',1)+'<button class="btn ghost sm" data-act="saveSel">'+L.save+'</button><button class="btn ghost sm" data-act="readMine">'+L.read+'</button></div>'+
+ '<div id="tm"></div></div>'+
+ '<div class="card" style="margin-top:12px"><h3>🌈 '+(lg==='zh'?'闪亮清单':'Sparkle checklist')+'</h3><div class="check" id="ck"></div></div>'+
+ '<div style="text-align:right;margin-top:12px"><button class="btn" data-act="step" data-s="5">'+(lg==='zh'?'写结尾 ➜':'Write my ending ➜')+'</button></div>'+
+ '</div></div>';
+ bindPaper();updCount();if(W.mode==='draw')startDraw();}
+function paperHTML(e,edit){const L=T[e.lang],lg=e.lang;const mo=e.mood!=null?MOODS[lg][e.mood]:null,we=e.weather!=null?WEATHER[lg][e.weather]:null;
+ return '<div class="paper" data-p="'+e.paper+'"><div class="holes">'+'<i></i>'.repeat(7)+'</div>'+
+ '<div class="phead"><span>📅 '+fmtD(e.date,lg)+'</span>'+(we?'<span>'+we[0]+' '+we[1]+'</span>':'')+(mo?'<span>'+mo[0]+' '+mo[1]+'</span>':'')+'</div>'+
+ (edit?'<input class="ptitle" id="pt" maxlength="60" placeholder="'+L.titleP+'" value="'+esc(e.title)+'">'+(W.mode==='write'?'':'')+
+  '<textarea class="paperTA" id="pb" placeholder="'+(lg==='zh'?'在这里写日记……':'Write your diary here…')+'" '+(W.mode!=='write'?'readonly':'')+'>'+esc(e.body)+'</textarea>'
+  :'<div class="ptitle" style="cursor:default">'+esc(e.title||(lg==='zh'?'无题':'My Diary'))+'</div><div class="readBody">'+esc(e.body)+'</div>')+
+ (e.drawing?'<div class="polaroid"><img src="'+e.drawing+'" alt=""></div>':'')+
+ '<div class="stLayer" id="sl">'+e.stickers.map((p,i)=>'<div class="placed '+(edit&&W.sel===i?'sel':'')+'" data-i="'+i+'" style="left:'+p.x+'%;top:'+p.y+'%;transform:translate(-50%,-50%) rotate('+(p.r||0)+'deg)">'+stk(p.id,Math.round(56*(p.s||1)))+'</div>').join('')+'</div></div>'}
+function decorBar(){const own=[...new Set(S.owned)];const lg=W.lang;
+ return '<div class="card" style="margin-top:10px;padding:10px 12px"><div class="muted">'+(lg==='zh'?'点贴纸放到日记上，拖动摆位置 ✨':'Tap a sticker to add it, then drag it around ✨')+'</div>'+
+ (W.sel>=0?'<div class="selbar"><button class="btn ghost sm" data-act="stOp" data-o="rl">↺</button><button class="btn ghost sm" data-act="stOp" data-o="rr">↻</button><button class="btn ghost sm" data-act="stOp" data-o="sm">－</button><button class="btn ghost sm" data-act="stOp" data-o="bg">＋</button><button class="btn ghost sm" data-act="stOp" data-o="del">🗑</button><button class="btn sm" data-act="stOp" data-o="ok">✓</button></div>':'')+
+ '<div class="palette">'+own.map(id=>'<button data-act="addSt" data-id="'+id+'">'+stk(id,50)+'</button>').join('')+'</div></div>'}
+function drawBar(){const cols=['#5a4478','#ff5fa2','#ff9f43','#ffd23f','#3ccf91','#3aa6ff','#9b6bff','#8b5a3c','#ffffff'];
+ return '<div class="drawBox" style="margin-top:10px"><canvas id="cv" width="900" height="600"></canvas><div class="colors">'+cols.map((c,i)=>'<button style="background:'+c+'" class="'+(i===0?'on':'')+'" data-act="pen" data-c="'+c+'"></button>').join('')+
+ '<button class="chip" data-act="penW" data-w="4">✏️</button><button class="chip" data-act="penW" data-w="12">🖍️</button><button class="chip" data-act="penW" data-w="28">🖌️</button><button class="chip" data-act="clearCv">🧽</button></div>'+
+ '<div class="row"><label class="btn ghost sm" style="cursor:pointer">🖼️ '+(W.lang==='zh'?'放一张照片':'Add a photo')+'<input type="file" accept="image/*" id="ph" style="display:none"></label><button class="btn sm" data-act="saveDraw">📸 '+(W.lang==='zh'?'贴进日记':'Put in my diary')+'</button>'+(W.e.drawing?'<button class="btn ghost sm" data-act="rmDraw">🗑 '+(W.lang==='zh'?'删掉画':'Remove picture')+'</button>':'')+'</div></div>'}
+function bindPaper(){const pt=$('#pt'),pb=$('#pb');let tm;
+ const deb=()=>{clearTimeout(tm);tm=setTimeout(()=>saveW(),700)};
+ if(pt)pt.oninput=()=>{W.e.title=pt.value;deb()};
+ if(pb){pb.oninput=()=>{W.e.body=pb.value;updCount();deb();autoGrow(pb)};autoGrow(pb)}
+ if(W.mode==='decor')bindStickers();}
+function autoGrow(t){t.style.height='auto';t.style.height=Math.max(304,t.scrollHeight)+'px'}
+function checks(e){const t=(e.body||'')+' '+((e.ending&&e.ending.text)||'');const lg=e.lang;const lo=t.toLowerCase();
+ const gems=liveGems(lg).filter(g=>g.text&&(lg==='zh'?t.includes(g.text.replace(/[。！？…]/g,'')):lo.includes(g.text.toLowerCase().replace(/[.!?]$/,''))));
+ const feelEN=/\b(happy|sad|glad|excited|proud|nervous|worried|scared|afraid|angry|cross|calm|surprised|delighted|cheerful|thrilled|grateful|disappointed|grumpy|frightened|embarrassed|felt|feel|love|loved|bored|tired|upset|jealous|lonely|shy)\b/;
+ const r=lg==='zh'?[/(早上|中午|下午|晚上|今天|昨天|放学|周末|在|和)/.test(t),/(开心|高兴|快乐|难过|伤心|生气|激动|兴奋|紧张|害怕|骄傲|感动|惊讶|着急|失望|温暖|觉得|喜欢|担心|平静)/.test(t),/(看到|看见|听到|听见|闻到|尝|摸|像|好像|颜色|声音)/.test(t),/(首先|然后|接着|后来|最后|突然|一边|先|再|终于)/.test(t),/因为/.test(t),gems.length>0]
+ :[/\b(morning|afternoon|evening|night|today|yesterday|after school|at|with|weekend)\b/.test(lo),feelEN.test(lo),/\b(saw|see|seen|heard|hear|smell|smelled|smelt|taste|tasted|looked|sounded|touch|felt soft|like a|as [a-z]+ as)\b/.test(lo),/\b(first|then|after that|next|finally|suddenly|later|in the end|at last)\b/.test(lo),/\bbecause\b/.test(lo),gems.length>0];
+ return{r,gems}}
+function updCount(){const e=W.e,lg=e.lang;const n=cnt(e.body,lg),goal=lg==='zh'?S.settings.zhGoal:S.settings.enGoal;const cn=$('#cn'),cb=$('#cb');if(cn)cn.textContent=n;if(cb){cb.style.width=Math.min(100,n/goal*100)+'%';cb.classList.toggle('ok',n>=goal)}
+ const ck=$('#ck');if(ck){const c=checks(e);ck.innerHTML=T[lg].checks.map((x,i)=>'<div class="'+(c.r[i]?'ok':'')+'">'+(c.r[i]?'✅ ':'⬜ ')+x+'</div>').join('')}}
+function tellMore(){const e=W.e,lg=e.lang;const body=e.body||'';const box=$('#tm');
+ const parts=lg==='zh'?body.split(/(?<=[。！？!?])/):body.split(/(?<=[.!?])\s*/);
+ const sents=parts.map(s=>s.trim()).filter(Boolean);
+ const c=checks(e).r;
+ const QZ=[[1,'你那时候心情怎么样？为什么？'],[2,'你看到了什么？是什么颜色、什么样子的？'],[2,'你听到了什么声音？'],[4,'为什么会这样呢？用“因为”说一说。'],[3,'接下来发生了什么？用“然后”接着写。'],[5,'能不能用一个宝盒里的好词，让句子更漂亮？']];
+ const QE=[[1,'How did you feel at that moment? Why?'],[2,'What did you see? What colour or shape was it?'],[2,'What could you hear?'],[4,'Why did it happen? Try using "because".'],[3,'What happened next? Try "Then,…"'],[5,'Can you use a gem word from your Gem Box to make it sparkle?']];
+ const Q=lg==='zh'?QZ:QE;
+ if(!sents.length){box.innerHTML=fairy(lg==='zh'?'先写一句话吧！今天发生了什么？':'Write one sentence first! What happened today?',lg);return}
+ let target=sents.reduce((a,s)=>cnt(s,lg)<cnt(a,lg)?s:a,sents[0]);
+ let opts=Q.filter(q=>!c[q[0]]);if(!opts.length)opts=Q;
+ W.tmN=(W.tmN||0)+1;const q=opts[W.tmN%opts.length][1];W.tmTarget=target;
+ box.innerHTML=fairy((lg==='zh'?'你写了：“':'You wrote: "')+'<b>'+esc(target)+'</b>'+(lg==='zh'?'”<br>':'"<br>')+esc(q),lg)+
+ '<textarea class="ta" id="tmA" style="min-height:80px" placeholder="'+(lg==='zh'?'再写一点……':'Add a little more…')+'"></textarea><div class="row" style="margin-top:6px"><button class="btn sm" data-act="tmAdd">'+(lg==='zh'?'加到这句后面 ➜':'Add after this sentence ➜')+'</button><button class="btn ghost sm" data-act="tellMore">'+(lg==='zh'?'换个问题':'Another question')+'</button></div>';}
+function st5(b){const e=W.e,L=T[W.lang],lg=W.lang;const E=ENDINGS[lg];const cur=E.find(x=>x[0]===e.ending.type);
+ b.innerHTML=fairy(L.endQ,lg)+'<div class="emo">'+E.map(x=>'<button class="'+(e.ending.type===x[0]?'on':'')+'" data-act="endType" data-t="'+x[0]+'"><b>'+x[1]+'</b>'+esc(x[2])+'</button>').join('')+'</div>'+
+ (cur?'<div class="card" style="margin-top:12px">'+(cur[0]==='secret'?'<div class="row" style="margin-bottom:8px"><button class="chip '+(e.ending.share?'on':'')+'" data-act="share" data-v="1">👩 '+L.share+'</button><button class="chip '+(!e.ending.share?'on':'')+'" data-act="share" data-v="0">'+L.onlyMe+'</button></div>':'')+
+ '<textarea class="ta" id="endT" placeholder="'+(lg==='zh'?'在这里写……':'Write here…')+'">'+esc(e.ending.text)+'</textarea><div class="helpers">'+cur[3].map(s=>'<button class="chip" data-act="insEnd" data-t="'+esc(s)+'">'+esc(s)+'</button>').join('')+'</div></div>':'')+
+ '<div class="row" style="justify-content:flex-end;margin-top:14px"><button class="btn ghost" data-act="step" data-s="4">⬅ '+(lg==='zh'?'日记页':'My page')+'</button><button class="btn" data-act="finish">'+L.finish+'</button></div>';
+ const t=$('#endT');if(t){let tm;t.oninput=()=>{e.ending.text=t.value;clearTimeout(tm);tm=setTimeout(()=>saveW(true),700)}}}
+
+
+/* ============ LUNA AI CHECK ============ */
+const SEP='\n💌 ';
+function combText(e){return (e.body||'').trim()+(e.ending&&e.ending.text.trim()?SEP+e.ending.text.trim():'')}
+function locate(orig,fixes){let pos=0;const out=[];fixes.forEach(f=>{if(!f||typeof f.wrong!=='string'||!f.wrong||typeof f.right!=='string'||f.wrong===f.right||f.wrong.includes('\n'))return;let i=orig.indexOf(f.wrong,pos);if(i<0)i=orig.indexOf(f.wrong);if(i<0)return;if(out.some(o=>i<o.at+o.wrong.length&&o.at<i+f.wrong.length))return;out.push({wrong:f.wrong,right:f.right,type:String(f.type||'').slice(0,20),why:String(f.why||'').slice(0,90),at:i,fixed:false,sp:!!f.sp});if(i>=pos)pos=i+f.wrong.length});return out.sort((a,b)=>a.at-b.at)}
+function applyCheck(e){const c=e.check;let t=c.orig;c.fixes.filter(f=>f.fixed).sort((a,b)=>b.at-a.at).forEach(f=>{t=t.slice(0,f.at)+f.right+t.slice(f.at+f.wrong.length)});
+ const k=t.indexOf(SEP);let body=k>=0?t.slice(0,k):t,end=k>=0?t.slice(k+SEP.length):'';if(c.extra)body=body+(e.lang==='zh'?'':' ')+c.extra;e.body=body;if(e.ending)e.ending.text=end;e.updated=Date.now()}
+function fxNum(c,i){let k=0;for(let j=0;j<=i;j++)if(!c.fixes[j].sp)k++;return k}
+function markHTML(c,mode){const t=c.orig;let h='',p=0;c.fixes.forEach((f,i)=>{h+=esc(t.slice(p,f.at));const n=f.sp?'<sup style="background:#9b6bff">✨</sup>':'<sup>'+fxNum(c,i)+'</sup>';
+  if(f.fixed||mode==='all')h+=(f.sp?'<span class="spk">'+esc(f.wrong)+'</span><ins style="background:#efe6ff;color:#7c3aed">'+esc(f.right)+'</ins>':'<del>'+esc(f.wrong)+'</del><ins>'+esc(f.right)+'</ins>')+n;
+  else h+='<span class="'+(f.sp?'spk':'todo')+'" data-act="fixOne" data-i="'+i+'">'+esc(f.wrong)+'</span>'+n;p=f.at+f.wrong.length});
+ h+=esc(t.slice(p));return h.replace(esc(SEP),'<br><br>💌 ')}
+function checkPrompt(e,text){if(e.lang==='zh')return '你是一位温柔的新加坡小学华文老师。Jenny 是 8 岁的小学二年级女生，下面是她写的华文日记（简体字）。\n请只找出真正的错误：错别字、标点符号（句号、逗号、问号等）、用错的词、语序不通、漏字。不要改她的写法和意思，不要把句子改得更高级。\n每个错误的 wrong 必须是从原文里一字不差复制的一小段（尽量短，一到几个字，可以带上前后一两个字让它唯一），right 是改正后的这一小段。按在原文出现的顺序排列。\n另外最多给 1 个 sparkle：把原文某一小段（from，一字不差）改得更生动（to），比如用叠词、四字词语、比喻。\n只回复 JSON：{"fixes":[{"wrong":"","right":"","type":"错别字|标点|用词|语序|漏字","why":"给孩子看的很短的原因，15个字以内"}],"praise":"具体、温暖的一句夸奖（25字内）","sparkle":{"from":"","to":"","why":""} 或 null,"ask":"一个好奇的问题，引导她多写一点细节（20字内）"}\n没有错误时 fixes 为 []。\n日记：\n<<<\n'+text+'\n>>>';
+ return 'You are a kind primary school English teacher in Singapore (British spelling). Jenny is an 8-year-old Primary 2 girl. Below is her English diary.\nFind ONLY real mistakes: spelling, capital letters, full stops and other punctuation, grammar (tense, plurals, a/an, verb agreement), missing or wrong words. Do NOT rewrite her style or ideas, and do not make sentences fancier.\nFor each mistake, "wrong" must be copied EXACTLY from her text (keep it short: one word or a few words; add a neighbouring word if needed to make it unique) and "right" is the corrected version of that same piece. List them in the order they appear.\nAlso give at most ONE "sparkle": copy a short phrase exactly ("from") and give a more vivid version ("to") using a describing word, simile or sense word.\nReply with JSON only: {"fixes":[{"wrong":"","right":"","type":"spelling|capital|punctuation|grammar|word","why":"very short reason a child understands, max 12 words"}],"praise":"one specific, warm compliment (max 22 words)","sparkle":{"from":"","to":"","why":""} or null,"ask":"one curious question that helps her add a detail (max 15 words)"}\nIf there are no mistakes, "fixes" is [].\nDiary:\n<<<\n'+text+'\n>>>'}
+async function runCheck(){const e=W.e;const text=combText(e);W.step=6;W.checking=true;W.checkErr=null;render();window.scrollTo(0,0);
+ try{const r=await SAMPLE.json(checkPrompt(e,text),{modelTier:'quick'});
+  if(!r||typeof r!=='object'||!Array.isArray(r.fixes))throw{code:'invalid_json'};
+  let fx=r.fixes.slice(0,25);if(r.sparkle&&r.sparkle.from&&r.sparkle.to)fx=fx.concat([{wrong:r.sparkle.from,right:r.sparkle.to,why:r.sparkle.why||'',type:'sparkle',sp:true}]);
+  e.check={orig:text,fixes:locate(text,fx),praise:String(r.praise||'').slice(0,160),ask:String(r.ask||'').slice(0,120),extra:'',at:Date.now()};saveW(true)}
+ catch(err){W.checkErr=err&&err.code||'err';if(err&&['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(err.code))SAMPLE=null}
+ W.checking=false;if(VIEW==='write'&&W.step===6)render()}
+const TYPEZH={spelling:'拼写',capital:'大写',punctuation:'标点',grammar:'语法',word:'用词',sparkle:'✨更生动'};
+function st6(b){const e=W.e,lg=e.lang;
+ if(W.checking){b.innerHTML='<div class="card" style="text-align:center;padding:40px"><div class="spin">🧚‍♀️</div><h3>'+(lg==='zh'?'露娜正在认真读你的日记……':'Luna is reading your diary carefully…')+'</h3><div class="muted">'+(lg==='zh'?'找一找有没有写错的地方 ✨':'Looking for little mistakes ✨')+'</div></div>';return}
+ if(W.checkErr||!e.check){b.innerHTML=fairy(lg==='zh'?'露娜现在没办法批改，先拿星星吧！下次再一起检查。':'Luna can\'t check right now. Let\'s get your stars! We can check next time.',lg)+'<div style="text-align:center"><button class="btn" data-act="getStars">🌟 '+(lg==='zh'?'拿星星':'Get my stars')+'</button></div>';return}
+ const c=e.check,real=c.fixes.filter(f=>!f.sp),left=real.filter(f=>!f.fixed).length,sp=c.fixes.find(f=>f.sp);
+ b.innerHTML=fairy(esc(c.praise||(lg==='zh'?'写得真好！':'Lovely writing!'))+'<br>'+(real.length?(lg==='zh'?'露娜用<b style="color:#e5484d">红色波浪线</b>标出了 '+real.length+' 个小错误。点一下红色的字，看看为什么，再改正它！':'Luna marked <b style="color:#e5484d">'+real.length+' little mistake'+(real.length>1?'s':'')+'</b> with a red wavy line. Tap the red words, read why, and fix them!'):(lg==='zh'?'🎉 一个错误都没有，太仔细了！':'🎉 No mistakes at all — super careful!')),lg)+
+ '<div class="split"><div class="card"><h3>📝 '+(lg==='zh'?'露娜的批改':'Luna\'s marks')+'</h3><div class="mk">'+markHTML(c)+'</div>'+
+ '<div class="muted" style="margin-top:8px">'+(lg==='zh'?'<span style="color:#e5484d">红色划掉</span> = 写错的　<span style="color:#15803d">绿色</span> = 改正的　<span style="color:#7c3aed">紫色</span> = 更生动的写法':'<span style="color:#e5484d">Red crossed out</span> = mistake　<span style="color:#15803d">Green</span> = correct　<span style="color:#7c3aed">Purple</span> = sparkle idea')+'</div></div>'+
+ '<div>'+c.fixes.map((f,i)=>f.sp?'':'<div class="fx '+(f.fixed?'done':'')+'"><span class="n">'+fxNum(c,i)+'</span><div style="flex:1"><div><span class="w">'+esc(f.wrong)+'</span> ➜ <span class="r">'+(f.fixed||W.peek===i?esc(f.right):'❓')+'</span> <span class="tag dr">'+esc(lg==='zh'?f.type:(TYPEZH[f.type]?f.type:f.type))+'</span></div><div class="muted">'+esc(f.why)+'</div></div>'+(f.fixed?'<b style="color:#15803d">✓</b>':'<button class="btn sm" data-act="fixOne" data-i="'+i+'">'+(W.peek===i?(lg==='zh'?'改正 ✓':'Fix ✓'):(lg==='zh'?'看答案':'Show'))+'</button>')+'</div>').join('')+
+ (left>1?'<button class="btn ghost sm" data-act="fixAll">'+(lg==='zh'?'全部改正':'Fix them all')+'</button>':'')+
+ (sp?'<div class="fx" style="background:#f6f0ff"><span style="font-size:22px">✨</span><div style="flex:1"><b>'+(lg==='zh'?'让句子更闪亮：':'Make it sparkle:')+'</b><div>“'+esc(sp.wrong)+'” ➜ <b style="color:#7c3aed">“'+esc(sp.right)+'”</b></div><div class="muted">'+esc(sp.why)+'</div></div>'+(sp.fixed?'<b style="color:#7c3aed">✓</b>':'<button class="btn sm" style="background:linear-gradient(135deg,#b18bff,#7c9bff)" data-act="fixOne" data-i="'+c.fixes.indexOf(sp)+'">'+(lg==='zh'?'用它':'Use it')+'</button>')+'</div>':'')+
+ (c.ask?'<div class="card" style="margin-top:10px">'+fairy('🤔 '+esc(c.ask),lg)+(c.extra?'<div class="muted">✓ '+esc(c.extra)+'</div>':'<textarea class="ta" id="askA" style="min-height:70px" placeholder="'+(lg==='zh'?'想写就写一句（可以不写）':'Add one more sentence if you like')+'"></textarea>'+micBtn('askA')+'<button class="btn ghost sm" data-act="askAdd">'+(lg==='zh'?'加进日记 ➜':'Add to my diary ➜')+'</button>')+'</div>':'')+
+ '<div style="text-align:right;margin-top:14px"><button class="btn" data-act="getStars" '+(left?'title="fix first"':'')+'>🌟 '+(lg==='zh'?'改好了，拿星星！':'All done — get my stars!')+'</button></div></div></div>';}
+function checkPanel(e){if(!e.check||!e.check.fixes)return '';const lg=e.lang,c=e.check;if(!c.fixes.length)return '<div class="card" style="margin-top:14px">🧚‍♀️ '+(lg==='zh'?'露娜批改：没有错误，真棒！':'Luna checked: no mistakes!')+'</div>';
+ return '<div class="card" style="margin-top:14px"><h3>📝 '+(lg==='zh'?'露娜的批改记录':'Luna\'s marks')+'</h3><div class="mk">'+markHTML(c,'all')+'</div></div>'}
+function micBtn(t,sm){if(!DICT)return '';return '<button class="btn ghost sm micB '+(DICT_ON&&DICT_T===t?'on':'')+'" data-act="mic" data-t="'+t+'" style="margin:6px 4px 0 0">🎤 '+(W&&W.lang==='zh'?(DICT_ON&&DICT_T===t?'停止':'说出来'):(DICT_ON&&DICT_T===t?'Stop':'Say it'))+'</button><span class="muted" id="micP_'+t+'"></span>'}
+let SAMPLE=null,DICT=null,TTS=null,DICT_T=null,DICT_ON=false;
+async function initAI(){if(!window.claude||!window.claude.use)return;
+ window.claude.use('sample').then(s=>{SAMPLE=s||null}).catch(()=>{});
+ window.claude.use('tts').then(t=>{TTS=t||null}).catch(()=>{});
+ window.claude.use('dictation').then(d=>{if(!d)return;DICT=d;
+  d.onFinal(({text})=>{const ta=document.getElementById(DICT_T);if(ta&&text&&!ta.readOnly)insertAt(ta,text.trim());const p=document.getElementById('micP_'+DICT_T);if(p)p.textContent=''});
+  d.onPartial(({text})=>{const p=document.getElementById('micP_'+DICT_T);if(p)p.textContent='… '+text});
+  d.onState(({state})=>{DICT_ON=state==='listening';document.querySelectorAll('.micB').forEach(b=>{const on=DICT_ON&&b.dataset.t===DICT_T;b.classList.toggle('on',on);b.textContent='🎤 '+(W&&W.lang==='zh'?(on?'停止':'说出来'):(on?'Stop':'Say it'))})});
+  if(VIEW==='write')render()}).catch(()=>{})}
+
+/* stickers drag */
+function bindStickers(){const sl=$('#sl');if(!sl)return;sl.querySelectorAll('.placed').forEach(el=>{el.onpointerdown=ev=>{ev.preventDefault();const i=+el.dataset.i;if(W.sel!==i){W.sel=i;sl.querySelectorAll('.placed').forEach(x=>x.classList.toggle('sel',+x.dataset.i===i));refreshDecorBar()}
+ const rect=sl.getBoundingClientRect();el.setPointerCapture(ev.pointerId);
+ const mv=e2=>{const p=W.e.stickers[i];p.x=Math.max(0,Math.min(100,(e2.clientX-rect.left)/rect.width*100));p.y=Math.max(0,Math.min(100,(e2.clientY-rect.top)/rect.height*100));el.style.left=p.x+'%';el.style.top=p.y+'%'};
+ const up=()=>{el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up);el.removeEventListener('pointercancel',up);saveW(true)};
+ el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up)}})}
+function refreshDecorBar(){const pw=$('#pw');if(!pw)return;const old=pw.nextElementSibling;if(old&&old.classList.contains('card'))old.outerHTML=decorBar()}
+function redrawPaper(){const pw=$('#pw');pw.innerHTML=paperHTML(W.e,true);bindPaper();refreshDecorBar()}
+
+/* drawing */
+let DR=null;
+function startDraw(){const cv=$('#cv');if(!cv)return;const ctx=cv.getContext('2d');ctx.fillStyle='#fffefc';ctx.fillRect(0,0,cv.width,cv.height);
+ if(W.e.drawing){const im=new Image();im.onload=()=>ctx.drawImage(im,0,0,cv.width,cv.height);im.src=W.e.drawing}
+ DR={cv,ctx,c:'#5a4478',w:8,down:false};ctx.lineCap='round';ctx.lineJoin='round';
+ const pos=ev=>{const r=cv.getBoundingClientRect();return[(ev.clientX-r.left)/r.width*cv.width,(ev.clientY-r.top)/r.height*cv.height]};
+ cv.onpointerdown=ev=>{ev.preventDefault();cv.setPointerCapture(ev.pointerId);DR.down=true;DR.last=pos(ev);ctx.beginPath();ctx.fillStyle=DR.c;ctx.arc(DR.last[0],DR.last[1],DR.w/2,0,7);ctx.fill()};
+ cv.onpointermove=ev=>{if(!DR.down)return;const p=pos(ev);ctx.strokeStyle=DR.c;ctx.lineWidth=DR.w;ctx.beginPath();ctx.moveTo(DR.last[0],DR.last[1]);ctx.lineTo(p[0],p[1]);ctx.stroke();DR.last=p};
+ cv.onpointerup=cv.onpointercancel=()=>DR.down=false}
+function stopDraw(){DR=null}
+document.addEventListener('change',ev=>{if(ev.target.id!=='ph'||!ev.target.files[0])return;const f=ev.target.files[0];const im=new Image();const u=URL.createObjectURL(f);im.onload=()=>{const c=document.createElement('canvas');const sc=Math.min(1,560/Math.max(im.width,im.height));c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);W.e.drawing=c.toDataURL('image/jpeg',.72);saveW(true);W.mode='write';render();toast('🖼️ ✓')};im.src=u});
+
+/* finish & rewards */
+function quality(t,lg){const n=cnt(t,lg);if(lg==='zh'){const ch=(t.match(/[㐀-鿿]/g)||[]);const u=new Set(ch).size;if(ch.length>=15&&u/ch.length<.3)return false;if(/([㐀-鿿])\1{4,}/.test(t))return false;return true}
+ const w=(t.toLowerCase().match(/[a-z']+/g)||[]);const u=new Set(w).size;if(w.length>=12&&u/w.length<.4)return false;if(/\b(\w+)(\s+\1\b){3,}/i.test(t))return false;if(w.some(x=>x.length>16))return false;return true}
+function finish(){const e=W.e,lg=e.lang;const goal=lg==='zh'?S.settings.zhGoal:S.settings.enGoal;const n=cnt(e.body,lg);
+ if(e.mood==null){toast(lg==='zh'?'先选今天的心情哦 💗':'Pick your mood first 💗');W.step=1;render();return}
+ if(n<goal){modal(fairy((lg==='zh'?'差一点点！你写了 '+n+' 字，目标是 '+goal+' 字。点「✨再多说一点」，露娜帮你想想还能写什么！':'Almost there! You wrote '+n+' words. The goal is '+goal+'. Tap "✨ Tell me more" and I will help you think of more!'),lg)+'<div style="text-align:right"><button class="btn" data-act="closeTM">OK ✨</button></div>');return}
+ if(!quality(e.body,lg)){modal(fairy(lg==='zh'?'露娜发现好多重复的字词哦～用自己的话，把今天的事情写清楚吧！':'Hmm, I see lots of the same words again and again. Write your own real sentences, okay? 🌸',lg)+'<div style="text-align:right"><button class="btn" data-act="closeModal">OK</button></div>');return}
+ if(!e.ending.text.trim()){modal(fairy(lg==='zh'?'还没写结尾哦！给妈妈或爸爸说一句话，或者写一个小秘密吧 💌':'Don\'t forget your ending! A note to Mummy or Daddy, a wish, or a little secret 💌',lg)+'<div style="text-align:right"><button class="btn" data-act="closeModal">OK</button></div>');W.step=5;render();return}
+ if(!e.title.trim())e.title=lg==='zh'?(e.spark!=null&&e.spark>=0?SPARKS.zh[e.spark][2]:'今天的日记'):(e.spark!=null&&e.spark>=0?SPARKS.en[e.spark][2]:'My Day');
+ const comb=combText(e);
+ if(SAMPLE&&!(e.check&&(e.check.after===comb))){if(e.check&&e.check.orig===comb){W.step=6;render()}else runCheck();return}
+ grant()}
+function grant(){const e=W.e,lg=e.lang;const n=cnt(e.body,lg);
+ const t=today(),k=t+'|'+lg;let earned=0,box=null,lines=[];
+ const first=!e.done;e.done=true;e.finished=e.finished||Date.now();
+ if(e.date===t&&!S.rewarded[k]){
+  S.rewarded[k]=e.id;earned+=2;lines.push(lg==='zh'?'完成今天的日记 +2 ⭐':'Today\'s diary done +2 ⭐');
+  const c=checks(e);const nOk=c.r.filter(Boolean).length;if(nOk>=4){earned+=1;lines.push(lg==='zh'?'闪亮清单 '+nOk+'/6 +1 ⭐':'Sparkle checklist '+nOk+'/6 +1 ⭐')}
+  if(e.check&&e.check.fixes){const real=e.check.fixes.filter(f=>!f.sp);if(!real.length){earned+=1;lines.push(lg==='zh'?'露娜没找到错误，真仔细！+1 ⭐':'No mistakes found — careful writer! +1 ⭐')}else if(real.every(f=>f.fixed)){earned+=1;lines.push(lg==='zh'?'把露娜标出的错误都改正了 +1 ⭐':'Fixed all of Luna\'s marks +1 ⭐')}}
+  if(c.gems.length){earned+=1;lines.push(lg==='zh'?'用了宝盒好词 +1 ⭐':'Used a gem word +1 ⭐')}
+  const tg=todayGem();if(tg&&tg.lang===lg&&!S.bonus['gem|'+t]&&(lg==='zh'?e.body.includes(tg.text.replace(/[。！？]/g,'')):e.body.toLowerCase().includes(tg.text.toLowerCase().replace(/[.!?]$/,'')))){S.bonus['gem|'+t]=1;earned+=1;lines.push(lg==='zh'?'用了今日好词 +1 ⭐':'Used Today\'s Gem +1 ⭐')}
+  if(S.rewarded[t+'|en']&&S.rewarded[t+'|zh']&&!S.bonus['dbl|'+t]){S.bonus['dbl|'+t]=1;earned+=2;lines.push(lg==='zh'?'今天两本都写了 +2 ⭐':'Both diaries today! +2 ⭐')}
+  box=openBox();
+  const sk=streak();if(sk>0&&sk%7===0&&!S.bonus['wk|'+t]){S.bonus['wk|'+t]=1;const b2=openBox();if(b2)lines.push('🔥 '+sk+(lg==='zh'?' 天连写！多送一个盲盒':' day streak! Extra mystery box')+' '+STK[b2].e)}
+ }
+ if(e.check)e.check.after=combText(e);
+ S.stars+=earned;saveW(true);persist();markDirty('meta');
+ confetti();
+ modal('<div style="text-align:center"><div class="big">'+(lg==='zh'?'太棒了，Jenny！':'Amazing, Jenny!')+' 🎉</div><p class="muted">'+(lg==='zh'?'你写了 '+n+' 个字':'You wrote '+n+' words')+'</p>'+
+ (lines.length?'<div style="text-align:left;background:#fff8e6;border-radius:14px;padding:10px 14px;margin:8px 0">'+lines.map(x=>'<div>'+x+'</div>').join('')+'</div>':'<p class="muted">'+(lg==='zh'?'今天的星星已经拿过啦，修改的日记也保存好了 ✓':'Today\'s stars are already collected. Your changes are saved ✓')+'</p>')+
+ (box?'<div id="bx" style="margin:10px 0"><div class="box" data-act="openBx" data-id="'+box+'">🎁</div><div class="muted">'+(lg==='zh'?'点礼盒打开贴纸！':'Tap the mystery box!')+'</div></div>':'')+
+ '<div class="row" style="justify-content:center;margin-top:10px"><button class="btn ghost" data-act="readId" data-id="'+e.id+'">📖 '+(lg==='zh'?'看我的日记':'See my diary')+'</button><button class="btn" data-act="homeClose">🏠 Home</button></div></div>');
+}
+function openBox(){const owned=new Set(S.owned);let left=STICKERS.filter(s=>!owned.has(s.id));if(!left.length){S.stars+=1;return null}
+ const pick=left[Math.floor(Math.random()*left.length)];S.owned.push(pick.id);return pick.id}
+
+/* ============ READ ============ */
+function vRead(m,id){id=id||W&&W.readId;const e=S.entries[id];if(!e||e.del){go('shelf');return}W={e,lang:e.lang,step:4,mode:'read',sel:-1,readId:id};
+ m.className=e.lang==='zh'?'zh-mode':'en';const lg=e.lang,E=ENDINGS[lg].find(x=>x[0]===e.ending.type);
+ m.innerHTML='<div class="row between" style="margin-bottom:10px"><button class="btn ghost sm" data-act="go" data-v="shelf">⬅</button><div class="row"><button class="btn ghost sm" data-act="readMine">🔊</button><button class="btn ghost sm" data-act="editId" data-id="'+e.id+'">✏️ '+(lg==='zh'?'修改':'Edit')+'</button><button class="btn ghost sm" data-act="delEntry" data-id="'+e.id+'">🗑</button></div></div>'+
+ '<div style="max-width:760px;margin:0 auto">'+paperHTML(e,false)+
+ (E&&e.ending.text?'<div class="letter" style="margin-top:14px"><div class="to">'+E[1]+' '+esc(E[2])+'</div>'+(E[0]==='secret'&&!e.ending.share?'<div class="msg">🔒 '+esc(e.ending.text)+'</div><div class="muted">'+(lg==='zh'?'只有我能看':'Only me')+'</div>':'<div class="msg">'+esc(e.ending.text)+'</div>')+
+ (e.reply?'<div class="reply">💌 <b>'+(e.reply.who||'Mummy')+':</b> '+esc(e.reply.text)+'</div>':'')+'</div>':'')+checkPanel(e)+'</div>';
+ if(e.reply&&!e.reply.seen){e.reply.seen=true;e.updated=Date.now();persist();markDirty('e_'+e.id)}}
+
+/* ============ SHELF ============ */
+let SH={y:null,m:null,f:''};
+function vShelf(m){const now=new Date();if(SH.y==null){SH.y=now.getFullYear();SH.m=now.getMonth()}
+ const first=new Date(SH.y,SH.m,1),days=new Date(SH.y,SH.m+1,0).getDate();const byDay={};liveEntries().forEach(e=>{(byDay[e.date]=byDay[e.date]||[]).push(e)});
+ let cal='<div class="cal">'+['S','M','T','W','T','F','S'].map(x=>'<div class="h">'+x+'</div>').join('');for(let i=0;i<first.getDay();i++)cal+='<div></div>';
+ for(let d=1;d<=days;d++){const s=SH.y+'-'+pad(SH.m+1)+'-'+pad(d);const es=byDay[s]||[];cal+='<button class="d '+(s===today()?'today':'')+'" data-act="shDay" data-d="'+s+'">'+d+'<span class="dots">'+(es.some(e=>e.lang==='en')?'<i style="background:#ff7eb9"></i>':'')+(es.some(e=>e.lang==='zh')?'<i style="background:#5fd3b3"></i>':'')+'</span></button>'}
+ cal+='</div>';
+ let list=liveEntries().filter(e=>!SH.f||e.lang===SH.f).filter(e=>!SH.day||e.date===SH.day).sort((a,b)=>b.date.localeCompare(a.date)||b.updated-a.updated);
+ m.innerHTML='<h2>📚 My Diaries 我的日记</h2><div class="split"><div class="card"><div class="row between"><button class="btn ghost sm" data-act="shMon" data-d="-1">◀</button><b>'+MO_EN[SH.m]+' '+SH.y+'</b><button class="btn ghost sm" data-act="shMon" data-d="1">▶</button></div><div style="height:10px"></div>'+cal+
+ '<div class="muted" style="margin-top:8px"><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#ff7eb9"></i> English　<i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#5fd3b3"></i> 华文</div></div>'+
+ '<div><div class="row" style="margin-bottom:8px"><button class="chip '+(!SH.f?'on':'')+'" data-act="shF" data-f="">All</button><button class="chip '+(SH.f==='en'?'on':'')+'" data-act="shF" data-f="en">📕 English</button><button class="chip '+(SH.f==='zh'?'on':'')+'" data-act="shF" data-f="zh">📗 华文</button>'+(SH.day?'<button class="chip on" data-act="shDay" data-d="">'+SH.day+' ✕</button>':'')+'</div>'+
+ '<div class="grid">'+(list.length?list.map(e=>{const mo=e.mood!=null?MOODS[e.lang][e.mood][0]:'📔';return '<button class="ent" data-act="'+(e.done?'readId':'editId')+'" data-id="'+e.id+'"><div class="ic">'+(e.stickers[0]?stk(e.stickers[0].id,44):mo)+'</div><div class="bd"><div class="tt '+(e.lang==='zh'?'zh':'')+'">'+esc(e.title||(e.lang==='zh'?'（没写完）':'(not finished)'))+'</div><div class="muted">'+fmtD(e.date,e.lang)+' · '+cnt(e.body,e.lang)+(e.lang==='zh'?' 字':' words')+'</div></div><span class="tag '+e.lang+'">'+(e.lang==='zh'?'华文':'EN')+'</span>'+(e.done?'':'<span class="tag dr">draft</span>')+'</button>'}).join(''):'<div class="card muted">'+(SH.day?'No diary on this day. 这天没有日记。':'No diaries yet — open a diary book on Home! 还没有日记，回首页开始写吧！')+'</div>')+'</div></div></div>';}
+
+/* ============ GEMS ============ */
+let GM={lang:'en',cat:'',q:'',shop:false};
+function vGems(m){const lg=GM.lang,C=GEMCATS[lg];
+ let mine=liveGems(lg);if(GM.cat)mine=mine.filter(g=>g.cat===GM.cat);if(GM.q){const q=GM.q.toLowerCase();mine=mine.filter(g=>(g.text+' '+(g.meaning||'')+' '+(g.ex||'')).toLowerCase().includes(q))}
+ mine.sort((a,b)=>(b.fav?1:0)-(a.fav?1:0)||b.created-a.created);
+ const used=usageMap();
+ let shop=BANK[lg].filter(b=>!GM.cat||b[0]===GM.cat).filter(b=>!liveGems(lg).some(g=>g.text===b[1]));
+ if(GM.q){const q=GM.q.toLowerCase();shop=shop.filter(b=>(b[1]+b[2]).toLowerCase().includes(q))}
+ const counts={};liveGems(lg).forEach(g=>counts[g.cat]=(counts[g.cat]||0)+1);
+ m.innerHTML='<div class="row between"><h2 style="margin:0">💎 Gem Box 好词好句宝盒</h2><button class="btn sm" data-act="addGem">＋ '+(lg==='zh'?'收藏新的':'Add a gem')+'</button></div><div style="height:10px"></div>'+
+ '<div class="row between"><div class="tabs"><button class="'+(lg==='en'?'on':'')+'" data-act="gLang" data-l="en">📕 English</button><button class="'+(lg==='zh'?'on':'')+'" data-act="gLang" data-l="zh">📗 华文</button></div>'+
+ '<div class="tabs"><button class="'+(!GM.shop?'on':'')+'" data-act="gShop" data-v="0">💎 '+(lg==='zh'?'我的宝盒':'My Box')+' ('+liveGems(lg).length+')</button><button class="'+(GM.shop?'on':'')+'" data-act="gShop" data-v="1">🛍️ '+(lg==='zh'?'好词宝库':'Treasure Shop')+'</button></div></div>'+
+ '<div class="cats" style="margin:10px 0"><button class="chip '+(!GM.cat?'on':'')+'" data-act="gCat" data-c="">🌈 '+(lg==='zh'?'全部':'All')+'</button>'+Object.entries(C).map(([k,v])=>'<button class="chip '+(GM.cat===k?'on':'')+'" data-act="gCat" data-c="'+k+'" style="border-bottom:3px solid '+v[2]+'">'+v[0]+' '+v[1]+(counts[k]?' <b>'+counts[k]+'</b>':'')+'</button>').join('')+'</div>'+
+ '<input class="search" id="gq" placeholder="🔍 '+(lg==='zh'?'搜一搜……':'Search my gems…')+'" value="'+esc(GM.q)+'"><div style="height:12px"></div>'+
+ (GM.shop?'<div class="muted" style="margin-bottom:8px">'+(lg==='zh'?'点 ＋ 把喜欢的好词收进你的宝盒。写日记时露娜会提醒你用！':'Tap ＋ to collect words into your box. Luna will remind you to use them in your diary!')+'</div><div class="gemList">'+(shop.length?shop.map(b=>'<div class="gemC" style="--gc:'+C[b[0]][2]+'"><div class="tx '+(lg==='zh'?'zh':'')+'">'+esc(b[1])+'</div><div class="mn">'+esc(b[2])+'</div><div class="ft"><span>'+C[b[0]][0]+' '+C[b[0]][1]+'</span><button class="say" data-act="say" data-t="'+esc(b[1])+'" data-l="'+lg+'">🔊</button></div><button class="star btn sm" style="padding:4px 10px;top:10px" data-act="collect" data-c="'+b[0]+'" data-t="'+esc(b[1])+'" data-mn="'+esc(b[2])+'">＋</button></div>').join(''):'<div class="card muted">'+(lg==='zh'?'这一类都收集好啦！🎉':'You collected them all! 🎉')+'</div>')+'</div>'
+ :'<div class="gemList">'+(mine.length?mine.map(g=>{const c=C[g.cat]||C[lg==='zh'?'qita':'other'];return '<div class="gemC" style="--gc:'+c[2]+'"><button class="star" data-act="gFav" data-id="'+g.id+'">'+(g.fav?'⭐':'☆')+'</button><div class="tx '+(lg==='zh'?'zh':'')+'">'+esc(g.text)+'</div>'+(g.meaning?'<div class="mn">'+esc(g.meaning)+'</div>':'')+(g.ex?'<div class="ex">✏️ '+esc(g.ex)+'</div>':'')+
+  '<div class="ft"><span>'+c[0]+' '+c[1]+'</span>'+(g.src?'<span>· '+esc(g.src)+'</span>':'')+'<span>· '+(lg==='zh'?'用过 ':'used ')+(used[g.id]||0)+'×</span><span style="flex:1"></span><button class="say" data-act="say" data-t="'+esc(g.text)+'" data-l="'+lg+'">🔊</button><button class="chip" style="padding:3px 9px" data-act="editGem" data-id="'+g.id+'">✏️</button></div></div>'}).join('')
+  :'<div class="card">'+fairy(lg==='zh'?'宝盒还是空的！去「好词宝库」收集，或者读书时看到好词好句，点「＋收藏新的」记下来。':'Your Gem Box is empty! Visit the Treasure Shop, or when you read a lovely word in a book, tap "＋ Add a gem".',lg)+'</div>')+'</div>');
+ const q=$('#gq');q.oninput=()=>{GM.q=q.value;const p=q.selectionStart;vGems(m);const n=$('#gq');n.focus();n.setSelectionRange(p,p)};}
+function usageMap(){const u={};const es=liveEntries();liveGems().forEach(g=>{const tx=g.lang==='zh'?g.text.replace(/[。！？…]/g,''):g.text.toLowerCase().replace(/[.!?]$/,'');if(!tx)return;u[g.id]=es.filter(e=>e.lang===g.lang&&(g.lang==='zh'?((e.body||'')+(e.ending.text||'')).includes(tx):((e.body||'')+' '+(e.ending.text||'')).toLowerCase().includes(tx))).length});return u}
+function gemForm(g,pre){const lg=g?g.lang:(pre&&pre.lang)||GM.lang;const C=GEMCATS[lg];const v=g||pre||{};
+ modal('<h3>💎 '+(g?(lg==='zh'?'修改好词好句':'Edit gem'):(lg==='zh'?'收藏好词好句':'Save a gem'))+'</h3>'+
+ '<div class="field"><label>'+(lg==='zh'?'语言':'Language')+'</label><select id="gL" '+(g?'disabled':'')+'><option value="en" '+(lg==='en'?'selected':'')+'>English</option><option value="zh" '+(lg==='zh'?'selected':'')+'>华文</option></select></div>'+
+ '<div class="field"><label>'+(lg==='zh'?'好词 / 好句':'Word or sentence')+' *</label><textarea id="gT" rows="2">'+esc(v.text||'')+'</textarea></div>'+
+ '<div class="field"><label>'+(lg==='zh'?'分类':'Category')+'</label><select id="gC">'+Object.entries(C).map(([k,c])=>'<option value="'+k+'" '+((v.cat===k)?'selected':'')+'>'+c[0]+' '+c[1]+'</option>').join('')+'</select></div>'+
+ '<div class="field"><label>'+(lg==='zh'?'意思 / 拼音（可以不写）':'Meaning (optional)')+'</label><input id="gM" value="'+esc(v.meaning||'')+'"></div>'+
+ '<div class="field"><label>'+(lg==='zh'?'我用它造个句子（可以不写）':'My own sentence with it (optional)')+'</label><textarea id="gE" rows="2">'+esc(v.ex||'')+'</textarea></div>'+
+ '<div class="field"><label>'+(lg==='zh'?'在哪里看到的？':'Where did I find it?')+'</label><input id="gS" list="srcs" value="'+esc(v.src||'')+'" placeholder="'+(lg==='zh'?'例如：故事书、课本、老师说的':'e.g. a storybook, school, my diary')+'"><datalist id="srcs"><option value="My diary"><option value="Storybook"><option value="School"><option value="故事书"><option value="课本"><option value="老师说的"></datalist></div>'+
+ '<div class="row between" style="margin-top:12px">'+(g?'<button class="btn ghost sm" data-act="delGem" data-id="'+g.id+'">🗑</button>':'<span></span>')+'<div class="row"><button class="btn ghost sm" data-act="closeModal">Cancel</button><button class="btn sm" id="gOK">💎 Save</button></div></div>',md=>{
+  const sel=md.querySelector('#gL');sel.onchange=()=>{const nv={lang:sel.value,text:md.querySelector('#gT').value,meaning:md.querySelector('#gM').value,ex:md.querySelector('#gE').value,src:md.querySelector('#gS').value};gemForm(null,nv)};
+  md.querySelector('#gOK').onclick=()=>{const text=md.querySelector('#gT').value.trim();if(!text){toast('✏️ ?');return}
+   const ng=g||{id:uid(),lang:sel.value,created:Date.now(),fav:false};Object.assign(ng,{text,cat:md.querySelector('#gC').value,meaning:md.querySelector('#gM').value.trim(),ex:md.querySelector('#gE').value.trim(),src:md.querySelector('#gS').value.trim(),updated:Date.now()});
+   S.gems[ng.id]=ng;persist();markDirty('meta');closeModal();toast('💎 '+(ng.lang==='zh'?'收进宝盒啦！':'Saved to your Gem Box!'));if(VIEW==='gems')render();else if(VIEW==='write'&&W.step===4)updCount()}})}
+
+/* ============ ALBUM ============ */
+function vAlbum(m){const own=new Set(S.owned);
+ m.innerHTML='<h2>🌟 Sticker Album 贴纸册 <span class="muted">'+own.size+' / '+STICKERS.length+'</span></h2>'+fairy('Finish a diary every day to open a mystery box 🎁! Write 7 days in a row for an extra box. 每天写完日记就能开盲盒！','en')+
+ STICKER_SERIES.map(s=>{const got=s.items.filter((_,i)=>own.has(s.k+i)).length;return '<div class="card" style="margin-bottom:14px"><div class="row between"><h3 style="margin:0">'+s.n+' · '+s.zh+'</h3><span class="pill">'+got+'/10</span></div><div style="height:12px"></div><div class="album">'+
+ s.items.map((it,i)=>{const id=s.k+i,o=own.has(id);return '<div class="it">'+stk(id,64,o?'':'lock')+'<span>'+(o?esc(it[1]):'?')+(STK[id].rare&&o?' ✨':'')+'</span></div>'}).join('')+'</div></div>'}).join('');}
+
+/* ============ MAIL ============ */
+function vMail(m){const L=liveEntries().filter(e=>e.done&&e.ending&&e.ending.text&&e.ending.type).sort((a,b)=>b.date.localeCompare(a.date)||b.updated-a.updated);
+ m.innerHTML='<h2>💌 Mailbox 小信箱</h2>'+fairy('Here are all the little notes you wrote at the end of your diaries. Mummy and Daddy can write back! 你写给爸爸妈妈的话都在这里，他们会回信哦！','en')+
+ '<div class="grid g2">'+(L.length?L.map(e=>{const E=ENDINGS[e.lang].find(x=>x[0]===e.ending.type)||ENDINGS[e.lang][0];const hidden=e.ending.type==='secret'&&!e.ending.share;
+  return '<div class="letter '+e.lang+'"><div class="row between"><span class="to">'+E[1]+' '+esc(E[2])+'</span><span class="muted">'+fmtD(e.date,e.lang)+'</span></div>'+
+  (hidden?'<div class="secret">🔒 '+(PARENT?'Jenny\'s secret (only for her) 这是Jenny的小秘密':'<span class="msg">'+esc(e.ending.text)+'</span>')+'</div>':'<div class="msg">'+esc(e.ending.text)+'</div>')+
+  (e.reply?'<div class="reply">💌 <b>'+esc(e.reply.who||'Mummy')+':</b> '+esc(e.reply.text)+(e.reply.seen?'':' <span class="tag dr">new</span>')+'</div>':'')+
+  '<div class="row" style="margin-top:6px"><button class="btn ghost sm" data-act="readId" data-id="'+e.id+'">📖</button>'+(hidden?'':'<button class="btn ghost sm" data-act="reply" data-id="'+e.id+'">✍️ '+(e.reply?'改回信':'回信 Reply')+'</button>')+'</div></div>'}).join(''):'<div class="card muted">No letters yet. 还没有信哦。</div>')+'</div>';
+ L.forEach(e=>{if(e.reply&&!e.reply.seen&&!PARENT){e.reply.seen=true;e.updated=Date.now();markDirty('e_'+e.id)}});persist();}
+function replyForm(id){const e=S.entries[id];if(!PARENT){parentGate(()=>replyForm(id));return}
+ modal('<h3>✍️ 给 Jenny 回信</h3><div class="letter"><div class="msg">'+esc(e.ending.text)+'</div></div><div class="field"><label>谁回信</label><select id="rW"><option>Mummy</option><option>Daddy</option><option>妈妈</option><option>爸爸</option></select></div><div class="field"><label>回信内容（用'+(e.lang==='zh'?'华文':'English')+'回，孩子顺便多读一点）</label><textarea id="rT" rows="4">'+esc(e.reply?e.reply.text:'')+'</textarea></div><div class="row" style="justify-content:flex-end"><button class="btn ghost sm" data-act="closeModal">取消</button><button class="btn sm" id="rOK">💌 送出</button></div>',md=>{
+  if(e.reply)md.querySelector('#rW').value=e.reply.who;
+  md.querySelector('#rOK').onclick=()=>{const t=md.querySelector('#rT').value.trim();if(!t)return;e.reply={who:md.querySelector('#rW').value,text:t,at:Date.now(),seen:false};e.updated=Date.now();persist();markDirty('e_'+e.id);closeModal();toast('💌 已送出');render()}})}
+
+/* ============ PARENT ============ */
+let gateCb=null;
+function parentGate(cb){if(PARENT){cb?cb():go('parent');return}gateCb=cb||null;const a=12+Math.floor(Math.random()*8),b=6+Math.floor(Math.random()*4);
+ modal('<h3>👩 家长角 · 请家长回答</h3><p class="big" style="margin:6px 0">'+a+' × '+b+' = ?</p><div class="field"><input id="pg" inputmode="numeric" autocomplete="off"></div><div class="row" style="justify-content:flex-end"><button class="btn ghost sm" data-act="closeModal">取消</button><button class="btn sm" id="pgOK">进入</button></div>',md=>{const i=md.querySelector('#pg');i.focus();const ok=()=>{if(+i.value===a*b){PARENT=true;closeModal();if(gateCb){const c=gateCb;gateCb=null;c()}else go('parent')}else{toast('不对哦');i.value=''}};md.querySelector('#pgOK').onclick=ok;i.onkeydown=ev=>{if(ev.key==='Enter')ok()}})}
+function vParent(m){if(!PARENT){go('home');return}
+ const es=liveEntries().filter(e=>e.done);const en=es.filter(e=>e.lang==='en'),zh=es.filter(e=>e.lang==='zh');
+ const sum=a=>a.reduce((x,e)=>x+cnt(e.body,e.lang),0);const avg=a=>a.length?Math.round(sum(a)/a.length):0;
+ const wk=new Date();wk.setDate(wk.getDate()-6);const wks=dstr(wk);const thisWk=es.filter(e=>e.date>=wks);
+ const last=es.slice().sort((a,b)=>a.date.localeCompare(b.date)||a.finished-b.finished).slice(-14);const mx=Math.max(10,...last.map(e=>cnt(e.body,e.lang)));
+ const used=usageMap();const usedN=Object.values(used).filter(x=>x>0).length;
+ const ck=es.slice(-10).map(e=>checks(e).r);const ckAvg=i=>ck.length?Math.round(ck.filter(r=>r[i]).length/ck.length*100):0;
+ const dates=[...doneDays()].sort();
+ m.innerHTML='<div class="row between"><h2 style="margin:0">👩 家长角</h2><button class="btn ghost sm" data-act="parentOut">退出家长模式</button></div><div style="height:12px"></div>'+
+ '<div class="grid g3"><div class="card"><div class="muted">完成的日记</div><div class="big">'+es.length+'</div><div class="muted">英文 '+en.length+' · 华文 '+zh.length+'</div></div>'+
+ '<div class="card"><div class="muted">近 7 天</div><div class="big">'+thisWk.length+' 篇</div><div class="muted">连续 '+streak()+' 天 · 共写 '+dates.length+' 天</div></div>'+
+ '<div class="card"><div class="muted">平均篇幅</div><div class="big">'+avg(en)+'<span style="font-size:16px"> 词</span> / '+avg(zh)+'<span style="font-size:16px"> 字</span></div><div class="muted">英文词数 / 华文字数（不含结尾）</div></div></div>'+
+ '<div class="card" style="margin-top:14px"><h3>📈 最近 14 篇的长度 <span class="muted" style="font-size:13px">粉＝英文（词）绿＝华文（字）</span></h3><div class="bars">'+(last.length?last.map(e=>{const n=cnt(e.body,e.lang);return '<div title="'+e.date+' '+n+'" style="height:'+(n/mx*100)+'%;background:'+(e.lang==='zh'?'#5fd3b3':'#ff8cc6')+'"><span>'+n+'</span></div>'}).join(''):'<span class="muted">还没有数据</span>')+'</div><div style="height:18px"></div></div>'+
+ '<div class="grid g2" style="margin-top:14px"><div class="card"><h3>🌈 写作技巧使用率（最近10篇）</h3>'+T.zh.checks.map((x,i)=>'<div class="row between" style="margin:5px 0"><span>'+x+'</span><b>'+ckAvg(i)+'%</b></div><div class="lvl"><b style="width:'+ckAvg(i)+'%"></b></div>').join('')+'</div>'+
+ '<div class="card"><h3>💎 好词好句</h3><div>英文 '+liveGems('en').length+' 条 · 华文 '+liveGems('zh').length+' 条</div><div class="muted">其中 '+usedN+' 条已在日记里用过</div><h3 style="margin-top:14px">⭐ 奖励</h3><div>现在 ⭐ '+S.stars+' · 贴纸 '+new Set(S.owned).size+'/'+STICKERS.length+'</div>'+
+ '<div class="field"><label>现实奖励（孩子首页会看到）</label><input id="sR" value="'+esc(S.settings.reward)+'" placeholder="例如：周末去吃冰淇淋"></div><div class="field"><label>需要多少 ⭐</label><input id="sRS" type="number" min="5" value="'+S.settings.rewardStars+'"></div></div></div>'+
+ errBook()+'<div class="grid g2" style="margin-top:14px"><div class="card"><h3>🎯 每篇目标长度</h3><div class="field"><label>英文日记（词）建议 P2：30–50</label><input id="sEN" type="number" min="10" value="'+S.settings.enGoal+'"></div><div class="field"><label>华文日记（字）建议 P2：40–80</label><input id="sZH" type="number" min="10" value="'+S.settings.zhGoal+'"></div><button class="btn sm" data-act="saveSet">保存设置</button></div>'+
+ '<div class="card"><h3>☁️ 备份</h3><div class="muted" id="cloud2">'+cloudMsg()+'</div><div class="row" style="margin-top:10px"><button class="btn ghost sm" data-act="copyBk">📋 复制备份码</button><button class="btn ghost sm" data-act="importBk">📥 粘贴恢复</button></div><div class="muted" style="margin-top:6px">恢复是「合并」，不会清掉现有日记和贴纸。</div></div></div>';}
+
+function errBook(){const all=[];liveEntries().forEach(e=>{if(e.check&&e.check.fixes)e.check.fixes.forEach(f=>{if(!f.sp)all.push({lang:e.lang,date:e.date,...f})})});
+ if(!all.length)return '<div class="card" style="margin-top:14px"><h3>📒 错误小本（露娜 AI 批改）</h3><div class="muted">孩子完成日记时露娜会自动批改，错误会记在这里。</div></div>';
+ const by={};all.forEach(f=>{const k=(f.lang==='zh'?'华文·':'英文·')+(f.lang==='zh'?f.type:(TYPEZH[f.type]||f.type));by[k]=(by[k]||0)+1});
+ const rec=all.sort((a,b)=>b.date.localeCompare(a.date)).slice(0,30);
+ return '<div class="card" style="margin-top:14px"><h3>📒 错误小本（露娜 AI 批改，共 '+all.length+' 处）</h3><div class="row">'+Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([k,v])=>'<span class="pill">'+esc(k)+' '+v+'</span>').join('')+'</div><div style="margin-top:10px;max-height:260px;overflow:auto">'+rec.map(f=>'<div style="margin:4px 0;font-size:15px"><span class="muted">'+f.date.slice(5)+'</span> <span style="color:#e5484d;text-decoration:line-through">'+esc(f.wrong)+'</span> ➜ <b style="color:#15803d">'+esc(f.right)+'</b> <span class="muted">'+esc(f.why)+'</span></div>').join('')+'</div></div>'}
+/* ============ BACKUP / MERGE ============ */
+function mergeInto(base,inc){if(!inc||typeof inc!=='object')return base;
+ Object.values(inc.entries||{}).forEach(e=>{if(!e||!e.id)return;const c=base.entries[e.id];if(!c||(e.updated||0)>(c.updated||0))base.entries[e.id]=e});
+ Object.values(inc.gems||{}).forEach(g=>{if(!g||!g.id)return;const c=base.gems[g.id];if(!c||(g.updated||g.created||0)>(c.updated||c.created||0))base.gems[g.id]=g});
+ base.owned=[...new Set([...(base.owned||[]),...(inc.owned||[])])];
+ base.stars=Math.max(base.stars||0,inc.stars||0);
+ base.rewarded=Object.assign({},inc.rewarded||{},base.rewarded||{});base.bonus=Object.assign({},inc.bonus||{},base.bonus||{});
+ if(inc.settingsAt&&(!base.settingsAt||inc.settingsAt>base.settingsAt)){base.settings=Object.assign(base.settings,inc.settings);base.settingsAt=inc.settingsAt}
+ return base}
+const b64e=s=>btoa(unescape(encodeURIComponent(s))),b64d=s=>decodeURIComponent(escape(atob(s)));
+
+/* ============ CLOUD (db) ============ */
+let DB=null,UID=null,CL='local',dirty=new Set(),flushT=null,writing=false;
+function cloudMsg(){return CL==='ok'?'☁️ 已自动同步到云端（换设备用同一个账号登录就能看到）':CL==='loading'?'☁️ 连接云端中…':CL==='err'?'⚠️ 云端暂时连不上，已保存在本机，稍后自动再试':'💾 已保存在这台设备。换设备：在旧设备点「复制备份码」，到新设备点「粘贴恢复」。（用 claude.ai 链接打开时会自动云端同步，并有露娜 AI 批改）'}
+function showCloud(){$('#cloud').textContent=CL==='ok'?'☁️ synced':CL==='err'?'⚠️ offline — saved on this device':CL==='loading'?'☁️ …':'💾 saved on this device';const c2=$('#cloud2');if(c2)c2.textContent=cloudMsg()}
+function metaDoc(){return{owned:S.owned,stars:S.stars,rewarded:S.rewarded,bonus:S.bonus,settings:S.settings,settingsAt:S.settingsAt||0,gems:S.gems,v:1}}
+function markDirty(k){dirty.add(k);clearTimeout(flushT);flushT=setTimeout(flush,1500)}
+async function flush(){if(!DB||!UID||writing)return;writing=true;const col=DB.collection('data/users/'+UID);
+ try{while(dirty.size){const k=dirty.values().next().value;dirty.delete(k);let body;
+   if(k==='meta')body=metaDoc();else{const e=S.entries[k.slice(2)];if(!e)continue;body=Object.assign({},e);if(JSON.stringify(body).length>240000)body.drawing=null}
+   try{await col.doc(k).set(body)}catch(err){if(err&&err.code==='unavailable'){await new Promise(r=>setTimeout(r,800+Math.random()*800));await col.doc(k).set(body)}else throw err}}
+  CL='ok'}catch(err){CL='err';console.warn('cloud',err);setTimeout(()=>{if(CL==='err')flush()},30000)}
+ writing=false;showCloud();if(dirty.size){clearTimeout(flushT);flushT=setTimeout(flush,1500)}}
+async function initCloud(){try{if(!window.claude||!window.claude.use){CL='local';showCloud();return}CL='loading';showCloud();
+ const [db,us]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);if(!db||!us){CL='local';showCloud();return}
+ const id=await us.id();if(!id){CL='local';showCloud();return}DB=db;UID=id;
+ const to=setTimeout(()=>{if(CL==='loading'){CL='err';showCloud()}},10000);
+ const snap=await db.collection('data/users/'+id).get();clearTimeout(to);
+ const inc={entries:{},gems:{}};let cloudE={};snap.docs.forEach(d=>{const x=d.data();if(!x)return;if(d.id==='meta'){Object.assign(inc,x);inc.entries={};inc.gems=x.gems||{}}else if(d.id.startsWith('e_')){inc.entries[x.id]=x;cloudE[x.id]=x.updated||0}});
+ const before=JSON.stringify(S);mergeInto(S,inc);persist();
+ Object.values(S.entries).forEach(e=>{if(!(e.id in cloudE)||(e.updated||0)>cloudE[e.id])dirty.add('e_'+e.id)});dirty.add('meta');
+ CL='ok';showCloud();if(JSON.stringify(S)!==before&&VIEW!=='write')render();flush()}catch(err){console.warn(err);CL='err';showCloud()}}
+
+/* ============ ACTIONS ============ */
+const ACT={
+ go:b=>{if(b.dataset.v==='parent')parentGate();else go(b.dataset.v)},
+ say:b=>speak(b.dataset.t,b.dataset.l),
+ maskClose:(b,ev)=>{if(ev.target===b)closeModal()},closeModal,
+ closeTM:()=>{closeModal();W.step=4;render();setTimeout(tellMore,50)},
+ homeClose:()=>{closeModal();go('home')},
+ openDiary:b=>{const lg=b.dataset.l;const e=todayEntry(lg);if(e&&e.done){modal('<h3>'+(lg==='zh'?'今天的华文日记已经写好啦！🌟':'You already finished today\'s English diary! 🌟')+'</h3><div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn ghost sm" data-act="readId" data-id="'+e.id+'">📖 '+(lg==='zh'?'看看':'Read it')+'</button><button class="btn sm" data-act="newDiary" data-l="'+lg+'">✨ '+(lg==='zh'?'再写一篇':'Write another one')+'</button></div>');return}
+  openEntry(e||newEntry(lg),e?(e.body?4:e.mood!=null?2:1):1)},
+ newDiary:b=>{closeModal();openEntry(newEntry(b.dataset.l),1)},
+ step:b=>{if(W.step===3){const a=$('#ans');if(a&&a.value.trim()){appendBody(a.value);W.ans='';saveW(true)}}W.step=+b.dataset.s;W.mode=W.mode==='read'?'write':W.mode;W.sel=-1;render();window.scrollTo(0,0)},
+ mood:b=>{W.e.mood=+b.dataset.i;saveW(true);render()},
+ weather:b=>{W.e.weather=+b.dataset.i;saveW(true);render()},
+ pickSpark:b=>{const i=+b.dataset.i;if(W.e.spark!==i){W.q=0;W.ans=''}W.e.spark=i;W.step=3;saveW(true);render();window.scrollTo(0,0)},
+ moreSpark:()=>{W.sparkSeed++;render()},
+ sparkCat:b=>{W.cat=b.dataset.c||null;W.sparkSeed++;render()},
+ ownIdea:()=>{W.e.spark=-1;W.q=0;W.step=3;saveW(true);render()},
+ ins:b=>insertAt($('#ans'),b.dataset.t),
+ insEnd:b=>{const t=$('#endT');insertAt(t,b.dataset.t)},
+ qNext:()=>{const a=$('#ans');const v=a.value.trim();const lg=W.lang;
+  if(!v){toast(lg==='zh'?'先写一点点吧 ✏️':'Write a little first ✏️');return}
+  if(lg!=='zh'&&!/[.!?]$/.test(v)){toast('💡 Remember the full stop . at the end!')}
+  if(lg==='zh'&&!/[。！？]$/.test(v)){toast('💡 句子最后别忘了句号「。」')}
+  appendBody(v);W.ans='';W.lastCheer=true;saveW(true);const qs=questions();
+  if(W.q<qs.length-1){W.q++;render()}else{W.step=4;render();toast(lg==='zh'?'哇！日记写好一大半啦 🌟':'Wow! Your diary is almost done 🌟')}},
+ qSkip:()=>{const qs=questions();W.ans='';if(W.q<qs.length-1){W.q++;render()}else{W.step=4;render()}},
+ mode:b=>{W.mode=b.dataset.m;W.sel=-1;render()},
+ paper:b=>{W.e.paper=b.dataset.p;saveW(true);render()},
+ addSt:b=>{const e=W.e;const side=Math.random()<.5;e.stickers.push({id:b.dataset.id,x:side?6+Math.random()*10:84+Math.random()*10,y:10+Math.random()*75,r:Math.round(Math.random()*30-15),s:1});W.sel=e.stickers.length-1;saveW(true);redrawPaper()},
+ stOp:b=>{const p=W.e.stickers[W.sel];if(!p)return;const o=b.dataset.o;if(o==='rl')p.r=(p.r||0)-15;if(o==='rr')p.r=(p.r||0)+15;if(o==='sm')p.s=Math.max(.5,(p.s||1)-.2);if(o==='bg')p.s=Math.min(2.4,(p.s||1)+.2);if(o==='del'){W.e.stickers.splice(W.sel,1);W.sel=-1}if(o==='ok')W.sel=-1;saveW(true);redrawPaper()},
+ pen:b=>{if(DR)DR.c=b.dataset.c;document.querySelectorAll('.colors button').forEach(x=>x.classList.toggle('on',x===b))},
+ penW:b=>{if(DR)DR.w=+b.dataset.w},
+ clearCv:()=>{if(DR){DR.ctx.fillStyle='#fffefc';DR.ctx.fillRect(0,0,DR.cv.width,DR.cv.height)}},
+ saveDraw:()=>{if(!DR)return;const c=document.createElement('canvas');c.width=480;c.height=320;c.getContext('2d').drawImage(DR.cv,0,0,480,320);W.e.drawing=c.toDataURL('image/jpeg',.72);saveW(true);W.mode='write';render();toast('📸 ✓')},
+ rmDraw:()=>{W.e.drawing=null;saveW(true);render()},
+ tellMore:()=>tellMore(),
+ tmAdd:()=>{const a=$('#tmA');const v=a.value.trim();if(!v)return;const e=W.e;const t=W.tmTarget;const sep=W.lang==='zh'?'':' ';const idx=t?e.body.indexOf(t):-1;
+  if(idx>=0){const end=idx+t.length;e.body=e.body.slice(0,end)+sep+v+e.body.slice(end)}else appendBody(v);
+  saveW(true);const pb=$('#pb');if(pb){pb.value=e.body;autoGrow(pb)}updCount();$('#tm').innerHTML=fairy(W.lang==='zh'?'太棒了！日记更生动了 🌟 还想再加一点吗？':'Wonderful! Your diary is more alive now 🌟 Want to add more?',W.lang)+'<button class="btn mint sm" data-act="tellMore">'+T[W.lang].tellMore+'</button>'},
+ saveSel:()=>{const pb=$('#pb');let s='';if(pb&&pb.selectionEnd>pb.selectionStart)s=pb.value.slice(pb.selectionStart,pb.selectionEnd).trim();
+  if(!s){toast(W.lang==='zh'?'先在日记里选中一个好词好句，再点我 💎':'Select a lovely word or sentence in your diary first 💎');return}
+  gemForm(null,{lang:W.lang,text:s,src:W.lang==='zh'?'我的日记':'My diary',cat:W.lang==='zh'?'haoju':'sentence'})},
+ readMine:()=>{const e=W.e;speak((e.title||'')+(e.lang==='zh'?'。':'. ')+(e.body||''),e.lang)},
+ endType:b=>{W.e.ending.type=b.dataset.t;if(b.dataset.t==='secret')W.e.ending.share=false;saveW(true);render()},
+ share:b=>{W.e.ending.share=b.dataset.v==='1';saveW(true);render()},
+ finish:()=>finish(),
+ fixOne:b=>{const i=+b.dataset.i,f=W.e.check.fixes[i];if(!f||f.fixed)return;if(!f.sp&&W.peek!==i){W.peek=i;render();return}f.fixed=true;W.peek=null;applyCheck(W.e);saveW(true);render()},
+ fixAll:()=>{W.e.check.fixes.forEach(f=>{if(!f.sp)f.fixed=true});applyCheck(W.e);saveW(true);render()},
+ askAdd:()=>{const a=$('#askA');const v=a&&a.value.trim();if(!v)return;W.e.check.extra=v;applyCheck(W.e);saveW(true);render()},
+ getStars:()=>{const c=W.e.check;if(c&&c.fixes.some(f=>!f.sp&&!f.fixed)){toast(W.lang==='zh'?'还有红色的小错误没改哦 ✏️':'Fix the red marks first ✏️');return}grant()},
+ mic:b=>{if(!DICT)return;if(DICT_ON&&DICT_T===b.dataset.t){DICT.stop().catch(()=>{});return}if(DICT_ON)DICT.stop().catch(()=>{});DICT_T=b.dataset.t;DICT.start().catch(e=>{if(e&&e.code==='not_granted'){DICT=null;render()}})},
+ openBx:b=>{const id=b.dataset.id;const s=STK[id];$('#bx').innerHTML='<div class="reveal" style="display:inline-block">'+stk(id,110)+'</div><div style="font-weight:700;margin-top:10px;font-size:18px">'+esc(s.n)+(s.rare?' ✨ RARE!':'')+'</div><div class="muted">'+STICKER_SERIES.find(x=>x.k===s.s).n+'</div>';confetti()},
+ readId:b=>{closeModal();VIEW='read';W={readId:b.dataset.id};render(b.dataset.id);window.scrollTo(0,0)},
+ editId:b=>{const e=S.entries[b.dataset.id];if(e)openEntry(e,e.body?4:e.mood!=null?2:1)},
+ delEntry:b=>ask('🗑 Delete this diary? 删除这篇日记？<br><span class="muted" style="font-size:14px">Stars and stickers you earned will stay. 已得到的星星和贴纸不会扣掉。</span>',()=>{const e=S.entries[b.dataset.id];e.del=true;e.updated=Date.now();persist();markDirty('e_'+e.id);go('shelf')},'Delete 删除'),
+ shMon:b=>{SH.m+=+b.dataset.d;if(SH.m<0){SH.m=11;SH.y--}if(SH.m>11){SH.m=0;SH.y++}render()},
+ shF:b=>{SH.f=b.dataset.f;render()},
+ shDay:b=>{SH.day=b.dataset.d||null;render()},
+ gLang:b=>{GM.lang=b.dataset.l;GM.cat='';render()},gShop:b=>{GM.shop=b.dataset.v==='1';render()},gCat:b=>{GM.cat=b.dataset.c;render()},
+ collect:b=>{const g={id:uid(),lang:GM.lang,text:b.dataset.t,meaning:b.dataset.mn,cat:b.dataset.c,src:GM.lang==='zh'?'好词宝库':'Treasure Shop',ex:'',fav:false,created:Date.now(),updated:Date.now()};S.gems[g.id]=g;persist();markDirty('meta');toast('💎 +1');render()},
+ addGem:()=>gemForm(null,{lang:GM.lang}),
+ editGem:b=>gemForm(S.gems[b.dataset.id]),
+ gFav:b=>{const g=S.gems[b.dataset.id];g.fav=!g.fav;g.updated=Date.now();persist();markDirty('meta');render()},
+ delGem:b=>{const g=S.gems[b.dataset.id];g.del=true;g.updated=Date.now();persist();markDirty('meta');closeModal();render()},
+ reply:b=>replyForm(b.dataset.id),
+ parentGate:()=>parentGate(),
+ parentOut:()=>{PARENT=false;go('home')},
+ saveSet:()=>{S.settings.enGoal=Math.max(10,+$('#sEN').value||30);S.settings.zhGoal=Math.max(10,+$('#sZH').value||40);S.settings.reward=$('#sR').value.trim();S.settings.rewardStars=Math.max(5,+$('#sRS').value||30);S.settingsAt=Date.now();persist();markDirty('meta');toast('✓ 已保存')},
+ copyBk:async()=>{const code='JDD1:'+b64e(JSON.stringify(S));try{await navigator.clipboard.writeText(code);toast('📋 已复制备份码，可粘贴到备忘录保存')}catch(e){modal('<h3>备份码（全选复制）</h3><textarea class="ta" style="font-size:12px;min-height:200px" readonly onfocus="this.select()">'+esc(code)+'</textarea><div style="text-align:right;margin-top:8px"><button class="btn sm" data-act="closeModal">好</button></div>')}},
+ importBk:()=>modal('<h3>📥 粘贴备份码</h3><textarea class="ta" id="bkI" style="font-size:12px;min-height:160px" placeholder="JDD1:..."></textarea><div class="row" style="justify-content:flex-end;margin-top:8px"><button class="btn ghost sm" data-act="closeModal">取消</button><button class="btn sm" id="bkOK">合并恢复</button></div>',md=>md.querySelector('#bkOK').onclick=()=>{try{let v=md.querySelector('#bkI').value.trim();if(v.startsWith('JDD1:'))v=v.slice(5);const inc=JSON.parse(b64d(v));mergeInto(S,inc);persist();Object.keys(S.entries).forEach(id=>dirty.add('e_'+id));markDirty('meta');closeModal();toast('✓ 已合并恢复');render()}catch(e){toast('备份码不对')}})
+};
+document.addEventListener('click',ev=>{const b=ev.target.closest('[data-act]');if(!b)return;const f=ACT[b.dataset.act];if(f){if(b.dataset.act!=='maskClose')ev.preventDefault();f(b,ev)}});
+document.addEventListener('pointerdown',ev=>{if(VIEW==='write'&&W&&W.mode==='decor'&&W.sel>=0&&!ev.target.closest('.placed,.selbar,.palette')){W.sel=-1;const sl=$('#sl');if(sl)sl.querySelectorAll('.placed').forEach(x=>x.classList.remove('sel'));refreshDecorBar()}});
+render();
+setTimeout(initCloud,0);setTimeout(initAI,0);
+</script>
+</body>
+</html>
